@@ -1,0 +1,182 @@
+[
+  {
+    "path": "/assets/models/tank.glb",
+    "title": "유입수",
+    "position": [
+      4,
+      0,
+      3
+    ],
+    "metadata": {
+      "tankId": "65AF1-IW1"
+    }
+  },
+  {
+    "path": "/assets/models/box.glb",
+    "title": "유량계1",
+    "position": [
+      4,
+      0,
+      -2
+    ],
+    "metadata": {
+      "tankId": "65AF1-FWM1"
+    }
+  },
+  {
+    "path": "/assets/models/box.glb",
+    "title": "유량계2",
+    "position": [
+      2,
+      0,
+      -2
+    ],
+    "metadata": {
+      "tankId": "65AF1-FWM2"
+    }
+  },
+  {
+    "path": "/assets/models/slope.glb",
+    "title": "해수펌프1",
+    "position": [
+      0,
+      0,
+      0
+    ],
+    "metadata": {
+      "tankId": "65AF1-SWP1"
+    }
+  },
+  {
+    "path": "/assets/models/slope.glb",
+    "title": "해수펌프2",
+    "position": [
+      2,
+      0,
+      0
+    ],
+    "metadata": {
+      "tankId": "65AF1-SWP2"
+    }
+  },
+  {
+    "path": "/assets/models/slope.glb",
+    "title": "해수펌프3",
+    "position": [
+      4,
+      0,
+      0
+    ],
+    "metadata": {
+      "tankId": "65AF1-SWP3"
+    }
+  },
+  {
+    "path": "/assets/models/switchboard.glb",
+    "title": "배전반 메인",
+    "position": [
+      4,
+      0,
+      -4
+    ],
+    "metadata": {
+      "tankId": "65AF1-DPM"
+    }
+  },
+  {
+    "path": "/assets/models/switchboard.glb",
+    "title": "배전반A",
+    "position": [
+      0,
+      0,
+      -4
+    ],
+    "metadata": {
+      "tankId": "65AF1-DPA"
+    }
+  },
+  {
+    "path": "/assets/models/switchboard.glb",
+    "title": "배전반B",
+    "position": [
+      -2,
+      0,
+      -4
+    ],
+    "metadata": {
+      "tankId": "65AF1-DPB"
+    }
+  },
+  {
+    "path": "/assets/models/box.glb",
+    "title": "사료급이기",
+    "position": [
+      -2,
+      0,
+      3
+    ],
+    "metadata": {
+      "tankId": "SAMPLE1"
+    }
+  },
+  {
+    "path": "/assets/models/basket.glb",
+    "title": "퀀텀 센서 연결 PC",
+    "position": [
+      -4,
+      0,
+      -4
+    ],
+    "metadata": {
+      "tankId": "SAMPLE2"
+    }
+  },
+  {
+    "path": "/assets/models/basket.glb",
+    "title": "명선 센서 연결 PC",
+    "position": [
+      -4,
+      0,
+      5
+    ],
+    "metadata": {
+      "tankId": "SAMPLE3"
+    }
+  },
+  {
+    "path": "/assets/models/waterTank.glb",
+    "title": "수조 1",
+    "position": [
+      0,
+      0,
+      6
+    ],
+    "metadata": {
+      "tankId": "65AF1-RT1"
+    }
+  },
+  {
+    "path": "/assets/models/waterTank.glb",
+    "title": "수조 2",
+    "position": [
+      2,
+      0,
+      6
+    ],
+    "metadata": {
+      "tankId": "65AF1-RT2"
+    }
+  },
+  {
+    "path": "/assets/models/waterTank.glb",
+    "title": "수조 3",
+    "position": [
+      4,
+      0,
+      6
+    ],
+    "metadata": {
+      "tankId": "65AF1-RT3"
+    }
+  }
+]
