@@ -9,7 +9,10 @@
 <body>
 <main id="root"></main>
 <script>
-  kw.create(document.getElementById("root"))
+  fetch('/assets/data/sample.json').then(async (response) => {
+    const data = await response.json()
+    kw.create(document.getElementById("root"), { data })
+  })
 </script>
 </body>
 </html>
