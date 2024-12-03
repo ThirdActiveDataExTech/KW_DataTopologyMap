@@ -1,4 +1,0 @@
-venice_sunset_1k.hdr
-- Author: Greg Zaal
-- License: CC0
-- URL: https://polyhaven.com/a/venice_sunset

@@ -11,8 +11,3 @@ dist/
 .vscode/*
 !.vscode/extensions.json
 .idea
-
-#
-*
-!dist/
-!dist/**/*
