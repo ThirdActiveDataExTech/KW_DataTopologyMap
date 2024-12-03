@@ -5,7 +5,6 @@
 
 # Dist
 node_modules
-dist/
 
 # IDE
 .vscode/*
@@ -13,6 +12,3 @@ dist/
 .idea
 
 #
-*
-!dist/
-!dist/**/*

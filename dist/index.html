@@ -1,18 +1,16 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-  <title>dev</title>
-<link href="/index.css" rel="stylesheet"><script src="/index.js"></script></head>
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml"><title>dev</title><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><link href="/index.css" rel="stylesheet">
+</head>
 <body>
-<main id="root"></main>
+<div id="root"></div>
+<script src="/index.js"></script>
 <script>
-  fetch('/assets/data/sample.json').then(async (response) => {
-    const data = await response.json()
-    kw.create(document.getElementById("root"), { data })
-  })
+  fetch(kw.getFullPath('/assets/data/sample.json')).then(async (response) => {
+    const data = await response.json();
+    kw.create(document.getElementById('root'), { data });
+  });
 </script>
 </body>
 </html>
