@@ -165,3 +165,10 @@ PERFORMANCE OF THIS SOFTWARE.
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
+
+/**
+ * postprocessing v6.36.4 build Tue Nov 05 2024
+ * https://github.com/pmndrs/postprocessing
+ * Copyright 2015-2024 Raoul van Rüschen
+ * @license Zlib
+ */
