@@ -117,7 +117,7 @@
       ],
       "metadata": {
         "title": "사료급이기",
-        "tankId": "SAMPLE1"
+        "tankId": "TMP-001"
       }
     },
     {
@@ -129,7 +129,7 @@
       ],
       "metadata": {
         "title": "퀀텀 센서 연결 PC",
-        "tankId": "SAMPLE2"
+        "tankId": "TMP-002"
       }
     },
     {
@@ -141,7 +141,7 @@
       ],
       "metadata": {
         "title": "명선 센서 연결 PC",
-        "tankId": "SAMPLE3"
+        "tankId": "TMP-003"
       }
     },
     {
