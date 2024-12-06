@@ -3,7 +3,7 @@
     {
       "model": "/assets/models/tank.glb",
       "position": [
-        4,
+        -2,
         0,
         3
       ],
@@ -111,7 +111,7 @@
     {
       "model": "/assets/models/box.glb",
       "position": [
-        -2,
+        4,
         0,
         3
       ],
@@ -149,7 +149,7 @@
       "position": [
         0,
         0,
-        6
+        5
       ],
       "metadata": {
         "title": "수조 1",
@@ -161,7 +161,7 @@
       "position": [
         2,
         0,
-        6
+        5
       ],
       "metadata": {
         "title": "수조 2",
@@ -173,7 +173,7 @@
       "position": [
         4,
         0,
-        6
+        5
       ],
       "metadata": {
         "title": "수조 3",
