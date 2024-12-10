@@ -1,4 +1,4 @@
-venice_sunset_1k.hdr
-- Author: Greg Zaal
+rosendal_park_sunset_1k.hdr
+- Authors: Dimitrios Savva, Jarod Guest
 - License: CC0
-- URL: https://polyhaven.com/a/venice_sunset
+- URL: https://polyhaven.com/a/rosendal_park_sunset
