@@ -1,4 +1,4 @@
-rosendal_park_sunset_1k.hdr
-- Authors: Dimitrios Savva, Jarod Guest
+kloppenheim_02_1k.hdr
+- Authors: Greg Zaal
 - License: CC0
-- URL: https://polyhaven.com/a/rosendal_park_sunset
+- URL: https://polyhaven.com/a/kloppenheim_02_1k
