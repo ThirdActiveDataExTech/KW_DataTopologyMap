@@ -1,7 +1,7 @@
 {
   "models": [
     {
-      "model": "/assets/models/tank.glb",
+      "model": "/assets/models/sample/tank.glb",
       "position": [-1, 0, 3],
       "metadata": {
         "title": "유입수",
@@ -9,7 +9,7 @@
       }
     },
     {
-      "model": "/assets/models/box.glb",
+      "model": "/assets/models/sample/box.glb",
       "position": [4, 0, -2],
       "metadata": {
         "title": "유량계1",
@@ -17,7 +17,7 @@
       }
     },
     {
-      "model": "/assets/models/box.glb",
+      "model": "/assets/models/sample/box.glb",
       "position": [2, 0, -2],
       "metadata": {
         "title": "유량계2",
@@ -25,7 +25,7 @@
       }
     },
     {
-      "model": "/assets/models/slope.glb",
+      "model": "/assets/models/sample/slope.glb",
       "position": [0, 0, 0],
       "metadata": {
         "title": "해수펌프1",
@@ -33,7 +33,7 @@
       }
     },
     {
-      "model": "/assets/models/slope.glb",
+      "model": "/assets/models/sample/slope.glb",
       "position": [2, 0, 0],
       "metadata": {
         "title": "해수펌프2",
@@ -41,7 +41,7 @@
       }
     },
     {
-      "model": "/assets/models/slope.glb",
+      "model": "/assets/models/sample/slope.glb",
       "position": [4, 0, 0],
       "metadata": {
         "title": "해수펌프3",
@@ -49,7 +49,7 @@
       }
     },
     {
-      "model": "/assets/models/switchboard.glb",
+      "model": "/assets/models/sample/switchboard.glb",
       "position": [4, 0, -4],
       "metadata": {
         "title": "배전반 메인",
@@ -57,7 +57,7 @@
       }
     },
     {
-      "model": "/assets/models/switchboard.glb",
+      "model": "/assets/models/sample/switchboard.glb",
       "position": [0, 0, -4],
       "metadata": {
         "title": "배전반A",
@@ -65,7 +65,7 @@
       }
     },
     {
-      "model": "/assets/models/switchboard.glb",
+      "model": "/assets/models/sample/switchboard.glb",
       "position": [-2, 0, -4],
       "metadata": {
         "title": "배전반B",
@@ -73,7 +73,7 @@
       }
     },
     {
-      "model": "/assets/models/box.glb",
+      "model": "/assets/models/sample/box.glb",
       "position": [4, 0, 3],
       "metadata": {
         "title": "사료급이기",
@@ -81,7 +81,7 @@
       }
     },
     {
-      "model": "/assets/models/basket.glb",
+      "model": "/assets/models/sample/basket.glb",
       "position": [-5, 0, -4],
       "metadata": {
         "title": "퀀텀 센서 연결 PC",
@@ -89,7 +89,7 @@
       }
     },
     {
-      "model": "/assets/models/basket.glb",
+      "model": "/assets/models/sample/basket.glb",
       "position": [-5, 0, 5],
       "metadata": {
         "title": "명선 센서 연결 PC",
@@ -97,7 +97,7 @@
       }
     },
     {
-      "model": "/assets/models/waterTank.glb",
+      "model": "/assets/models/sample/waterTank.glb",
       "position": [0, 0, 5],
       "metadata": {
         "title": "수조 1",
@@ -105,7 +105,7 @@
       }
     },
     {
-      "model": "/assets/models/waterTank.glb",
+      "model": "/assets/models/sample/waterTank.glb",
       "position": [2, 0, 5],
       "metadata": {
         "title": "수조 2",
@@ -113,7 +113,7 @@
       }
     },
     {
-      "model": "/assets/models/waterTank.glb",
+      "model": "/assets/models/sample/waterTank.glb",
       "position": [4, 0, 5],
       "metadata": {
         "title": "수조 3",
