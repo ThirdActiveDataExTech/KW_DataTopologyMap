@@ -4,12 +4,13 @@
   <link rel="icon" href="/favicon.svg" type="image/svg+xml"><title>dev</title><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><link href="/index.css" rel="stylesheet">
 </head>
 <body>
-<div id="root"></div>
+<div id="root" style="position: fixed; left: 0; top: 0; width: 100%; height: 100%;"></div>
 <script src="/index.js"></script>
 <script>
   fetch(kw.resolveUrl('/assets/data/sample.json')).then(async (response) => {
     const data = await response.json();
-    kw.create(document.getElementById('root'), { data });
+    const { handle, unmount } = await kw.create(document.getElementById('root'), { data });
+    console.log('data:', handle.getData());
   });
 </script>
 </body>
