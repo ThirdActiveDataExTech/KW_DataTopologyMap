@@ -9,7 +9,8 @@
 <script>
   fetch(kw.resolveUrl('/assets/data/sample.json')).then(async (response) => {
     const data = await response.json();
-    kw.create(document.getElementById('root'), { data });
+    const { handle, unmount } = await kw.create(document.getElementById('root'), { data });
+    console.log('data:', handle.getData());
   });
 </script>
 </body>
