@@ -1,0 +1,13 @@
+/*!
+ * Gothic A1
+ * https://fonts.google.com/specimen/Gothic+A1
+ * Designed by HanYang I&C Co
+ * SIL Open Font License 1.1
+ */
+
+/*!
+ * Nanum Gothic Coding
+ * https://fonts.google.com/specimen/Nanum+Gothic+Coding
+ * Designed by Sandoll Communication
+ * SIL Open Font License 1.1
+ */
