@@ -101,14 +101,14 @@
             <a data-bs-toggle="tab" href="#des-details2" class=""> API </a>
             <a data-bs-toggle="tab" href="#des-details3" class=""> 관련 데이터 </a>
             <a data-bs-toggle="tab" href="#des-details4" class=""> 문의/오류신고 </a>
-            <a data-bs-toggle="tab" href="#des-details5" class=""> Swagger </a>
+            <!--<a data-bs-toggle="tab" href="#des-details5" class=""> Swagger </a>-->
         </div>
         <div class="tab-content">
             <div id="des-details1" class="tab-pane active">
               <div th:replace="asp/page/detail-template01::divTabDetailData"></div>
             </div>
             <div id="des-details2" class="tab-pane">
-              <div th:replace="asp/page/detail-template02::divTabDetailAPI"></div>
+                <div th:replace="asp/page/detail-template05::divTabSwaggerTest"></div>
             </div>
             <div id="des-details3" class="tab-pane">
               <div th:replace="asp/page/detail-template03::divTabDetailRelactionData"></div>  
@@ -116,9 +116,9 @@
             <div id="des-details4" class="tab-pane">
               <div th:replace="asp/page/detail-template04::divTabDetailReport"></div>  
             </div>
-            <div id="des-details5" class="tab-pane">
-              <div th:replace="asp/page/detail-template05::divTabSwaggerTest"></div>
-            </div>
+            <!--<div id="des-details5" class="tab-pane">
+                <div th:replace="asp/page/detail-template02::divTabDetailAPI"></div>
+            </div>-->
         </div>
     </div>
   </div>

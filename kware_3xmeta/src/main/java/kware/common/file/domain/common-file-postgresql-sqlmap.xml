@@ -146,8 +146,8 @@
          WHERE FILE_ID = #{fileId}
     </select>
 
-    <update id="IncreaseDownCnt" parameterType="CommonFile">
-        /* file.IncreaseDownCnt */
+    <update id="increaseDownCnt" parameterType="CommonFile">
+        /* file.increaseDownCnt */
         UPDATE CETUS_FILE
            SET DOWN_CNT = DOWN_CNT + 1
          WHERE FILE_UID = #{fileUid}

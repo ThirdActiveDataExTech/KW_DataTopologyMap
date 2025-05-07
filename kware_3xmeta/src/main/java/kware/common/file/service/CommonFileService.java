@@ -13,6 +13,7 @@ import kware.common.file.tus.service.FileUploadService;
 import kware.common.file.tus.util.EncryptionUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.MediaType;
@@ -37,10 +38,14 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class CommonFileService {
+
     private final static SimpleDateFormat YYYYMM_format = new SimpleDateFormat("yyyy" + File.separator + "MM");
     private static final String IN_PROGRESS_ID = "InProgress";
     private final FileUploadService fileUploadService;
     private final CommonFileDao dao;
+
+    @Value("${tus.server.storage.temp}")
+    private String tusTemp;
 
     public Long generateUid() {
         return dao.key();
@@ -52,7 +57,6 @@ public class CommonFileService {
 
     public List<CommonFile> list(CommonFile bean) {
         bean.setSaved(CommonFileState.Y.name());
-
         List<CommonFile> resList = dao.list(bean);
         //파일경로를 암호화 해서 base64로 인코딩한 후에
         resList.stream().forEach(cfile -> cfile.setFilePath(EncryptionUtil.encrypt(cfile.getFilePath())));
@@ -74,15 +78,17 @@ public class CommonFileService {
     }
 
     /**
-     * 수정필요함
-     *
-     * @param req
-     * @return
-     */
+     * @method      download
+     * @author      hdh
+     * @date        2025-04-30
+     * @deacription 파일 다운로드 및 불러오기 (저장 이후 시점)
+    **/
     @Transactional
-    public ResponseEntity<Resource> download(final HttpServletRequest req) {
+    public ResponseEntity download(final HttpServletRequest req) {
         String fileId = req.getParameter("fileId");
-        if (req.getParameter("fileId").equals("null")) return ResponseEntity.noContent().build();
+        if (req.getParameter("fileId").equals("null") || req.getParameter("fileId").equals("undefined") || req.getParameter("fileId").length() == 0) {
+            return ResponseEntity.ok("fileId is not found");
+        }
         else {
 
             String download = req.getParameter("download");
@@ -91,20 +97,19 @@ public class CommonFileService {
             CommonFileLog commonFileLog = new CommonFileLog();
             commonFileLog.setFileId(fileId);
 
-            // find file-uid by file url ...
             CommonFile commonFile = new CommonFile();
             commonFile.setFileId(fileId);
             commonFile = dao.findFileInfo(commonFile);
 
             if ("Y".equals(download)) {
-                // set file-uid, file-id
+
                 commonFileLog.setFileUid(commonFile.getFileUid());
                 commonFileLog.setFileId(commonFile.getFileId());
 
                 commonFileLog.setWorkerUid(user != null ? user.getUid().toString() : WebUtil.getIpAddress(req));
                 commonFileLog.setWorkerNm(user != null ? user.getUserNm() : WebUtil.getIpAddress(req));
 
-                dao.IncreaseDownCnt(commonFile);  // file table - downCnt + 1
+                dao.increaseDownCnt(commonFile);  // file table - downCnt + 1
                 dao.insertLog(commonFileLog);  // file log table - log insert
             }
 
@@ -120,7 +125,7 @@ public class CommonFileService {
                     log.debug("파일이 존재합니다. filepath:{}, orgFileNam:{}", realPath, orgFileNm);
             } else {
                 log.error("파일이 존재하지 않습니다. filepath:{}, orgFileNam:{}", realPath, orgFileNm);
-                return ResponseEntity.noContent().build();
+                return ResponseEntity.ok("file is not existed");
             }
 
             String fileNameOrg = null;
@@ -128,7 +133,8 @@ public class CommonFileService {
                 fileNameOrg = URLEncoder.encode(orgFileNm, "UTF-8").replaceAll("\\+", "%20");
             } catch (UnsupportedEncodingException e) {
             }
-            String disposition = "attachment;filename=" + fileNameOrg + ";";
+            String disposition = "inline";
+            if("Y".equals(download)) disposition = "attachment;filename=" + fileNameOrg + ";";
 
             return ResponseEntity.ok()
                     .contentType(MediaType.APPLICATION_OCTET_STREAM)
@@ -137,9 +143,49 @@ public class CommonFileService {
         }
     }
 
-    /***
-     * 사용방법 > Long fileUid = fileService.processFileBean(bean, UserUtil.getUser(), null);
-     * */
+    /**
+     * @method      download2
+     * @author      hdh
+     * @date        2025-04-30
+     * @deacription 파일 다운로드 및 불러오기 (저장 이전 시점 => temp dir 위치에 있는 경우)
+    **/
+    @Transactional
+    public ResponseEntity download2(final HttpServletRequest req) {
+        String fileId = req.getParameter("fileId");
+        if (req.getParameter("fileId").equals("null") || req.getParameter("fileId").equals("undefined") || req.getParameter("fileId").length() == 0) {
+            return ResponseEntity.ok("fileId is not found");
+        }
+        else {
+
+            File file2 = new File(tusTemp + File.separator + fileId);
+            String filePath = file2.getAbsolutePath();
+            String fileName = file2.getName();
+
+            Resource resource = new FileSystemResource(filePath);
+
+            if (file2.exists() && file2.isFile()) {
+                if (log.isDebugEnabled())
+                    log.debug("파일이 존재합니다. filepath:{}, orgFileNam:{}", filePath, fileName);
+            } else {
+                log.error("파일이 존재하지 않습니다. filepath:{}, orgFileNam:{}", filePath, fileName);
+            }
+
+            String disposition = "inline";
+
+            return ResponseEntity.ok()
+                    .contentType(MediaType.APPLICATION_OCTET_STREAM)
+                    .header("Content-Disposition", disposition)
+                    .body(resource);
+        }
+    }
+
+
+    /**
+     * @method      processFileBean
+     * @author      hdh
+     * @date        2025-04-30
+     * @deacription 사용방법 > Long fileUid = fileService.processFileBean(bean, UserUtil.getUser(), null);
+    **/
     @Transactional
     public <T extends FileBean> Long processFileBean(T bean, SessionUserInfo user, Long fileUid) {
         if (bean.getFileAdd() != null) {

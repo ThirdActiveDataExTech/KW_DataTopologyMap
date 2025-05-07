@@ -1,0 +1,26 @@
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<script th:src="@{'/assets/js/page/manager/user-form-info.js'}"></script>
+<script th:inline="javascript">
+    $(function () {
+
+        console.log("user-form-info :: 사용자 정보 script")
+        userFormInfo.initUploader(null)
+
+        $("#userJbgd").select2({
+            placeholder: "직책 선택",
+        });
+        $("#userDepth").select2({
+            placeholder: "그룹/부서 선택",
+        });
+        $("#userTeam").select2({
+            placeholder: "팀 선택",
+        });
+        $("#userInfo").select2({
+            placeholder: "항목명 선택",
+        });
+        $("#userDoc").select2({
+            placeholder: "증빙서류 선택",
+        });
+    });
+</script>
+</html>

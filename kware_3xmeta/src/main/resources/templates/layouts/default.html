@@ -5,7 +5,7 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title>UST21</title>
+    <title>3Xmeta</title>
     <meta name="robots" content="noindex, follow" />
     <meta name="description" content="Urdan Minimal eCommerce Bootstrap 5 Template is a stunning eCommerce website template that is the best choice for any online store.">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -31,6 +31,10 @@
         <th:block th:replace="fragments/footer :: footer"></th:block>
         <th:block th:replace="fragments/sidebar-menu :: sidebar-menu"></th:block>
         <th:block th:replace="fragments/script :: script"></th:block>
+        <script type="module">
+            import 'ckeditor-config';  /* 이미지 업로더 포함 */
+            import 'ckeditor-config2';  /* 이미지 업로더 미포함 */
+        </script>
         <th:block layout:fragment="script"></th:block>
         <script th:inline="javascript"></script>
     </div>

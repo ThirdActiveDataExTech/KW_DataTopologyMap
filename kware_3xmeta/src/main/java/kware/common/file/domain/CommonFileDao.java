@@ -36,7 +36,7 @@ public class CommonFileDao extends CetusDaoSupport {
         return insert("insertLog", bean);
     }
 
-    public int IncreaseDownCnt(CommonFile bean){return update("IncreaseDownCnt", bean);}
+    public int increaseDownCnt(CommonFile bean){return update("increaseDownCnt", bean);}
     
     public List<CommonFileLog> selectLog(CommonFileLog bean) {
         return selectList("selectLog", bean);
