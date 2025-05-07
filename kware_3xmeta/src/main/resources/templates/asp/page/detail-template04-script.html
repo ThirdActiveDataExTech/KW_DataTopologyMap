@@ -1,0 +1,214 @@
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<script th:inline="javascript">
+
+var detailtpl04 = {
+    
+    isContentFold : true,
+    page : 1,
+
+    setDetailRatingListData : function(dataObj){
+
+        let reportTotalCountObj = dataObj.totals;
+        
+        // Count 조회
+        let totalCountWrapEle = $(".sidebar-list-style-2");
+        totalCountWrapEle.find("#all").text(reportTotalCountObj.all);
+        totalCountWrapEle.find("#opinion").text(reportTotalCountObj.opinion);
+        totalCountWrapEle.find("#question").text(reportTotalCountObj.question);
+        totalCountWrapEle.find("#report").text(reportTotalCountObj.report);
+
+        let listData = dataObj.listData;
+        for(let i=0; i<listData.length; i++){
+
+            this.setCommentListEle(listData[i]);
+        }
+
+        this.setPageNationEle(listData);
+    },
+    setCommentListEle : function(dataObj){
+
+        let commentWrapperEle = $("<div/>", {
+            "class" : "single-comment-wrapper single-comment-border",
+            "data-aos" : "fade-up",
+            "data-aos-delay" : "400"
+        });
+
+        // 프로필 사진 영역
+        let commentUserImgWrapEle = $("<div/>", {"class" : "blog-comment-img"}).css({
+            "width": "120px",
+            "height": "120px",
+            "min-width": "120px"
+        });
+        let commentUserImgEle = $("<img/>", {"src" : dataObj["userImg"]})
+        .css({
+            "background" : "#f4f4f4",
+            "border" : "1px solid #f4f4f4",
+            "width" : "120px",
+            "height": "120px"
+        })
+        .attr("onerror", "this.src='/assets/images/page/detail/profile_noimage.png'");
+
+        //let commentUserImgEle = $("<i/>", {"class" : "pe-7s-user"}).css({"font-size" : "80px"});
+        commentUserImgWrapEle.append(commentUserImgEle);
+
+        // 컨텐츠 영역
+        let commentContentEle = $("<div/>", {"class" : "blog-comment-content"}).css({"width": "calc(100% - 120px)"});
+        let commentInfoWrapEle = $("<div/>", {"class" : "comment-info-reply-wrap"});
+        let commentPEle = $("<p/>").text(dataObj.comment);
+        
+        // 내용을 기본으로 접힌 상태로 할지?
+        if(this.isContentFold){
+
+            commentPEle.addClass("fold");
+            commentContentEle.css("width", "calc(100% - 140px)");
+        }
+
+        commentContentEle.append(commentInfoWrapEle);
+        commentContentEle.append(commentPEle);
+
+        let commentInfoEle = $("<div/>", {"class" : "comment-info"});
+        let commentInfoSectionEle = $("<div/>").css({
+            "display" : "flex",
+            "gap" : "20px",
+            "align-items" : "baseline",
+            "width" : "100%",
+            "justify-content" : "space-between"
+        });
+        let dateSpanEle = $("<span/>").text(dataObj.createDate);
+        let sectionSpanEle = $("<span/>").css({"color": "#e97730"}).text(dataObj.section);
+        commentInfoSectionEle.append(dateSpanEle).append(sectionSpanEle);
+        commentInfoEle.append(commentInfoSectionEle);
+
+        let commentInfoSection2Ele = $("<div/>").css({
+            "display" : "flex",
+            "gap" : "20px",
+            "align-items" : "baseline",
+            "width" : "100%",
+            "justify-content" : "space-between"
+        });
+        let commentInfoH4Ele = $("<h4/>").text(dataObj.userId);
+        let commentInfoRatingEle = $("<div/>", {"class" : "result-rating"});
+
+        for(let i=0; i<5; i++){
+
+            let iStarEle = $("<i/>", {"class" : "ti-star"});
+            commentInfoRatingEle.append(iStarEle);
+        }
+
+        commentInfoSection2Ele.append(commentInfoH4Ele).append(commentInfoRatingEle);
+        commentInfoEle.append(commentInfoSection2Ele);
+
+        commentInfoWrapEle.append(commentInfoEle);
+
+        let commentToggleEle = $("<div/>", {"class" : "comment-reply"});
+        let btnToggleEle = $("<a/>", {
+            "class" : (this.isContentFold)? "ti-angle-down" : "ti-angle-up",
+            "href" : "javascript:void(0);",
+            "data-isfold" : (this.isContentFold)? true : false
+        }).on("click", function(e){
+
+            if($(e.currentTarget).attr("data-isfold") === "true"){
+
+                $(e.currentTarget).attr({
+                    "class" : "ti-angle-up",
+                    "data-isfold" : false
+                });
+                commentContentEle.css("width", "calc(100% - 120px)");
+            }
+            else {
+
+                $(e.currentTarget).attr({
+                    "class" : "ti-angle-down",
+                    "data-isfold" : true
+                });
+                commentContentEle.css("width", "calc(100% - 140px)");
+            }
+            void commentPEle.get(0).offsetHeight;
+            commentPEle.toggleClass('fold');
+
+            e.preventDefault();
+            e.stopPropagation();
+        });
+        commentToggleEle.append(btnToggleEle);
+        commentInfoWrapEle.append(commentToggleEle);
+
+        commentWrapperEle.append(commentUserImgWrapEle);
+        commentWrapperEle.append(commentContentEle);
+        
+        $("#ratingList .blog-comment-wrapper").append(commentWrapperEle).ready(function(){
+
+            Common.setRattingStar(commentInfoRatingEle.find(".ti-star"), dataObj.rating);
+        });
+    },
+
+    // [TODO] 페이지네이션 처리(임시로 처리한 로직이므로 DB연동시 수정 필요)
+    setPageNationEle : function(dataObj){
+
+        let paginationEle = $('<div>', {
+            "class": "pagination-style-1 aos-init",
+            "data-aos": "fade-up",
+            "data-aos-delay": "200"
+        });
+
+        let ulEle = $("<ul>");
+
+        for(let j=0; j < Math.ceil(dataObj.length / 2); j++) {
+
+            let aEle = $('<a>', { 
+                class : j+1 == this.page ? 'active' : '', 
+                href : `javascript: detailtpl04.fnPage(${j+1});`, 
+                text : j+1
+            });
+            let liEle = $('<li>').append(aEle);
+            ulEle.append(liEle);
+        }
+
+        paginationEle.append(ulEle);
+
+        $("#ratingList .blog-comment-wrapper").append(paginationEle);
+    },
+    fnPage : function(selectPage) {
+
+        $("#ratingList .blog-comment-wrapper").children().remove();
+        
+        this.page = selectPage;
+
+        Http.getJson('/assets/data/detail_data.json').then(async (data) => {
+
+            // 탭-문의/오류신고 평점목록조회
+            const tabReportData = data["tab_report"];
+            detailtpl04.setDetailRatingListData(tabReportData);
+        });
+    },
+};
+
+$(function () {  
+
+    // 평점 클릭 이벤트 적용
+    Common.setRattingStarOnClick($("#tabRating .your-rating.tab-state .ti-star"));
+
+
+    // 평점 등록하기
+    $("#tabRating #btnTabRatingSubmit").click(function(e){
+
+        let obj = {
+            rating : Common.getRattingStar($("#tabRating .your-rating.tab-state")),
+            ratingType : $("#tabRating [name=tab-ratting-group]:checked").val(),
+            detailContents : $("#tabRating .rating-form-style input[type=text]").val()
+        };
+        console.log(obj);
+
+        // 내용 출력
+        let strMsg = "";
+        strMsg += "평점 : " + obj.rating + "<br/>";
+        strMsg += "타입 선택 : " + obj.ratingType + "<br/>";
+        strMsg += "작성 내용 : " + obj.detailContents;
+
+        Util.alert(strMsg);
+
+        e.preventDefault();
+        e.stopPropagation();
+    });
+});
+</script>
+</html>

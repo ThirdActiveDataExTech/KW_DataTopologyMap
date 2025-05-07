@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cetusUser">
+
+	<select id="view" resultType="cetusUser" parameterType="Long">
+		/* cetusUser.view */
+		SELECT CU.UID
+			  ,CU.USER_ID
+			  ,CU.PASSWORD
+			  ,CU.USER_NM
+			  ,CU.USER_TEL
+			  ,CU.USER_EMAIL
+			  ,CU.APPROVE_AT
+			  ,CU.USE_AT
+			  ,CU.LAST_CONN_DT
+			  ,CU.non_approve_resn
+			  ,CU.LAST_PASSWORD_CHANGE_DE
+			  ,CU.FAIL_CNT
+			  ,CU.DELETE_AT
+		  FROM CETUS_USER CU
+	     WHERE CU.UID = #{uid}
+	</select>
+
+	<insert id="insert" parameterType="cetusUser" useGeneratedKeys="true" keyProperty="uid">
+		/* cetusUser.insert */
+		INSERT INTO CETUS_USER (
+			USER_ID
+		   ,PASSWORD
+		   ,USER_NM
+		   ,USER_TEL
+		   ,USER_EMAIL
+		   ,APPROVE_AT
+		   ,USE_AT
+		   ,LAST_CONN_DT
+		   ,REG_DT
+		   ,UPDT_DT
+		   ,REG_UID
+		   ,UPDT_UID
+		   ,LAST_PASSWORD_CHANGE_DE
+		) VALUES (
+			#{userId}
+		   ,#{password}
+		   ,#{userNm}
+		   ,#{userTel}
+		   ,#{userEmail}
+		   ,'Y'
+		   ,'Y'
+		   ,NOW()
+		   ,NOW()
+		   ,NOW()
+		   ,#{regUid}
+		   ,#{updtUid}
+		   ,NOW()
+		)
+	</insert>
+
+	<update id="update" parameterType="cetusUser">
+		/* cetusUser.update */
+		UPDATE CETUS_USER
+		   SET UPDT_UID = #{updtUid}
+		      ,UPDT_DT = NOW()
+			  ,PASSWORD = #{password}
+			  ,USER_NM = #{userNm}
+			  ,USER_TEL = #{userTel}
+			  ,USER_EMAIL = #{userEmail}
+	     WHERE UID = #{uid}
+	</update>
+
+	<update id="updateFailCnt" parameterType="cetusUser">
+		/* cetusUser.updateFailCnt */
+		UPDATE CETUS_USER
+		   SET FAIL_CNT = COALESCE(FAIL_CNT, 0) + 1
+		 WHERE USER_ID = #{userId}
+	</update>
+
+	<update id="updateUserFailCntAndChangeLastLoginDt" parameterType="cetusUser">
+		/* cetusUser.updateUserFailCntAndChangeLastLoginDt */
+		UPDATE CETUS_USER
+		   SET FAIL_CNT = 0
+		 WHERE USER_ID = #{userId}
+	</update>
+
+	<update id="updateUserUseAt" parameterType="cetusUser">
+		/* cetusUser.updateUserUseAt */
+		UPDATE CETUS_USER
+		   SET USE_AT = (CASE USE_AT WHEN 'N' THEN 'Y' ELSE 'N' END)
+		      ,FAIL_CNT = FAIL_CNT + 1
+		 WHERE USER_ID = #{userId}
+	</update>
+
+	<select id="getUserCntByUserEmail" resultType="_int" parameterType="String">
+		/* cetusUser.getUserCntByUserEmail */
+		SELECT COUNT(*)
+		  FROM CETUS_USER
+		 WHERE USER_EMAIL = #{userEmail}
+		   AND APPROVE_AT = 'Y'
+		   AND USE_AT = 'Y'
+	</select>
+
+	<select id="getUserByUserId" parameterType="String" resultType="UserFullInfo">
+		/* cetusUser.getUserByUserId */
+		SELECT CU.UID
+			  ,CU.USER_ID
+			  ,CU.PASSWORD
+			  ,CU.USER_NM
+		   	  ,CU.USER_TEL
+			  ,CU.USER_EMAIL
+			  ,CU.APPROVE_AT
+			  ,CU.USE_AT
+			  ,CU.LAST_CONN_DT
+			  ,CU.LAST_PASSWORD_CHANGE_DE
+			  ,CU.USER_STTUS_CD
+			  ,CU.FAIL_CNT
+			  ,CU.DELETE_AT
+			  ,'USER_ROLE' AS ROLE
+			  ,'사용자 권한' AS ROLE_NM
+		  FROM CETUS_USER CU
+		 WHERE CU.USER_ID = #{userId}
+	</select>
+
+	<select id="getUserInfoByUid" parameterType="Long" resultType="UserFullInfo">
+		/* cetusUser.getUserInfoByUid */
+		SELECT CU.UID
+			  ,CU.USER_ID
+			  ,CU.PASSWORD
+			  ,CU.USER_NM
+		   	  ,CU.USER_TEL
+			  ,CU.USER_EMAIL
+			  ,CU.APPROVE_AT
+			  ,CU.USE_AT
+			  ,CU.LAST_CONN_DT
+			  ,CU.LAST_PASSWORD_CHANGE_DE
+			  ,CU.USER_STTUS_CD
+			  ,CU.FAIL_CNT
+			  ,CU.DELETE_AT
+			  ,'USER_ROLE' AS ROLE
+			  ,'사용자 권한' AS ROLE_NM
+		  FROM CETUS_USER CU
+		 WHERE CU.UID = #{uid}
+	</select>
+
+	<select id="excelPageList" parameterType="UserExcelSearch" resultType="UserExcelPage">
+		/* cetusUser.excelPageList */
+		SELECT USER_ID
+			  ,USER_NM
+			  ,USER_TEL
+			  ,USER_EMAIL
+			  ,APPROVE_AT
+			  ,USE_AT
+			  ,LAST_CONN_DT
+			  ,'사용자 권한' AS ROLE_NM
+		  FROM CETUS_USER
+		 WHERE 1 = 1
+		<if test="@Ognl@isNotEmpty(approveAt)">
+		   AND APPROVE_AT = #{approveAt}
+		</if>
+		<if test="@Ognl@isNotEmpty(browseText)">
+		   AND (USER_NM LIKE '%' || #{browseText} || '%' OR USER_ID LIKE '%' || #{browseText} || '%')
+		</if>
+		 ORDER BY REG_DT DESC
+		<if test="@Ognl@isNotEmpty(startNumber) and  @Ognl@isNotEmpty(endNumber)">
+		OFFSET ${startNumber} LIMIT ${endNumber}
+		</if>
+	</select>
+
+	<select id="excelPageCount" parameterType="UserExcelSearch" resultType="int">
+		/* cetusUser.excelPageCount */
+		SELECT COUNT(*)
+		  FROM CETUS_USER
+		 WHERE 1 = 1
+		<if test="@Ognl@isNotEmpty(approveAt)">
+		   AND APPROVE_AT = #{approveAt}
+		</if>
+		<if test="@Ognl@isNotEmpty(browseText)">
+		   AND (USER_NM LIKE '%' || #{browseText} || '%' OR USER_ID LIKE '%' || #{browseText} || '%')
+		</if>
+	</select>
+
+</mapper>

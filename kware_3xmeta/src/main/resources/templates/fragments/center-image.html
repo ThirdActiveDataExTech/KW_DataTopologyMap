@@ -1,0 +1,450 @@
+<!--
+    # main image 영역
+    -> 화면에서 상단 중앙에 오는 이미지 영역 부분이다
+-->
+
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
+<!-- S: 센터에 오는 메인 이미지 (중앙센터 + 양쪽 사이드 이미지) -->
+<th:block th:fragment="main-image">
+    <link rel="stylesheet" th:href="@{'/assets/css/page/center/breadcrumb.css'}" />
+    <div class="breadcrumb-area bg-gray-4 breadcrumb-padding-1">
+        <div class="container" id="main-center-text">
+            <div class="breadcrumb-content text-center aos-init aos-animate">
+                <h2 data-aos="fade-up" data-aos-delay="200" class="aos-init aos-animate"></h2>
+                <ul data-aos="fade-up" data-aos-delay="400" class="aos-init aos-animate" id="menu-tree-ul"></ul>
+            </div>
+        </div>
+        <!-- 좌측 이미지 -->
+        <div class="breadcrumb-img-1 aos-init aos-animate">
+            <img th:src="@{'/assets/images/page/left_slide.png'}" alt="" data-aos="fade-right" data-aos-delay="200">
+        </div>
+        <!-- 우측 이미지 -->
+        <div class="breadcrumb-img-2 aos-init aos-animate">
+            <img th:src="@{'/assets/images/page/right_slide.png'}" alt="" data-aos="fade-left" data-aos-delay="200">
+        </div>
+    </div>
+    <script th:inline="javascript">
+        $(document).ready(function(e) {
+            const currentUrl = window.location.pathname;
+            Http.getJson('/assets/data/menu_data.json').then((obj) => {
+                const path = findMenuInfo_link(obj, currentUrl);
+                drawTitle(path)
+            })
+        })
+        function drawTitle(path) {
+
+            const currentMenu = path[path.length -1]
+            // 1. h2 요소에 클릭된 메뉴의 이름 넣기
+            $('#main-center-text h2').text(currentMenu.name).attr('data-uid', currentMenu.uid);
+
+            // 2. id가 "menu-tree-ul"인 ul에 메뉴 경로 추가하기
+            const $menuTreeUl = $('#menu-tree-ul');
+            $menuTreeUl.empty(); // 기존 항목 제거
+
+            // 3. 최상위 부모부터 li로 구성하여 추가 ([href]가 #일 때는 li만 추가)
+            path.forEach((menu, index) => {
+                const $li = $('<li></li>');
+                if (menu.link === "#") $li.text(menu.name);
+                else {
+                    $li.append(`<a href="${menu.link}" class="menu-a-link" data-uid="${menu.uid}">${menu.name}</a>`);
+                }
+                // 메뉴가 마지막 항목이 아니면 '>' 추가
+                if (index < path.length - 1) $li.append('<i class="ti-angle-right"></i>');
+
+                $menuTreeUl.append($li);
+            });
+            // 4. 마지막 항목 (현재 클릭된 메뉴)을 id="last-li"로 추가
+            $('#last-li').text(currentMenu.name).attr('data-uid', currentMenu.uid);
+        }
+        function findMenuInfo_uid(obj, targetUid) {
+            // 메뉴를 탐색하는 재귀 함수
+            function findMenuByUid(menuList, uid) {
+                for (let menu of menuList) {
+                    if (menu.uid == uid) return menu; // 해당 uid를 찾으면 메뉴 반환
+
+                    // 서브 메뉴가 있는 경우, 서브 메뉴에서 재귀적으로 찾기
+                    if (menu.subMenu) {
+                        const found = findMenuByUid(menu.subMenu, uid);
+                        if (found) return found;
+                    }
+                }
+                return null;
+            }
+
+            // 최상위 메뉴부터 시작해서 [targetUid]를 찾아 올라간다.
+            let currentMenu = findMenuByUid(obj, targetUid);
+            let path = [];
+
+            while (currentMenu) {
+                path.unshift({
+                    name: currentMenu.name,
+                    link: currentMenu.link || '#',  // link가 없으면 #로 설정
+                    uid: currentMenu.uid,
+                    upperUid: currentMenu.upperUid
+                });
+                if (currentMenu.upperUid === null) break;
+                currentMenu = findMenuByUid(obj, currentMenu.upperUid);
+            }
+            return path
+        }
+        function findMenuInfo_link(obj, targetLink) {
+            // 메뉴를 탐색하는 재귀 함수
+            function findMenuByLink(menuList, link) {
+                for (let menu of menuList) {
+                    if (menu.link === link) return menu; // 해당 link를 찾으면 메뉴 반환
+
+                    // 서브 메뉴가 있는 경우, 서브 메뉴에서 재귀적으로 찾기
+                    if (menu.subMenu) {
+                        const found = findMenuByLink(menu.subMenu, link);
+                        if (found) return found;
+                    }
+                }
+                return null;
+            }
+
+            // 메뉴 목록에서 uid로 메뉴를 찾는 함수
+            function findMenuByUid(menuList, uid) {
+                for (let menu of menuList) {
+                    if (menu.uid === uid) return menu;
+
+                    // 서브 메뉴가 있는 경우, 서브 메뉴에서 재귀적으로 찾기
+                    if (menu.subMenu) {
+                        const found = findMenuByUid(menu.subMenu, uid);
+                        if (found) return found;
+                    }
+                }
+                return null;
+            }
+
+            // 최상위 메뉴부터 시작해서 [targetLink]를 찾아 그 메뉴를 찾는다.
+            let currentMenu = findMenuByLink(obj, targetLink);
+            let path = [];
+
+            // 해당 메뉴가 존재하는 경우, 그 메뉴에서부터 상위 메뉴를 찾아 경로를 쌓는다.
+            while (currentMenu) {
+                path.unshift({
+                    name: currentMenu.name,
+                    link: currentMenu.link || '#',  // link가 없으면 #로 설정
+                    uid: currentMenu.uid,
+                    upperUid: currentMenu.upperUid
+                });
+                // upperUid가 null이면 최상위 메뉴에 도달한 것
+                if (currentMenu.upperUid === null) break;
+
+                // 부모 메뉴를 찾는다. (upperUid를 기준으로 찾음)
+                currentMenu = findMenuByUid(obj, currentMenu.upperUid);
+            }
+            return path;
+        }
+    </script>
+</th:block>
+<!-- E: 센터에 오는 메인 이미지 (중앙센터 + 양쪽 사이드 이미지) -->
+
+<!-- S: 센터에 오는 메인 이미지 (중앙센터 + 양쪽 사이드 이미지) + 상단 헤더바 -->
+<th:block th:fragment="main-image-title(title1='', title2='', leftImg='', rightImg='')">
+    <!--  [title1, title2, leftImg, rightImg] 정보값은 각각의 HTML 페이지에서 파라미터로 넘겨준다. -->
+    <!--  * 만일 빈값('')으로 넘어온다면, 기본값으로 보여지도록 한다. -->
+    <link rel="stylesheet" th:href="@{'/assets/css/page/center/breadcrumb.css'}" />
+    <div>
+        <div class="breadcrumb-area bg-gray-4 breadcrumb-padding-1">
+            <div class="container" id="main-center-text2"  data-aos="fade-up" data-aos-delay="200">
+                <div class="breadcrumb-content text-center aos-init aos-animate">
+                    <h2 class="aos-init aos-animate" style="margin-top: 15px;" th:text="${#strings.isEmpty(title1) ? 'AI기반 해양수산 지능형 플랫폼' : title1}"></h2>
+                    <ul class="aos-init aos-animate" id="menu-tree-ul2">
+                        <li th:text="${#strings.isEmpty(title2) ? '어장 공간정보 빅데이터 플랫폼 구축 및 활용사업' : title2}"></li>
+                    </ul>
+                </div>
+            </div>
+            <!-- 좌측 이미지 -->
+            <div class="breadcrumb-img-1 aos-init aos-animate">
+                <img th:src="${#strings.isEmpty(leftImg) ? '/assets/images/page/left_slide.png' : leftImg}" alt="" data-aos="fade-right" data-aos-delay="200">
+            </div>
+            <!-- 우측 이미지 -->
+            <div class="breadcrumb-img-2 aos-init aos-animate">
+                <img th:src="${#strings.isEmpty(rightImg) ? '/assets/images/page/right_slide.png' : rightImg}" alt="" data-aos="fade-left" data-aos-delay="200">
+            </div>
+        </div>
+        <div class="container" style="margin-top: 50px;" data-aos="fade-up" data-aos-delay="200">
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="breadcrumb-content">
+                        <ul class="justify-content-start" id="content-tree-ul">
+                            <li><a href="#">Home</a></li>
+                            <li><i class="ti-angle-right"></i></li>
+                            <li></li>
+                        </ul>
+                        <h2 id="content-tree-text"></h2>
+                    </div>
+                </div>
+                <div class="col-lg-6 justify-content-end" style="flex-direction: row; display: flex;">
+                </div>
+            </div>
+        </div>
+    </div>
+    <script th:inline="javascript">
+
+        $(document).ready(function(e) {
+            let currentUrl = window.location.pathname;
+            Http.getJson('/assets/data/menu_data.json').then((obj) => {
+                if((currentUrl === "/asp") || (currentUrl === "/asp/") || currentUrl === "/asp/home") currentUrl = '/asp/home'
+                const path = findMenuInfo_link(obj, currentUrl);
+                /*drawTitle(path)*/ // 추후 [visibility] hidden 처리에 따라 주석 풀기
+                drawContent(path)
+            })
+        })
+
+        function drawContent(path) {
+            const $contentTreeUl = $('#content-tree-ul');
+            $contentTreeUl.empty(); // 기존 항목을 지움
+
+            // 최상위 메뉴부터 li로 구성하여 추가
+            path.forEach((menu, index) => {
+                const $li = $('<li></li>');
+                if (menu.link === "#") $li.text(menu.name);
+                else $li.append(`<a href="${menu.link}" class="menu-a-link" data-uid="${menu.uid}">${menu.name}</a>`);
+
+                // 메뉴가 마지막 항목이 아니면 '>' 추가
+                if (index < path.length - 1) $li.append('<i class="ti-angle-right"></i>');
+                $contentTreeUl.append($li);
+            });
+
+            const currentMenu = path[path.length -1]
+            // h2 요소에 클릭된 메뉴의 이름 넣기
+            $('#content-tree-text').text(currentMenu.name).attr('data-uid', currentMenu.uid);
+        }
+
+        function drawTitle(path) {
+            const currentMenu = path[path.length -1]
+            // 1. h2 요소에 클릭된 메뉴의 이름 넣기
+            $('#main-center-text2 h2').text(currentMenu.name).attr('data-uid', currentMenu.uid);
+
+            // 2. id가 "menu-tree-ul2"인 ul에 메뉴 경로 추가하기
+            const $menuTreeUl = $('#menu-tree-ul2');
+            $menuTreeUl.empty(); // 기존 항목 제거
+
+            // 3. 최상위 부모부터 li로 구성하여 추가 ([href]가 #일 때는 li만 추가)
+            path.forEach((menu, index) => {
+                const $li = $('<li></li>');
+                if (menu.link === "#") $li.text(menu.name);
+                else {
+                    $li.append(`<a href="${menu.link}" class="menu-a-link" data-uid="${menu.uid}">${menu.name}</a>`);
+                }
+                // 메뉴가 마지막 항목이 아니면 '>' 추가
+                if (index < path.length - 1) $li.append('<i class="ti-angle-right"></i>');
+
+                $menuTreeUl.append($li);
+            });
+            // 4. 마지막 항목 (현재 클릭된 메뉴)을 id="last-li2"로 추가
+            $('#last-li2').text(currentMenu.name).attr('data-uid', currentMenu.uid);
+        }
+
+        function findMenuInfo_uid(obj, targetUid) {
+            // 메뉴를 탐색하는 재귀 함수
+            function findMenuByUid(menuList, uid) {
+                for (let menu of menuList) {
+                    if (menu.uid == uid) return menu; // 해당 uid를 찾으면 메뉴 반환
+
+                    // 서브 메뉴가 있는 경우, 서브 메뉴에서 재귀적으로 찾기
+                    if (menu.subMenu) {
+                        const found = findMenuByUid(menu.subMenu, uid);
+                        if (found) return found;
+                    }
+                }
+                return null;
+            }
+
+            // 최상위 메뉴부터 시작해서 [targetUid]를 찾아 올라간다.
+            let currentMenu = findMenuByUid(obj, targetUid);
+            let path = [];
+
+            while (currentMenu) {
+                path.unshift({
+                    name: currentMenu.name,
+                    link: currentMenu.link || '#',  // link가 없으면 #로 설정
+                    uid: currentMenu.uid,
+                    upperUid: currentMenu.upperUid
+                });
+                if (currentMenu.upperUid === null) break;
+                currentMenu = findMenuByUid(obj, currentMenu.upperUid);
+            }
+            return path
+        }
+
+        function findMenuInfo_link(obj, targetLink) {
+            // 메뉴를 탐색하는 재귀 함수
+            function findMenuByLink(menuList, link) {
+                for (let menu of menuList) {
+                    if (menu.link === link) return menu; // 해당 link를 찾으면 메뉴 반환
+
+                    // 서브 메뉴가 있는 경우, 서브 메뉴에서 재귀적으로 찾기
+                    if (menu.subMenu) {
+                        const found = findMenuByLink(menu.subMenu, link);
+                        if (found) return found;
+                    }
+                }
+                return null;
+            }
+
+            // 메뉴 목록에서 uid로 메뉴를 찾는 함수
+            function findMenuByUid(menuList, uid) {
+                for (let menu of menuList) {
+                    if (menu.uid === uid) return menu;
+
+                    // 서브 메뉴가 있는 경우, 서브 메뉴에서 재귀적으로 찾기
+                    if (menu.subMenu) {
+                        const found = findMenuByUid(menu.subMenu, uid);
+                        if (found) return found;
+                    }
+                }
+                return null;
+            }
+
+            // 최상위 메뉴부터 시작해서 [targetLink]를 찾아 그 메뉴를 찾는다.
+            let currentMenu = findMenuByLink(obj, targetLink);
+            let path = [];
+
+            // 해당 메뉴가 존재하는 경우, 그 메뉴에서부터 상위 메뉴를 찾아 경로를 쌓는다.
+            while (currentMenu) {
+                path.unshift({
+                    name: currentMenu.name,
+                    link: currentMenu.link || '#',  // link가 없으면 #로 설정
+                    uid: currentMenu.uid,
+                    upperUid: currentMenu.upperUid
+                });
+                // upperUid가 null이면 최상위 메뉴에 도달한 것
+                if (currentMenu.upperUid === null) break;
+
+                // 부모 메뉴를 찾는다. (upperUid를 기준으로 찾음)
+                currentMenu = findMenuByUid(obj, currentMenu.upperUid);
+            }
+            return path;
+        }
+    </script>
+</th:block>
+<!-- E: 센터에 오는 메인 이미지 (중앙센터 + 양쪽 사이드 이미지) + 상단 헤더바 -->
+
+<!-- S: 센터에 오는 메인 이미지 (메뉴 데이터에 없는 경우) -->
+<th:block th:fragment="center-image(title)">
+    <link rel="stylesheet" th:href="@{'/assets/css/page/center/breadcrumb.css'}" />
+    <div class="breadcrumb-area bg-gray-4 breadcrumb-padding-1">
+        <div class="container">
+            <div class="breadcrumb-content text-center aos-init aos-animate">
+                <h2 data-aos="fade-up" data-aos-delay="200" class="aos-init aos-animate" th:text="${title}"></h2>
+                <ul>
+                    <li><a href="#">Home</a></li>
+                    <li><i class="ti-angle-right"></i></li>
+                    <li th:text="${title}"></li>
+                </ul>
+            </div>
+        </div>
+        <!-- 좌측 이미지 -->
+        <div class="breadcrumb-img-1 aos-init aos-animate">
+            <img th:src="@{'/assets/images/page/left_slide.png'}" alt="" data-aos="fade-right" data-aos-delay="200">
+        </div>
+        <!-- 우측 이미지 -->
+        <div class="breadcrumb-img-2 aos-init aos-animate">
+            <img th:src="@{'/assets/images/page/right_slide.png'}" alt="" data-aos="fade-left" data-aos-delay="200">
+        </div>
+    </div>
+</th:block>
+<!-- E: 센터에 오는 메인 이미지 (메뉴 데이터에 없는 경우) -->
+
+<!-- S: 센터에 오는 메인 이미지 (중앙센터 + 양쪽 사이드 이미지) + 상단 헤더바 (메뉴 데이터에 없는 경우) -->
+<th:block th:fragment="center-image-title(title='', title1='', title2='', leftImg='', rightImg='')">
+    <!--  [title, title1, title2, leftImg, rightImg] 정보값은 각각의 HTML 페이지에서 파라미터로 넘겨준다. -->
+    <!--  * 만일 빈값('')으로 넘어온다면, 기본값으로 보여지도록 한다. -->
+    <!--  * [title]값은 기본적으로 넘겨주도록 한다. -->
+    <link rel="stylesheet" th:href="@{'/assets/css/page/center/breadcrumb.css'}" />
+    <div>
+        <div class="breadcrumb-area bg-gray-4 breadcrumb-padding-1">
+            <div class="container" data-aos="fade-up" data-aos-delay="200">
+                <div class="breadcrumb-content text-center aos-init aos-animate">
+                    <h2 class="aos-init aos-animate" style="margin-top: 15px;" th:text="${#strings.isEmpty(title1) ? 'AI기반 해양수산 지능형 플랫폼' : title1}"></h2>
+                    <ul class="aos-init aos-animate">
+                        <li th:text="${#strings.isEmpty(title2) ? '어장 공간정보 빅데이터 플랫폼 구축 및 활용사업' : title2}"></li>
+                    </ul>
+                </div>
+            </div>
+            <!-- 좌측 이미지 -->
+            <div class="breadcrumb-img-1 aos-init aos-animate">
+                <img th:src="${#strings.isEmpty(leftImg) ? '/assets/images/page/left_slide.png' : leftImg}" alt="" data-aos="fade-right" data-aos-delay="200">
+            </div>
+            <!-- 우측 이미지 -->
+            <div class="breadcrumb-img-2 aos-init aos-animate">
+                <img th:src="${#strings.isEmpty(rightImg) ? '/assets/images/page/right_slide.png' : rightImg}" alt="" data-aos="fade-left" data-aos-delay="200">
+            </div>
+        </div>
+        <div class="container" style="margin-top: 50px;" data-aos="fade-up" data-aos-delay="200">
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="breadcrumb-content">
+                        <ul class="justify-content-start">
+                            <li><a href="#">Home</a></li>
+                            <li><i class="ti-angle-right"></i></li>
+                            <li th:text="${title}"></li>
+                        </ul>
+                        <h2 th:text="${title}"></h2>
+                    </div>
+                </div>
+                <div class="col-lg-6 justify-content-end" style="flex-direction: row; display: flex;">
+                </div>
+            </div>
+        </div>
+    </div>
+</th:block>
+<!-- E: 센터에 오는 메인 이미지 (중앙센터 + 양쪽 사이드 이미지) + 상단 헤더바 (메뉴 데이터에 없는 경우) -->
+
+<!-- S: 센터에 오는 메인 이미지 (중앙센터 + 양쪽 사이드 이미지) + 돌아가기버튼 헤더바 (메뉴 데이터에 없는 경우) -->
+<th:block th:fragment="center-image-title-back(backtitle='', backUrl='', title1='', title2='', leftImg='', rightImg='')">
+    <!--  [title, title1, title2, leftImg, rightImg] 정보값은 각각의 HTML 페이지에서 파라미터로 넘겨준다. -->
+    <!--  * 만일 빈값('')으로 넘어온다면, 기본값으로 보여지도록 한다. -->
+    <!--  * [title]값은 기본적으로 넘겨주도록 한다. -->
+    <link rel="stylesheet" th:href="@{'/assets/css/page/center/breadcrumb.css'}" />
+    <div>
+        <div class="breadcrumb-area bg-gray-4 breadcrumb-padding-1">
+            <div class="container" data-aos="fade-up" data-aos-delay="200">
+                <div class="breadcrumb-content text-center aos-init aos-animate">
+                    <h2 class="aos-init aos-animate" style="margin-top: 15px;" th:text="${#strings.isEmpty(title1) ? 'AI기반 해양수산 지능형 플랫폼' : title1}"></h2>
+                    <ul class="aos-init aos-animate">
+                        <li th:text="${#strings.isEmpty(title2) ? '어장 공간정보 빅데이터 플랫폼 구축 및 활용사업' : title2}"></li>
+                    </ul>
+                </div>
+            </div>
+            <!-- 좌측 이미지 -->
+            <div class="breadcrumb-img-1 aos-init aos-animate">
+                <img th:src="${#strings.isEmpty(leftImg) ? '/assets/images/page/left_slide.png' : leftImg}" alt="" data-aos="fade-right" data-aos-delay="200">
+            </div>
+            <!-- 우측 이미지 -->
+            <div class="breadcrumb-img-2 aos-init aos-animate">
+                <img th:src="${#strings.isEmpty(rightImg) ? '/assets/images/page/right_slide.png' : rightImg}" alt="" data-aos="fade-left" data-aos-delay="200">
+            </div>
+        </div>
+        <div class="container" style="margin-top: 50px;" data-aos="fade-up" data-aos-delay="200">
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="breadcrumb-content">
+                        <div class="top-info">
+                            <button class="circle-btn" th:onclick="'location.href=\''+ @{${backUrl}} + '\''">
+                                    ←
+                            </button>
+                            <a th:href="${backUrl}" style="text-decoration: none;">
+                                <h4 class="title-text" th:text="${backtitle}" style="cursor: pointer;"></h4>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 justify-content-end" style="flex-direction: row; display: flex;">
+                </div>
+            </div>
+        </div>
+    </div>
+    <script th:inline="javascript">
+        $(document).ready(function(e) {
+
+        });
+    </script>
+</th:block>
+<!-- E: 센터에 오는 메인 이미지 (중앙센터 + 양쪽 사이드 이미지) + 돌아가기버튼 헤더바 (메뉴 데이터에 없는 경우) -->
+
+</html>

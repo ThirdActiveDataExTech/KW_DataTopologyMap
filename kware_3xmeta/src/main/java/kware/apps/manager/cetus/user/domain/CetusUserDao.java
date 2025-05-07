@@ -1,0 +1,47 @@
+package kware.apps.manager.cetus.user.domain;
+
+import cetus.bean.Page;
+import cetus.bean.Pageable;
+import cetus.dao.SuperDao;
+import kware.apps.manager.cetus.user.dto.request.UserExcelSearch;
+import kware.apps.manager.cetus.user.dto.response.UserExcelPage;
+import kware.apps.manager.cetus.user.dto.response.UserFullInfo;
+import kware.apps.manager.cetus.user.dto.response.UserView;
+import org.springframework.stereotype.Component;
+
+
+@Component
+public class CetusUserDao extends SuperDao<CetusUser> {
+
+    public CetusUserDao() {
+        super("cetusUser");
+    }
+
+    public UserFullInfo getUserByUserId(String userId) {
+        return selectOne("getUserByUserId", userId);
+    }
+
+    public int updateFailCnt(CetusUser bean) {
+        return update("updateFailCnt", bean);
+    }
+
+    public Page<UserExcelPage> excelPage(UserExcelSearch bean, Pageable pageable) {
+        return page("excelPageList", "excelPageCount", bean , pageable);
+    }
+
+    public int updateUserFailCntAndChangeLastLoginDt(CetusUser bean) {
+        return update("updateUserFailCntAndChangeLastLoginDt", bean);
+    }
+
+    public int updateUserUseAt(CetusUser bean) {
+        return update("updateUserUseAt", bean);
+    }
+
+    public Integer getUserCntByUserEmail(String userEmail) {
+        return selectOne("getUserCntByUserEmail", userEmail);
+    }
+
+    public UserView getUserInfoByUid(Long userUid) {
+        return selectOne("getUserInfoByUid", userUid);
+    }
+}

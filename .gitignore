@@ -15,3 +15,14 @@ node_modules
 *.zip
 dist/assets/models/aqua
 dist/assets/data/aqua.json
+
+#
+logs
+bin
+build
+.svn
+.gradle
+.settings
+kware_3xmeta/src/main/resources/static/assets/*
+application.yml
+application-*.yml

@@ -1,0 +1,236 @@
+<!-- footer -->
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<th:block th:fragment="footer">
+    <style>
+    .footer-about .footer-logo a img {
+        max-width: 160px;
+    }
+    .footer-widget h3.footer-title {
+        font-weight: 800;
+    }
+    .footer-about p, 
+    .footer-list ul li a{
+        font-weight: 500;
+        color: #414141;
+    }
+    </style>
+    <footer class="footer-area">
+
+        <!-- S: footer detail -->
+        <div class="bg-gray-2">
+            <div class="container">
+                <div class="footer-top pt-80 pb-35">
+                    <div class="row" style="justify-content: space-between;">
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- E: footer detail -->
+
+        <!-- S: footer -->
+        <div class="bg-gray-3">
+            <div class="container">
+                <div class="footer-bottom copyright text-center bg-gray-3">
+                    <p></p>
+                </div>
+            </div>
+        </div>
+        <!-- E: footer -->
+    </footer>
+    <script th:src="@{'/assets/js/vendor/jquery-3.6.0.min.js'}"></script>
+    <script th:inline="javascript">
+    var footerDataObj = {
+
+        footerDataUrl: "/assets/data/footer_data.json",
+        
+        getFooterData: async function () {
+
+            let response = await fetch(this.footerDataUrl);
+
+            if (!response.ok) {
+
+                throw new Error("Failed to fetch footer data");
+            }
+            return await response.json();
+        },
+
+        createFooter: async function (targetEle) {
+
+            try {
+                
+                let footerDataObj = await this.getFooterData();
+                const self = this; // `this` 참조 유지
+
+                $.each(footerDataObj, function (idx, val) {
+
+                    const footerDataEle = self.createFooterElement(val); // `self`로 메서드 호출
+                    targetEle.append(footerDataEle);
+                });
+            } 
+            catch (error) {
+
+                console.error("Error fetching menu data:", error);
+            }
+        },
+
+        createFooterElement: function (_footerDataObj) {
+
+            // 전체 초기화
+            $(".footer-top .row .section").remove();
+
+            let sectionListData = _footerDataObj.sections;
+
+            for(let i=0; i<sectionListData.length; i++){
+
+                let nodeEle = null;
+                
+                if(sectionListData[i].id === "company"){
+
+                    nodeEle = this.setCompanyLogoAreaEle(sectionListData[i]);
+                }
+                else if(sectionListData[i].id === "getInTouch"){
+
+                    nodeEle = this.setGetInTouchAreaEle(sectionListData[i]);
+                }
+                else {
+
+                    nodeEle = this.setEtcAreaEle(sectionListData[i]);
+                }
+
+                if(nodeEle){
+
+                    $(".footer-top .row").append(nodeEle);
+                }
+            }
+
+            // copyRight
+            $(".footer-bottom.copyright p").html(_footerDataObj.copyright);
+        },
+
+        setCompanyLogoAreaEle : function(dataObj){
+
+
+            let sectionEle = $("<div/>", {
+                class : "col-lg-" + dataObj.colWidth + " col-md-6 col-sm-6 col-12 section"
+            });
+            let footerWidgetWrapEle = $("<div/>", {class : "footer-widget footer-about mb-40"});
+            
+            if(dataObj.marginLeftStyle){
+
+                footerWidgetWrapEle.addClass("footer-widget-margin-" + dataObj.marginLeftStyle);
+            }
+
+            let footerLogoEle = $("<div/>", {class : "footer-logo"});
+            let footerLogoAEle = $("<a/>", {href : dataObj.pageUrl});
+            let footerLogoAImgEle = $("<img/>", {src : dataObj.logoImgUrl});
+
+            footerLogoAEle.append(footerLogoAImgEle);
+            footerLogoEle.append(footerLogoAEle);
+
+            let systemNmEle = $("<p/>", {id : "systemNm"}).html(dataObj.systemNm);
+            let partnerAreaEle = $("<div/>", {class : "partner-wrap"});
+
+            const parter = dataObj.partnerCompanyList;
+            for(let i=0; i<parter.length; i++){
+
+                let paymentImgAreaEle = $("<div/>", {"class" : "payment-img"});
+                let paymentImgAEle = $("<a/>", {"href" : parter[i].pageUrl});
+                let paymentImgEle = $("<img/>", {"src" : parter[i].logoImgUrl, "alt" : "logo"});
+
+                paymentImgAEle.append(paymentImgEle);
+                paymentImgAreaEle.append(paymentImgAEle);
+
+                partnerAreaEle.append(paymentImgAreaEle);
+            }
+
+            footerWidgetWrapEle.append(footerLogoEle);
+            footerWidgetWrapEle.append(systemNmEle);
+            footerWidgetWrapEle.append(partnerAreaEle);
+            sectionEle.append(footerWidgetWrapEle);
+
+            return sectionEle;
+        },
+
+        setGetInTouchAreaEle : function(dataObj){
+
+            let sectionEle = $("<div/>", {
+                class : "col-lg-" + dataObj.colWidth + " col-md-6 col-sm-6 col-12 section"
+            });
+            let footerWidgetWrapEle = $("<div/>", {class : "footer-widget footer-address mb-40"});
+
+            if(dataObj.marginLeftStyle){
+
+                footerWidgetWrapEle.addClass("footer-widget-margin-" + dataObj.marginLeftStyle);
+            }
+
+            let footerTitleEle = $("<h3/>", {class : "footer-title"}).html(dataObj.title);
+            let ulEle = $("<ul/>");
+            let openTimeEle = $("<div/>", {class : "open-time"});
+            const listData = dataObj.items;
+
+            for(let i=0; i<listData.length; i++){
+
+                if(listData[i].label === "etc"){
+
+                    let openTimePEle = $("<p/>").html(listData[i].data);
+                    openTimeEle.append(openTimePEle);
+                }
+                else {
+
+                    let liEle = $("<li/>");
+                    let labelEle = $("<span/>").html(listData[i].label + " : ");
+                    liEle.append(labelEle).append(listData[i].data);
+                    ulEle.append(liEle);
+                }
+            }
+            
+            footerWidgetWrapEle.append(footerTitleEle);
+            footerWidgetWrapEle.append(ulEle);
+            footerWidgetWrapEle.append(openTimeEle);
+            sectionEle.append(footerWidgetWrapEle);
+
+            return sectionEle;
+        },
+
+        setEtcAreaEle : function(dataObj){
+
+            let sectionEle = $("<div/>", {
+                class : "col-lg-" + dataObj.colWidth + " col-md-6 col-sm-6 col-12 section"
+            });
+            let footerWidgetWrapEle = $("<div/>", {class : "footer-widget footer-list mb-40"});
+
+            if(dataObj.marginLeftStyle){
+
+                footerWidgetWrapEle.addClass("footer-widget-margin-" + dataObj.marginLeftStyle);
+            }
+
+            let footerTitleEle = $("<h3/>", {class : "footer-title"}).html(dataObj.title);
+            let ulEle = $("<ul/>");
+            const listData = dataObj.items;
+
+            for(let i=0; i<listData.length; i++){
+
+                let liEle = $("<li/>");
+                let aEle = $("<a/>", {href : listData[i].pageUrl, class: "menu-a-link"}).html(listData[i].title);
+                liEle.append(aEle);
+                ulEle.append(liEle);
+            }
+
+            footerWidgetWrapEle.append(footerTitleEle);
+            footerWidgetWrapEle.append(ulEle);
+            sectionEle.append(footerWidgetWrapEle);
+
+            return sectionEle;
+        },
+    };
+
+    $(function() {
+
+        let footerWrap = $(".footer-area");
+        footerDataObj.createFooter(footerWrap);
+
+    });
+    </script>
+</th:block>
+</html>

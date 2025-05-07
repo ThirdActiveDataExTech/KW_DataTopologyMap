@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/default2}">
+
+<!-- (방법1) [title1, title2]처럼 [AspController]에서 모델로 내려준다. (추후 DB 사용 고려) -->
+<!-- (방법2) [leftImg, rightImg]처럼 각각의 html 페이지에서 하드코딩 -->
+<th:block layout:fragment="center-image">
+    <th:block th:with="title1=${title1}, title2=${title2}, leftImg='', rightImg='/assets/images/page/right_slide.png'">
+        <th:block th:replace="fragments/center-image :: main-image-title(${title1}, ${title2}, ${leftImg}, ${rightImg})"></th:block>
+    </th:block>
+</th:block>
+
+<th:block layout:fragment="head">
+    <link rel="stylesheet" th:href="@{'/assets/css/page/list.css'}" />
+</th:block>
+<th:block layout:fragment="content">
+  <div class="page-area page-responsive pt-80 pb-100">
+    <div class="container">
+      <div class="row flex-row-reverse">
+        <div class="col-lg-9">
+          <div class="page-topbar-wrapper mb-40">
+            <div class="page-topbar-left">
+              <div class="showing-item">
+                <span id="showing-card">
+                    <!-- Showing 1–12 of 60 results -->
+                </span>
+                <span id="showing-list">
+                    <!-- Showing 1–12 of 60 results -->
+                </span>
+              </div>
+            </div>
+            <div class="page-topbar-right">
+                <div class="page-sorting-area">
+                    <select class="nice-select nice-select-style-1">
+                        <option value="title">이름순</option>
+                        <option value="update">업데이트순</option>
+                        <option value="rating">별점순</option>
+                    </select>
+                </div>
+              <div class="page-view-mode nav" role="tablist">
+                <a class="active" href="#shop-1" data-bs-toggle="tab" aria-selected="true" tabindex="-1" role="tab" onclick="list.fnTab('card')"><i class=" ti-layout-grid3 "></i> </a>
+                <a href="#shop-2" data-bs-toggle="tab" aria-selected="false" role="tab" onclick="list.fnTab('list')"><i class=" ti-view-list-alt "></i></a>
+              </div>
+            </div>
+          </div>
+          <div class="page-bottom-area">
+            <div class="tab-content jump">
+              <div id="shop-1" class="tab-pane active" role="tabpanel">
+                <div class="row">
+                  <!-- card view -->
+                </div>
+                <div id="card-pagination" class="pagination-style-1">
+                    <!-- card pagination -->
+                </div>
+              </div>
+              <div id="shop-2" class="tab-pane" role="tabpanel">
+                <!-- list view -->
+                <!-- list pagination -->
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-3">
+          <div class="sidebar-wrapper">
+            <div class="sidebar-widget mb-40 aos-init aos-animate" data-aos="fade-up" data-aos-delay="200">
+              <div class="search-wrap-2">
+                <form class="search-2-form" id="searchForm" action="#">
+                  <input id="keyword" placeholder="검색어를 입력하세요" type="text">
+                  <button class="button-search"><i class=" ti-search "></i></button>
+                </form>
+              </div>
+            </div>
+            <div class="sidebar-widget sidebar-widget-border mb-40 pb-35" data-aos="fade-up" data-aos-delay="200">
+                <div class="sidebar-widget-title mb-25">
+                    <h3>카테고리</h3>
+                </div>
+                <div id="categories" class="sidebar-widget-color sidebar-list-style">
+                </div>
+            </div>
+            <div class="sidebar-widget sidebar-widget-border mb-40 pb-35" data-aos="fade-up" data-aos-delay="200">
+                <div class="sidebar-widget-title mb-25">
+                    <h3>제공기관</h3>
+                </div>
+                <div  id="provider" class="sidebar-widget-color sidebar-list-style">
+                </div>
+            </div>
+            <div class="sidebar-widget sidebar-widget-border mb-40 pb-35" data-aos="fade-up" data-aos-delay="200">
+                <div class="sidebar-widget-title mb-25">
+                    <h3>데이터 타입</h3>
+                </div>
+                <div id="dataType" class="sidebar-widget-color sidebar-list-style">
+                </div>
+            </div>
+            <div class="sidebar-widget sidebar-widget-border mb-40 pb-35" data-aos="fade-up" data-aos-delay="200">
+                <div class="sidebar-widget-title mb-30">
+                    <h3>등록일</h3>
+                </div>
+                <div class="page-filter">
+                    <div id="slider-range"></div>
+                    <div class="page-slider-amount">
+                        <div class="label-input">
+                            <input type="text" id="amount" name="price" style="width: 100%" />
+                        </div>
+                        <button type="button" id="date-btn">적용</button>
+                    </div>
+                </div>
+            </div>
+            <div class="sidebar-widget" data-aos="fade-up" data-aos-delay="200">
+                <div class="sidebar-widget-title mb-25">
+                    <h3>태그</h3>
+                </div>
+                <div id="tags" class="sidebar-widget-tag">
+                </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</th:block>
+
+<th:block layout:fragment="script">
+  <script th:src="@{'/assets/js/page/list.js'}"></script>
+  <script th:inline="javascript">
+    $(function() {
+        $('#showing-list').hide();
+
+        list.pageList();
+
+        // 등록일 slider
+        $('#slider-range').slider({
+            range: true,
+            min: 0,
+            max: 365,
+            values: [0, 365],
+            slide: function(event, ui) {
+                
+                $('#amount').val(list.dateFormat(ui.values[0]) + " - " + list.dateFormat(ui.values[1]));
+            }
+        });
+        $('#amount').val( list.dateFormat($('#slider-range').slider("values", 0)) +
+            " - " + list.dateFormat($('#slider-range').slider("values", 1)));
+            
+
+        // 정렬순서 변경
+        $('.nice-select').change(function() {
+            let sort = $(this).val();
+            list.setSort(sort);
+            list.fnPage(1);
+        });
+
+        // 검색어 검색
+        $('#searchForm').on('keypress', function(event) {
+            if (event.key === 'Enter') {
+                event.preventDefault(); // 기본 동작(폼 제출) 막기
+                
+                let keyword = $('#keyword').val()
+                list.setKeyword(keyword);
+                list.fnPage(1);
+            }
+        });
+
+        // 검색조건 검색
+        $(document).on('change', 'input[type="checkbox"]', function() {
+
+            const type = $(this).attr('id').split('_')[0];
+            const value = $(this).attr('value');
+
+            if ($(this).is(':checked')) {
+                list.param[type].push(value);
+            } else {
+                list.param[type] = list.param[type].filter(item => item !== value);
+            }
+            
+            list.fnPage(1);
+        });
+        
+        // 등록일 검색
+        $("#date-btn").click(function() {
+
+            list.param['date'][0] = list.dateFormat($('#slider-range').slider("values", 0));
+            list.param['date'][1] = list.dateFormat($('#slider-range').slider("values", 1));
+
+            list.fnPage(1);
+        });
+
+
+        // 뷰 버튼 클릭
+        $(document).on('click', '.detail-btn', function() {
+            window.location.href = '/asp/detail'
+        });
+
+        // 좋아요 버튼 클릭
+        $(document).on('click', '.like-content-btn', function(e) {
+            list.likeClickEvent(this);
+        })
+
+    })
+        
+  </script>
+</th:block>
+</html>

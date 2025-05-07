@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/default}">
+
+<th:block layout:fragment="center-image">
+    <th:block th:with="backtitle='사용자 상세 정보', backUrl='/manager/cetus/user', title1=${title1}, title2=${title2}, leftImg='', rightImg=''">
+        <th:block th:replace="fragments/center-image :: center-image-title-back(${backtitle}, ${backUrl}, ${title1}, ${title2}, ${leftImg}, ${rightImg})"></th:block>
+    </th:block>
+</th:block>
+
+<th:block layout:fragment="head">
+    <style>
+        .sidebar-container {
+            width: 100%;
+            padding: 15px;
+            border: 1px solid #eeeeee;
+        }
+
+        .profile-section {
+            margin-top: 20px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .profile-img-wrapper {
+            position: relative;
+            display: inline-block;
+        }
+
+        .profile-img {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            background-color: #eee;
+        }
+
+        /* 카메라 아이콘 버튼 */
+        .camera-icon-btn {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            background-color: #d7e4f5;
+            border: none;
+            border-radius: 100%;
+            cursor: pointer;
+            padding: 10px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* 카메라 아이콘 자체 */
+        .camera-icon {
+            font-size: 22px;
+            color: #333;
+        }
+        .camera-icon:hover {
+            font-weight: bold;
+        }
+
+
+        /* 드롭다운 메뉴 */
+        .camera-dropdown-menu {
+            position: absolute;
+            top: 100%;
+
+            left: auto;
+            right: -100%;
+            margin-top: 3px; /* 버튼과 약간 간격 */
+
+            background-color: #fff;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            z-index: 10;
+            padding: 5px 0;
+            width: 140px; /* 충분한 너비로 고정 */
+            display: none;
+            padding: 10px 10px 10px !important;
+            box-sizing: border-box; /* 내부 padding 포함 너비 계산 */
+        }
+        /* ✅ 작은 화면 대응 (왼쪽 아래로 붙게) */
+        @media (max-width: 420px) {
+            .camera-dropdown-menu {
+                right: auto;
+                left: 0;
+                margin-top: 6px;
+            }
+        }
+        .camera-dropdown-menu button {
+            width: 100%;
+            background-color: #d7e4f5;
+            border: none;
+            padding: 8px 10px;
+            font-size: 13px;
+            color: #1a2a40;
+            text-align: center;
+            cursor: pointer;
+        }
+        .camera-dropdown-menu button:last-child {
+            margin-bottom: 1px;
+        }
+
+        .camera-dropdown-menu button:first-child {
+            margin-bottom: 5px;
+        }
+
+
+        /* 프로필 텍스트 */
+        .profile-info {
+            margin-top: 10px;
+            font-size: 14px;
+            color: #333;
+            margin-bottom: 35px;
+        }
+
+        /* 메뉴 버튼 영역 */
+        .menu-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        /* 메뉴 버튼 스타일 */
+        .menu-btn {
+            background-color: #d7e4f5;
+            border-radius: 5px;
+            border: none;
+            padding: 6px;               /* 높이 줄임 */
+            font-size: 13px;
+            cursor: pointer;
+            text-align: center;
+            color: #1a3e6e;
+        }
+        .menu-btn:last-child {
+            margin-bottom: 20px; /* 원하는 여백 값으로 조절 가능 */
+        }
+        .menu-btn:hover {
+            font-weight: bold;
+        }
+        .menu-btn.active {
+            font-weight: bold;
+            background-color: #b5cbf1;
+        }
+    </style>
+</th:block>
+
+<th:block layout:fragment="content">
+    <div class="my-account-wrapper pb-100 pt-30">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <!-- My Account Page Start -->
+                    <div class="myaccount-page-wrapper">
+                        <!-- My Account Tab Menu Start -->
+                        <div class="row">
+                            <div class="col-lg-4 col-md-4">
+                                <div class="sidebar-container">
+                                    <!-- 프로필 이미지 영역 -->
+                                    <div class="profile-section">
+                                        <div class="profile-img-wrapper">
+                                            <img src="/assets/images/page/detail/profile_noimage.png" alt="Profile" class="profile-img">
+                                            <button class="camera-icon-btn dropdown-toggle" id="cameraBtn">
+                                                <i class="ti-camera camera-icon"></i>
+                                            </button>
+
+                                            <!-- 드롭다운 메뉴 -->
+                                            <div class="dropdown-menu camera-dropdown-menu" id="cameraDropdown" style="display: none;">
+                                                <button class="menu-btn" onclick="resetToDefault()">기본 이미지로</button>
+                                                <button class="menu-btn" onclick="uploadNewImage()">새 이미지 등록</button>
+                                            </div>
+                                        </div>
+                                        <div class="profile-info">
+                                            <strong>홍길동</strong>
+                                            <div>케이워어(주)</div>
+                                        </div>
+                                    </div>
+
+                                    <!-- 메뉴 버튼 영역 -->
+                                    <div class="menu-buttons">
+                                        <button class="menu-btn active" data-target="#user-info">사용자 정보</button>
+                                        <button class="menu-btn" data-target="#user-password">패스워드</button>
+                                        <button class="menu-btn" data-target="#user-board">게시물</button>
+                                        <button class="menu-btn" data-target="#user-hist">활동기록</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- My Account Tab Menu End -->
+                            <!-- My Account Tab Content Start -->
+                            <div class="col-lg-8 col-md-8">
+                                <div class="tab-content" id="myaccountContent">
+
+                                    <!-- Single Tab Content Start -->
+                                    <div class="tab-pane fade show active" id="user-info" role="tabpanel">
+                                        <div class="myaccount-content">
+                                            <h3>Dashboard</h3>
+                                            <div class="welcome">
+                                                <p>Hello, <strong>Alex Tuntuni</strong> (If Not <strong>Tuntuni !</strong><a href="login-register.html" class="logout"> Logout</a>)</p>
+                                            </div>
+
+                                            <p class="mb-0">From your account dashboard. you can easily check &amp; view your recent orders, manage your shipping and billing addresses and edit your password and account details.</p>
+                                        </div>
+                                    </div>
+                                    <!-- Single Tab Content End -->
+
+                                    <!-- Single Tab Content Start -->
+                                    <div class="tab-pane fade" id="user-password" role="tabpanel">
+                                        <div class="myaccount-content">
+                                            <h3>Orders</h3>
+                                            <div class="myaccount-table table-responsive text-center">
+                                                <table class="table table-bordered">
+                                                    <thead class="thead-light">
+                                                    <tr>
+                                                        <th>Order</th>
+                                                        <th>Date</th>
+                                                        <th>Status</th>
+                                                        <th>Total</th>
+                                                        <th>Action</th>
+                                                    </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                    <tr>
+                                                        <td>1</td>
+                                                        <td>Aug 22, 2022</td>
+                                                        <td>Pending</td>
+                                                        <td>$3000</td>
+                                                        <td><a href="cart.html" class="check-btn sqr-btn ">View</a></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>2</td>
+                                                        <td>July 22, 2022</td>
+                                                        <td>Approved</td>
+                                                        <td>$200</td>
+                                                        <td><a href="cart.html" class="check-btn sqr-btn ">View</a></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>3</td>
+                                                        <td>June 12, 2017</td>
+                                                        <td>On Hold</td>
+                                                        <td>$990</td>
+                                                        <td><a href="cart.html" class="check-btn sqr-btn ">View</a></td>
+                                                    </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- Single Tab Content End -->
+
+                                    <!-- Single Tab Content Start -->
+                                    <div class="tab-pane fade" id="user-board" role="tabpanel">
+                                        <div class="myaccount-content">
+                                            <h3>Downloads</h3>
+                                            <div class="myaccount-table table-responsive text-center">
+                                                <table class="table table-bordered">
+                                                    <thead class="thead-light">
+                                                    <tr>
+                                                        <th>Product</th>
+                                                        <th>Date</th>
+                                                        <th>Expire</th>
+                                                        <th>Download</th>
+                                                    </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                    <tr>
+                                                        <td>Haven - Free Real Estate PSD Template</td>
+                                                        <td>Aug 22, 2022</td>
+                                                        <td>Yes</td>
+                                                        <td><a href="#" class="check-btn sqr-btn "><i class="fa fa-cloud-download"></i> Download File</a></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>HasTech - Profolio Business Template</td>
+                                                        <td>Sep 12, 2022</td>
+                                                        <td>Never</td>
+                                                        <td><a href="#" class="check-btn sqr-btn "><i class="fa fa-cloud-download"></i> Download File</a></td>
+                                                    </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- Single Tab Content End -->
+
+                                    <!-- Single Tab Content Start -->
+                                    <div class="tab-pane fade" id="user-hist" role="tabpanel">
+                                        <div class="myaccount-content">
+                                            <h3>Payment Method</h3>
+                                            <p class="saved-message">You Can't Saved Your Payment Method yet.</p>
+                                        </div>
+                                    </div>
+                                    <!-- Single Tab Content End -->
+
+                                </div>
+                            </div> <!-- My Account Tab Content End -->
+                        </div>
+                    </div> <!-- My Account Page End -->
+                </div>
+            </div>
+        </div>
+    </div>
+</th:block>
+
+<th:block layout:fragment="script">
+    <script th:inline="javascript">
+
+        $(document).ready(function () {
+            $('.menu-btn').on('click', function () {
+                $('.menu-btn').removeClass('active');
+                $(this).addClass('active');
+                $('.tab-pane').removeClass('show active');
+                const target = $(this).data('target');
+                $(target).addClass('show active');
+            });
+        });
+
+        document.addEventListener("DOMContentLoaded", function () {
+            const cameraBtn = document.getElementById("cameraBtn");
+            const dropdown = document.getElementById("cameraDropdown");
+            cameraBtn.addEventListener("click", function (e) {
+                e.stopPropagation();
+                dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
+            });
+            document.addEventListener("click", function () {
+                dropdown.style.display = "none";
+            });
+        });
+
+        function resetToDefault() {
+            alert("기본 이미지로 설정합니다.");
+        }
+        function uploadNewImage() {
+            alert("이미지 업로드 창 띄우기");
+        }
+    </script>
+</th:block>
+</html>

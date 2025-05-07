@@ -1,0 +1,17 @@
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<script th:inline="javascript">
+
+$(function () {  
+
+  // 파일 다운로드 
+  $("#btnFileDownload").click(function(e){
+
+    detail.fnFileDownload();
+
+    e.preventDefault();
+    e.stopPropagation();
+  });
+
+});
+</script>
+</html>

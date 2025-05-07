@@ -1,0 +1,32 @@
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<script th:inline="javascript">
+
+$(function () {
+
+    detail02.drawTemplate02();
+
+    $(document).on("click", ".api-tab", function (e) {
+        e.preventDefault();
+        detail02.apiTabClickEvent(this);
+    });
+
+    $(document).on('click', '.response-model-box-control', function(e) {
+        detail02.responseModelBoxClickEvent(this);
+    });
+
+
+    $(document).on('click', '.inner-object.last', function(e) {
+        detail02.innerObjectLastClickEvent(this);
+    });
+
+
+    $(document).on('click', '.dot-span', function(e) {
+        detail02.dotSpanClickEvent(this);
+    })
+
+
+
+});
+
+</script>
+</html>
