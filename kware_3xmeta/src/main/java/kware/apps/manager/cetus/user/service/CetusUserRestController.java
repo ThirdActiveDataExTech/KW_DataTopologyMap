@@ -5,8 +5,10 @@ import cetus.bean.Pageable;
 import kware.apps.manager.cetus.user.domain.CetusUser;
 import kware.apps.manager.cetus.user.dto.request.UserChange;
 import kware.apps.manager.cetus.user.dto.request.UserExcelSearch;
+import kware.apps.manager.cetus.user.dto.request.UserListSearch;
 import kware.apps.manager.cetus.user.dto.request.UserSave;
 import kware.apps.manager.cetus.user.dto.response.UserExcelPage;
+import kware.apps.manager.cetus.user.dto.response.UserList;
 import kware.common.excel.ExcelRender;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -83,5 +85,11 @@ public class CetusUserRestController {
             excel.renderExcel(service.excelPage(search, pageable).getList());
         }
         excel.writeWorkbook(res);
+    }
+
+    @GetMapping
+    public ResponseEntity userList(@Valid UserListSearch search, Pageable pageable) {
+        Page<UserList> page = service.userList(search, pageable);
+        return ResponseEntity.ok(page);
     }
 }

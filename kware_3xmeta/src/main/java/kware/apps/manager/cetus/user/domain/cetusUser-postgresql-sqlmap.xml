@@ -179,4 +179,35 @@
 		</if>
 	</select>
 
+	<select id="userList" resultType="UserList" parameterType="UserListSearch">
+		/* cetusUser.userList */
+		SELECT CU.UID
+		,CU.USER_ID
+		,CU.USER_NM
+		,CU.USER_TEL
+		,CU.USER_EMAIL
+		,CU.APPROVE_AT
+		,CU.USE_AT
+		,TO_CHAR(CU.REG_DT, 'YYYY-MM-DD') AS REG_DT
+		FROM CETUS_USER CU
+		WHERE CU.DELETE_AT = 'N'
+		ORDER BY CU.REG_DT DESC
+		<if test="@Ognl@isNotEmpty(userId)">
+			AND CU.USER_ID LIKE '%' || #{userId} || '%'
+		</if>
+		<if test="@Ognl@isNotEmpty(startNumber) and  @Ognl@isNotEmpty(endNumber)">
+			OFFSET ${startNumber} LIMIT ${endNumber}
+		</if>
+	</select>
+
+	<select id="userListCount" resultType="int" parameterType="UserListSearch">
+		/* cetusUser.userListCount */
+		SELECT COUNT(*)
+		FROM CETUS_USER CU
+		WHERE CU.DELETE_AT = 'N'
+		<if test="@Ognl@isNotEmpty(userId)">
+			AND CU.USER_ID LIKE '%' || #{userId} || '%'
+		</if>
+	</select>
+
 </mapper>

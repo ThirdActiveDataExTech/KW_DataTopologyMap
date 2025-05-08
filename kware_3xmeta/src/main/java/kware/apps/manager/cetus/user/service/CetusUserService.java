@@ -6,9 +6,11 @@ import kware.apps.manager.cetus.user.domain.CetusUser;
 import kware.apps.manager.cetus.user.domain.CetusUserDao;
 import kware.apps.manager.cetus.user.dto.request.UserChange;
 import kware.apps.manager.cetus.user.dto.request.UserExcelSearch;
+import kware.apps.manager.cetus.user.dto.request.UserListSearch;
 import kware.apps.manager.cetus.user.dto.request.UserSave;
 import kware.apps.manager.cetus.user.dto.response.UserExcelPage;
 import kware.apps.manager.cetus.user.dto.response.UserFullInfo;
+import kware.apps.manager.cetus.user.dto.response.UserList;
 import kware.apps.manager.cetus.user.dto.response.UserView;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -76,5 +78,10 @@ public class CetusUserService {
     @Transactional(readOnly = true)
     public Integer findUserCntByUserEmail(String userEmail) {
         return dao.getUserCntByUserEmail(userEmail);
+    }
+
+    @Transactional(readOnly = true)
+    public Page<UserList> userList(UserListSearch search, Pageable pageable) {
+        return dao.userList(search, pageable);
     }
 }

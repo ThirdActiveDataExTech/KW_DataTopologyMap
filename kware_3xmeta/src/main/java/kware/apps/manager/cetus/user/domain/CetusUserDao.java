@@ -4,8 +4,10 @@ import cetus.bean.Page;
 import cetus.bean.Pageable;
 import cetus.dao.SuperDao;
 import kware.apps.manager.cetus.user.dto.request.UserExcelSearch;
+import kware.apps.manager.cetus.user.dto.request.UserListSearch;
 import kware.apps.manager.cetus.user.dto.response.UserExcelPage;
 import kware.apps.manager.cetus.user.dto.response.UserFullInfo;
+import kware.apps.manager.cetus.user.dto.response.UserList;
 import kware.apps.manager.cetus.user.dto.response.UserView;
 import org.springframework.stereotype.Component;
 
@@ -43,5 +45,9 @@ public class CetusUserDao extends SuperDao<CetusUser> {
 
     public UserView getUserInfoByUid(Long userUid) {
         return selectOne("getUserInfoByUid", userUid);
+    }
+
+    public Page<UserList> userList(UserListSearch search, Pageable pageable) {
+        return page("userList", "userListCount", search, pageable);
     }
 }
