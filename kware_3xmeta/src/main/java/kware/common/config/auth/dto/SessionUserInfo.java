@@ -12,22 +12,29 @@ import java.util.List;
 @Getter
 @EqualsAndHashCode(of = "userId", callSuper = false)
 public class SessionUserInfo implements Serializable {
+
     private Long uid;
     private String userId;
     @JsonIgnore
     private String password;
     private String userNm;
-    private String userTel;
-    private String userEmail;
-    private String approveAt;
-    private String useAt;
-    private String lastConnDt;
-    private String lastPasswordChangeDe;
-    private String userSttusCd;
-    private Integer failCnt;
-    private String deleteAt;
     private String role;
-    private String roleNm;
+    private String status;
+    private Integer failCnt;
+    private Long profileUid;
+    private String profileId;
+    private String metaData;
+    private String useAt;
+    private String approveAt;
+    private Long workplaceUid;
+    private String workplaceNm;
+    private Long groupUid;
+    private String groupNm;
+    private Long deptUid;
+    private String deptNm;
+    private Long positionUid;
+    private String positionNm;
+
     private List<String> authorizedMenuUrls;
     private List<CetusMenu> menus;
 
@@ -36,17 +43,23 @@ public class SessionUserInfo implements Serializable {
         this.userId = user.getUserId();
         this.password = user.getPassword();
         this.userNm = user.getUserNm();
-        this.userTel = user.getUserTel();
-        this.userEmail = user.getUserEmail();
-        this.approveAt = user.getApproveAt();
-        this.useAt = user.getUseAt();
-        this.lastConnDt = user.getLastConnDt();
-        this.lastPasswordChangeDe = user.getLastPasswordChangeDe();
-        this.userSttusCd = user.getUserSttusCd();
-        this.failCnt = user.getFailCnt();
-        this.deleteAt = user.getDeleteAt();
         this.role = user.getRole();
-        this.roleNm = user.getRoleNm();
+        this.status = user.getStatus();
+        this.failCnt = user.getFailCnt();
+        this.profileUid = user.getProfileUid();
+        this.profileId = user.getProfileId();
+        this.metaData = user.getMetaData();
+        this.useAt = user.getUseAt();
+        this.approveAt = user.getApproveAt();
+
+        this.workplaceUid = user.getWorkplaceUid();
+        this.workplaceNm = user.getWorkplaceNm();
+        this.groupUid = user.getGroupUid();
+        this.groupNm = user.getGroupNm();
+        this.deptUid = user.getDeptUid();
+        this.deptNm = user.getDeptNm();
+        this.positionUid = user.getPositionUid();
+        this.positionNm = user.getPositionNm();
     }
 
     public void addMenuAndAuthorizedMenuUrls(List<CetusMenu> menus, List<String> authorizedMenuUrls) {

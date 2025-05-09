@@ -5,6 +5,7 @@ import java.util.List;
 import kware.apps.manager.cetus.menu.domain.CetusMenuInfoDao;
 import kware.apps.manager.cetus.menu.dto.request.MenuListSearch;
 import kware.apps.manager.cetus.menu.dto.response.MenuList;
+import kware.apps.manager.cetus.menu.dto.response.MenuTreeList;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -19,5 +20,10 @@ public class CetusMenuInfoService {
     @Transactional(readOnly = true)
     public List<MenuList> getMenuList(MenuListSearch search) {
         return dao.list(search);
+    }
+
+    @Transactional(readOnly = true)
+    public List<MenuTreeList> getMenuTreeList(MenuListSearch search) {
+        return dao.findMenuTreeList(search);
     }
 }

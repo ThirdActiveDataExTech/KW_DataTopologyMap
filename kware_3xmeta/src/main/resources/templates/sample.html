@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/default}">
+
+<th:block layout:fragment="center-image">
+  <th:block th:with="backtitle='테스트 화면', title1=${title1}, title2=${title2}, leftImg='', rightImg=''">
+    <th:block th:replace="fragments/center-image :: center-image-title(${backtitle}, ${title1}, ${title2}, ${leftImg}, ${rightImg})"></th:block>
+  </th:block>
+</th:block>
+
+<th:block layout:fragment="head">
+  <link rel="stylesheet" th:href="@{'/assets/css/page/manager/user-form.css'}" />
+  <style>
+    .ck-editor__editable{ min-height: 300px; }
+  </style>
+</th:block>
+
+<th:block layout:fragment="content">
+  <div class="my-account-wrapper pb-100 pt-30">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-12">
+
+          <!-- My Account Page Start -->
+          <div class="myaccount-page-wrapper">
+
+            <div class="row">
+
+              <!-- 왼쪽 사이드 메뉴바 // -->
+              <div class="col-lg-4 col-md-4">
+                <div class="sidebar-container" data-aos="fade-up" data-aos-delay="200">
+                  <!-- 프로필 이미지 영역 -->
+                  <div class="profile-section">
+
+                    <div class="profile-info">
+                      <strong>홍길동</strong>
+                      <div>케이워어(주)</div>
+                    </div>
+                  </div>
+
+                  <!-- 메뉴 버튼 영역 -->
+                  <div class="menu-buttons">
+                    <button class="menu-btn active" data-target="#ckeditor">ckeditor</button>
+                    <button class="menu-btn" data-target="#thumbnail">썸네일 첨부파일</button>
+                    <button class="menu-btn" data-target="#file-upload">일반 첨부파일</button>
+                    <button class="menu-btn" data-target="#select2-tree">select2, tree</button>
+                    <button class="menu-btn" data-target="#popup">popup</button>
+                  </div>
+                </div>
+              </div>
+              <!-- // 왼쪽 사이드 메뉴바 -->
+
+              <!-- 오른쪽 컨텐츠 영역 // -->
+              <div class="col-lg-8 col-md-8">
+                <div class="tab-content" id="myaccountContent">
+
+                  <!-- [1] ckeditor 탭 -->
+                  <div class="tab-pane fade show active" id="ckeditor" role="tabpanel">
+                    <div class="row info-row" style="margin-bottom: 25px;" data-aos="fade-up" data-aos-delay="200">
+
+                      <!-- 탭 컨텐츠 영역 -->
+                      <div class="myaccount-content">
+                        <h3>ckeditor</h3>
+                        <div class="account-details-form">
+                            <div class="row info-row">
+                              <div class="col-lg-12">
+                                <div>
+                                  <label for="ckeditor1" class="required">첨부파일 없는 ckditor</label>
+                                  <div>
+                                    <div id="ckeditor1"></div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="row info-row">
+                              <div class="col-lg-12">
+                                <div>
+                                  <label for="ckeditor2" class="required">첨부파일 있는 ckditor</label>
+                                  <div>
+                                    <div id="ckeditor2"></div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+
+                            <div class="btn-wrap">
+                              <button class="btn-custom-b" id="save-btn1">저장</button>
+                            </div>
+                        </div>
+                      </div>
+
+                    </div>
+                  </div>
+
+                  <!-- [2] thumbnail 탭 -->
+                  <div class="tab-pane fade" id="thumbnail" role="tabpanel">
+                    <div class="row info-row" style="margin-bottom: 25px;" data-aos="fade-up" data-aos-delay="200">
+
+                      <!-- 탭 컨텐츠 영역 -->
+                      <div class="myaccount-content">
+                        <h3>thumbnail</h3>
+                        <div class="account-details-form">
+                          <div class="row info-row">
+                            <div class="col-lg-6">
+                              <div style="margin-bottom: 10px">
+                                <label for="upload-container1" class="required">썸네일 이미지 (Promise 사용)</label>
+                                <div>
+                                  <div id="upload-container1" style="display: none;"></div>
+                                  <img src="/assets/images/page/detail/profile_noimage.png" alt="Profile" id="profile-thumbnail-id1" class="profile-img">
+                                </div>
+                              </div>
+                              <div class="btn-wrap">
+                                <button class="btn-custom-b" id="upload1">업로드</button>
+                                <button class="btn-custom-b" id="delete1">삭제</button>
+                              </div>
+                            </div>
+                            <div class="col-lg-6">
+                              <div class="col-lg-12">
+                                <div style="margin-bottom: 10px">
+                                  <label for="upload-container2" class="required">썸네일 이미지 (Promise 미사용)</label>
+                                  <div>
+                                    <div id="upload-container2" style="display: none;"></div>
+                                    <img src="/assets/images/page/detail/profile_noimage.png" alt="Profile" id="profile-thumbnail-id2" class="profile-img">
+                                  </div>
+                                </div>
+                                <div class="btn-wrap">
+                                  <button class="btn-custom-b" id="upload2">업로드</button>
+                                  <button class="btn-custom-b" id="delete2">삭제</button>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+
+                          <div class="btn-wrap" style="margin-top: 10px;">
+                            <button class="btn-custom-b" id="save-btn2">Promise 미사용 저장</button>
+                          </div>
+                        </div>
+                      </div>
+
+                    </div>
+                  </div>
+
+                  <!-- [3] file-upload 탭 -->
+                  <div class="tab-pane fade" id="file-upload" role="tabpanel">
+                    <div class="row info-row" style="margin-bottom: 25px;" data-aos="fade-up" data-aos-delay="200">
+                      <div class="myaccount-content">
+                        <h3>file-upload</h3>
+                        <div class="account-details-form">
+                          <div class="row info-row">
+                            <div class="col-lg-12">
+                              <div>
+                                <label for="upload-container3" class="required">일반 첨부파일</label>
+                                <div>
+                                  <div id="upload-container3" class="mt-1"></div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="btn-wrap" style="margin-top: 10px;">
+                            <button class="btn-custom-b" id="save-btn3">첨부파일 저장</button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- [4] select2-tree 탭 -->
+                  <div class="tab-pane fade" id="select2-tree" role="tabpanel">
+                    <div class="row info-row" style="margin-bottom: 25px;" data-aos="fade-up" data-aos-delay="200">
+                      <div class="myaccount-content">
+                        <h3>select2-tree</h3>
+                        <div>
+
+                          <div class="row">
+                            <div class="col-12 col-md-6">
+                              <div class="card">
+                                <div class="pb-3 border-bottom" style="padding: 30px;">
+                                  <span>체크박스 트리</span>
+                                </div>
+                                <div class="card-body">
+                                  <div class="mt-2" id="menu-tree1"></div>
+                                </div>
+                              </div>
+                            </div>
+
+                            <div class="col-12 col-md-6">
+                              <div class="card">
+                                <div class="pb-3 border-bottom" style="padding: 30px;">
+                                  <span>우클릭 insert 트리</span>
+                                </div>
+                                <div class="card-body">
+                                  <div class="mt-2" id="menu-tree2"></div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+
+                          <div class="row info-row" style="margin-top: 20px;">
+                            <div class="col-lg-6 info-col2">
+                              <div style="margin-bottom: 20px;">
+                                <label for="userDepth" class="required">그룹/부서</label>
+                                <div>
+                                  <select class="select2 form-select round border_line" id="userDepth" name="userDepth" multiple>
+                                    <option value="">그룹/부서 전체</option>
+                                    <option value="test1">그룹/부서1</option>
+                                    <option value="test2">그룹/부서2</option>
+                                    <option value="test3">그룹/부서3</option>
+                                    <option value="test4">그룹/부서4</option>
+                                  </select>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="col-lg-6 info-col2">
+                              <div style="margin-bottom: 20px;">
+                                <label for="userTeam" class="required">팀명</label>
+                                <div>
+                                  <select class="select2 form-select round border_line" id="userTeam" name="userTeam" multiple>
+                                    <option value="">팀명 전체</option>
+                                    <option value="test1">팀명1</option>
+                                    <option value="test2">팀명2</option>
+                                    <option value="test3">팀명3</option>
+                                    <option value="test4">팀명4</option>
+                                  </select>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="btn-wrap" style="margin-top: 10px;">
+                            <button class="btn-custom-b" id="save-btn4">체크정보 조회</button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+
+                  <!-- [5] thumbnail 탭 -->
+                  <div class="tab-pane fade" id="popup" role="tabpanel">
+                    <div class="row info-row" style="margin-bottom: 25px;" data-aos="fade-up" data-aos-delay="200">
+
+                      <!-- 탭 컨텐츠 영역 -->
+                      <div class="myaccount-content">
+                        <h3>popup</h3>
+                        <div class="account-details-form">
+                          <div class="btn-wrap" style="margin-top: 10px;">
+                            <button class="btn-custom-b" id="popup1">textarea 팝업열기</button>
+                            <button class="btn-custom-b" id="popup2">text 팝업열기</button>
+                            <button class="btn-custom-b" id="popup3">썸네일이미지 + textarea 팝업열기</button>
+                            <button class="btn-custom-b" id="popup4">썸네일이미지 + ckeditor 팝업열기</button>
+                          </div>
+                        </div>
+                      </div>
+
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+              <!-- // 오른쪽 컨텐츠 영역 -->
+
+            </div>
+          </div>
+          <!-- My Account Page End -->
+
+        </div>
+      </div>
+    </div>
+  </div>
+  <th:block th:replace="popup/popup :: popup-modal"></th:block>
+</th:block>
+
+<th:block layout:fragment="script">
+  <th:block th:replace="popup/popup-script::script"></th:block>
+  <script th:inline="javascript">
+
+    const fileUid = null;
+
+    /* ==== ckeditor === */
+    let ckeditor1 = null;
+    let ckeditor2 = null;
+
+
+    /* ==== thumbnail === */
+    let thumbnailUploader1 = new ThumbnailUpload("#upload-container1")
+    let thumbnailUploader2 = new ThumbnailUpload("#upload-container2")
+
+
+    /* ==== file uploader === */
+    let fileUploader = new Upload("#upload-container3")
+
+
+    /* ==== tree === */
+    let testTree1 = new Tree("menu-tree1", false)
+    let testTree2 = new Tree("menu-tree2", true, false)
+
+    $(function () {
+
+      $('.menu-btn').on('click', function () {
+        $('.menu-btn').removeClass('active');
+        $(this).addClass('active');
+        $('.tab-pane').removeClass('show active');
+        const target = $(this).data('target');
+        $(target).addClass('show active');
+
+        /* ================== select2 ================== */
+        if(target === "#select2-tree") {
+          initSelect2();
+        }
+
+      });
+
+
+      /* ================== ckeditor ================== */
+      editorInit();
+      $("#save-btn1").on('click', function() {
+        console.log("### ckeditor1 ###")
+        console.log(ckeditor1.getEditorData());
+        console.log()
+
+        console.log("### ckeditor2 ###")
+        console.log(ckeditor2.getEditorData());
+        console.log()
+      });
+
+
+      /* ================== thumbnail ================== */
+      uploaderInit();
+      $("#upload1").on("click", async function () {
+        const result = await thumbnailUploader1.openFileUploadPromise();
+        if (result.submit) {
+          console.log("## 이미지 업로드 정보 ## ", result.file);
+          // TODO : {result.file} 정보로 바로 이미지 저장
+        }
+      });
+      $("#delete1").on("click", async function() {
+        const targets = [
+          thumbnailUploader1.getTempThumbnailFile(),
+          thumbnailUploader1.getThumbnailStaticUpload()
+        ];
+        for (const file of targets) {
+          if (file.hasOwnProperty('fileId')) {
+            const result = await thumbnailUploader1.removeFilePromise(file, 'removed-by-user');
+            if (result.submit) {
+              console.log("## 이미지 파일 삭제 정보 ## ", result.file);
+              // TODO : {result.file} 정보로 바로 이미지 삭제
+            }
+          }
+        }
+      });
+      $("#upload2").on('click', function () {
+        thumbnailUploader2.openFileUpload();
+      });
+      $("#delete2").on('click', function () {
+        const targets = [
+          thumbnailUploader2.getTempThumbnailFile(),
+          thumbnailUploader2.getThumbnailStaticUpload()
+        ];
+        for (const file of targets) {
+          if (file.hasOwnProperty('fileId')) {
+            thumbnailUploader2.removeThumbnailFile(file, 'removed-by-user');
+          }
+        }
+      });
+      $("#save-btn2").on("click", function () {
+        let FileAdd = [], FileDel = [];
+        const uploadThumbnail = thumbnailUploader2.getTempThumbnailFile();
+        if(uploadThumbnail.hasOwnProperty('fileId')) FileAdd.push(uploadThumbnail);
+        FileDel = thumbnailUploader2.getRemoveFile();
+        console.log("### thumbnail2 ###")
+        console.log("add > ", FileAdd)
+        console.log("delete > ", FileDel)
+      });
+
+
+      /* ================== file-upload ================== */
+      fileUploaderInit();
+      $("#save-btn3").on("click", function () {
+        const FileAdd = fileUploader.getTempFileUrls()
+        const FileDel = fileUploader.getRemoveFileUrls()
+        console.log("### file-upload ###");
+        console.log("add > ", FileAdd);
+        console.log("delete > ", FileDel);
+      });
+
+
+      /* ================== select2, tree ================== */
+      // tree 초기화
+      testTree1.drawTree("/manager/api/menu/tree.json", {})
+      testTree2.drawTree("/manager/api/menu/tree.json", {})
+      // tree add event
+      testTree2.customAddFunction("기타 추가", (data) => {
+        const inst = $.jstree.reference(data.reference);
+        const obj = inst.get_node(data.reference);
+        console.log("sortNo > ", obj.children.length + 1);
+        console.log("id - upperNo > ", obj.id);
+      });
+
+      $("#save-btn4").on("click", function () {
+        const jsTreeSelected1 = testTree1.getCheckbox()
+        const userTeamSelected = $('#userTeam').val();
+        const userDepthSelected = $('#userDepth').val();
+
+        console.log("### select2, tree ###");
+        console.log("tree select1 > ", jsTreeSelected1);
+        console.log("select2 #1 > ", userTeamSelected);
+        console.log("select2 #2 > ", userDepthSelected);
+      });
+
+
+      /* ================== popup ================== */
+      setTextAreaPopup();
+      setTextPopup();
+      setThumbnail_TextAreaPopup();
+      setThumbnail_CKEditorPopup();
+      $("#popup1").on('click', async function () {
+        let result = await popup.openTextAreaPopup(); // result : { submit: ture/false, value: 값 }
+        console.log("#### useTextArea Popup ####")
+        console.log("submit > ", result.submit)
+        console.log("value > ", result.value)
+      });
+      $("#popup2").on('click', async function() {
+        let result = await popup.openTextPopup(); // result : true, false
+        console.log("#### useText Popup ####")
+        console.log("submit > ", result)
+      });
+      $("#popup3").on("click", async function () {
+        let result = await popup.openThumbnailPopup();
+        console.log("#### useThumbnail_TextArea Popup ####")
+        console.log("submit > ", result.submit)
+        console.log("image > ", result.image)
+        console.log("title > ", result.title)
+        console.log("description > ", result.description)
+      });
+      $("#popup4").on("click", async function () {
+        let result = await popup.openThumbnail2Popup();
+        console.log("#### useThumbnail_CKEditor Popup ####")
+        console.log("submit > ", result.submit)
+        console.log("image > ", result.image)
+        console.log("title > ", result.title)
+        console.log("description > ", result.description)
+      });
+
+
+    });
+
+    async function editorInit() {
+      /* ckeditor1 : 첨부파일 미사용 */
+      const ckeditor1Content = '<p>hello world</p>';
+      ckeditor1 = new Editor("ckeditor1", ckeditor1Content, false);
+      ckeditor1 = await ckeditor1.init();
+
+      /* ckeditor2 : 첨부파일 사용 */
+      ckeditor2 = new Editor("ckeditor2", '', true);
+      ckeditor2 = await ckeditor2.init();
+      ckeditor2.setEditorData('<b>hi?</b>')
+    }
+
+    function uploaderInit() {
+      /* thumbnail Uploader1 : Promise 사용 */
+      FileUtil.loadEditFiles(fileUid, thumbnailUploader1);
+      thumbnailUploader1.setThumbNail("profile-thumbnail-id1")
+      thumbnailUploader1.usePromise();
+
+      /* thumbnail Uploader2 : Promise 미사용 */
+      FileUtil.loadEditFiles(fileUid, thumbnailUploader2);
+      thumbnailUploader2.setThumbNail("profile-thumbnail-id2")
+    }
+
+    function fileUploaderInit() {
+      /* 일반 첨부파일 업로더 */
+      FileUtil.loadEditFiles(fileUid, fileUploader);
+      fileUploader.setUploadInfo(10); // 최대 10개 업로드 가능하도록 제한
+    }
+
+    function initSelect2() {
+      $("#userTeam").select2({
+        placeholder: "팀명 선택",
+        language: {
+          noResults: function() {
+            return "검색 결과가 없습니다.";
+          }
+        }
+      });
+      $("#userDepth").select2({
+        placeholder: "그룹/부서 선택",
+        language: {
+          noResults: function() {
+            return "검색 결과가 없습니다.";
+          }
+        }
+      });
+    }
+
+
+    function setTextAreaPopup() {
+      popup.setTextAreaPopupTitle("TextArea 팝업 타이틀");
+      popup.setTextAreaPopupSpan(`<span>여기는 textarea 팝업 span 영역입니다.</span>`);
+      popup.setTextAreaPopupLabel("textarea label");
+      popup.setTextAreaPopupLeftBtn('btn-black', '왼쪽(취소)', false);
+      popup.setTextAreaPopupRightBtn('btn-red', '오른쪽(저장)', true);
+    }
+    function setTextPopup() {
+      popup.setTextPopupTitle("Text 팝업 타이틀");
+      popup.setTextPopupSpan('<span>해당 항목을 공개 상태로 전환하시겠습니까?</span>');
+      popup.setTextPopupLeftBtn('btn-black', '왼쪽(취소)', false);
+      popup.setTextPopupRightBtn('btn-red', '오른쪽(저장)', true);
+    }
+    function setThumbnail_TextAreaPopup() {
+      popup.setThumbnailPopupLeftBtn('btn-black', '왼쪽(취소)', false);
+      popup.setThumbnailPopupRightBtn('btn-red', '오른쪽(저장)', true);
+    }
+    function setThumbnail_CKEditorPopup() {
+      popup.setThumbnail2PopupLeftBtn('btn-black', '왼쪽(취소)', false);
+      popup.setThumbnail2PopupRightBtn('btn-red', '오른쪽(저장)', true);
+    }
+
+  </script>
+</th:block>
+</html>

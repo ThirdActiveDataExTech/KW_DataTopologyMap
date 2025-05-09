@@ -4,6 +4,7 @@
 	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="cetusMenuInfo">
+
 	<select id="list" resultType="MenuList" parameterType="MenuListSearch">
 		/* cetusMenuInfo.list */
 		WITH RECURSIVE MENU_LIST(MENU_NO
@@ -94,6 +95,106 @@
 			 		 , DEPTH
 			 		 , REPLACE(REPLACE(array_to_string(PATH_NM, ','), ',', '<![CDATA[<]]>'), 'root <![CDATA[<]]>', '') AS MENU_PATH
 			 		 , CASE WHEN EXISTS(SELECT 1 
+			 		 					  FROM CETUS_MENU_INFO
+					 					 WHERE UPPER_MENU_NO = A.MENU_NO) THEN 'N' ELSE 'Y'
+					 		 END AS IS_LEAF
+		  		 FROM MENU_LIST A
+		  		 LEFT JOIN CETUS_USER CU_REG ON CU_REG.UID = A.REG_UID
+		  		 LEFT JOIN CETUS_USER CU_UPDT ON CU_UPDT.UID = A.UPDT_UID
+ 		 		ORDER BY PATH
+	</select>
+
+
+	<select id="findMenuTreeList" resultType="MenuTreeList" parameterType="MenuListSearch">
+		/* cetusMenuInfo.findMenuTreeList */
+		WITH RECURSIVE MENU_LIST(MENU_NO
+							   , PROGRAM_UID
+							   , UPPER_MENU_NO
+							   , MENU_NM
+							   , MENU_ICON
+							   , SORT_NO
+							   , MENU_DC
+							   , USE_AT
+							   , REG_UID
+							   , REG_DT
+							   , UPDT_UID
+							   , UPDT_DT
+							   , URL
+							   , DEPTH
+							   , PATH_NM
+							   , PATH
+							   , CYCLE) AS
+			   (SELECT A.MENU_NO
+			   		 , A.PROGRAM_UID
+					 , A.UPPER_MENU_NO
+					 , A.MENU_NM
+            		 , A.MENU_ICON
+            		 , A.SORT_NO
+            		 , A.MENU_DC
+            		 , A.USE_AT
+            		 , A.REG_UID
+            		 , A.REG_DT
+            		 , A.UPDT_UID
+            		 , A.UPDT_DT
+					 , B.URL
+            		 , 1
+					 , ARRAY[A.MENU_NM::TEXT]
+            		 , ARRAY[A.MENU_NO::INT]
+            		 , false
+		  		  FROM cetus_menu_info A
+		  	 LEFT JOIN cetus_progrm_info B
+		    		ON A.program_uid = B.uid
+				 WHERE A.delete_at = 'N'
+		   		   AND A.UPPER_MENU_NO IS NULL
+				<if test="@Ognl@isNotEmpty(useAt)">
+				   AND A.USE_AT = #{useAt}
+				</if>
+			 UNION ALL
+				SELECT A.MENU_NO
+					 , A.PROGRAM_UID
+            		 , A.UPPER_MENU_NO
+            		 , A.MENU_NM
+            		 , A.MENU_ICON
+            		 , A.SORT_NO
+            		 , A.MENU_DC
+            		 , A.USE_AT
+            		 , A.REG_UID
+            		 , A.REG_DT
+            		 , A.UPDT_UID
+            		 , A.UPDT_DT
+					 , C.URL
+            		 , B.DEPTH + 1
+					 , ARRAY_APPEND(B.PATH_NM, A.MENU_NM::TEXT)
+            		 , ARRAY_APPEND(B.PATH, A.SORT_NO::INT)
+            		 , A.menu_no = ANY(B.PATH)
+				  FROM cetus_menu_info A
+         	INNER JOIN MENU_LIST B ON A.upper_menu_no = B.MENU_NO
+		  	 LEFT JOIN cetus_progrm_info C ON A.program_uid = C.uid
+		 		 WHERE A.delete_at = 'N'
+		   		   AND NOT CYCLE
+				<if test="@Ognl@isNotEmpty(useAt)">
+				   AND A.USE_AT = #{useAt}
+				</if>
+			   )
+				SELECT A.MENU_NO AS NO
+					 , A.UPPER_MENU_NO AS UPPER_NO
+					 , A.MENU_NM AS TEXT
+					 , A.PROGRAM_UID
+			 		 , LPAD('', DEPTH * 8) || A.MENU_NM AS TREE_MENU_NM
+             		 , A.MENU_ICON
+             		 , A.SORT_NO
+             		 , A.MENU_DC
+             		 , A.USE_AT
+             		 , A.REG_UID
+             		 , TO_CHAR(A.REG_DT, 'YYYY-MM-DD HH24:MI:SS') AS REG_DT
+					 , CU_REG.USER_NM AS REG_NM
+             		 , A.UPDT_UID
+             		 , TO_CHAR(A.UPDT_DT, 'YYYY-MM-DD HH24:MI:SS') AS UPDT_DT
+					 , CU_UPDT.USER_NM AS UPDT_NM
+			 		 , URL
+			 		 , DEPTH
+			 		 , REPLACE(REPLACE(array_to_string(PATH_NM, ','), ',', '<![CDATA[<]]>'), 'root <![CDATA[<]]>', '') AS MENU_PATH
+			 		 , CASE WHEN EXISTS(SELECT 1
 			 		 					  FROM CETUS_MENU_INFO
 					 					 WHERE UPPER_MENU_NO = A.MENU_NO) THEN 'N' ELSE 'Y'
 					 		 END AS IS_LEAF

@@ -13,18 +13,18 @@ import java.time.LocalDateTime;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class CetusUser extends AuditBean {
+
     private Long uid;
     private String userId;
     private String password;
     private String userNm;
-    private String userTel;
-    private String userEmail;
-    private String approveAt;
-    private String useAt;
-    private String lastConnDt;
-    private String nonApproveResn;
-    private LocalDateTime lastPasswordChangeDe;
+    private String authorCd;
+    private String status;
     private int failCnt;
+    private Long profileUid;
+    private String metaData;
+    private String useAt;
+    private String approveAt;
 
     /**
      * @method      CetusUser
@@ -36,8 +36,6 @@ public class CetusUser extends AuditBean {
         this.userId = request.getUserId();
         this.password = encodePassword;
         this.userNm = request.getUserNm();
-        this.userTel = request.getUserTel();
-        this.userEmail = request.getUserEmail();
     }
 
     /**
@@ -60,8 +58,6 @@ public class CetusUser extends AuditBean {
         this.uid = uid;
         this.password = encodePassword;
         this.userNm = (request.getUserNm() != null) ? request.getUserNm() : this.userNm;
-        this.userTel = (request.getUserTel() != null) ? request.getUserTel() : this.userTel;
-        this.userEmail = (request.getUserEmail() != null) ? request.getUserEmail() : this.userEmail;
         return this;
     }
 }

@@ -8,18 +8,36 @@
 
         $("#userJbgd").select2({
             placeholder: "직책 선택",
+            language: {
+                noResults: function(term) {
+                    console.log("term: ", term)
+                    return "검색 결과가 없습니다.";
+                }
+            }
         });
         $("#userDepth").select2({
             placeholder: "그룹/부서 선택",
+            language: {
+                noResults: function() {
+                    return "검색 결과가 없습니다.";
+                }
+            }
         });
         $("#userTeam").select2({
             placeholder: "팀 선택",
+            language: {
+                noResults: function() {
+                    return "검색 결과가 없습니다.";
+                }
+            }
         });
         $("#userInfo").select2({
             placeholder: "항목명 선택",
-        });
-        $("#userDoc").select2({
-            placeholder: "증빙서류 선택",
+            language: {
+                noResults: function() {
+                    return "검색 결과가 없습니다.";
+                }
+            }
         });
     });
 </script>
