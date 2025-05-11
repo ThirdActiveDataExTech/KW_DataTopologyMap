@@ -54,27 +54,6 @@ public class CetusUserRestController {
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/check-email")
-    public ResponseEntity checkEmail(@RequestParam(name = "userEmail", required = true) String userEmail) {
-
-        String message = "";
-        int findUserCnt = service.findUserCntByUserEmail(userEmail);
-
-        if (findUserCnt == 1) message = "이미 등록된 이메일입니다. 다른 이메일을 입력해주세요";
-        else if (findUserCnt == 0) message = "사용 가능한 이메일 입니다.";
-        else message = "올바르지 않은 이메일 입니다.";
-
-        if (!isValidEmail(userEmail)) {
-            findUserCnt = 2;
-            message = "유효한 이메일 형식이 아닙니다.";
-        }
-
-        Map<String, Object> map = new HashMap<>();
-        map.put("findUserCnt", findUserCnt);
-        map.put("message", message);
-        return ResponseEntity.ok(map);
-    }
-
     @GetMapping(value = "/excel", produces = "application/vnd.ms-excel")
     public void renderUserExcelPage(@Valid UserExcelSearch search, HttpServletResponse res) throws IOException {
         Pageable pageable = new Pageable(1000);

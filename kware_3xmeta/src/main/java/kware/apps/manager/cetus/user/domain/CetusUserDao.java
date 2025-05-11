@@ -39,10 +39,6 @@ public class CetusUserDao extends SuperDao<CetusUser> {
         return update("updateUserUseAt", bean);
     }
 
-    public Integer getUserCntByUserEmail(String userEmail) {
-        return selectOne("getUserCntByUserEmail", userEmail);
-    }
-
     public UserView getUserInfoByUid(Long userUid) {
         return selectOne("getUserInfoByUid", userUid);
     }

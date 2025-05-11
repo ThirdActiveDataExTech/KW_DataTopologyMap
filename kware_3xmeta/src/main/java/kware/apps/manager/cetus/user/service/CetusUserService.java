@@ -76,11 +76,6 @@ public class CetusUserService {
     }
 
     @Transactional(readOnly = true)
-    public Integer findUserCntByUserEmail(String userEmail) {
-        return dao.getUserCntByUserEmail(userEmail);
-    }
-
-    @Transactional(readOnly = true)
     public Page<UserList> userList(UserListSearch search, Pageable pageable) {
         return dao.userList(search, pageable);
     }

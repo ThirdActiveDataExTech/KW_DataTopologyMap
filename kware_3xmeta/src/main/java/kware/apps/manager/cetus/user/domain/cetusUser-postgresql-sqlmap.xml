@@ -79,15 +79,6 @@
 		 WHERE USER_ID = #{userId}
 	</update>
 
-	<select id="getUserCntByUserEmail" resultType="_int" parameterType="String">
-		/* cetusUser.getUserCntByUserEmail */
-		SELECT COUNT(*)
-		  FROM CETUS_USER
-		 WHERE USER_EMAIL = #{userEmail}
-		   AND APPROVE_AT = 'Y'
-		   AND USE_AT = 'Y'
-	</select>
-
 	<select id="getUserByUserId" parameterType="String" resultType="UserFullInfo">
 		/* cetusUser.getUserByUserId */
 		SELECT CU.UID
@@ -162,10 +153,8 @@
 		/* cetusUser.excelPageList */
 		SELECT USER_ID
 			  ,USER_NM
-			  ,USER_EMAIL
 			  ,APPROVE_AT
 			  ,USE_AT
-			  ,LAST_CONN_DT
 			  ,'사용자 권한' AS ROLE_NM
 		  FROM CETUS_USER
 		 WHERE 1 = 1
@@ -199,12 +188,11 @@
 		SELECT CU.UID
 		,CU.USER_ID
 		,CU.USER_NM
-		,CU.USER_EMAIL
 		,CU.APPROVE_AT
 		,CU.USE_AT
 		,TO_CHAR(CU.REG_DT, 'YYYY-MM-DD') AS REG_DT
 		FROM CETUS_USER CU
-		WHERE CU.DELETE_AT = 'N'
+		WHERE 1 = 1
 		ORDER BY CU.REG_DT DESC
 		<if test="@Ognl@isNotEmpty(userId)">
 			AND CU.USER_ID LIKE '%' || #{userId} || '%'
@@ -218,7 +206,7 @@
 		/* cetusUser.userListCount */
 		SELECT COUNT(*)
 		FROM CETUS_USER CU
-		WHERE CU.DELETE_AT = 'N'
+		WHERE 1 = 1
 		<if test="@Ognl@isNotEmpty(userId)">
 			AND CU.USER_ID LIKE '%' || #{userId} || '%'
 		</if>
