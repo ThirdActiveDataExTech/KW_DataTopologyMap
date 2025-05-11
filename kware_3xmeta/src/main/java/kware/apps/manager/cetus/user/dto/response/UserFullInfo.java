@@ -13,7 +13,9 @@ public class UserFullInfo {
     private String password;
     private String userNm;
     private String role;
+    private String roleNm;
     private String status;
+    private String statusNm;
     private Integer failCnt;
     private Long profileUid;
     private String profileId;

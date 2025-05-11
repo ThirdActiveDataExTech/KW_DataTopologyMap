@@ -2,17 +2,27 @@ package kware.apps.manager.cetus.enumstatus;
 
 
 import lombok.Getter;
-import org.springframework.security.core.userdetails.User;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Getter
 public enum UserStatus {
 
-    APPROVED("승인 완료"),
-    WAIT("승인 대기");
+    APPROVED("사용중"),
+    WAIT("승인 대기"),
+    STOP("정지");
 
     private String description;
 
     UserStatus(String description) {
         this.description = description;
+    }
+
+    public static List<EnumCodeDto> toList() {
+        return Arrays.stream(values())
+                .map(e -> new EnumCodeDto(e.name(), e.getDescription()))
+                .collect(Collectors.toList());
     }
 }

@@ -2,6 +2,10 @@ package kware.apps.manager.cetus.enumstatus;
 
 import lombok.Getter;
 
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Getter
 public enum UserAuthorCd {
 
@@ -14,5 +18,11 @@ public enum UserAuthorCd {
 
     UserAuthorCd(String name) {
         this.name = name;
+    }
+
+    public static List<EnumCodeDto> toList() {
+        return Arrays.stream(values())
+                .map(e -> new EnumCodeDto(e.name(), e.getName()))
+                .collect(Collectors.toList());
     }
 }

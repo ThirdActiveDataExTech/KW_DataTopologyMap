@@ -1,0 +1,51 @@
+package kware.apps.manager.cetus.form.service;
+
+import cetus.bean.Page;
+import cetus.bean.Pageable;
+import kware.apps.manager.cetus.form.domain.CetusColumnOptions;
+import kware.apps.manager.cetus.form.dto.request.ColumnsChange;
+import kware.apps.manager.cetus.form.dto.request.ColumnsSave;
+import kware.apps.manager.cetus.form.dto.request.ColumnsSearch;
+import kware.apps.manager.cetus.form.dto.response.ColumnsPage;
+import kware.apps.manager.cetus.form.dto.response.ColumnsView;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
+
+
+@RestController
+@RequestMapping(value="/cetus/api/form")
+@RequiredArgsConstructor
+public class CetusFormColumnsRestController {
+    private final CetusFormColumnsService service;
+
+    @PostMapping
+    public ResponseEntity<Void> save(@RequestBody @Valid ColumnsSave request) {
+        service.save(request);
+        return ResponseEntity.ok().build();
+    }
+
+    @PutMapping("/{uid}")
+    public ResponseEntity<Void> update(@PathVariable Long uid, @RequestBody @Valid ColumnsChange request) {
+        service.change(uid, request);
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping
+    public ResponseEntity<Page<ColumnsPage>> page(ColumnsSearch request, Pageable pageable) {
+        return ResponseEntity.ok(service.columns(request, pageable));
+    }
+
+    @GetMapping("/{uid}")
+    public ResponseEntity<ColumnsView> columns(@PathVariable Long uid) {
+        return ResponseEntity.ok(service.column(uid));
+    }
+
+    @PutMapping("/option/{uid}")
+    public ResponseEntity<Void> optionChange(@PathVariable Long uid, @RequestBody @Valid CetusColumnOptions request) {
+        service.optionChange(uid, request);
+        return ResponseEntity.ok().build();
+    }
+}

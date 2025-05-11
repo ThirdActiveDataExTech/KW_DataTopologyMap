@@ -17,7 +17,7 @@ public class CetusMenuInfoRestController {
 
     private final CetusMenuInfoService service;
 
-    @GetMapping("/tree.json")
+    @GetMapping("/tree")
     public ResponseEntity tree() {
         List<MenuTreeList> list = service.getMenuTreeList(new MenuListSearch("Y"));
         return ResponseEntity.ok(list);

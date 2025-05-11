@@ -4,253 +4,138 @@
       layout:decorate="~{layouts/default}">
 
 <th:block layout:fragment="center-image">
-    <th:block th:with="backtitle='사용자 관리', backUrl='/manager/cetus/user', title1='사용자 관리', title2='시스템 관리 > 사용자 관리', leftImg='', rightImg=''">
-        <th:block th:replace="fragments/center-image :: center-image-title-back(${backtitle}, ${backUrl}, ${title1}, ${title2}, ${leftImg}, ${rightImg})"></th:block>
+    <th:block th:with="title='사용자 관리', title1='사용자 관리', title2='시스템 관리 > 사용자 관리', leftImg='', rightImg=''">
+        <th:block th:replace="fragments/center-image :: center-image-title-custom(${title}, ${title1}, ${title2}, ${leftImg}, ${rightImg})"></th:block>
     </th:block>
 </th:block>
 
 <th:block layout:fragment="head">
-    <link rel="stylesheet" th:href="@{'/assets/css/page/list.css'}" />
+    <link rel="stylesheet" th:href="@{'/assets/css/page/manager/user-list.css'}" />
     <link rel="stylesheet" th:href="@{'/assets/css/page/manager/user-form.css'}" />
-    <style>
-        .tree ul {
-            list-style-type: none;
-            padding-left: 20px;
-            position: relative;
-        }
-        .tree ul::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            border-left: 1px solid #ccc;
-            height: 100%;
-        }
-        .tree li {
-            margin: 5px 0;
-            padding-left: 20px;
-            position: relative;
-        }
-        .tree li::before {
-            content: '';
-            position: absolute;
-            top: 12px;
-            left: 0;
-            border-top: 1px solid #ccc;
-            width: 20px;
-        }
-        .filter-section {
-            border: 1px solid #ddd;
-            border-radius: 6px;
-            margin-bottom: 15px;
-        }
-        .filter-header {
-            background: #f7f7f7;
-            padding: 10px 15px;
-            cursor: pointer;
-            font-weight: bold;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .filter-header::after {
-            content: '\25BC';
-            font-size: 12px;
-        }
-        .filter-body {
-            padding: 10px 15px;
-            display: none;
-        }
-        .sidebar-container {
-            border: 1px solid #ddd;
-            border-radius: 6px;
-            padding: 15px;
-            background-color: #fff;
-        }
-        .filter-title-area {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 10px;
-        }
-        .filter-title-area h3 {
-            margin: 0;
-            font-size: 16px;
-            font-weight: bold;
-        }
-        .user-profile-img {
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            margin-right: 10px;
-        }
-        .user-info-wrapper {
-            display: flex;
-            align-items: center;
-        }
-        .user-text-info {
-            display: flex;
-            flex-direction: column;
-        }
-        td {
-            vertical-align: middle !important;
-        }
-        .single-page-cart a {
-            background-color: #d7e9f7;
-            padding: 6px 12px;
-            border-radius: 4px;
-            color: #1a1a1a;
-            display: inline-block;
-            font-size: 14px;
-        }
-    </style>
 </th:block>
 
 <th:block layout:fragment="content">
     <div class="my-account-wrapper pb-100 pt-30">
-        <div class="container">
+        <div class="container custom-container">
             <div class="row">
                 <div class="col-lg-12">
                     <div class="myaccount-page-wrapper">
 
                         <div class="row">
                             <div class="col-lg-3 col-md-3">
+
                                 <div class="sidebar-container">
                                     <div class="filter-title-area">
                                         <h3>Filter</h3>
                                         <div class="page-more-update-wrapper btn-control-wrapper">
-                                            <div class="single-page-cart btn-hover">
-                                                <a href="javascript:void(0);" style="font-size: 14px;"><span>모두 초기화</span></a>
-                                            </div>
+                                            <button type="button" class="custom-button" id="filter-remove">모두 초기화</button>
                                         </div>
                                     </div>
 
                                     <div class="filter-section">
                                         <div class="filter-header">사용자</div>
                                         <div class="filter-body">
-                                            <input type="text" class="form-control mb-2" placeholder="이름" />
-                                            <input type="text" class="form-control" placeholder="ID" />
+                                            <input type="text" class="form-control mb-2" placeholder="이름" id="userNm-input" name="userNm" />
+                                            <input type="text" class="form-control" placeholder="ID" id="userId-input" name="userId" />
                                         </div>
                                     </div>
 
                                     <div class="filter-section">
-                                        <div class="filter-header">소속</div>
+                                        <div class="filter-header" data-id="userGroup" data-name="소속">소속</div>
                                         <div class="filter-body">
                                             <div class="mt-2">
-                                                <label><input type="checkbox"> ####</label><br>
-                                                <label><input type="checkbox"> ####</label><br>
-                                                <label><input type="checkbox"> ####</label>
+                                                <select class="select2 form-select round border_line" id="userGroup" name="userGroup" multiple>
+                                                    <option th:each="group : ${userGroup}" th:value="${group?.uid}" th:text="${group?.name}"></option>
+                                                </select>
                                             </div>
                                         </div>
                                     </div>
 
                                     <div class="filter-section">
-                                        <div class="filter-header">직책</div>
+                                        <div class="filter-header" data-id="userPosition" data-name="직급">직급</div>
                                         <div class="filter-body">
-                                            <select class="form-select">
-                                                <option>선택</option>
-                                            </select>
+                                            <div class="mt-2">
+                                                <select class="select2 form-select round border_line" id="userPosition" name="userPosition" multiple>
+                                                    <option th:each="position : ${userPosition}" th:value="${position?.uid}" th:text="${position?.name}"></option>
+                                                </select>
+                                            </div>
                                         </div>
                                     </div>
 
                                     <div class="filter-section">
                                         <div class="filter-header">그룹/부서</div>
                                         <div class="filter-body">
-                                            <div class="tree">
-                                                <ul>
-                                                    <li><strong>Root Name</strong>
-                                                        <ul>
-                                                            <li>
-                                                                <label><input type="checkbox"> Group A</label>
-                                                                <ul>
-                                                                    <li><label><input type="checkbox"> Group A-1</label></li>
-                                                                    <li><label><input type="checkbox"> Group A-2</label></li>
-                                                                </ul>
-                                                            </li>
-                                                            <li><label><input type="checkbox"> Group B</label></li>
-                                                        </ul>
-                                                    </li>
-                                                </ul>
-                                            </div>
+                                            <div class="mt-2" id="depth-tree"></div>
                                         </div>
                                     </div>
 
                                     <div class="filter-section">
-                                        <div class="filter-header">상태</div>
+                                        <div class="filter-header" data-id="userStatus" data-name="상태">상태</div>
                                         <div class="filter-body">
-                                            <select class="form-select">
-                                                <option>선택</option>
-                                            </select>
+                                            <div class="mt-2">
+                                                <select class="select2 form-select round border_line" id="userStatus" name="userStatus" multiple>
+                                                    <option th:each="status : ${userStatus}" th:value="${status?.code}" th:text="${status?.name}"></option>
+                                                </select>
+                                            </div>
                                         </div>
                                     </div>
 
                                     <div class="filter-section">
                                         <div class="filter-header">가입일</div>
                                         <div class="filter-body">
-                                            <input type="date" class="form-control mb-2" />
-                                            <input type="date" class="form-control" />
+                                            <label class="form-label" for="startDate">시작일</label>
+                                            <input type="date" class="form-control mb-4" id="startDate" name="startDate"/>
+                                            <label class="form-label" for="endDate">종료일</label>
+                                            <input type="date" class="form-control" id="endDate" name="endDate"/>
                                         </div>
                                     </div>
 
                                     <div class="filter-section">
-                                        <div class="filter-header">권한</div>
+                                        <div class="filter-header" data-id="userAuthorCd" data-name="권한">권한</div>
                                         <div class="filter-body">
-                                            <select class="form-select">
-                                                <option>선택</option>
-                                            </select>
+                                            <div class="mt-2">
+                                                <select class="select2 form-select round border_line" id="userAuthorCd" name="userAuthorCd" multiple>
+                                                    <option th:each="author : ${userAuthorCd}" th:value="${author?.code}" th:text="${author?.name}"></option>
+                                                </select>
+                                            </div>
                                         </div>
                                     </div>
-
                                 </div>
+
                             </div>
 
                             <div class="col-lg-9 col-md-9">
-                                <div class="pb-3 border-bottom d-flex flex-wrap justify-content-between align-items-center">
-                                    <div class="page-topbar-left d-flex align-items-center flex-wrap gap-2">
-                                        <span><b>59</b>건 중 <b>0</b>건 선택</span>
-                                        <div class="page-more-update-wrapper btn-control-wrapper">
-                                            <div class="single-page-cart btn-hover">
-                                                <a href="javascript:void(0);"><span>소속 변경</span></a>
-                                            </div>
-                                        </div>
-                                        <div class="page-more-update-wrapper btn-control-wrapper">
-                                            <div class="single-page-cart btn-hover">
-                                                <a href="javascript:void(0);"><span>상태 변경</span></a>
-                                            </div>
-                                        </div>
-                                        <div class="page-more-update-wrapper btn-control-wrapper">
-                                            <div class="single-page-cart btn-hover">
-                                                <a href="javascript:void(0);"><span>권한 변경</span></a>
-                                            </div>
+                                <div class="topbar-container">
+                                    <div class="topbar-left">
+                                        <span id="total-num"></span>
+                                        <div class="btn-wrapper">
+                                            <button type="button" class="custom-button" id="dept-change">그룹/부서 변경</button>
+                                            <button type="button" class="custom-button" id="status-change">상태 변경</button>
+                                            <button type="button" class="custom-button" id="authorCd-change">권한 변경</button>
                                         </div>
                                     </div>
-                                    <div class="page-topbar-right d-flex flex-wrap gap-2">
-                                        <div class="page-more-update-wrapper btn-control-wrapper">
-                                            <div class="single-page-cart btn-hover">
-                                                <a href="javascript:void(0);"><span>리스트 다운로드</span></a>
-                                            </div>
-                                        </div>
-                                        <div class="page-more-update-wrapper btn-control-wrapper">
-                                            <div class="single-page-cart btn-hover">
-                                                <a href="javascript:void(0);"><span>초대하기</span></a>
-                                            </div>
-                                        </div>
-                                        <div class="page-more-update-wrapper btn-control-wrapper">
-                                            <div class="single-page-cart btn-hover">
-                                                <a href="javascript:void(0);"><span>계정 추가</span></a>
-                                            </div>
+                                    <div class="topbar-right">
+                                        <div class="btn-wrapper">
+                                            <button type="button" class="custom-button" id="download-list">리스트 다운로드</button>
+                                            <button type="button" class="custom-button" id="invite-user">초대하기</button>
+                                            <button type="button" class="custom-button" id="add-user">계정 추가</button>
                                         </div>
                                     </div>
                                 </div>
+
                                 <div class="table-responsive mt-3">
                                     <table class="table table-bordered" id="user-table">
                                         <thead class="table-light">
                                         <tr>
-                                            <th><input type="checkbox" /></th>
+                                            <th>
+                                                <div class="form-check">
+                                                    <input class="form-check-input lc-check-all" type="checkbox" id="lc-check-all"/>
+                                                </div>
+                                            </th>
                                             <th>No</th>
                                             <th>사용자</th>
                                             <th>소속</th>
-                                            <th>직책</th>
+                                            <th>직급</th>
                                             <th>그룹/부서</th>
                                             <th>상태</th>
                                             <th>가입일</th>
@@ -267,43 +152,142 @@
             </div>
         </div>
     </div>
+
+    <th:block th:replace="manager/user/modal/user-dept-modal"></th:block>
+    <th:block th:replace="manager/user/modal/user-status-modal"></th:block>
+    <th:block th:replace="manager/user/modal/user-author-modal"></th:block>
+    <th:block th:replace="manager/user/modal/user-invite-modal"></th:block>
+
 </th:block>
 
 <th:block layout:fragment="script">
+    <script th:src="@{'/assets/js/page/manager/user-list.js'}"></script>
     <script th:inline="javascript">
+
+        /** 모달 닫을때 생기는 warning 해결 **/
+        $(document).on('hide.bs.modal', function () {
+            if (document.activeElement) {
+                $(document.activeElement).blur();
+            }
+        });
+
+        const userGroup = [[${userGroup}]]
+        const userPosition = [[${userPosition}]]
+        const userStatus = [[${userStatus}]]
+        const userAuthorCd = [[${userAuthorCd}]]
+
         $(function () {
+
+            userList.initTree();
+            userList.initTable();
+
             $('.filter-header').on('click', function () {
-                $(this).next('.filter-body').slideToggle(150);
+                const $this = $(this);
+                const id = $this.data('id');
+                const name = $this.data('name');
+                $this.toggleClass('open');
+                $this.next('.filter-body').slideToggle(150);
+                $(`#${id}`).select2({
+                    placeholder: `${name} 선택`,
+                    language: {
+                        noResults: function() {
+                            return "검색 결과가 없습니다.";
+                        }
+                    }
+                });
             });
 
-            const table = new Table("user-table")
-                .get("/cetus/api/user")
-                .delUnUseParams()
-                .add(new Column("uid").render((data, full) => {
-                    return `<input type="checkbox" data-uid="${full.uid}">`;
-                }))
-                .add(new Column("uid").render((data, full) => full.listIndex))
-                .add(new Column("userNm").render((data, full) => {
-                    return `
-            <div class="user-info-wrapper">
-                <img src="/assets/images/page/detail/profile_noimage.png" alt="프로필" class="user-profile-img">
-                <div class="user-tezlxt-info">
-                    <span>${full.userNm}</span>
-                    <span class="text-danger">${full.userEmail || ''}</span>
-                </div>
-            </div>`;
-                }))
-                .add(new Column("userNm"))
-                .add(new Column("userNm"))
-                .add(new Column("userNm"))
-                .add(new Column("useAt").render(data => data === "Y" ? "사용중" : "중지"))
-                .add(new Column("regDt"))
-                .add(new Column("userNm"))
-                .selectable()
-                .select(function (data) {
-                    window.location.href = `/manager/cetus/user/${data.uid}`;
-                })
-                .init();
+            /* == 필터 > 사용자 (ID, 이름) == */
+            $('#userId-input, #userNm-input').on('keyup', function (e) {
+                if (e.key === 'Enter') {
+                    userList.submitTable();
+                }
+            });
+
+            /* == 필터 > 소속, 직급, 상태, 권한 == */
+            $('#userGroup, #userPosition, #userStatus, #userAuthorCd').on('change', function() {
+                userList.submitTable()
+            });
+
+            /* == 필터 > 가입일 == */
+            $('#startDate, #endDate').on('change', function() {
+                userList.submitTable()
+            });
+
+            /* == 모두 초기화 == */
+            $("#filter-remove").on('click', function() {
+                userList.formReset();
+            });
+
+            /* == 그룹/부서 변경 == */
+            $("#dept-change").on('click', function() {
+                userList.userDeptChange();
+            });
+
+            /* == 상태 변경 == */
+            $("#status-change").on('click', function() {
+                userList.userStatusChange();
+            });
+
+            /* == 권한 변경 == */
+            $("#authorCd-change").on('click', function() {
+                userList.userAuthorChange();
+            });
+
+            /* == 다운로드 == */
+            $("#download-list").on('click', function() {
+                userList.userListDownload();
+            });
+
+            /* == 초대 == */
+            $("#invite-user").on('click', function() {
+                userList.inviteUser();
+            });
+
+            /* == 사용자 추가 == */
+            $("#add-user").on('click', function() {
+                window.location.href = '/manager/cetus/user/save'
+            });
+
+            /* == 권한 변경 팝업 닫기 == */
+            $('#author-cancel-btn').on('click', function () {
+                Util.confirm('정말 닫으시겠습니까? <br> 변경사항이 저장되지 않을 수 있습니다.').then((isOk) => {
+                    if(isOk) {
+                        $('#userAuthorModal').modal('hide');
+                        userList.submitTable();
+                    }
+                });
+            });
+            $("#author-select-btn").on("click", function () {
+                console.log("author-select-btn")
+            });
+
+            /* == 그룹/부서 변경 팝업 닫기 == */
+            $('#dept-cancel-btn').on('click', function () {
+                Util.confirm('정말 닫으시겠습니까? <br> 변경사항이 저장되지 않을 수 있습니다.').then((isOk) => {
+                    if(isOk) {
+                        $('#userDeptModal').modal('hide');
+                        userList.submitTable();
+                    }
+                });
+            });
+            $("#dept-select-btn").on("click", function () {
+                console.log("dept-select-btn")
+            });
+
+            /* == 상태 변경 팝업 닫기 == */
+            $('#status-cancel-btn').on('click', function () {
+                Util.confirm('정말 닫으시겠습니까? <br> 변경사항이 저장되지 않을 수 있습니다.').then((isOk) => {
+                    if(isOk) {
+                        $('#userStatusModal').modal('hide');
+                        userList.submitTable();
+                    }
+                });
+            });
+            $("#status-select-btn").on("click", function () {
+                console.log("status-select-btn")
+            });
+
         });
     </script>
 </th:block>

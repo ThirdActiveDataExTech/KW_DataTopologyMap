@@ -43,7 +43,7 @@ public class CetusUserDao extends SuperDao<CetusUser> {
         return selectOne("getUserInfoByUid", userUid);
     }
 
-    public Page<UserList> userList(UserListSearch search, Pageable pageable) {
+    public Page<UserList> userPage(UserListSearch search, Pageable pageable) {
         return page("userList", "userListCount", search, pageable);
     }
 }

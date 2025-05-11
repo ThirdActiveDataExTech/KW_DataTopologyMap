@@ -10,10 +10,25 @@ public class UserList {
 
     private Long uid;
     private String userId;
+    private String password;
     private String userNm;
-    private String userTel;
-    private String userEmail;
-    private String approveAt;
+    private String role;
+    private String roleNm;
+    private String status;
+    private String statusNm;
+    private Integer failCnt;
+    private Long profileUid;
+    private String profileId;
+    private String metaData;
     private String useAt;
+    private String approveAt;
+    private Long workplaceUid;
+    private String workplaceNm;
+    private Long groupUid;
+    private String groupNm;
+    private Long deptUid;
+    private String deptNm;
+    private Long positionUid;
+    private String positionNm;
     private String regDt;
 }

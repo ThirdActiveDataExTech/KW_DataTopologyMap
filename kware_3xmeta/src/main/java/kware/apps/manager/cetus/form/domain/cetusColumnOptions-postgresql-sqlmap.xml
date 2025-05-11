@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cetusColumnOptions">
+	<select id="list" resultType="ColumnsPage" parameterType="ColumnsSearch">
+		/* cetusColumnOptions.list */
+		SELECT
+			  UID
+			, COLUMNS_UID
+			, LABEL
+            , NAME
+            , REG_UID
+            , REG_DT
+            , UPDT_UID
+            , UPDT_DT
+		FROM CETUS_COLUMN_OPTIONS CU
+		WHERE 1 = 1
+		  AND COLUMNS_UID = #{columnsUid}
+		ORDER BY REG_DT DESC
+	</select>
+
+	<select id="findByUid" parameterType="long" resultType="ColumnsView">
+		SELECT
+		       UID
+			 , COLUMNS_UID
+			 , LABEL
+			 , NAME
+			 , REG_UID
+			 , REG_DT
+			 , UPDT_UID
+			 , UPDT_DT
+		FROM CETUS_FORM_COLUMNS
+		WHERE uid = #{uid}
+	</select>
+
+	<insert id="insert" parameterType="CetusColumnOptions">
+		INSERT INTO CETUS_COLUMN_OPTIONS (
+				   COLUMNS_UID
+				 , LABEL
+				 , NAME
+				 , REG_UID
+				 , REG_DT
+				 , UPDT_UID
+				 , UPDT_DT
+		) VALUES (
+				   #{columnsUid}
+				 , #{label}
+				 , #{name}
+				 , #{regUid}
+				 , now()
+				 , #{updtUid}
+				 , now()
+				 )
+	</insert>
+
+	<update id="update" parameterType="CetusColumnOptions">
+		UPDATE CETUS_COLUMN_OPTIONS
+		  SET label         = #{label}
+		    , name          = #{name}
+		    , updt_uid      = #{updtUid}
+		    , updt_dt       = now()
+		WHERE uid = #{uid}
+	</update>
+</mapper>

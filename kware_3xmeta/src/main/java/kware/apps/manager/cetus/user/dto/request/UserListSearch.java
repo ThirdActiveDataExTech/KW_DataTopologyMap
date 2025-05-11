@@ -1,14 +1,18 @@
 package kware.apps.manager.cetus.user.dto.request;
 
-import cetus.annotation.YOrN;
 import lombok.Getter;
+import lombok.Setter;
 
-@Getter
+@Getter @Setter
 public class UserListSearch {
 
+    private String userNm;
     private String userId;
-
-    public UserListSearch(String userId) {
-        this.userId = userId;
-    }
+    private String startDate;
+    private String endDate;
+    private String[] userAuthorCd;
+    private String[] userStatus;
+    private Long[] userGroup;
+    private Long[] userDepth;
+    private Long[] userPosition;
 }

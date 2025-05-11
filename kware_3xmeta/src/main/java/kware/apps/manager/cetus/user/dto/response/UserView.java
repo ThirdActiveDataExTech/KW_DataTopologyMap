@@ -12,15 +12,11 @@ public class UserView {
     private String userId;
     private String password;
     private String userNm;
-    private String userTel;
-    private String userEmail;
-    private String approveAt;
-    private String useAt;
-    private String lastConnDt;
-    private String lastPasswordChangeDe;
-    private String userSttusCd;
+    private String authorCd;
+    private String status;
     private Integer failCnt;
-    private String deleteAt;
-    private String role;
-    private String roleNm;
+    private Long profileUid;
+    private String metaData;
+    private String useAt;
+    private String approveAt;
 }

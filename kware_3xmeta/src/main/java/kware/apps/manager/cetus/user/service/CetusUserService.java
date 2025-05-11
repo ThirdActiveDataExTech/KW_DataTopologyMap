@@ -76,7 +76,8 @@ public class CetusUserService {
     }
 
     @Transactional(readOnly = true)
-    public Page<UserList> userList(UserListSearch search, Pageable pageable) {
-        return dao.userList(search, pageable);
+    public Page<UserList> userPage(UserListSearch search, Pageable pageable) {
+        System.out.println("search = " + search);
+        return dao.userPage(search, pageable);
     }
 }

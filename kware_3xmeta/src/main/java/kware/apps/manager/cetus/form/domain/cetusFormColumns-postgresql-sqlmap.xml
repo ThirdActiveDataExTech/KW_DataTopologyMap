@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cetusFormColumns">
+	<select id="list" resultType="ColumnsPage" parameterType="ColumnsSearch">
+		/* cetusFormColumns.list */
+		SELECT
+		  UID
+		, WORKPLACE_UID
+		, TYPE
+		, LABEL
+		, REQUIRED
+		, DESCRIPTION
+		, USE_AT
+		, NAME
+		, REG_UID
+		, REG_DT
+		, UPDT_UID
+		, UPDT_DT
+		, PLACEHOLDER
+		FROM CETUS_FORM_COLUMNS CU
+		WHERE 1 = 1
+		  AND WORKPLACE_UID = #{workplaceUid}
+		<if test="@Ognl@isNotEmpty(type)">
+			AND CU.TYPE = #{type}
+		</if>
+		ORDER BY CU.REG_DT DESC
+		<if test="@Ognl@isNotEmpty(startNumber) and  @Ognl@isNotEmpty(endNumber)">
+			OFFSET ${startNumber} LIMIT ${endNumber}
+		</if>
+	</select>
+
+	<select id="view" parameterType="long" resultType="CetusFormColumns">
+		SELECT UID
+			 , TYPE
+			 , LABEL
+			 , REQUIRED
+			 , DESCRIPTION
+			 , USE_AT
+			 , NAME
+			 , REG_UID
+			 , REG_DT
+			 , UPDT_UID
+			 , UPDT_DT
+			 , PLACEHOLDER
+			 , WORKPLACE_UID
+		FROM CETUS_FORM_COLUMNS
+		WHERE uid = #{uid}
+	</select>
+
+	<select id="findByUid" parameterType="long" resultType="ColumnsView">
+		SELECT UID
+			 , TYPE
+			 , LABEL
+			 , REQUIRED
+			 , DESCRIPTION
+			 , USE_AT
+			 , NAME
+			 , REG_UID
+			 , REG_DT
+			 , UPDT_UID
+			 , UPDT_DT
+			 , PLACEHOLDER
+			 , WORKPLACE_UID
+		FROM CETUS_FORM_COLUMNS
+		WHERE uid = #{uid}
+	</select>
+
+	<select id="count" resultType="int" parameterType="ColumnsSearch">
+		/* cetusUser.userListCount */
+		SELECT COUNT(*)
+		FROM CETUS_FORM_COLUMNS CU
+		WHERE 1 = 1
+		 AND WORKPLACE_UID = #{workplaceUid}
+		<if test="@Ognl@isNotEmpty(type)">
+			AND CU.TYPE = #{type}
+		</if>
+	</select>
+
+	<insert id="insert" parameterType="ColumnsSave" useGeneratedKeys="true" keyProperty="uid">
+		INSERT INTO CETUS_FORM_COLUMNS (
+					  TYPE
+					, LABEL
+					, REQUIRED
+					, DESCRIPTION
+					, USE_AT
+					, NAME
+					, REG_UID
+					, REG_DT
+					, UPDT_UID
+					, UPDT_DT
+					, PLACEHOLDER
+					, WORKPLACE_UID
+					, FORM_GROUP
+					, ORDER
+					) VALUES (
+				     #{type}
+				   , #{label}
+				   , #{required}
+				   , #{description}
+				   , #{useAt}
+				   , #{name}
+				   , #{regUid}
+				   , now()
+				   , #{updtUid}
+				   , now()
+				   , #{placeholder}
+				   , #{workplaceUid}
+			       , #{formGroup}
+				   , #{order}
+				 )
+	</insert>
+
+	<update id="update" parameterType="ColumnsChange">
+		UPDATE CETUS_FORM_COLUMNS
+		  SET
+		      TYPE          = #{type}
+		    , LABEL         = #{label}
+		    , REQUIRED      = #{required}
+		    , DESCRIPTION   = #{description}
+		    , USE_AT        = #{useAt}
+		    , NAME          = #{name}
+		    , UPDT_UID      = #{updtUid}
+		    , UPDT_DT       = now()
+		    , PLACEHOLDER   = #{placeholder}
+		WHERE uid = #{uid}
+	</update>
+</mapper>
