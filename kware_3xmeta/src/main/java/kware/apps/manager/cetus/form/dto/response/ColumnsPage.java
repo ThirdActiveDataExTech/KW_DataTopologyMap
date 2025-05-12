@@ -25,6 +25,8 @@ public class ColumnsPage {
     private Long updtUid;
     private String regDt;
     private String updtDt;
+    private String formGroup;
+    private Integer sortNum;
 
     private List<CetusColumnOptions> options = new ArrayList<>();
 

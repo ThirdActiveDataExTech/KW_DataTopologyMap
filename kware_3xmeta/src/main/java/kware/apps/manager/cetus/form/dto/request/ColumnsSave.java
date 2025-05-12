@@ -15,8 +15,6 @@ import java.util.List;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ColumnsSave {
-
-    private Long workplaceUid;
     @NotBlank @DisplayName("타입")
     private String type;
     @NotBlank @DisplayName("라벨")
@@ -31,5 +29,11 @@ public class ColumnsSave {
     private String placeholder;
     @NotBlank @DisplayName("폼 그룹")
     private String formGroup;
+    private Integer sortNum;
+    private String defaultValue;
     private List<CetusColumnOptions> options = new ArrayList<>();
+
+    public void addOrder(Integer sortNum) {
+        this.sortNum = sortNum;
+    }
 }

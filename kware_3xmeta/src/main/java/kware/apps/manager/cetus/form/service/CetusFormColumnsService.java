@@ -31,11 +31,16 @@ public class CetusFormColumnsService {
 
     @Transactional
     public void save(ColumnsSave request) {
+        // order 계산
+        int nextOrder = columnsDao.findNextSortNum(request.getFormGroup());
+        request.addOrder(nextOrder);
+        
         CetusFormColumns formColumns = new CetusFormColumns(request);
+
         columnsDao.insert(formColumns);
 
         if (ElementType.from(request.getType()).requiresOption()) {
-            if(request.getOptions() == null && request.getOptions().isEmpty()) {
+            if (request.getOptions() == null && request.getOptions().isEmpty()) {
                 throw new SimpleException("옵션이 필요한 컬럼입니다.", HttpStatus.NO_CONTENT);
             }
 
@@ -53,6 +58,23 @@ public class CetusFormColumnsService {
     public void change(Long uid, ColumnsChange request) {
         CetusFormColumns view = columnsDao.view(uid);
         columnsDao.update(view.changeColumns(uid, request));
+
+        if(ElementType.from(request.getType()).requiresOption()) {
+            if (request.getOptions() == null && request.getOptions().isEmpty()) {
+                throw new SimpleException("옵션이 필요한 컬럼입니다.", HttpStatus.NO_CONTENT);
+            }
+
+            var options = request.getOptions();
+            options.forEach(option -> {
+               option.addColumnsUid(view.getUid());
+               option.addAuthor(view.getRegUid());
+               if(option.getUid() != null) {
+                   optionsDao.update(option);
+               } else {
+                   optionsDao.insert(option);
+               }
+            });
+        }
     }
 
     @Transactional(readOnly = true)
@@ -86,4 +108,13 @@ public class CetusFormColumnsService {
         optionsDao.update(request);
     }
 
+    @Transactional
+    public void deleteColumns(Long uid) {
+        columnsDao.deleteColumns(uid);
+    }
+
+    @Transactional
+    public void deleteOption (Long uid) {
+        optionsDao.delete(uid);
+    }
 }

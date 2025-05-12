@@ -2,7 +2,6 @@ package kware.apps.manager.cetus.form.service;
 
 import cetus.bean.Page;
 import cetus.bean.Pageable;
-import kware.apps.manager.cetus.form.domain.CetusColumnOptions;
 import kware.apps.manager.cetus.form.dto.request.ColumnsChange;
 import kware.apps.manager.cetus.form.dto.request.ColumnsSave;
 import kware.apps.manager.cetus.form.dto.request.ColumnsSearch;
@@ -43,9 +42,17 @@ public class CetusFormColumnsRestController {
         return ResponseEntity.ok(service.column(uid));
     }
 
-    @PutMapping("/option/{uid}")
-    public ResponseEntity<Void> optionChange(@PathVariable Long uid, @RequestBody @Valid CetusColumnOptions request) {
-        service.optionChange(uid, request);
+    @DeleteMapping("/{uid}")
+    public ResponseEntity<Void> columnsDelete(@PathVariable Long uid) {
+        service.deleteColumns(uid);
         return ResponseEntity.ok().build();
     }
+
+    @DeleteMapping("/option/{uid}")
+    public ResponseEntity<Void> optionDelete(@PathVariable Long uid) {
+        service.deleteOption(uid);
+        return ResponseEntity.ok().build();
+    }
+
+
 }

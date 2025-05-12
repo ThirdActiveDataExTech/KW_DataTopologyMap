@@ -12,7 +12,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class CetusFormColumns extends AuditBean {
     private Long uid;
-    private Long workplaceUid;
     private String type;
     private String label;
     private boolean required;
@@ -21,11 +20,11 @@ public class CetusFormColumns extends AuditBean {
     private String name;
     private String placeholder;
     private String formGroup;
-    private Integer order;
+    private Integer sortNum;
+    private String defaultValue;
 
 
     public CetusFormColumns(ColumnsSave request) {
-        this.workplaceUid = request.getWorkplaceUid();
         this.type = request.getType();
         this.label = request.getLabel();
         this.required = request.isRequired();
@@ -33,11 +32,13 @@ public class CetusFormColumns extends AuditBean {
         this.useAt = request.getUseAt();
         this.name = request.getName();
         this.placeholder = request.getPlaceholder();
+        this.formGroup =request.getFormGroup();
+        this.sortNum = request.getSortNum();
+        this.defaultValue = request.getDefaultValue();
     }
 
     public CetusFormColumns changeColumns(Long uid, ColumnsChange request) {
         this.uid = uid;
-        this.workplaceUid = request.getWorkplaceUid();
         this.type = request.getType() != null ? request.getType() : this.type;
         this.label = request.getLabel() != null ? request.getLabel() : this.label;
         this.required = request.isRequired();
@@ -45,6 +46,8 @@ public class CetusFormColumns extends AuditBean {
         this.useAt = request.getUseAt() != null ? request.getUseAt() : this.useAt;
         this.name = request.getName() != null ? request.getName() : this.name;
         this.placeholder = request.getPlaceholder() != null ? request.getPlaceholder() : this.placeholder;
+        this.sortNum = request.getSortNum() != null ? request.getSortNum() : this.sortNum;
+        this.defaultValue = request.getDefaultValue() != null ? request.getDefaultValue() : this.defaultValue;
         return this;
     }
 }

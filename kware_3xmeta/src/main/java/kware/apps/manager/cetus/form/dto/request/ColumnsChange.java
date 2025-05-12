@@ -14,8 +14,6 @@ import java.util.List;
 @Getter @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ColumnsChange {
 
-    private Long workplaceUid;
-
     @NotBlank @DisplayName("타입")
     private String type;
     @NotBlank @DisplayName("라벨")
@@ -29,6 +27,9 @@ public class ColumnsChange {
     private String name;
     @NotBlank @DisplayName("placeholder")
     private String placeholder;
+    private String formGroup;
+    private Integer sortNum;
+    private String defaultValue;
 
     private List<CetusColumnOptions> options = new ArrayList<>();
 }

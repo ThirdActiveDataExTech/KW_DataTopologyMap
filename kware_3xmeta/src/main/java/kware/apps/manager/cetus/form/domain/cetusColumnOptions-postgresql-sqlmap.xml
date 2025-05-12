@@ -57,10 +57,16 @@
 
 	<update id="update" parameterType="CetusColumnOptions">
 		UPDATE CETUS_COLUMN_OPTIONS
-		  SET label         = #{label}
-		    , name          = #{name}
-		    , updt_uid      = #{updtUid}
-		    , updt_dt       = now()
-		WHERE uid = #{uid}
+		  SET LABEL         = #{label}
+		    , NAME          = #{name}
+		    , UPDT_UID      = #{updtUid}
+		    , UPDT_DT       = now()
+		WHERE UID = #{uid}
+		  AND COLUMNS_UID = #{columnsUid}
 	</update>
+
+	<delete id="delete" parameterType="long">
+		DELETE FROM CETUS_COLUMN_OPTIONS
+		WHERE UID = #{uid}
+	</delete>
 </mapper>
