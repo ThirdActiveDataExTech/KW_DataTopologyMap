@@ -46,4 +46,12 @@ public class CetusUserDao extends SuperDao<CetusUser> {
     public Page<UserList> userPage(UserListSearch search, Pageable pageable) {
         return page("userList", "userListCount", search, pageable);
     }
+
+    public int updateUserStatus(CetusUser bean) {
+        return update("updateUserStatus", bean);
+    }
+
+    public int updateUserAuthorCd(CetusUser bean) {
+        return update("updateUserAuthorCd", bean);
+    }
 }

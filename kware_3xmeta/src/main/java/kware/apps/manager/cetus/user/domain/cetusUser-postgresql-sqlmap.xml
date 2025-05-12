@@ -244,6 +244,7 @@
 		 INNER JOIN CETUS_POSITION_USER CPU ON CPU.USER_UID = CU.UID
 		 INNER JOIN CETUS_POSITION CP ON CP.UID = CPU.POSITION_UID
 	 	 WHERE 1 = 1
+		   AND CWU.WORKPLACE_UID = #{workplaceUid}
 		<if test="@Ognl@isNotEmpty(userId)">
 			AND CU.USER_ID LIKE '%' || #{userId} || '%'
 		</if>
@@ -303,6 +304,7 @@
 		 INNER JOIN CETUS_POSITION_USER CPU ON CPU.USER_UID = CU.UID
 		 INNER JOIN CETUS_POSITION CP ON CP.UID = CPU.POSITION_UID
 	 	 WHERE 1 = 1
+	 	   AND CWU.WORKPLACE_UID = #{workplaceUid}
 		<if test="@Ognl@isNotEmpty(userId)">
 			AND CU.USER_ID LIKE '%' || #{userId} || '%'
 		</if>
@@ -343,5 +345,23 @@
 			</foreach>
 		</if>
 	</select>
+
+	<update id="updateUserStatus" parameterType="CetusUser">
+		/* cetusUser.updateUserStatus */
+		UPDATE CETUS_USER
+		   SET UPDT_UID = #{updtUid}
+		   	  ,UPDT_DT = NOW()
+		   	  ,STATUS = #{status}
+		 WHERE UID = #{uid}
+	</update>
+
+	<update id="updateUserAuthorCd" parameterType="CetusUser">
+		/* cetusUser.updateUserAuthorCd */
+		UPDATE CETUS_USER
+		   SET UPDT_UID = #{updtUid}
+		   	  ,UPDT_DT = NOW()
+		      ,AUTHOR_CD = #{authorCd}
+		 WHERE UID = #{uid}
+	</update>
 
 </mapper>

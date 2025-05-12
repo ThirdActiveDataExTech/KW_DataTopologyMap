@@ -25,4 +25,9 @@ public enum UserAuthorCd {
                 .map(e -> new EnumCodeDto(e.name(), e.getName()))
                 .collect(Collectors.toList());
     }
+
+    public static boolean isValidCode(String code) {
+        return Arrays.stream(UserAuthorCd.values())
+                .anyMatch(status -> status.name().equals(code));
+    }
 }

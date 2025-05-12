@@ -15,6 +15,10 @@ public final class UserUtil {
     public static SessionUserInfo getUser() {
         return getUser(WebUtil.getCurrentRequest());
     }
+
+    public static Long getUserWorkplaceUid() {
+        return getUser().getWorkplaceUid();
+    }
     
     public static SessionUserInfo getUser(HttpServletRequest request) {
         Object user = request.getAttribute(REQUEST_USER_KEY);

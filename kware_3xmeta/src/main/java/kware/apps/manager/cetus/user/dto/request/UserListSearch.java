@@ -15,4 +15,7 @@ public class UserListSearch {
     private Long[] userGroup;
     private Long[] userDepth;
     private Long[] userPosition;
+
+    private Long workplaceUid;
+
 }

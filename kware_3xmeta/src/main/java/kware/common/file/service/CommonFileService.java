@@ -79,7 +79,7 @@ public class CommonFileService {
 
     /**
      * @method      download
-     * @author      hdh
+     * @author      dahyeon
      * @date        2025-04-30
      * @deacription 파일 다운로드 및 불러오기 (저장 이후 시점)
     **/
@@ -145,7 +145,7 @@ public class CommonFileService {
 
     /**
      * @method      download2
-     * @author      hdh
+     * @author      dahyeon
      * @date        2025-04-30
      * @deacription 파일 다운로드 및 불러오기 (저장 이전 시점 => temp dir 위치에 있는 경우)
     **/
@@ -182,7 +182,7 @@ public class CommonFileService {
 
     /**
      * @method      processFileBean
-     * @author      hdh
+     * @author      dahyeon
      * @date        2025-04-30
      * @deacription 사용방법 > Long fileUid = fileService.processFileBean(bean, UserUtil.getUser(), null);
     **/

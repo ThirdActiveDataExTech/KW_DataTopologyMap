@@ -249,43 +249,55 @@
                 window.location.href = '/manager/cetus/user/save'
             });
 
-            /* == 권한 변경 팝업 닫기 == */
-            $('#author-cancel-btn').on('click', function () {
-                Util.confirm('정말 닫으시겠습니까? <br> 변경사항이 저장되지 않을 수 있습니다.').then((isOk) => {
-                    if(isOk) {
-                        $('#userAuthorModal').modal('hide');
-                        userList.submitTable();
-                    }
-                });
-            });
-            $("#author-select-btn").on("click", function () {
-                console.log("author-select-btn")
-            });
-
             /* == 그룹/부서 변경 팝업 닫기 == */
             $('#dept-cancel-btn').on('click', function () {
                 Util.confirm('정말 닫으시겠습니까? <br> 변경사항이 저장되지 않을 수 있습니다.').then((isOk) => {
                     if(isOk) {
-                        $('#userDeptModal').modal('hide');
-                        userList.submitTable();
+                        userList.resetDeptModal();
                     }
                 });
             });
             $("#dept-select-btn").on("click", function () {
-                console.log("dept-select-btn")
+                userList.changeUserDept()
             });
+
 
             /* == 상태 변경 팝업 닫기 == */
             $('#status-cancel-btn').on('click', function () {
                 Util.confirm('정말 닫으시겠습니까? <br> 변경사항이 저장되지 않을 수 있습니다.').then((isOk) => {
                     if(isOk) {
-                        $('#userStatusModal').modal('hide');
-                        userList.submitTable();
+                        userList.resetStatusModal();
                     }
                 });
             });
             $("#status-select-btn").on("click", function () {
-                console.log("status-select-btn")
+                userList.changeUserStatus();
+                userList.resetStatusModal();
+            });
+
+            /* == 권한 변경 팝업 닫기 == */
+            $('#author-cancel-btn').on('click', function () {
+                Util.confirm('정말 닫으시겠습니까? <br> 변경사항이 저장되지 않을 수 있습니다.').then((isOk) => {
+                    if(isOk) {
+                        userList.resetAuthorModal();
+                    }
+                });
+            });
+            $("#author-select-btn").on("click", function () {
+                userList.changeUserAuthor();
+            });
+
+
+            // userStatus-change 라디오 버튼 클릭 이벤트 위임
+            $(document).on('click', '#userStatus-form input[name="userStatus-change"]', function () {
+                const selectedVal = $(this).val();
+                $("#status-select-btn").attr('disabled', false);
+            });
+
+            // userAuthor-change 라디오 버튼 클릭 이벤트 위임
+            $(document).on('click', '#userAuthor-form input[name="userAuthor-change"]', function () {
+                const selectedVal = $(this).val();
+                $("#author-select-btn").attr('disabled', false);
             });
 
         });

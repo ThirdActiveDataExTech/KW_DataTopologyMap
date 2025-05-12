@@ -397,12 +397,14 @@
       });
 
       $("#save-btn4").on("click", function () {
-        const jsTreeSelected1 = testTree1.getCheckbox()
+        const jsTreeSelected1 = testTree1.getSelectedData()
+        const jsTreeSelected2 = testTree2.getSelectedData()
         const userTeamSelected = $('#userTeam').val();
         const userDepthSelected = $('#userDepth').val();
 
         console.log("### select2, tree ###");
         console.log("tree select1 > ", jsTreeSelected1);
+        console.log("tree select2 > ", jsTreeSelected2);
         console.log("select2 #1 > ", userTeamSelected);
         console.log("select2 #2 > ", userDepthSelected);
       });

@@ -25,4 +25,9 @@ public enum UserStatus {
                 .map(e -> new EnumCodeDto(e.name(), e.getDescription()))
                 .collect(Collectors.toList());
     }
+
+    public static boolean isValidCode(String code) {
+        return Arrays.stream(UserStatus.values())
+                .anyMatch(status -> status.name().equals(code));
+    }
 }

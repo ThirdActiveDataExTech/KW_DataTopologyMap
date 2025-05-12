@@ -2,6 +2,7 @@ package kware.apps.manager.cetus.user.domain;
 
 import cetus.bean.AuditBean;
 import kware.apps.manager.cetus.user.dto.request.UserChange;
+import kware.apps.manager.cetus.user.dto.request.UserChangeInfo;
 import kware.apps.manager.cetus.user.dto.request.UserSave;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -28,7 +29,7 @@ public class CetusUser extends AuditBean {
 
     /**
      * @method      CetusUser
-     * @author      hdh
+     * @author      dahyeon
      * @date        2025-04-28
      * @deacription 유저 저장용 생성자
     **/
@@ -40,7 +41,7 @@ public class CetusUser extends AuditBean {
 
     /**
      * @method      CetusUser
-     * @author      hdh
+     * @author      dahyeon
      * @date        2025-04-28
      * @deacription 유저 수정용 생성자 1
     **/
@@ -50,7 +51,7 @@ public class CetusUser extends AuditBean {
 
     /**
      * @method      CetusUser
-     * @author      hdh
+     * @author      dahyeon
      * @date        2025-04-28
      * @deacription 유저 수정용 생성자 2
     **/
@@ -59,5 +60,25 @@ public class CetusUser extends AuditBean {
         this.password = encodePassword;
         this.userNm = (request.getUserNm() != null) ? request.getUserNm() : this.userNm;
         return this;
+    }
+
+    /**
+     * @method      CetusUser
+     * @author      dahyeon
+     * @date        2025-05-12
+     * @deacription 유저 수정용 생성자 3
+    **/
+    public CetusUser(String code, String value, Long uid) {
+        if("STATUS".equals(code)) {
+
+            this.status = value;
+            this.uid = uid;
+
+        } else if("AUTHOR".equals(code)) {
+
+            this.authorCd = value;
+            this.uid = uid;
+
+        }
     }
 }

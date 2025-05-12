@@ -2,10 +2,7 @@ package kware.apps.manager.cetus.user.service;
 
 import cetus.bean.Page;
 import cetus.bean.Pageable;
-import kware.apps.manager.cetus.user.dto.request.UserChange;
-import kware.apps.manager.cetus.user.dto.request.UserExcelSearch;
-import kware.apps.manager.cetus.user.dto.request.UserListSearch;
-import kware.apps.manager.cetus.user.dto.request.UserSave;
+import kware.apps.manager.cetus.user.dto.request.*;
 import kware.apps.manager.cetus.user.dto.response.UserExcelPage;
 import kware.apps.manager.cetus.user.dto.response.UserList;
 import kware.common.excel.ExcelRender;
@@ -53,5 +50,11 @@ public class CetusUserRestController {
     public ResponseEntity userPage(@Valid UserListSearch search, Pageable pageable) {
         Page<UserList> page = service.userPage(search, pageable);
         return ResponseEntity.ok(page);
+    }
+
+    @PutMapping("/change-info")
+    public ResponseEntity userChangeInfo(@RequestBody @Valid UserChangeInfo request) {
+        service.userChangeInfo(request);
+        return ResponseEntity.ok().build();
     }
 }
