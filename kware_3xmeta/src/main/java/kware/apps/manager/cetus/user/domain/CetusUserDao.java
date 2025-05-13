@@ -25,6 +25,10 @@ public class CetusUserDao extends SuperDao<CetusUser> {
         return selectOne("getUserByUserId", userId);
     }
 
+    public UserFullInfo getUserFullInfoByUserUid(Long uid) {
+        return selectOne("getUserFullInfoByUserUid", uid);
+    }
+
     public int updateFailCnt(CetusUser bean) {
         return update("updateFailCnt", bean);
     }
@@ -67,5 +71,9 @@ public class CetusUserDao extends SuperDao<CetusUser> {
 
     public int updateUserAuthorCd(CetusUser bean) {
         return update("updateUserAuthorCd", bean);
+    }
+
+    public int updateUserProfile(CetusUser bean) {
+        return update("updateUserProfile", bean);
     }
 }

@@ -26,6 +26,7 @@ public class CetusUser extends AuditBean {
     private String metaData;
     private String useAt;
     private String approveAt;
+    private String userEmail;
 
     /**
      * @method      CetusUser
@@ -80,5 +81,10 @@ public class CetusUser extends AuditBean {
             this.uid = uid;
 
         }
+    }
+
+    public CetusUser(Long uid, Long profileUid) {
+        this.uid = uid;
+        this.profileUid = profileUid;
     }
 }

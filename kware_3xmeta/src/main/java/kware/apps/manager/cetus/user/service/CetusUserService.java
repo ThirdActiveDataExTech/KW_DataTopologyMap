@@ -115,6 +115,12 @@ public class CetusUserService {
         return dao.getUserByUserId(userId);
     }
 
+
+    @Transactional(readOnly = true)
+    public UserFullInfo findUserFullInfoByUserUid(Long uid) {
+        return dao.getUserFullInfoByUserUid(uid);
+    }
+
     /**
      * @method      findUserInfoByUid
      * @author      dahyeon
@@ -220,5 +226,12 @@ public class CetusUserService {
             }
 
         }
+    }
+
+    @Transactional
+    public void changeUserProfile(Long uid, UserProfile request) {
+        Long profileUid = (request.getProfileUid() != null) ? request.getProfileUid() : null;
+        profileUid = commonFileService.processFileBean(request, UserUtil.getUser(), profileUid);
+        dao.updateUserProfile(new CetusUser(uid, profileUid));
     }
 }

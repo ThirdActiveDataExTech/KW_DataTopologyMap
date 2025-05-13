@@ -66,4 +66,18 @@ public class AspController {
         return "asp/myInfo/index";
     }
 
+    @GetMapping("/chart")
+    public String chart() {
+        return "asp/page/chart";
+    }
+
+    @GetMapping("/signup")
+    public String signup() {
+        return "asp/page/signup";
+    }
+
+    @GetMapping("/expired")
+    public String expired() {
+        return "asp/page/expired";
+    }
 }

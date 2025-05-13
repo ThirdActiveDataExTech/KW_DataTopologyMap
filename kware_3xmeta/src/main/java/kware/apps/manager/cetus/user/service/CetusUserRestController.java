@@ -47,4 +47,10 @@ public class CetusUserRestController {
         service.userChangeInfo(request);
         return ResponseEntity.ok().build();
     }
+
+    @PutMapping("/change-profile/{uid}")
+    public ResponseEntity changeUserProfile(@PathVariable("uid") Long uid, @RequestBody @Valid UserProfile request) {
+        service.changeUserProfile(uid, request);
+        return ResponseEntity.ok().build();
+    }
 }

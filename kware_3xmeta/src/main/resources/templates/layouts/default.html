@@ -43,7 +43,6 @@
             });
 
             const IntervalCheck = () => {
-                console.log(">> ", sessionStorage.getItem("_CSV_DOWNLOADING_"))
                 if (sessionStorage.getItem("_CSV_DOWNLOADING_") == 1) {
                     checkByBell()
                     setInterval(() => {

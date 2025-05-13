@@ -123,6 +123,50 @@
 		 WHERE CU.USER_ID = #{userId}
 	</select>
 
+	<select id="getUserFullInfoByUserUid" parameterType="Long" resultType="UserFullInfo">
+		/* cetusUser.getUserByUserId */
+		SELECT CU.UID
+			  ,CU.USER_ID
+			  ,CU.PASSWORD
+			  ,CU.USER_NM
+			  ,CU.AUTHOR_CD AS ROLE
+			  ,CASE WHEN CU.AUTHOR_CD = 'SUPER' THEN '슈퍼 권한'
+					WHEN CU.AUTHOR_CD = 'SYSTEM' THEN '시스템 권한'
+					WHEN CU.AUTHOR_CD = 'MANAGER' THEN '운영자 권한'
+					WHEN CU.AUTHOR_CD = 'USER' THEN '유저 권한'
+				END AS ROLE_NM
+			  ,CU.STATUS
+			  ,CASE WHEN CU.STATUS = 'APPROVED' THEN '사용중'
+					WHEN CU.STATUS = 'WAIT' THEN '승인 대기'
+					WHEN CU.STATUS = 'STOP' THEN '정지'
+				END AS STATUS_NM
+		      ,CU.FAIL_CNT
+		      ,CU.PROFILE_UID
+		      ,CF.FILE_ID AS PROFILE_ID
+		      ,CU.META_DATA
+		      ,CU.USE_AT
+		      ,CU.APPROVE_AT
+		      ,CW.UID AS WORKPLACE_UID
+		      ,CW.NAME AS WORKPLACE_NM
+		      ,CG.UID AS GROUP_UID
+		      ,CG.NAME AS GROUP_NM
+		      ,CD.UID AS DEPT_UID
+			  ,CD.NAME AS DEPT_NM
+			  ,CP.UID AS POSITION_UID
+			  ,CP.NAME AS POSITION_NM
+		  FROM CETUS_USER CU
+		  LEFT JOIN CETUS_FILE CF ON CF.FILE_UID = CU.PROFILE_UID::BIGINT AND CF.USE_AT = 'Y' AND CF.SAVED = 'Y'
+		 INNER JOIN CETUS_WORKPLACE_USER CWU ON CWU.USER_UID = CU.UID
+		 INNER JOIN CETUS_WORKPLACE CW ON CW.UID = CWU.WORKPLACE_UID
+		 INNER JOIN CETUS_GROUP_USER CGU ON CGU.USER_UID = CU.UID
+		 INNER JOIN CETUS_GROUP CG ON CG.UID = CGU.GROUP_UID
+		 INNER JOIN CETUS_DEPT_USER CDU ON CDU.USER_UID = CU.UID
+		 INNER JOIN CETUS_DEPT CD ON CD.UID = CDU.DEPT_UID
+		 INNER JOIN CETUS_POSITION_USER CPU ON CPU.USER_UID = CU.UID
+		 INNER JOIN CETUS_POSITION CP ON CP.UID = CPU.POSITION_UID
+		 WHERE CU.UID = #{uid}
+	</select>
+
 	<select id="getUserInfoByUid" parameterType="Long" resultType="UserFullInfo">
 		/* cetusUser.getUserInfoByUid */
 		SELECT CU.UID
@@ -497,4 +541,12 @@
 		 WHERE UID = #{uid}
 	</update>
 
+	<update id="updateUserProfile" parameterType="CetusUser">
+		/* cetusUser.updateUserProfile */
+		UPDATE CETUS_USER
+		   SET UPDT_UID = #{updtUid}
+			  ,UPDT_DT = NOW()
+			  ,PROFILE_UID = #{profileUid}
+		 WHERE UID = #{uid}
+	</update>
 </mapper>

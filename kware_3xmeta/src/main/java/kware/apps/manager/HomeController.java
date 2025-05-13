@@ -68,4 +68,9 @@ public class HomeController {
         return "/sample";
     }
 
+    @GetMapping("/css-sample")
+    public String test2(){
+        return "/sample-css";
+    }
+
 }

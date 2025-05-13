@@ -11,7 +11,6 @@
 
 <th:block layout:fragment="head">
     <link rel="stylesheet" th:href="@{'/assets/css/page/manager/user-list.css'}" />
-    <link rel="stylesheet" th:href="@{'/assets/css/page/manager/user-form.css'}" />
 </th:block>
 
 <th:block layout:fragment="content">
@@ -35,8 +34,8 @@
                                     <div class="filter-section">
                                         <div class="filter-header">사용자</div>
                                         <div class="filter-body">
-                                            <input type="text" class="form-control mb-2" placeholder="이름" id="userNm-input" name="userNm" />
-                                            <input type="text" class="form-control" placeholder="ID" id="userId-input" name="userId" />
+                                            <input type="text" class="form-control custom-input mb-2" placeholder="이름" id="userNm-input" name="userNm" />
+                                            <input type="text" class="form-control custom-input" placeholder="ID" id="userId-input" name="userId" />
                                         </div>
                                     </div>
 
@@ -83,10 +82,10 @@
                                     <div class="filter-section">
                                         <div class="filter-header">가입일</div>
                                         <div class="filter-body">
-                                            <label class="form-label" for="startDate">시작일</label>
-                                            <input type="date" class="form-control mb-4" id="startDate" name="startDate"/>
-                                            <label class="form-label" for="endDate">종료일</label>
-                                            <input type="date" class="form-control" id="endDate" name="endDate"/>
+                                            <label class="form-label custom-label" for="startDate">시작일</label>
+                                            <input type="date" class="form-control custom-input mb-4" id="startDate" name="startDate"/>
+                                            <label class="form-label custom-label" for="endDate">종료일</label>
+                                            <input type="date" class="form-control custom-input" id="endDate" name="endDate"/>
                                         </div>
                                     </div>
 

@@ -5,6 +5,8 @@ import kware.apps.manager.cetus.enumstatus.UserAuthorCd;
 import kware.apps.manager.cetus.enumstatus.UserStatus;
 import kware.apps.manager.cetus.group.service.CetusGroupService;
 import kware.apps.manager.cetus.position.service.CetusPositionService;
+import kware.apps.manager.cetus.user.dto.response.UserFullInfo;
+import kware.apps.manager.cetus.user.dto.response.UserView;
 import kware.apps.manager.cetus.user.service.CetusUserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -34,7 +36,9 @@ public class CetusUserController {
     }
 
     @GetMapping("/{uid}")
-    public String form(@PathVariable("uid") Long uid) {
+    public String form(@PathVariable("uid") Long uid, Model model) {
+        UserFullInfo info = service.findUserFullInfoByUserUid(uid);
+        model.addAttribute("form", info);
         return "manager/user/form";
     }
 

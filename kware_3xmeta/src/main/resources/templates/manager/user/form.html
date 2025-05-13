@@ -31,7 +31,7 @@
                                     <div class="profile-section">
                                         <div class="profile-img-wrapper">
                                             <div id="upload-container" style="display: none;"></div>
-                                            <img src="/assets/images/page/detail/profile_noimage.png" alt="Profile" id="profile-thumbnail-id" class="profile-img">
+                                            <img th:src="|/cetus/files/download?fileId=${form?.profileId}|" onerror="this.src='/assets/images/page/detail/profile_noimage.png'" alt="Profile" id="profile-thumbnail-id" class="profile-img" />
                                             <button class="camera-icon-btn dropdown-toggle" id="cameraBtn">
                                                 <i class="ti-camera camera-icon"></i>
                                             </button>
@@ -50,10 +50,10 @@
 
                                     <!-- 메뉴 버튼 영역 -->
                                     <div class="menu-buttons">
-                                        <button class="menu-btn active" data-target="#user-info">사용자 정보</button>
-                                        <button class="menu-btn" data-target="#user-password">패스워드</button>
-                                        <button class="menu-btn" data-target="#user-board">게시물</button>
-                                        <button class="menu-btn" data-target="#user-hist">활동기록</button>
+                                        <button class="menu-btn custom-button active" data-target="#user-info">사용자 정보</button>
+                                        <button class="menu-btn custom-button" data-target="#user-password">패스워드</button>
+                                        <button class="menu-btn custom-button" data-target="#user-board">게시물</button>
+                                        <button class="menu-btn custom-button" data-target="#user-hist">활동기록</button>
                                     </div>
                                 </div>
                             </div>
@@ -105,11 +105,12 @@
     <th:block th:replace="manager/user/user-form-hist-script::script"></th:block>
     <script th:inline="javascript">
 
-        const fileUid = null;
+        const profileUid = [[${form.profileUid}]];
+        const uid = [[${uid}]]
 
         $(document).ready(function () {
 
-            userFormProfile.initUploader(fileUid);
+            userFormProfile.initUploader(profileUid);
 
             $('.menu-btn').on('click', function () {
                 $('.menu-btn').removeClass('active');

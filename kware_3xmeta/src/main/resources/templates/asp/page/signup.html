@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/default}">
+
+<th:block layout:fragment="center-image">
+    <th:block th:with="title='회원가입',title1='회원가입', title2='Home > 회원가입', leftImg='', rightImg=''">
+        <th:block th:replace="fragments/center-image :: center-image-title-custom(${title}, ${title1}, ${title2}, ${leftImg}, ${rightImg})"></th:block>
+    </th:block>
+</th:block>
+
+<th:block layout:fragment="head">
+    <style>
+        .btn-ok,
+        .left-btn {
+            background-color: #d7e4f5;
+            border-radius: 6px;
+            border: none;
+            padding: 12px 24px;
+            font-size: 15px;
+            font-weight: 500;
+            color: #1a3e6e;
+            cursor: pointer;
+            min-width: 140px;
+            text-align: center;
+        }
+
+        /* 회원가입 버튼 하늘색 */
+        .btn-ok {
+            background-color: #d7e4f5;
+        }
+
+        .btn-ok:hover {
+            background-color: #c3d6f0;
+            font-weight: bold;
+        }
+
+        /* 이전단계 버튼은 어두운 색 */
+        .left-btn {
+            background-color: #333;
+            color: white;
+        }
+
+        .left-btn:hover {
+            background-color: #222;
+            font-weight: bold;
+        }
+
+        /* 버튼 정렬 */
+        .btn-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 40px;
+        }
+
+        .right-buttons {
+            display: flex;
+            gap: 12px;
+        }
+    </style>
+</th:block>
+
+<th:block layout:fragment="content">
+    <div class="my-account-wrapper pb-100 pt-30">
+        <div class="container">
+            <div class="section-title-2 st-border-center text-center mb-35 aos-init aos-animate" data-aos="fade-up" data-aos-delay="200">
+                <h2>회원가입</h2>
+            </div>
+            <hr>
+            <div class="my-account-wrapper pb-100" style="padding: 30px 0px 50px 0px;">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <!-- My Account Page Start -->
+                            <div class="myaccount-page-wrapper">
+                                <!-- My Account Tab Menu Start -->
+                                <div class="row" style="margin-bottom: 20px;">
+                                    <div class="col-lg-12 col-md-8">
+                                        <div id="account-info">
+                                            <div class="myaccount-content" style="border: 0px; padding: 0px !important;">
+                                                <div class="account-details-form">
+                                                    <form class="needs-validation" id="save-form" novalidate="">
+                                                        <input type="hidden" value="USER" name="authorCd">
+                                                        <div class="row">
+                                                            <div class="col-lg-6">
+                                                                <div class="single-input-item">
+                                                                    <label for="userNm" class="form-label">이름<span class="req">*</span></label>
+                                                                    <input class="form-control" type="text" id="userNm" name="userNm" required>
+                                                                    <div class="invalid-feedback">필수 정보입니다.</div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-lg-6">
+                                                                <label class="form-label" for="userId">아이디<span class="req">*</span></label>
+                                                                <div class="input-group">
+                                                                    <input type="text" id="userId" name="userId" class="form-control" required>
+                                                                    <button class="btn btn-ok" id="userId-chk" type="button">중복 확인</button>
+                                                                    <div class="invalid-feedback">필수 정보입니다.</div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row" style="margin-bottom: 20px;">
+                                                            <div class="col-lg-6">
+                                                                <label class="form-label" for="userEmail">이메일<span class="req">*</span></label>
+                                                                <div class="input-group">
+                                                                    <input type="email" id="userEmail" name="userEmail" class="form-control" required="">
+                                                                    <button class="btn btn-ok" id="userEmail-chk" type="button">중복 확인</button>
+                                                                    <div class="invalid-feedback">필수 정보입니다.</div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row" style="margin-bottom: 20px;">
+                                                            <div class="col-lg-6">
+                                                                <div class="single-input-item">
+                                                                    <label for="password" class="form-label">비밀번호<span class="req">*</span></label>
+                                                                    <input class="form-control" type="password" id="password" name="password" placeholder="8~20자" pattern=".{8,20}" required="">
+                                                                    <div class="invalid-feedback">필수 정보입니다. (8~20자)</div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-lg-6">
+                                                                <div class="single-input-item">
+                                                                    <label for="confirmPassword" class="form-label">비밀번호 확인</label>
+                                                                    <input class="form-control" type="password" id="confirmPassword" placeholder="8~20자" required="">
+                                                                    <label class="error-message" id="passwordChk-error"></label>
+                                                                    <div class="invalid-feedback">비밀번호가 일치하지 않습니다.</div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="btn-container" style="margin-top: 50px;">
+                                                            <!-- 왼쪽 버튼 -->
+                                                            <button type="button" class="btn btn-dark btn-step left-btn" id="back-step">이전 단계</button>
+
+                                                            <!-- 오른쪽 버튼들 -->
+                                                            <div class="right-buttons">
+                                                                <button type="button" class="btn btn-ok" id="save-btn">회원가입</button>
+                                                            </div>
+                                                        </div>
+
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- My Account Page End -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</th:block>
+
+
+<th:block layout:fragment="script">
+    <script th:inline="javascript">
+
+    </script>
+</th:block>
+</html>

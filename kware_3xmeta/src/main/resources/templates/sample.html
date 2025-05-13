@@ -41,11 +41,11 @@
 
                   <!-- 메뉴 버튼 영역 -->
                   <div class="menu-buttons">
-                    <button class="menu-btn active" data-target="#ckeditor">ckeditor</button>
-                    <button class="menu-btn" data-target="#thumbnail">썸네일 첨부파일</button>
-                    <button class="menu-btn" data-target="#file-upload">일반 첨부파일</button>
-                    <button class="menu-btn" data-target="#select2-tree">select2, tree</button>
-                    <button class="menu-btn" data-target="#popup">popup</button>
+                    <button class="menu-btn custom-button active" data-target="#ckeditor">ckeditor</button>
+                    <button class="menu-btn custom-button" data-target="#thumbnail">썸네일 첨부파일</button>
+                    <button class="menu-btn custom-button" data-target="#file-upload">일반 첨부파일</button>
+                    <button class="menu-btn custom-button" data-target="#select2-tree">select2, tree</button>
+                    <button class="menu-btn custom-button" data-target="#popup">popup</button>
                   </div>
                 </div>
               </div>
@@ -84,8 +84,8 @@
                               </div>
                             </div>
 
-                            <div class="btn-wrap">
-                              <button class="btn-custom-b" id="save-btn1">저장</button>
+                            <div class="custom-btn-wrap">
+                              <button class="custom-button" id="save-btn1">저장</button>
                             </div>
                         </div>
                       </div>
@@ -110,9 +110,9 @@
                                   <img src="/assets/images/page/detail/profile_noimage.png" alt="Profile" id="profile-thumbnail-id1" class="profile-img">
                                 </div>
                               </div>
-                              <div class="btn-wrap">
-                                <button class="btn-custom-b" id="upload1">업로드</button>
-                                <button class="btn-custom-b" id="delete1">삭제</button>
+                              <div class="custom-btn-wrap">
+                                <button class="custom-button" id="upload1">업로드</button>
+                                <button class="custom-button" id="delete1">삭제</button>
                               </div>
                             </div>
                             <div class="col-lg-6">
@@ -124,16 +124,16 @@
                                     <img src="/assets/images/page/detail/profile_noimage.png" alt="Profile" id="profile-thumbnail-id2" class="profile-img">
                                   </div>
                                 </div>
-                                <div class="btn-wrap">
-                                  <button class="btn-custom-b" id="upload2">업로드</button>
-                                  <button class="btn-custom-b" id="delete2">삭제</button>
+                                <div class="custom-btn-wrap">
+                                  <button class="custom-button" id="upload2">업로드</button>
+                                  <button class="custom-button" id="delete2">삭제</button>
                                 </div>
                               </div>
                             </div>
                           </div>
 
-                          <div class="btn-wrap" style="margin-top: 10px;">
-                            <button class="btn-custom-b" id="save-btn2">Promise 미사용 저장</button>
+                          <div class="custom-btn-wrap" style="margin-top: 10px;">
+                            <button class="custom-button" id="save-btn2">Promise 미사용 저장</button>
                           </div>
                         </div>
                       </div>
@@ -157,8 +157,8 @@
                               </div>
                             </div>
                           </div>
-                          <div class="btn-wrap" style="margin-top: 10px;">
-                            <button class="btn-custom-b" id="save-btn3">첨부파일 저장</button>
+                          <div class="custom-btn-wrap" style="margin-top: 10px;">
+                            <button class="custom-button" id="save-btn3">첨부파일 저장</button>
                           </div>
                         </div>
                       </div>
@@ -197,7 +197,7 @@
                           </div>
 
                           <div class="row info-row" style="margin-top: 20px;">
-                            <div class="col-lg-6 info-col2">
+                            <div class="col-lg-6">
                               <div style="margin-bottom: 20px;">
                                 <label for="userDepth" class="required">그룹/부서</label>
                                 <div>
@@ -211,7 +211,7 @@
                                 </div>
                               </div>
                             </div>
-                            <div class="col-lg-6 info-col2">
+                            <div class="col-lg-6">
                               <div style="margin-bottom: 20px;">
                                 <label for="userTeam" class="required">팀명</label>
                                 <div>
@@ -226,8 +226,8 @@
                               </div>
                             </div>
                           </div>
-                          <div class="btn-wrap" style="margin-top: 10px;">
-                            <button class="btn-custom-b" id="save-btn4">체크정보 조회</button>
+                          <div class="custom-btn-wrap" style="margin-top: 10px;">
+                            <button class="custom-button" id="save-btn4">체크정보 조회</button>
                           </div>
                         </div>
                       </div>
@@ -235,7 +235,7 @@
                   </div>
 
 
-                  <!-- [5] thumbnail 탭 -->
+                  <!-- [5] popup 탭 -->
                   <div class="tab-pane fade" id="popup" role="tabpanel">
                     <div class="row info-row" style="margin-bottom: 25px;" data-aos="fade-up" data-aos-delay="200">
 
@@ -243,18 +243,17 @@
                       <div class="myaccount-content">
                         <h3>popup</h3>
                         <div class="account-details-form">
-                          <div class="btn-wrap" style="margin-top: 10px;">
-                            <button class="btn-custom-b" id="popup1">textarea 팝업열기</button>
-                            <button class="btn-custom-b" id="popup2">text 팝업열기</button>
-                            <button class="btn-custom-b" id="popup3">썸네일이미지 + textarea 팝업열기</button>
-                            <button class="btn-custom-b" id="popup4">썸네일이미지 + ckeditor 팝업열기</button>
+                          <div class="custom-btn-wrap" style="margin-top: 10px;">
+                            <button class="custom-button" id="popup1">textarea 팝업열기</button>
+                            <button class="custom-button" id="popup2">text 팝업열기</button>
+                            <button class="custom-button" id="popup3">썸네일이미지 + textarea 팝업열기</button>
+                            <button class="custom-button" id="popup4">썸네일이미지 + ckeditor 팝업열기</button>
                           </div>
                         </div>
                       </div>
 
                     </div>
                   </div>
-
                 </div>
               </div>
               <!-- // 오른쪽 컨텐츠 영역 -->
@@ -307,7 +306,6 @@
         if(target === "#select2-tree") {
           initSelect2();
         }
-
       });
 
 
@@ -442,8 +440,6 @@
         console.log("title > ", result.title)
         console.log("description > ", result.description)
       });
-
-
     });
 
     async function editorInit() {
