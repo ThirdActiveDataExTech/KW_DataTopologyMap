@@ -77,12 +77,6 @@ public class CommonFileService {
         return dao.list(bean);
     }
 
-    /**
-     * @method      download
-     * @author      dahyeon
-     * @date        2025-04-30
-     * @deacription 파일 다운로드 및 불러오기 (저장 이후 시점)
-    **/
     @Transactional
     public ResponseEntity download(final HttpServletRequest req) {
         String fileId = req.getParameter("fileId");
@@ -143,12 +137,6 @@ public class CommonFileService {
         }
     }
 
-    /**
-     * @method      download2
-     * @author      dahyeon
-     * @date        2025-04-30
-     * @deacription 파일 다운로드 및 불러오기 (저장 이전 시점 => temp dir 위치에 있는 경우)
-    **/
     @Transactional
     public ResponseEntity download2(final HttpServletRequest req) {
         String fileId = req.getParameter("fileId");
@@ -179,13 +167,6 @@ public class CommonFileService {
         }
     }
 
-
-    /**
-     * @method      processFileBean
-     * @author      dahyeon
-     * @date        2025-04-30
-     * @deacription 사용방법 > Long fileUid = fileService.processFileBean(bean, UserUtil.getUser(), null);
-    **/
     @Transactional
     public <T extends FileBean> Long processFileBean(T bean, SessionUserInfo user, Long fileUid) {
         if (bean.getFileAdd() != null) {

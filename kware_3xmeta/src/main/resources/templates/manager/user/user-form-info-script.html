@@ -3,8 +3,21 @@
 <script th:inline="javascript">
     $(function () {
 
-        console.log("user-form-info :: 사용자 정보 script")
-        userFormInfo.initUploader(null)
+        /* == 그룹/부서 변경 == */
+        $("#userDept-choose").on('click', function() {
+            userFormInfo.userDeptChange($("#userDept-uid").val());
+        });
+        $("#change-dept-select-btn").on('click', function () {
+           userFormInfo.chooseDept();
+        });
+        $("#change-dept-cancel-btn").on('click', function () {
+            userFormInfo.cancelChooseDept();
+        });
+
+        $("#save-btn").on('click', function () {
+            userFormInfo.submitForm();
+        });
+
 
         $("#userJbgd").select2({
             placeholder: "직책 선택",

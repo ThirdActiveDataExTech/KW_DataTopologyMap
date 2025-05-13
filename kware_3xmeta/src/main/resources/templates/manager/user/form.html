@@ -43,8 +43,8 @@
                                             </div>
                                         </div>
                                         <div class="profile-info">
-                                            <strong>홍길동</strong>
-                                            <div>케이워어(주)</div>
+                                            <strong th:text="${form?.userNm}"></strong>
+                                            <div th:text="${form?.groupNm}"></div>
                                         </div>
                                     </div>
 
@@ -95,6 +95,9 @@
             </div>
         </div>
     </div>
+
+    <th:block th:replace="manager/user/modal/user-change-dept-modal"></th:block>
+
 </th:block>
 
 <th:block layout:fragment="script">
@@ -107,6 +110,19 @@
 
         const profileUid = [[${form.profileUid}]];
         const uid = [[${uid}]]
+
+        const userForm = [[${form}]]
+        const userGroupLst = [[${userGroup}]]
+        const userPositionLst = [[${userPosition}]]
+        const userStatusLst = [[${userStatus}]]
+        const userAuthorCdLst = [[${userAuthorCd}]]
+
+        /** 모달 닫을때 생기는 warning 해결 **/
+        $(document).on('hide.bs.modal', function () {
+            if (document.activeElement) {
+                $(document.activeElement).blur();
+            }
+        });
 
         $(document).ready(function () {
 

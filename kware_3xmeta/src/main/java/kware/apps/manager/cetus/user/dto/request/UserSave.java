@@ -19,4 +19,7 @@ public class UserSave {
 
     @NotBlank @DisplayName("사용자 이름")
     private String userNm;
+
+    @NotBlank @DisplayName("사용자 이메일")
+    private String userEmail;
 }

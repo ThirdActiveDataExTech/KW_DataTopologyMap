@@ -28,47 +28,24 @@ public class CetusUser extends AuditBean {
     private String approveAt;
     private String userEmail;
 
-    /**
-     * @method      CetusUser
-     * @author      dahyeon
-     * @date        2025-04-28
-     * @deacription 유저 저장용 생성자
-    **/
     public CetusUser(UserSave request, String encodePassword) {
         this.userId = request.getUserId();
         this.password = encodePassword;
         this.userNm = request.getUserNm();
     }
 
-    /**
-     * @method      CetusUser
-     * @author      dahyeon
-     * @date        2025-04-28
-     * @deacription 유저 수정용 생성자 1
-    **/
     public CetusUser(String userId) {
         this.userId = userId;
     }
 
-    /**
-     * @method      CetusUser
-     * @author      dahyeon
-     * @date        2025-04-28
-     * @deacription 유저 수정용 생성자 2
-    **/
-    public CetusUser changeUser(Long uid, UserChange request, String encodePassword) {
+    public CetusUser changeUser(Long uid, UserChange request) {
         this.uid = uid;
-        this.password = encodePassword;
         this.userNm = (request.getUserNm() != null) ? request.getUserNm() : this.userNm;
+        this.userEmail = (request.getUserEmail() != null) ? request.getUserEmail() : this.userEmail;
+        this.authorCd =  (request.getUserAuthor() != null) ? request.getUserAuthor() : this.authorCd;
         return this;
     }
 
-    /**
-     * @method      CetusUser
-     * @author      dahyeon
-     * @date        2025-05-12
-     * @deacription 유저 수정용 생성자 3
-    **/
     public CetusUser(String code, String value, Long uid) {
         if("STATUS".equals(code)) {
 

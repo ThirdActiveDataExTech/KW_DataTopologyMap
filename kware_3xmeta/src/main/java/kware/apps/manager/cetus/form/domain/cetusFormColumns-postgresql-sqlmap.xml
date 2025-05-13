@@ -111,7 +111,8 @@
 		SELECT COUNT(*)
 		FROM CETUS_FORM_COLUMNS CU
 		WHERE 1 = 1
-		 AND WORKPLACE_UID = #{workplaceUid}
+		AND WORKPLACE_UID = #{workplaceUid}
+		AND FORM_GROUP = #{formGroup}
 		<if test="@Ognl@isNotEmpty(type)">
 			AND CU.TYPE = #{type}
 		</if>

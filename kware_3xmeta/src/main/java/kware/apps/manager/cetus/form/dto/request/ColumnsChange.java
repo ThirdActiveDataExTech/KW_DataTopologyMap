@@ -13,7 +13,6 @@ import java.util.List;
 
 @Getter @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ColumnsChange {
-
     @NotBlank @DisplayName("타입")
     private String type;
     private String label;

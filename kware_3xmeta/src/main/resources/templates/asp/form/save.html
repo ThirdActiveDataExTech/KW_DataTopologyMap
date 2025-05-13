@@ -31,11 +31,16 @@
             border-top-right-radius: .375rem;
             border-bottom-right-radius: .375rem;
         }
+
         .error-message {
             color: #ea5455; /* 텍스트 색상 */
             font-size: 0.775rem;
             display: block; /* 라벨을 블록 요소로 설정하여 한 줄로 표현 */
             margin-top: 5px; /* 입력 필드와의 간격 조정 */
+        }
+
+        .nice-select.is-invalid {
+            border-color: #ea5455 !important; /* 부트스트랩의 빨간색 */
         }
     </style>
     <link rel="stylesheet" th:href="@{'/assets/css/page/manager/user-list.css'}"/>
@@ -62,27 +67,34 @@
                             <button type="button" class="custom-button" id="save-btn">저장</button>
                             <button type="button" class="custom-button" id="list-btn">목록</button>
                         </div>
+                        <div class="error-message" id="formGroup-error"></div>
                     </div>
                 </div>
             </div>
             <!-- e:buttons -->
 
             <!-- s:card1 -->
-            <div class="card" style="margin-top: 30px">
-                <div class="pb-3 border-bottom" style="padding: 30px;">
-                    <div class="row align-items-center">
-                        <h3 class="mb-0">기본 정보</h3>
-                    </div>
-                </div>
-
+            <div class="card" style="margin-top: 10px">
                 <form class="needs-validation" id="save-form-parent" novalidate="">
-                    <input type="hidden" value="SIGNUP" name="formGroup"/>
+                    <div class="pb-3 border-bottom" style="padding: 30px;">
+                        <div class="row align-items-center">
+                            <div class="col-12 d-flex justify-content-between align-items-center">
+                                <h3 class="mb-0">기본 정보</h3>
+                                <select class="nice-select nice-select-style-1" id="groupSelect" name="formGroup">
+                                    <option value="" disabled selected>폼 선택</option>
+                                    <option th:each="group : ${formGroups}"
+                                            th:value="${group.name()}"
+                                            th:text="${group.label}"></option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
                     <div class="card-body">
                         <div class="row">
                             <div class="col-lg-6">
                                 <div class="single-input-item">
                                     <div for="type" class="required">타입</div>
-                                    <select class="nice-select nice-select-style-1" id="typeSelect" name="type" style="width: 100% !important;">
+                                    <select class="nice-select nice-select-style-1 wide" id="typeSelect" name="type">
                                         <option value="" disabled selected>-- Select Type --</option>
                                         <option th:each="type : ${types}"
                                                 th:value="${type}"

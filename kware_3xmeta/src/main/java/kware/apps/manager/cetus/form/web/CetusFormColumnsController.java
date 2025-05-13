@@ -1,6 +1,7 @@
 package kware.apps.manager.cetus.form.web;
 
 
+import kware.apps.manager.cetus.form.dto.request.FormGroup;
 import kware.apps.manager.cetus.form.dto.response.ElementType;
 import kware.apps.manager.cetus.form.service.CetusFormColumnsService;
 import lombok.RequiredArgsConstructor;
@@ -18,13 +19,15 @@ public class CetusFormColumnsController {
     private final CetusFormColumnsService service;
 
     @GetMapping
-    public String list() {
+    public String list(Model model) {
+        model.addAttribute("formGroups", FormGroup.values());
         return "asp/form/index";
     }
 
     @GetMapping("/save")
     public String save(Model model) {
         model.addAttribute("types", ElementType.values());
+        model.addAttribute("formGroups", FormGroup.values());
         return "asp/form/save";
     }
 

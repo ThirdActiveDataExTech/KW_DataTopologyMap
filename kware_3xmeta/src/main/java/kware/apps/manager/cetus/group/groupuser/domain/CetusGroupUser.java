@@ -1,4 +1,4 @@
-package kware.apps.manager.cetus.dept.deptuser.domain;
+package kware.apps.manager.cetus.group.groupuser.domain;
 
 import cetus.bean.AuditBean;
 import lombok.AccessLevel;
@@ -6,13 +6,13 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class CetusDeptUser extends AuditBean {
+public class CetusGroupUser extends AuditBean {
 
-    private Long deptUid;
+    private Long groupUid;
     private Long userUid;
 
-    public CetusDeptUser(Long deptUid, Long userUid) {
-        this.deptUid = deptUid;
+    public CetusGroupUser(Long groupUid, Long userUid) {
+        this.groupUid = groupUid;
         this.userUid = userUid;
     }
 }

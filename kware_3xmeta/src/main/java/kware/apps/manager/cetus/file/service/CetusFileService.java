@@ -49,12 +49,6 @@ public class CetusFileService {
         return dao.countUserDownloading(UserUtil.getUser().getUid());
     }
 
-    /**
-     * @method      saveFile
-     * @author      dahyeon
-     * @date        2025-05-13
-     * @deacription 파일 임시저장
-    **/
     @Transactional
     public void saveFile(Long fileUid, String orgFileNm) {
         String userId = UserUtil.getUser().getUserId();
@@ -64,36 +58,17 @@ public class CetusFileService {
         }
     }
 
-    /**
-     * @method      checkIfUserDownloadingFile
-     * @author      dahyeon
-     * @date        2025-05-12
-     * @deacription 이미 유저가 다운로드 중인 파일이 있는지 체크
-     *              (+) [다운로드 이력] 테이블과 조인하여 사용
-    **/
     @Transactional(readOnly = true)
     public boolean checkIfUserDownloadingFile(Long userUid) {
         int count = dao.countUserDownloading(userUid);
         return count > 0;
     }
 
-    /**
-     * @method      deleteNotDownloadFile
-     * @author      dahyeon
-     * @date        2025-05-12
-     * @deacription 유저의 리스트 다운로드 최종 실패시, 임시저장된 파일 정보는 삭제
-    **/
     @Transactional
     public void deleteNotDownloadFile(Long fileUid) {
         dao.deleteNotDownloadFile(fileUid);
     }
 
-    /**
-     * @method      updateDownloadFile
-     * @author      dahyeon
-     * @date        2025-05-13
-     * @deacription 최종 저장된 파일 정보로 업데이트
-    **/
     @Transactional
     public void updateDownloadFile(Long fileUid, File tempFile) throws IOException {
         String fileId =  UUID.randomUUID().toString();
@@ -125,12 +100,6 @@ public class CetusFileService {
         dao.updateDownCnt(fileId);
     }
 
-    /**
-     * @method      download
-     * @author      dahyeon
-     * @date        2025-05-13
-     * @deacription 파일 다운로드
-    **/
     @Transactional
     public ResponseEntity<ByteArrayResource> download(String fileId, final HttpServletRequest req) {
 
@@ -175,12 +144,6 @@ public class CetusFileService {
         }
     }
 
-    /**
-     * @method      deleteFile
-     * @author      dahyeon
-     * @date        2025-05-13
-     * @deacription {fileUid}에 해당하는 파일 삭제
-    **/
     @Transactional
     public void deleteFile(Long fileUid) {
         dao.deleteFile(fileUid);

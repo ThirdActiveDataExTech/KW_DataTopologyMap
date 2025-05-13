@@ -11,6 +11,7 @@
 			  ,CU.USER_ID
 			  ,CU.PASSWORD
 			  ,CU.USER_NM
+		      ,CU.USER_EMAIL
 		      ,CU.AUTHOR_CD
 			  ,CU.STATUS
 			  ,CU.FAIL_CNT
@@ -28,6 +29,7 @@
 			USER_ID
 		   ,PASSWORD
 		   ,USER_NM
+		   ,USER_EMAIL
 		   ,APPROVE_AT
 		   ,USE_AT
 		   ,REG_DT
@@ -38,6 +40,7 @@
 			#{userId}
 		   ,#{password}
 		   ,#{userNm}
+		   ,#{userEmail}
 		   ,'Y'
 		   ,'Y'
 		   ,NOW()
@@ -47,13 +50,14 @@
 		)
 	</insert>
 
-	<update id="update" parameterType="cetusUser">
-		/* cetusUser.update */
+	<update id="updateUserInfo" parameterType="cetusUser">
+		/* cetusUser.updateUserInfo */
 		UPDATE CETUS_USER
 		   SET UPDT_UID = #{updtUid}
 		      ,UPDT_DT = NOW()
-			  ,PASSWORD = #{password}
 			  ,USER_NM = #{userNm}
+		      ,USER_EMAIL = #{userEmail}
+		      ,AUTHOR_CD = #{authorCd}
 	     WHERE UID = #{uid}
 	</update>
 
@@ -85,6 +89,7 @@
 			  ,CU.USER_ID
 			  ,CU.PASSWORD
 			  ,CU.USER_NM
+		      ,CU.USER_EMAIL
 			  ,CU.AUTHOR_CD AS ROLE
 			  ,CASE WHEN CU.AUTHOR_CD = 'SUPER' THEN '슈퍼 권한'
 					WHEN CU.AUTHOR_CD = 'SYSTEM' THEN '시스템 권한'
@@ -129,6 +134,7 @@
 			  ,CU.USER_ID
 			  ,CU.PASSWORD
 			  ,CU.USER_NM
+		      ,CU.USER_EMAIL
 			  ,CU.AUTHOR_CD AS ROLE
 			  ,CASE WHEN CU.AUTHOR_CD = 'SUPER' THEN '슈퍼 권한'
 					WHEN CU.AUTHOR_CD = 'SYSTEM' THEN '시스템 권한'
@@ -173,6 +179,7 @@
 			  ,CU.USER_ID
 			  ,CU.PASSWORD
 			  ,CU.USER_NM
+		      ,CU.USER_EMAIL
 			  ,CU.AUTHOR_CD AS ROLE
 			  ,CASE WHEN CU.AUTHOR_CD = 'SUPER' THEN '슈퍼 권한'
 					WHEN CU.AUTHOR_CD = 'SYSTEM' THEN '시스템 권한'
@@ -211,46 +218,13 @@
 		 WHERE CU.UID = #{uid}
 	</select>
 
-	<select id="excelPageList" parameterType="UserExcelSearch" resultType="UserExcelPage">
-		/* cetusUser.excelPageList */
-		SELECT USER_ID
-			  ,USER_NM
-			  ,APPROVE_AT
-			  ,USE_AT
-			  ,'사용자 권한' AS ROLE_NM
-		  FROM CETUS_USER
-		 WHERE 1 = 1
-		<if test="@Ognl@isNotEmpty(approveAt)">
-		   AND APPROVE_AT = #{approveAt}
-		</if>
-		<if test="@Ognl@isNotEmpty(browseText)">
-		   AND (USER_NM LIKE '%' || #{browseText} || '%' OR USER_ID LIKE '%' || #{browseText} || '%')
-		</if>
-		 ORDER BY REG_DT DESC
-		<if test="@Ognl@isNotEmpty(startNumber) and  @Ognl@isNotEmpty(endNumber)">
-		OFFSET ${startNumber} LIMIT ${endNumber}
-		</if>
-	</select>
-
-	<select id="excelPageCount" parameterType="UserExcelSearch" resultType="int">
-		/* cetusUser.excelPageCount */
-		SELECT COUNT(*)
-		  FROM CETUS_USER
-		 WHERE 1 = 1
-		<if test="@Ognl@isNotEmpty(approveAt)">
-		   AND APPROVE_AT = #{approveAt}
-		</if>
-		<if test="@Ognl@isNotEmpty(browseText)">
-		   AND (USER_NM LIKE '%' || #{browseText} || '%' OR USER_ID LIKE '%' || #{browseText} || '%')
-		</if>
-	</select>
-
 	<select id="userList" resultType="UserList" parameterType="UserListSearch">
 		/* cetusUser.userList */
 		SELECT CU.UID
 			  ,CU.USER_ID
 			  ,CU.PASSWORD
 			  ,CU.USER_NM
+		      ,CU.USER_EMAIL
 			  ,CU.AUTHOR_CD AS ROLE
 		      ,CASE WHEN CU.AUTHOR_CD = 'SUPER' THEN '슈퍼 권한'
 		          	WHEN CU.AUTHOR_CD = 'SYSTEM' THEN '시스템 권한'
@@ -394,6 +368,7 @@
 		/* cetusUser.userExcelList */
 		SELECT CU.USER_ID
 			  ,CU.USER_NM
+		      ,CU.USER_EMAIL
 		      ,CASE WHEN CU.AUTHOR_CD = 'SUPER' THEN '슈퍼 권한'
 		          	WHEN CU.AUTHOR_CD = 'SYSTEM' THEN '시스템 권한'
 		          	WHEN CU.AUTHOR_CD = 'MANAGER' THEN '운영자 권한'

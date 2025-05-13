@@ -18,6 +18,7 @@ public class SessionUserInfo implements Serializable {
     @JsonIgnore
     private String password;
     private String userNm;
+    private String userEmail;
     private String role;
     private String status;
     private Integer failCnt;
@@ -43,6 +44,7 @@ public class SessionUserInfo implements Serializable {
         this.userId = user.getUserId();
         this.password = user.getPassword();
         this.userNm = user.getUserNm();
+        this.userEmail = user.getUserEmail();
         this.role = user.getRole();
         this.status = user.getStatus();
         this.failCnt = user.getFailCnt();

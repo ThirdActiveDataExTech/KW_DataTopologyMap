@@ -14,6 +14,8 @@ public class UserExcelPage {
     private String userId;
     @ExcelColumn(headerName = "사용자 이름")
     private String userNm;
+    @ExcelColumn(headerName = "사용자 이메일")
+    private String userEmail;
     @ExcelColumn(headerName = "사용자 권한")
     private String roleNm;
     @ExcelColumn(headerName = "사용자 상태")

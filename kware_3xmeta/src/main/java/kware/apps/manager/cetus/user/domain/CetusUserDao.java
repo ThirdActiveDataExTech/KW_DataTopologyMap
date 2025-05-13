@@ -21,6 +21,10 @@ public class CetusUserDao extends SuperDao<CetusUser> {
         super("cetusUser");
     }
 
+    public int updateUserInfo(CetusUser bean) {
+        return update("updateUserInfo", bean);
+    }
+
     public UserFullInfo getUserByUserId(String userId) {
         return selectOne("getUserByUserId", userId);
     }
@@ -31,10 +35,6 @@ public class CetusUserDao extends SuperDao<CetusUser> {
 
     public int updateFailCnt(CetusUser bean) {
         return update("updateFailCnt", bean);
-    }
-
-    public Page<UserExcelPage> excelPage(UserExcelSearch bean, Pageable pageable) {
-        return page("excelPageList", "excelPageCount", bean , pageable);
     }
 
     public int updateUserFailCnt(CetusUser bean) {

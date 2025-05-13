@@ -38,6 +38,10 @@ public class CetusUserController {
     @GetMapping("/{uid}")
     public String form(@PathVariable("uid") Long uid, Model model) {
         UserFullInfo info = service.findUserFullInfoByUserUid(uid);
+        model.addAttribute("userAuthorCd", UserAuthorCd.toList());
+        model.addAttribute("userStatus", UserStatus.toList());
+        model.addAttribute("userGroup", groupService.findGroupList());
+        model.addAttribute("userPosition", positionService.findPositionList());
         model.addAttribute("form", info);
         return "manager/user/form";
     }

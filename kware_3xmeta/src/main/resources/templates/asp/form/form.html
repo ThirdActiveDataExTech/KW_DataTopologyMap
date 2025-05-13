@@ -46,6 +46,7 @@
 
       <!-- s:buttons -->
       <div>
+
         <div class="d-flex justify-content-end pe-4">
           <div class="btn-container" style="margin-top: 0px !important;">
             <!-- 왼쪽 버튼 -->
@@ -75,11 +76,12 @@
             <div class="row">
               <div class="col-lg-6">
                   <div for="typeSelect" class="required">타입</div>
-                  <select class="nice-select nice-select-style-1" id="typeSelect" name="type" disabled>
+                  <select class="nice-select wide nice-select-style-1" id="typeSelect" disabled>
                     <option value="" disabled selected>-- Select Type --</option>
                     <option th:each="type : ${types}"
                             th:text="${type}" th:value="${type}" th:selected="${type.name() == obj.type}"></option>
                   </select>
+                <input type="hidden" name="type" th:value="${obj.type}"/>
               </div>
 
               <div class="col-lg-6">

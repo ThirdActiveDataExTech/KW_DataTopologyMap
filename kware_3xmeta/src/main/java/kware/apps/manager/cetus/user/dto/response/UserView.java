@@ -19,4 +19,5 @@ public class UserView {
     private String metaData;
     private String useAt;
     private String approveAt;
+    private String userEmail;
 }

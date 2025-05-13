@@ -12,6 +12,7 @@ public class UserFullInfo {
     private String userId;
     private String password;
     private String userNm;
+    private String userEmail;
     private String role;
     private String roleNm;
     private String status;

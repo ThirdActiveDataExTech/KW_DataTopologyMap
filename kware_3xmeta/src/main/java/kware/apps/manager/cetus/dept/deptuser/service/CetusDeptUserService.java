@@ -22,4 +22,5 @@ public class CetusDeptUserService {
     public void resetDeptUser(Long userUid) {
         dao.deleteDeptUser(userUid);
     }
+
 }

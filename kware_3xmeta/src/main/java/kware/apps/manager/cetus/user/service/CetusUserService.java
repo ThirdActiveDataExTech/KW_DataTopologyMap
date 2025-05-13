@@ -10,6 +10,9 @@ import kware.apps.manager.cetus.enumstatus.DownloadTargetCd;
 import kware.apps.manager.cetus.enumstatus.UserAuthorCd;
 import kware.apps.manager.cetus.enumstatus.UserStatus;
 import kware.apps.manager.cetus.file.service.CetusFileService;
+import kware.apps.manager.cetus.group.groupuser.service.CetusGroupUserService;
+import kware.apps.manager.cetus.position.positionuser.domain.CetusPositionUser;
+import kware.apps.manager.cetus.position.positionuser.service.CetusPositionUserService;
 import kware.apps.manager.cetus.statushist.service.CetusUserStatusHistService;
 import kware.apps.manager.cetus.user.domain.CetusUser;
 import kware.apps.manager.cetus.user.domain.CetusUserDao;
@@ -40,6 +43,8 @@ public class CetusUserService {
 
     private final CetusUserStatusHistService statusHistService;
     private final CetusDeptUserService deptUserService;
+    private final CetusGroupUserService groupUserService;
+    private final CetusPositionUserService positionUserService;
     private final BCryptPasswordEncoder passwordEncoder;
     private final CetusUserDao dao;
     private final CommonFileService commonFileService;
@@ -47,12 +52,6 @@ public class CetusUserService {
     private final CetusConfig cetusConfig;
     private final CetusDownloadsHistService downloadsHistService;
 
-    /**
-     * @method      saveUser
-     * @author      dahyeon
-     * @date        2025-05-12
-     * @deacription 유저 저장
-    **/
     @Transactional
     public void saveUser(UserSave request) {
         String encodePassword = passwordEncoder.encode(request.getPassword());
@@ -60,17 +59,26 @@ public class CetusUserService {
         dao.insert(bean);
     }
 
-    /**
-     * @method      changeUser
-     * @author      dahyeon
-     * @date        2025-05-12
-     * @deacription 유저 수정
-    **/
     @Transactional
     public void changeUser(Long uid, UserChange request) {
+        if(!UserAuthorCd.isValidCode(request.getUserAuthor())) {
+            throw new SimpleException("유효하지 않은 사용자 권한 코드입니다.");
+        }
+        // 1. user
         CetusUser userView = dao.view(uid);
-        String password = (request.getPassword() != null) ? passwordEncoder.encode(request.getPassword()) : userView.getPassword();
-        dao.update(userView.changeUser(uid, request, password));
+        dao.updateUserInfo(userView.changeUser(uid, request));
+
+        // 2. dept
+        deptUserService.resetDeptUser(uid);
+        deptUserService.saveDeptUser(request.getUserDept(), uid);
+
+        // 3. group
+        groupUserService.resetGroupUser(uid);
+        groupUserService.saveGroupUser(request.getUserGroup(), uid);
+
+        // 4. position
+        positionUserService.resetPositionUser(uid);
+        positionUserService.savePositionUser(request.getUserPosition(), uid);
     }
 
     @Async
@@ -103,13 +111,6 @@ public class CetusUserService {
 
     }
 
-
-    /**
-     * @method      findUserByUserId
-     * @author      dahyeon
-     * @date        2025-05-12
-     * @deacription {userId} 값을 통해 유저 전체(상세) 정보 조회
-    **/
     @Transactional(readOnly = true)
     public UserFullInfo findUserByUserId(String userId) {
         return dao.getUserByUserId(userId);
@@ -121,82 +122,37 @@ public class CetusUserService {
         return dao.getUserFullInfoByUserUid(uid);
     }
 
-    /**
-     * @method      findUserInfoByUid
-     * @author      dahyeon
-     * @date        2025-05-12
-     * @deacription {uid} 값을 통해 유저 전체(상세) 정보 조회
-    **/
     @Transactional(readOnly = true)
     public UserView findUserInfoByUid(Long userUid) {
         return dao.getUserInfoByUid(userUid);
     }
 
-    /**
-     * @method      view
-     * @author      dahyeon
-     * @date        2025-05-12
-     * @deacription {uid} 값을 통해 유저 단건 정보 조회
-    **/
     @Transactional(readOnly = true)
     public CetusUser view(Long uid) {
         return dao.view(uid);
     }
 
-    /**
-     * @method      changeFailCnt
-     * @author      dahyeon
-     * @date        2025-05-12
-     * @deacription 비밀번호 실패 횟수 증가
-    **/
     @Transactional
     public void changeFailCnt(String userId) {
         dao.updateFailCnt(new CetusUser(userId));
     }
 
-    /**
-     * @method      resetUserFailCntAndChangeLastLoginDt
-     * @author      dahyeon
-     * @date        2025-05-12
-     * @deacription 비밀번호 실패 횟수 초기화
-    **/
     @Transactional
     public void resetUserFailCnt(String userId) {
         dao.updateUserFailCnt(new CetusUser(userId));
     }
 
-    /**
-     * @method      changeUseAt
-     * @author      dahyeon
-     * @date        2025-05-12
-     * @deacription 비밀번호 실패 횟수가 5회가 될 경우, {useAt} 값 변경
-    **/
     @Transactional
     public void changeUseAt(String userId) {
         dao.updateUserUseAt(new CetusUser(userId));
     }
 
-    /**
-     * @method      userPage
-     * @author      dahyeon
-     * @date        2025-05-12
-     * @deacription 유저 페이징 목록 조회
-    **/
     @Transactional(readOnly = true)
     public Page<UserList> userPage(UserListSearch search, Pageable pageable) {
         search.setWorkplaceUid(UserUtil.getUserWorkplaceUid());
         return dao.userPage(search, pageable);
     }
 
-    /**
-     * @method      userChangeInfo
-     * @author      dahyeon
-     * @date        2025-05-12
-     * @deacription 유저 정보 수정
-     *              (1) 그룹/부서 변경
-     *              (2) 상태 변경
-     *              (3) 권한 변경
-    **/
     @Transactional
     public void userChangeInfo(UserChangeInfo request) {
         if("DEPT".equals(request.getCode())) {
