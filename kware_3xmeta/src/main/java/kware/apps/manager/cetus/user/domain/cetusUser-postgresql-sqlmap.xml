@@ -64,8 +64,8 @@
 		 WHERE USER_ID = #{userId}
 	</update>
 
-	<update id="updateUserFailCntAndChangeLastLoginDt" parameterType="cetusUser">
-		/* cetusUser.updateUserFailCntAndChangeLastLoginDt */
+	<update id="updateUserFailCnt" parameterType="cetusUser">
+		/* cetusUser.updateUserFailCnt */
 		UPDATE CETUS_USER
 		   SET FAIL_CNT = 0
 		 WHERE USER_ID = #{userId}
@@ -303,8 +303,141 @@
 		 INNER JOIN CETUS_DEPT CD ON CD.UID = CDU.DEPT_UID
 		 INNER JOIN CETUS_POSITION_USER CPU ON CPU.USER_UID = CU.UID
 		 INNER JOIN CETUS_POSITION CP ON CP.UID = CPU.POSITION_UID
+		 WHERE 1 = 1
+		   AND CWU.WORKPLACE_UID = #{workplaceUid}
+		<if test="@Ognl@isNotEmpty(userId)">
+			AND CU.USER_ID LIKE '%' || #{userId} || '%'
+		</if>
+		<if test="@Ognl@isNotEmpty(userNm)">
+			AND CU.USER_NM LIKE '%' || #{userNm} || '%'
+		</if>
+		<if test="@Ognl@isNotEmpty(startDate) and @Ognl@isNotEmpty(endDate)">
+			AND CU.REG_DT BETWEEN #{startDate}::TIMESTAMP AND #{endDate}::TIMESTAMP
+		</if>
+		<if test="@Ognl@isNotEmpty(userAuthorCd)">
+			AND CU.AUTHOR_CD IN
+			<foreach item="item" collection="userAuthorCd" open="(" close=")" separator=",">
+				#{item}
+			</foreach>
+		</if>
+		<if test="@Ognl@isNotEmpty(userStatus)">
+			AND CU.STATUS IN
+			<foreach item="item" collection="userStatus" open="(" close=")" separator=",">
+				#{item}
+			</foreach>
+		</if>
+		<if test="@Ognl@isNotEmpty(userGroup)">
+			AND CG.UID IN
+			<foreach item="item" collection="userGroup" open="(" close=")" separator=",">
+				#{item}
+			</foreach>
+		</if>
+		<if test="@Ognl@isNotEmpty(userDepth)">
+			AND CD.UID IN
+			<foreach item="item" collection="userDepth" open="(" close=")" separator=",">
+				#{item}
+			</foreach>
+		</if>
+		<if test="@Ognl@isNotEmpty(userPosition)">
+			AND CP.UID IN
+			<foreach item="item" collection="userPosition" open="(" close=")" separator=",">
+				#{item}
+			</foreach>
+		</if>
+	</select>
+
+	<select id="userExcelList" resultType="UserExcelPage" parameterType="UserListSearch">
+		/* cetusUser.userExcelList */
+		SELECT CU.USER_ID
+			  ,CU.USER_NM
+		      ,CASE WHEN CU.AUTHOR_CD = 'SUPER' THEN '슈퍼 권한'
+		          	WHEN CU.AUTHOR_CD = 'SYSTEM' THEN '시스템 권한'
+		          	WHEN CU.AUTHOR_CD = 'MANAGER' THEN '운영자 권한'
+		          	WHEN CU.AUTHOR_CD = 'USER' THEN '유저 권한'
+		        END AS ROLE_NM
+		      ,CASE WHEN CU.STATUS = 'APPROVED' THEN '사용중'
+		          	WHEN CU.STATUS = 'WAIT' THEN '승인 대기'
+		          	WHEN CU.STATUS = 'STOP' THEN '정지'
+				END AS STATUS_NM
+			  ,CU.USE_AT
+			  ,CU.APPROVE_AT
+			  ,CW.NAME AS WORKPLACE_NM
+			  ,CG.NAME AS GROUP_NM
+			  ,CD.NAME AS DEPT_NM
+			  ,CP.NAME AS POSITION_NM
+			  ,TO_CHAR(CU.REG_DT, 'YYYY-MM-DD') AS REG_DT
+		  FROM CETUS_USER CU
+		  LEFT JOIN CETUS_FILE CF ON CF.FILE_UID = CU.PROFILE_UID::BIGINT AND CF.USE_AT = 'Y' AND CF.SAVED = 'Y'
+		 INNER JOIN CETUS_WORKPLACE_USER CWU ON CWU.USER_UID = CU.UID
+		 INNER JOIN CETUS_WORKPLACE CW ON CW.UID = CWU.WORKPLACE_UID
+		 INNER JOIN CETUS_GROUP_USER CGU ON CGU.USER_UID = CU.UID
+		 INNER JOIN CETUS_GROUP CG ON CG.UID = CGU.GROUP_UID
+		 INNER JOIN CETUS_DEPT_USER CDU ON CDU.USER_UID = CU.UID
+		 INNER JOIN CETUS_DEPT CD ON CD.UID = CDU.DEPT_UID
+		 INNER JOIN CETUS_POSITION_USER CPU ON CPU.USER_UID = CU.UID
+		 INNER JOIN CETUS_POSITION CP ON CP.UID = CPU.POSITION_UID
 	 	 WHERE 1 = 1
-	 	   AND CWU.WORKPLACE_UID = #{workplaceUid}
+		   AND CWU.WORKPLACE_UID = #{workplaceUid}
+		<if test="@Ognl@isNotEmpty(userId)">
+			AND CU.USER_ID LIKE '%' || #{userId} || '%'
+		</if>
+		<if test="@Ognl@isNotEmpty(userNm)">
+			AND CU.USER_NM LIKE '%' || #{userNm} || '%'
+		</if>
+		<if test="@Ognl@isNotEmpty(startDate) and @Ognl@isNotEmpty(endDate)">
+			AND CU.REG_DT BETWEEN #{startDate}::TIMESTAMP AND #{endDate}::TIMESTAMP
+		</if>
+		<if test="@Ognl@isNotEmpty(userAuthorCd)">
+			AND CU.AUTHOR_CD IN
+			<foreach item="item" collection="userAuthorCd" open="(" close=")" separator=",">
+				#{item}
+			</foreach>
+		</if>
+		<if test="@Ognl@isNotEmpty(userStatus)">
+			AND CU.STATUS IN
+			<foreach item="item" collection="userStatus" open="(" close=")" separator=",">
+				#{item}
+			</foreach>
+		</if>
+		<if test="@Ognl@isNotEmpty(userGroup)">
+			AND CG.UID IN
+			<foreach item="item" collection="userGroup" open="(" close=")" separator=",">
+				#{item}
+			</foreach>
+		</if>
+		<if test="@Ognl@isNotEmpty(userDepth)">
+			AND CD.UID IN
+			<foreach item="item" collection="userDepth" open="(" close=")" separator=",">
+				#{item}
+			</foreach>
+		</if>
+		<if test="@Ognl@isNotEmpty(userPosition)">
+			AND CP.UID IN
+			<foreach item="item" collection="userPosition" open="(" close=")" separator=",">
+				#{item}
+			</foreach>
+		</if>
+		ORDER BY CU.REG_DT DESC
+		<if test="@Ognl@isNotEmpty(startNumber) and  @Ognl@isNotEmpty(endNumber)">
+	   OFFSET ${startNumber} LIMIT ${endNumber}
+		</if>
+	</select>
+
+	<select id="userExcelCount" resultType="int" parameterType="UserListSearch">
+		/* cetusUser.userExcelCount */
+		SELECT COUNT(*)
+		  FROM CETUS_USER CU
+		  LEFT JOIN CETUS_FILE CF ON CF.FILE_UID = CU.PROFILE_UID::BIGINT AND CF.USE_AT = 'Y' AND CF.SAVED = 'Y'
+		 INNER JOIN CETUS_WORKPLACE_USER CWU ON CWU.USER_UID = CU.UID
+		 INNER JOIN CETUS_WORKPLACE CW ON CW.UID = CWU.WORKPLACE_UID
+		 INNER JOIN CETUS_GROUP_USER CGU ON CGU.USER_UID = CU.UID
+		 INNER JOIN CETUS_GROUP CG ON CG.UID = CGU.GROUP_UID
+		 INNER JOIN CETUS_DEPT_USER CDU ON CDU.USER_UID = CU.UID
+		 INNER JOIN CETUS_DEPT CD ON CD.UID = CDU.DEPT_UID
+		 INNER JOIN CETUS_POSITION_USER CPU ON CPU.USER_UID = CU.UID
+		 INNER JOIN CETUS_POSITION CP ON CP.UID = CPU.POSITION_UID
+	 	 WHERE 1 = 1
+		   AND CWU.WORKPLACE_UID = #{workplaceUid}
 		<if test="@Ognl@isNotEmpty(userId)">
 			AND CU.USER_ID LIKE '%' || #{userId} || '%'
 		</if>

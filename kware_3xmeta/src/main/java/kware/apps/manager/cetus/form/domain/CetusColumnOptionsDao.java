@@ -21,4 +21,8 @@ public class CetusColumnOptionsDao extends SuperDao<CetusColumnOptions> {
         return Optional.of(selectOne("findByUid", uid));
     }
 
+    public Integer findNextSortNum(Long columnsUid) {
+        return selectOne("findNextSortNum", columnsUid);
+    }
+
 }

@@ -1,7 +1,8 @@
 package kware.common.excel;
 
 
-
+import cetus.annotation.ExcelColumn;
+import cetus.util.DateTimeUtil;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.ss.usermodel.Cell;
@@ -10,19 +11,18 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.xssf.streaming.SXSSFSheet;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.apache.poi.xssf.usermodel.XSSFCellStyle;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import cetus.annotation.CSVColumn;
-import cetus.annotation.ExcelColumn;
 
 import javax.servlet.http.HttpServletResponse;
+import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
 import java.lang.invoke.MethodType;
 import java.lang.reflect.Field;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -181,5 +181,27 @@ public class ExcelRender {
             newWidth = 150;
         }
         nums.set(column, newWidth);
+    }
+
+    public File writeWorkBookToFile(String downloadPath, String fileName) throws IOException {
+        // 날짜 디렉토리 생성 (예: 20250512)
+        String todayDir = DateTimeUtil.getTodayShort();
+        Path fullDirPath = Paths.get(downloadPath, todayDir);
+        Files.createDirectories(fullDirPath); // 디렉토리 없으면 생성
+
+        // 최종 파일 경로
+        Path filePath = fullDirPath.resolve(fileName);
+
+        // 엑셀 파일 저장
+        try (OutputStream outputStream = Files.newOutputStream(filePath)) {
+            wb.write(outputStream);
+        } finally {
+            wb.dispose(); // SXSSFWorkbook 내부 임시파일 삭제
+        }
+
+        log.info("Excel 파일이 저장되었습니다: {}", filePath.toAbsolutePath());
+
+        // java.io.File 객체로 리턴
+        return filePath.toFile();
     }
 }

@@ -31,6 +31,8 @@
       border-bottom-right-radius: .375rem;
     }
   </style>
+  <link rel="stylesheet" th:href="@{'/assets/css/page/manager/user-list.css'}"/>
+  <link rel="stylesheet" th:href="@{'/assets/css/page/manager/user-form.css'}"/>
 </th:block>
 
 <th:block layout:fragment="content">
@@ -49,9 +51,9 @@
             <!-- 왼쪽 버튼 -->
             <!-- 오른쪽 버튼들 -->
             <div class="right-buttons">
-              <button type="button" class="btn btn-ok" id="update-btn">저장</button>
-              <button type="button" class="btn btn-danger btn-step" id="del-btn">삭제</button>
-              <button type="button" class="btn btn-dark btn-step" id="list-btn">목록</button>
+              <button type="button" class="custom-button" id="update-btn">저장</button>
+              <button type="button" class="custom-button" id="del-btn">삭제</button>
+              <button type="button" class="custom-button" id="list-btn">목록</button>
             </div>
           </div>
         </div>
@@ -73,7 +75,7 @@
             <div class="row">
               <div class="col-lg-6">
                   <div for="typeSelect" class="required">타입</div>
-                  <select class="nice-select nice-select-style-1" id="typeSelect" name="type">
+                  <select class="nice-select nice-select-style-1" id="typeSelect" name="type" disabled>
                     <option value="" disabled selected>-- Select Type --</option>
                     <option th:each="type : ${types}"
                             th:text="${type}" th:value="${type}" th:selected="${type.name() == obj.type}"></option>
@@ -155,7 +157,7 @@
           <div class="pb-3 border-bottom" style="padding: 30px;">
             <div class="d-flex justify-content-between align-items-center">
               <h3 class="mb-0">Options</h3>
-              <button type="button" class="btn btn-ok" style="width: 80px;" id="add-child">추가</button>
+              <button type="button" class="custom-button" style="width: 80px;" id="add-child">추가</button>
             </div>
           </div>
 
@@ -182,7 +184,7 @@
                     <td th:text="${option.uid}"></td>
                     <td><input type="text" id="child-label" class="form-control" name="label" required th:value="${option.label}"></td>
                     <td><input type="text" id="child-name" class="form-control" name="name" required th:value="${option.name}"></td>
-                    <td><button type="button" class="btn btn-dark btn-step remove-tr-btn">삭제</button></td>
+                    <td><button type="button" class="custom-button remove-tr-btn">삭제</button></td>
                   </tr>
                 </tbody>
               </table>

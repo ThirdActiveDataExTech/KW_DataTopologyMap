@@ -53,6 +53,4 @@ public class CetusFormColumnsRestController {
         service.deleteOption(uid);
         return ResponseEntity.ok().build();
     }
-
-
 }

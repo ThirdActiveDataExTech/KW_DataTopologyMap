@@ -22,6 +22,7 @@
     <div class="main-wrapper main-wrapper-2">
         <!-- S: sidebar cart -->
         <th:block th:replace="fragments/sidebar-cart :: sidebar-cart"></th:block>
+        <th:block th:replace="~{fragments/sidebar-download :: sidebar-download}"></th:block>
         <!-- E: sidebar cart -->
 
         <!-- S: main image -->
@@ -37,7 +38,46 @@
             import 'ckeditor-config2';  /* 이미지 업로더 미포함 */
         </script>
         <th:block layout:fragment="script"></th:block>
-        <script th:inline="javascript"></script>
+        <script th:inline="javascript">
+            $(function() {
+                IntervalCheck();
+            });
+
+            const IntervalCheck = () => {
+                if (sessionStorage.getItem("_CSV_DOWNLOADING_") == 1) {
+                    checkByBell()
+                    setInterval(() => {
+                        checkByBell()
+                    }, 10000)
+                }
+            }
+
+            const checkByBell = () => {
+                fetch("/cetus/api/custom-file/downloading-list")
+                    .then(res => res.json())
+                    .then(item => {
+                        if(item === 0) {
+                            const headerDiv = document.getElementById("__HEADER__")
+                            const bellAlarm = headerDiv.querySelector("#_BELL_ALARM_")
+                            bellAlarm.innerHTML = `<span class="product-count bg-red" id="download-csv"></span>`
+                            sessionStorage.setItem("_CHECK_MYDOWNLOAD_", 0)
+                            // download 완료 전, myDownload 방문 시 sessionStorage.getItem("_CSV_DOWNLOADING_") 값이 0으로 바뀌는 것을 방지
+                        }
+                    })
+            }
+
+            async function CREATE_USER_CSV(url, obj) {
+                sessionStorage.setItem("_CSV_DOWNLOADING_", "1")
+                const params = new URLSearchParams()
+                for (const key of Object.keys(obj)) {
+                    params.append(key, obj[key])
+                }
+                const urlWithParams = `${url}?${params.toString()}`
+                const options = { method: "get" }
+                const res = await fetch(urlWithParams, options)
+                Util.alert("다운로드 파일을 생성하고있습니다.")
+            }
+        </script>
     </div>
 
 </body>

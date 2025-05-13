@@ -1,20 +1,21 @@
 package kware.apps.manager.cetus.user.dto.request;
 
-import cetus.annotation.YOrN;
 import lombok.Getter;
+import lombok.Setter;
 
 
-@Getter
+@Getter @Setter
 public class UserExcelSearch {
 
-    private String browseText;
+    private String userNm;
+    private String userId;
+    private String startDate;
+    private String endDate;
+    private String[] userAuthorCd;
+    private String[] userStatus;
+    private Long[] userGroup;
+    private Long[] userDepth;
+    private Long[] userPosition;
 
-    @YOrN
-    private String approveAt;
-
-    public UserExcelSearch(String browseText, String approveAt) {
-        this.browseText = browseText;
-        this.approveAt = approveAt;
-    }
-
+    private Long workplaceUid;
 }

@@ -16,7 +16,6 @@ public class ColumnsChange {
 
     @NotBlank @DisplayName("타입")
     private String type;
-    @NotBlank @DisplayName("라벨")
     private String label;
     @NotNull
     @DisplayName("필수")

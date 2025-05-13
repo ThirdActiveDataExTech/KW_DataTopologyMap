@@ -46,6 +46,8 @@ public class CetusFormColumnsService {
 
             var options = request.getOptions();
             options.forEach(option -> {
+                Integer nextSortNum = optionsDao.findNextSortNum(formColumns.getUid());
+                option.addSortNum(nextSortNum);
                 option.addColumnsUid(formColumns.getUid());
                 option.addAuthor(formColumns.getRegUid());
                 optionsDao.insert(option);
@@ -93,6 +95,19 @@ public class CetusFormColumnsService {
     }
 
     @Transactional(readOnly = true)
+    public List<ColumnsPage> getFormGroupColumns(ColumnsSearch request) {
+        List<ColumnsPage> list = columnsDao.findByTenanyAndFormGroup(request);
+        list.forEach(x -> {
+            if(ElementType.from(x.getType()).requiresOption()) {
+                List<CetusColumnOptions> options = optionsDao.list(x.getUid());
+                x.addOptions(options);
+            }
+        });
+        return list;
+    }
+
+
+    @Transactional(readOnly = true)
     public ColumnsView column(Long uid) {
         var data = columnsDao.findByUid(uid).orElseThrow();
         if(ElementType.from(data.getType()).requiresOption()) {
@@ -101,6 +116,7 @@ public class CetusFormColumnsService {
         }
         return data;
     }
+
 
     @Transactional
     public void optionChange(Long uid, CetusColumnOptions request) {

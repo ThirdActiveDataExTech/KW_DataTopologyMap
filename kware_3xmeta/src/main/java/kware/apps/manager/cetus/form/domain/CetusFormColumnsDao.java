@@ -9,6 +9,7 @@ import kware.apps.manager.cetus.form.dto.response.ColumnsView;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.Optional;
 
 
@@ -28,6 +29,10 @@ public class CetusFormColumnsDao extends SuperDao<CetusFormColumns> {
 
     public Integer findNextSortNum(@Param("formGroup") String formGroup) {
         return selectOne("findNextSortNum", formGroup);
+    }
+
+    public List<ColumnsPage> findByTenanyAndFormGroup(ColumnsSearch baen) {
+        return selectList("findByTenanyAndFormGroup", baen);
     }
 
     public void deleteColumns(@Param("uid") Long uid) {

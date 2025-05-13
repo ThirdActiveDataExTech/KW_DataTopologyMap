@@ -36,6 +36,34 @@
 		</if>
 	</select>
 
+	<select id="findByTenanyAndFormGroup" resultType="ColumnsPage" parameterType="ColumnsSearch">
+		SELECT
+		  UID
+		, WORKPLACE_UID
+		, TYPE
+		, LABEL
+		, REQUIRED
+		, DESCRIPTION
+		, USE_AT
+		, NAME
+		, REG_UID
+		, TO_CHAR(CU.REG_DT, 'YYYY-MM-DD HH24:MI') AS REG_DT
+		, UPDT_UID
+		, TO_CHAR(CU.UPDT_DT, 'YYYY-MM-DD HH24:MI') AS UPDT_DT
+		, PLACEHOLDER
+		, SORT_NUM
+		, FORM_GROUP
+		FROM CETUS_FORM_COLUMNS CU
+		WHERE 1 = 1
+		  AND WORKPLACE_UID = #{workplaceUid}
+		  AND FORM_GROUP = #{formGroup}
+		  AND USE_AT = 'Y'
+		<if test="@Ognl@isNotEmpty(type)">
+			AND CU.TYPE = #{type}
+		</if>
+		ORDER BY CU.SORT_NUM
+	</select>
+
 	<select id="view" parameterType="long" resultType="CetusFormColumns">
 		SELECT UID
 			 , TYPE
@@ -138,8 +166,7 @@
 	<update id="update" parameterType="ColumnsChange">
 		UPDATE CETUS_FORM_COLUMNS
 		  SET
-		      TYPE          = #{type}
-		    , LABEL         = #{label}
+		      LABEL         = #{label}
 		    , REQUIRED      = #{required}
 		    , DESCRIPTION   = #{description}
 		    , USE_AT        = #{useAt}

@@ -40,6 +40,7 @@
 				   COLUMNS_UID
 				 , LABEL
 				 , NAME
+			     , SORT_NUM
 				 , REG_UID
 				 , REG_DT
 				 , UPDT_UID
@@ -48,6 +49,7 @@
 				   #{columnsUid}
 				 , #{label}
 				 , #{name}
+			     , #{sortNum}
 				 , #{regUid}
 				 , now()
 				 , #{updtUid}
@@ -61,9 +63,18 @@
 		    , NAME          = #{name}
 		    , UPDT_UID      = #{updtUid}
 		    , UPDT_DT       = now()
+		    <if test="@Ognl@isNotEmpty(sortNum)">
+		    , SORT_NUM = #{sortNum}
+		    </if>
 		WHERE UID = #{uid}
 		  AND COLUMNS_UID = #{columnsUid}
 	</update>
+
+	<select id="findNextSortNum" resultType="int">
+		SELECT COALESCE(MAX(SORT_NUM), 0) + 1
+		FROM CETUS_COLUMN_OPTIONS s
+		WHERE COLUMNS_UID = #{columnsUid}
+	</select>
 
 	<delete id="delete" parameterType="long">
 		DELETE FROM CETUS_COLUMN_OPTIONS

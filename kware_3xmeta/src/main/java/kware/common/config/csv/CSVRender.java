@@ -53,7 +53,6 @@ public class CSVRender {
     */
     public void makeDirFile(String downloadPath) throws IOException{
 
-        String pathSeparator = System.getProperty("path.separator");
         String PREFIX = UUID.randomUUID().toString();
         this.createMkdir(downloadPath +  File.separator + DateTimeUtil.getTodayShort());                 // 해당 경로 file mkdir
         Path dir = Paths.get(String.format("%s%s%s%s%s", downloadPath, File.separator, DateTimeUtil.getTodayShort(), File.separator, PREFIX));

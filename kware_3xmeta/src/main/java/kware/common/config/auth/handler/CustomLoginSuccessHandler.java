@@ -26,7 +26,7 @@ public class CustomLoginSuccessHandler implements AuthenticationSuccessHandler {
 	) throws IOException {
 		PrincipalDetails details = (PrincipalDetails) auth.getPrincipal();
 		auth = SecurityContextHolder.getContext().getAuthentication();
-		cetusUserService.resetUserFailCntAndChangeLastLoginDt(details.getUsername());
+		cetusUserService.resetUserFailCnt(details.getUsername());
 		if (UserUtil.isAuthenticated(auth)) {
 			res.sendRedirect("/asp/home");
 		}

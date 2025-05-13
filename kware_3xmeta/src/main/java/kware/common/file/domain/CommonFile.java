@@ -15,7 +15,6 @@ public class CommonFile {
     private Long   fileSize;
     private String fileType;
     private String extension;
-    private String inputNm;
     private String downCnt;
 
     private String regId;

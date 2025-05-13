@@ -13,13 +13,18 @@ import javax.validation.constraints.NotBlank;
 public class CetusColumnOptions extends AuditBean {
     private Long uid;
     private Long columnsUid;
-    @NotBlank @DisplayName("라벨") 
+    @NotBlank @DisplayName("라벨")
     private String label;
     @NotBlank @DisplayName("이름")
     private String name;
+    private Integer sortNum;
 
     public void addUid(Long uid) {
         this.uid = uid;
+    }
+
+    public void addSortNum(Integer sortNum) {
+        this.sortNum = sortNum;
     }
 
     public void addColumnsUid(Long columnsUid) {
