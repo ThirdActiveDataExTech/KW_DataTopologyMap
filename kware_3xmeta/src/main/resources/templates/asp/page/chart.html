@@ -74,13 +74,21 @@
                 return;
             }
 
-            const obj = { email: email };
+            Http.get("/cetus/api/user/checkEmail.json", { userEmail: email }).then(res => {
+                const {data, message } = res;
 
-            Http.post("/api/invite", obj, true).then(res => {
-                Util.alert("초대 메일이 전송되었습니다.");
-                $('#userInviteModal').modal('hide');
-            }).catch(err => {
-                Util.alert("초대 메일 전송에 실패했습니다.");
+                if (data === 0) {
+                    Http.post("/api/invite", { email: email }, true).then(() => {
+                        Util.alert("초대 메일이 전송되었습니다.");
+                        $('#userInviteModal').modal('hide');
+                    }).catch(() => {
+                        Util.alert("초대 메일 전송에 실패했습니다.");
+                    });
+                } else {
+                    Util.alert(message);
+                }
+            }).catch(() => {
+                Util.alert("이메일 확인 중 오류가 발생했습니다.");
             });
         });
 

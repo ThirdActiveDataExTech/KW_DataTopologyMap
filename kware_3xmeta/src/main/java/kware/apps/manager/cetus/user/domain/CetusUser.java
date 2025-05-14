@@ -46,6 +46,12 @@ public class CetusUser extends AuditBean {
         return this;
     }
 
+    public CetusUser changeUserPassword(Long uid, String encodePassword) {
+        this.uid = uid;
+        this.password = (encodePassword != null) ? encodePassword : this.password;
+        return this;
+    }
+
     public CetusUser(String code, String value, Long uid) {
         if("STATUS".equals(code)) {
 

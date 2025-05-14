@@ -64,22 +64,22 @@
                                 <div class="tab-content" id="myaccountContent">
 
                                     <!-- [1] 사용자 정보 탭 -->
-                                    <div class="tab-pane fade show active" id="user-info" role="tabpanel">
+                                    <div class="tab-pane tab-pane-form fade show active" id="user-info" role="tabpanel">
                                         <div th:replace="manager/user/user-form-info::userFormInfoTab"></div>
                                     </div>
 
                                     <!-- [2] 패스워드 탭 -->
-                                    <div class="tab-pane fade" id="user-password" role="tabpanel">
+                                    <div class="tab-pane tab-pane-form fade" id="user-password" role="tabpanel">
                                         <div th:replace="manager/user/user-form-password::userFormPasswordTab"></div>
                                     </div>
 
                                     <!-- [3] 게시물 탭 -->
-                                    <div class="tab-pane fade" id="user-board" role="tabpanel">
+                                    <div class="tab-pane tab-pane-form fade" id="user-board" role="tabpanel">
                                         <div th:replace="manager/user/user-form-board::userFormBoardTab"></div>
                                     </div>
 
                                     <!-- [4] 활동기록 탭 -->
-                                    <div class="tab-pane fade" id="user-hist" role="tabpanel">
+                                    <div class="tab-pane tab-pane-form fade" id="user-hist" role="tabpanel">
                                         <div th:replace="manager/user/user-form-hist::userFormHistTab"></div>
                                     </div>
 
@@ -128,12 +128,25 @@
 
             userFormProfile.initUploader(profileUid);
 
+            const savedTab = sessionStorage.getItem("form-tab");
+            if (savedTab) {
+                $('.tab-pane-form').removeClass('show active');
+                $(savedTab).addClass('show active');
+                $('.menu-btn').removeClass('active');
+                $('.menu-btn[data-target="' + savedTab + '"]').addClass('active');
+            } else {
+                $('.menu-btn').first().addClass('active');
+                $('.tab-pane-form').first().addClass('show active');
+            }
+
+
             $('.menu-btn').on('click', function () {
                 $('.menu-btn').removeClass('active');
                 $(this).addClass('active');
-                $('.tab-pane').removeClass('show active');
+                $('.tab-pane-form').removeClass('show active');
                 const target = $(this).data('target');
                 $(target).addClass('show active');
+                sessionStorage.setItem("form-tab", target);
             });
 
             $("#default-profile").on('click', function () {

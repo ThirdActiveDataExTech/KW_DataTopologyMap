@@ -9,13 +9,13 @@
           <form class="needs-validation" id="user-info-form" novalidate="">
 
             <div class="row custom-row">
-              <div class="col-lg-6 info-col">
+              <div class="col-lg-6">
                 <div class="single-input-item">
                   <label for="userNm" class="custom-label">이름</label>
                   <input class="form-control custom-input" type="text" id="userNm" name="userNm" th:value="${form?.userNm}" placeholder="이름을 입력하세요.">
                 </div>
               </div>
-              <div class="col-lg-6 info-col">
+              <div class="col-lg-6">
                 <div class="single-input-item">
                   <label for="userId" class="custom-label">ID</label>
                   <input class="form-control custom-input" type="text" id="userId" name="userId" readonly="" disabled="" th:value="${form?.userId}">
@@ -24,7 +24,7 @@
             </div>
 
             <div class="row custom-row">
-              <div class="col-lg-6 info-col">
+              <div class="col-lg-6">
                 <div class="single-input-item">
                   <label for="userEmail" class="custom-label">이메일</label>
                   <input class="form-control custom-input" type="text" id="userEmail" name="userEmail" th:value="${form?.userEmail}" placeholder="example@naver.com">
@@ -45,12 +45,14 @@
             </div>
 
             <div class="row custom-row">
-              <div class="col-lg-6 info-col">
-                <label for="userDept" class="custom-label">그룹/부서</label>
-                <div class="input-group">
-                  <input type="text" id="userDept" class="form-control custom-input" required="" th:value="${form?.deptNm}" readonly disabled>
-                  <input type="hidden" id="userDept-uid" name="userDept" class="form-control custom-input" th:value="${form?.deptUid}">
-                  <button class="custom-button" id="userDept-choose" type="button">선택</button>
+              <div class="col-lg-6">
+                <div style="margin-bottom: 20px;">
+                  <label for="userDept" class="custom-label">그룹/부서</label>
+                  <div class="input-group">
+                    <input type="text" id="userDept" class="form-control custom-input" required="" th:value="${form?.deptNm}" readonly disabled>
+                    <input type="hidden" id="userDept-uid" name="userDept" class="form-control custom-input" th:value="${form?.deptUid}">
+                    <button class="custom-button" id="userDept-choose" type="button">선택</button>
+                  </div>
                 </div>
               </div>
               <div class="col-lg-6">

@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import javax.servlet.http.HttpSession;
 import java.time.LocalDateTime;
 
 @Controller
@@ -17,7 +18,7 @@ public class CetusInviteController {
     private final CetusInviteDao dao;
 
     @GetMapping("/validate")
-    public String validateToken(@RequestParam("token") String token) {
+    public String validateToken(@RequestParam("token") String token, HttpSession session) {
         CetusInvite invite = dao.getInviteByToken(token);
 
         // 만료기간 확인
@@ -32,6 +33,8 @@ public class CetusInviteController {
         }
 
         dao.activateInvite(token);
+        session.setAttribute("inviteToken", token);
+        session.setAttribute("isInvited", true);
         return "redirect:/asp/signup";
     }
 }

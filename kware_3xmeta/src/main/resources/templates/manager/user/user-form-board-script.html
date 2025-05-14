@@ -1,7 +1,31 @@
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <script th:inline="javascript">
-  $(function () {
-    console.log("user-form-board :: 게시물 script")
-  });
+
+    $(function () {
+
+        $('.tab-header-custom a').on('click', function () {
+            $('.tab-header-custom a').removeClass('active');
+            $(this).addClass('active');
+            $('.tab-pane-custom').removeClass('show active');
+            const target = $(this).data('target');
+            $(target).addClass('show active');
+        });
+        $('.bbsctt-header a').on('click', function () {
+            $('.bbsctt-header a').removeClass('active');
+            $(this).addClass('active');
+            $('.tab-pane-bbsctt-custom').removeClass('show active');
+            const target = $(this).data('target');
+            $(target).addClass('show active');
+        });
+        $('.answer-header a').on('click', function () {
+            $('.answer-header a').removeClass('active');
+            $(this).addClass('active');
+            $('.tab-pane-answer-custom').removeClass('show active');
+            const target = $(this).data('target');
+            $(target).addClass('show active');
+        });
+
+    });
+
 </script>
 </html>

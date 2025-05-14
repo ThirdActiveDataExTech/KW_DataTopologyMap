@@ -61,6 +61,15 @@
 	     WHERE UID = #{uid}
 	</update>
 
+	<update id="updateUserPassword" parameterType="CetusUser">
+		/* cetusUser.updateUserPassword */
+		UPDATE CETUS_USER
+		   SET UPDT_UID = #{updtUid}
+			  ,UPDT_DT = NOW()
+			  ,PASSWORD = #{password}
+		 WHERE UID = #{uid}
+	</update>
+
 	<update id="updateFailCnt" parameterType="cetusUser">
 		/* cetusUser.updateFailCnt */
 		UPDATE CETUS_USER
@@ -524,4 +533,19 @@
 			  ,PROFILE_UID = #{profileUid}
 		 WHERE UID = #{uid}
 	</update>
+	<select id="findByUserId" resultType="_int" parameterType="cetusUser">
+		/* cetusUser.findByUserId */
+		SELECT count(*)
+		FROM cetus_user
+		WHERE USER_ID = #{userId}
+		  AND APPROVE_AT = 'Y'
+		  AND USE_AT = 'Y'
+	</select>
+
+	<select id="findByEmail" resultType="_int" parameterType="String">
+		/* cetusUser.findByEmail */
+		SELECT count(*)
+		FROM cetus_user
+		WHERE USER_EMAIL = #{userEmail}
+	</select>
 </mapper>

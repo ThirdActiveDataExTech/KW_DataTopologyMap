@@ -81,6 +81,13 @@ public class CetusUserService {
         positionUserService.savePositionUser(request.getUserPosition(), uid);
     }
 
+    @Transactional
+    public void changeUserPassword(Long uid, UserPasswordChange request) {
+        String encodePassword = passwordEncoder.encode(request.getPassword());
+        CetusUser userView = dao.view(uid);
+        dao.updateUserPassword(userView.changeUserPassword(uid, encodePassword));
+    }
+
     @Async
     public void renderEXCEL(UserExcelSearch search) {
         LocalDateTime now = LocalDateTime.now();
@@ -189,5 +196,19 @@ public class CetusUserService {
         Long profileUid = (request.getProfileUid() != null) ? request.getProfileUid() : null;
         profileUid = commonFileService.processFileBean(request, UserUtil.getUser(), profileUid);
         dao.updateUserProfile(new CetusUser(uid, profileUid));
+    }
+
+    /**
+     * 이미 등록된 userEmail 있는지 체크
+     * */
+    public Integer findByEmail(String email) {
+        return dao.findByEmail(email);
+    }
+
+    /**
+     * 이미 등록된 userId 있는지 체크
+     * */
+    public Integer findByUserId(CetusUser cetusUser) {
+        return dao.findByUserId(cetusUser);
     }
 }

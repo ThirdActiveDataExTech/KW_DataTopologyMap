@@ -82,6 +82,7 @@
                                                 <div class="account-details-form">
                                                     <form class="needs-validation" id="save-form" novalidate="">
                                                         <input type="hidden" value="USER" name="authorCd">
+                                                        <input type="hidden" name="approveAt" th:value="${isInvited} == true ? 'Y' : 'N'" />
                                                         <div class="row">
                                                             <div class="col-lg-6">
                                                                 <div class="single-input-item">

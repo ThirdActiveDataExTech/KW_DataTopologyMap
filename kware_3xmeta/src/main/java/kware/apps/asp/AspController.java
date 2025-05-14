@@ -7,9 +7,13 @@ import kware.common.config.auth.dto.SessionUserInfo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
+import javax.servlet.http.HttpSession;
 
 /**
 * @fileName AspController
@@ -72,7 +76,13 @@ public class AspController {
     }
 
     @GetMapping("/signup")
-    public String signup() {
+    public String signup(HttpSession session, Model model) {
+        Boolean isInvited = (Boolean) session.getAttribute("isInvited");
+        String inviteToken = (String) session.getAttribute("inviteToken");
+
+        model.addAttribute("isInvited", isInvited != null && isInvited);
+        model.addAttribute("inviteToken", inviteToken);
+
         return "asp/page/signup";
     }
 

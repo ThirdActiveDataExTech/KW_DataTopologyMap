@@ -1,38 +1,55 @@
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <th:block th:fragment="userFormBoardTab">
-  <div class="row" style="margin-bottom: 25px;" data-aos="fade-up" data-aos-delay="200">
-
+  <div class="row custom-row aos-init aos-animate" style="margin-bottom: 25px;" data-aos="fade-up" data-aos-delay="200">
     <!-- 탭 컨텐츠 영역 -->
     <div class="myaccount-content">
-      <h3>Downloads</h3>
-      <div class="myaccount-table table-responsive text-center">
-        <table class="table table-bordered">
-          <thead class="thead-light">
-          <tr>
-            <th>Product</th>
-            <th>Date</th>
-            <th>Expire</th>
-            <th>Download</th>
-          </tr>
-          </thead>
-          <tbody>
-          <tr>
-            <td>Haven - Free Real Estate PSD Template</td>
-            <td>Aug 22, 2022</td>
-            <td>Yes</td>
-            <td><a href="#" class="check-btn sqr-btn "><i class="fa fa-cloud-download"></i> Download File</a></td>
-          </tr>
-          <tr>
-            <td>HasTech - Profolio Business Template</td>
-            <td>Sep 12, 2022</td>
-            <td>Never</td>
-            <td><a href="#" class="check-btn sqr-btn "><i class="fa fa-cloud-download"></i> Download File</a></td>
-          </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
 
+      <h3 class="tab-header-custom">
+        <a class="active" data-bs-toggle="tab" data-target="#bbsctt-hist" aria-selected="true" role="tab">게시물</a>
+        <a data-bs-toggle="tab" data-target="#answer-hist" aria-selected="false" role="tab">댓글</a>
+      </h3>
+
+      <div class="tab-content" id="boardHistTab">
+        <div class="tab-pane tab-pane-custom fade show active" id="bbsctt-hist" role="tabpanel">
+
+          <div class="container">
+            <h3 class="tab-content-header-custom bbsctt-header">
+              <a class="active" data-bs-toggle="tab" data-target="#bbsctt-menu1" aria-selected="true" role="tab">메뉴1</a>
+              <a data-bs-toggle="tab" data-target="#bbsctt-menu2" aria-selected="false" role="tab" class="">메뉴2</a>
+            </h3>
+          </div>
+          <div class="tab-content" id="boardHistTab-bbsctt" style="padding-left: 15px;">
+            <div class="tab-pane tab-pane-bbsctt-custom fade show active" id="bbsctt-menu1" role="tabpanel">
+              게시물 > 메뉴1
+            </div>
+            <div class="tab-pane tab-pane-bbsctt-custom fade" id="bbsctt-menu2" role="tabpanel">
+              게시물 > 메뉴2
+            </div>
+          </div>
+
+        </div>
+        <div class="tab-pane tab-pane-custom fade" id="answer-hist" role="tabpanel">
+
+          <div class="container">
+            <h3 class="tab-content-header-custom answer-header">
+              <a class="active" data-bs-toggle="tab" data-target="#answer-menu1" aria-selected="true" role="tab">메뉴1</a>
+              <a data-bs-toggle="tab" data-target="#answer-menu2" aria-selected="false" role="tab" class="">메뉴2</a>
+            </h3>
+          </div>
+          <div class="tab-content" id="boardHistTab-answer" style="padding-left: 15px;">
+            <div class="tab-pane tab-pane-answer-custom fade show active" id="answer-menu1" role="tabpanel">
+              댓글 > 메뉴1
+            </div>
+            <div class="tab-pane tab-pane-answer-custom fade" id="answer-menu2" role="tabpanel">
+              댓글 > 메뉴2
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
   </div>
+
 </th:block>
 </html>
