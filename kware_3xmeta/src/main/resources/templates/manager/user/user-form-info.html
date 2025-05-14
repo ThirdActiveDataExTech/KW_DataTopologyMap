@@ -84,6 +84,32 @@
               </div>
             </div>
 
+            <hr style="border: 1px dashed #ccc; margin-top: 30px; margin-bottom: 30px;">
+
+            <div class="row custom-row">
+
+              <div class="col-lg-6">
+                <div class="single-input-item">
+                  <div for="userStatus" class="required">상태</div>
+                  <input type="hidden" id="status-before" th:value="${form?.status}" />
+                  <select class="nice-select nice-select-style-1 custom-select" id="userStatus" name="userStatus">
+                    <option value="" disabled selected>-- 유저 상태를 선택해주세요. --</option>
+                    <option th:each="status : ${userStatus}"
+                            th:value="${status?.code}"
+                            th:selected="${status?.code == form?.status}"
+                            th:text="${status?.name}"></option>
+                  </select>
+                </div>
+              </div>
+              <div class="col-lg-6">
+              <div class="single-input-item">
+                <div for="userAuthor" class="required">상태 변경 사유</div>
+                <textarea class="form-control custom-textarea" id="changeReason" name="changeReason"
+                          placeholder="사용자 상태 변경 사유를 입력하세요." disabled=""></textarea>
+              </div>
+            </div>
+            </div>
+
             <div class="custom-btn-wrap">
               <button type="button" class="custom-button" id="cancel-btn">취소</button>
               <button type="button" class="custom-button" id="save-btn">변경 적용</button>

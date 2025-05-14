@@ -79,6 +79,12 @@ public class CetusUserService {
         // 4. position
         positionUserService.resetPositionUser(uid);
         positionUserService.savePositionUser(request.getUserPosition(), uid);
+
+        // 5. status
+        if( request.getUserStatus() != null ) {
+            dao.updateUserStatus(new CetusUser("STATUS", request.getUserStatus(), uid));
+            statusHistService.saveUserStatusHistWithReason(uid, request.getUserStatus(), request.getChangeReason());
+        }
     }
 
     @Transactional

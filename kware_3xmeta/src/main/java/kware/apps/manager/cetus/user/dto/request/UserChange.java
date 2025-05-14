@@ -29,4 +29,7 @@ public class UserChange {
 
     @NotBlank @DisplayName("사용자 권한")
     private String userAuthor;
+
+    private String userStatus;
+    private String changeReason;
 }

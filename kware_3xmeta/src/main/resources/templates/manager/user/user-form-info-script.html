@@ -18,6 +18,15 @@
             userFormInfo.submitForm();
         });
 
+        $('#userStatus').on('change', function () {
+            const previousStatus = $('#status-before').val();
+            const currentStatus = $(this).val();
+            if (previousStatus !== currentStatus) {
+                $('#changeReason').prop('disabled', false);
+            } else {
+                $('#changeReason').val('').prop('disabled', true);
+            }
+        });
 
         $("#userJbgd").select2({
             placeholder: "직책 선택",
