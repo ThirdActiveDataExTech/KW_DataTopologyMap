@@ -5,47 +5,96 @@
     <div class="myaccount-content">
 
       <h3 class="tab-header-custom">
-        <a class="active" data-bs-toggle="tab" data-target="#bbsctt-hist" aria-selected="true" role="tab">게시물</a>
-        <a data-bs-toggle="tab" data-target="#answer-hist" aria-selected="false" role="tab">댓글</a>
+        <a class="active" data-target="#bbsctt-hist" aria-selected="true" role="tab">게시물</a>
+        <a data-target="#answer-hist" aria-selected="false" role="tab">댓글</a>
       </h3>
 
       <div class="tab-content" id="boardHistTab">
+
         <div class="tab-pane tab-pane-custom fade show active" id="bbsctt-hist" role="tabpanel">
 
           <div class="container">
             <h3 class="tab-content-header-custom bbsctt-header">
-              <a class="active" data-bs-toggle="tab" data-target="#bbsctt-menu1" aria-selected="true" role="tab">메뉴1</a>
-              <a data-bs-toggle="tab" data-target="#bbsctt-menu2" aria-selected="false" role="tab" class="">메뉴2</a>
+              <!-- 게시판 있을 경우 -->
+              <th:block th:if="${#lists.size(bbsList) > 0}">
+                <th:block th:each="item, iterStat : ${bbsList}">
+                  <a
+                    th:classappend="${iterStat.index == 0} ? 'active' : ''"
+                    th:attr="data-target='#bbsctt-menu' + ${item.bbsUid}, aria-selected=${iterStat.index == 0}"
+                    role="tab"
+                    th:data-uid="${item.bbsUid}"
+                    th:text="${item.bbsNm}"></a>
+                </th:block>
+              </th:block>
+              <!-- 게시판 없을 경우 -->
+              <th:block th:if="${#lists.size(bbsList) == 0}">
+                <span class="text-muted">현재 워크플레이스에 해당하는 게시판이 없습니다.</span>
+              </th:block>
             </h3>
           </div>
-          <div class="tab-content" id="boardHistTab-bbsctt" style="padding-left: 15px;">
-            <div class="tab-pane tab-pane-bbsctt-custom fade show active" id="bbsctt-menu1" role="tabpanel">
-              게시물 > 메뉴1
+
+          <th:block th:unless="${#lists.size(bbsList) == 0}">
+            <div class="container">
+              <input type="hidden" id="bbsctt-hist-tab" th:value="${bbsList.get(0).bbsUid}" />
+              <div class="table-responsive mt-3">
+                <table class="table table-bordered" id="bbsctt-hist-table">
+                  <thead class="table-light">
+                  <tr>
+                    <th></th>
+                    <th>No</th>
+                    <th>게시글 제목</th>
+                    <th>공개 여부</th>
+                  </tr>
+                  </thead>
+                </table>
+              </div>
             </div>
-            <div class="tab-pane tab-pane-bbsctt-custom fade" id="bbsctt-menu2" role="tabpanel">
-              게시물 > 메뉴2
-            </div>
-          </div>
+          </th:block>
 
         </div>
+
         <div class="tab-pane tab-pane-custom fade" id="answer-hist" role="tabpanel">
 
           <div class="container">
             <h3 class="tab-content-header-custom answer-header">
-              <a class="active" data-bs-toggle="tab" data-target="#answer-menu1" aria-selected="true" role="tab">메뉴1</a>
-              <a data-bs-toggle="tab" data-target="#answer-menu2" aria-selected="false" role="tab" class="">메뉴2</a>
+              <!-- 게시판 있을 경우 -->
+              <th:block th:if="${#lists.size(bbsList) > 0}">
+                <th:block th:each="item, iterStat : ${bbsList}">
+                  <a
+                    th:classappend="${iterStat.index == 0} ? 'active' : ''"
+                    th:attr="data-target='#answer-menu' + ${item.bbsUid}, aria-selected=${iterStat.index == 0}"
+                    role="tab"
+                    th:data-uid="${item.bbsUid}"
+                    th:text="${item.bbsNm}"></a>
+                </th:block>
+              </th:block>
+              <!-- 게시판 없을 경우 -->
+              <th:block th:if="${#lists.size(bbsList) == 0}">
+                <span class="text-muted">현재 워크플레이스에 해당하는 게시판이 없습니다.</span>
+              </th:block>
             </h3>
           </div>
-          <div class="tab-content" id="boardHistTab-answer" style="padding-left: 15px;">
-            <div class="tab-pane tab-pane-answer-custom fade show active" id="answer-menu1" role="tabpanel">
-              댓글 > 메뉴1
+
+          <th:block th:unless="${#lists.size(bbsList) == 0}">
+            <div class="container">
+              <input type="hidden" id="answer-hist-tab" th:value="${bbsList.get(0).bbsUid}" />
+              <div class="table-responsive mt-3">
+                <table class="table table-bordered" id="answer-hist-table">
+                  <thead class="table-light">
+                  <tr>
+                    <th></th>
+                    <th>No</th>
+                    <th>게시글 제목</th>
+                    <th>공개 여부</th>
+                  </tr>
+                  </thead>
+                </table>
+              </div>
             </div>
-            <div class="tab-pane tab-pane-answer-custom fade" id="answer-menu2" role="tabpanel">
-              댓글 > 메뉴2
-            </div>
-          </div>
+          </th:block>
 
         </div>
+
       </div>
 
     </div>

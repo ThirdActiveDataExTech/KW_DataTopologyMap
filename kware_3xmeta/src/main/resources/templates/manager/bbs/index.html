@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/default}">
+
+<th:block layout:fragment="center-image">
+    <th:block th:with="title1='게시판 관리', title2='시스템 관리 > 게시판 관리', leftImg='', rightImg=''">
+        <th:block th:replace="fragments/center-image :: main-image-title(${title1}, ${title2}, ${leftImg}, ${rightImg})"></th:block>
+    </th:block>
+</th:block>
+
+<th:block layout:fragment="head">
+    <style>
+        .dataTable tr.odd:hover,
+        .dataTable tr.even:hover {
+            cursor: pointer; /* 선택적으로 커서도 포인터로 */
+        }
+    </style>
+</th:block>
+
+<th:block layout:fragment="content">
+    <div class="related-product-area pb-100 pt-100">
+        <div class="container">
+            <div class="section-title-2 st-border-center text-center mb-35 aos-init aos-animate" data-aos="fade-up" data-aos-delay="200">
+                <h2>게시판 관리</h2>
+            </div>
+            <hr>
+            <!-- s:list -->
+            <div>
+                <div style="display: flex; justify-content: right; margin-right: 15px; margin-bottom: 15px;">
+                    <button type="button" class="custom-button" id="new-btn">게시판 추가</button>
+                </div>
+                <div class="container">
+                    <table class="table table-bordered" id="bbs-table">
+                        <thead class="table-light">
+                        <tr>
+                            <th>번호</th>
+                            <th>게시판명</th>
+                            <th>게시판 유형</th>
+                            <th>사용 여부</th>
+                            <th>게시글 수</th>
+                            <th>등록일</th>
+                            <th>등록자</th>
+                        </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+            <!-- e:list -->
+
+        </div>
+    </div>
+</th:block>
+
+<th:block layout:fragment="script">
+    <script th:src="@{'/assets/js/page/manager/bbs/bbs-list-form.js'}"></script>
+    <script th:inline="javascript">
+        $(function () {
+            bbsJS.initTable();
+
+            $("#new-btn").on('click', function () {
+               window.location.href = '/manager/cetus/bbs/save'
+            });
+        });
+    </script>
+</th:block>
+</html>

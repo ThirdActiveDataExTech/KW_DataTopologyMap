@@ -1,6 +1,7 @@
 package kware.apps.manager.cetus.user.web;
 
 
+import kware.apps.manager.cetus.bbs.service.CetusBbsService;
 import kware.apps.manager.cetus.enumstatus.UserAuthorCd;
 import kware.apps.manager.cetus.enumstatus.UserStatus;
 import kware.apps.manager.cetus.group.service.CetusGroupService;
@@ -23,6 +24,8 @@ public class CetusUserController {
     private final CetusUserService service;
     private final CetusGroupService groupService;
     private final CetusPositionService positionService;
+    private final CetusBbsService bbsService;
+
 
     @GetMapping({"", "/"})
     public String index(Model model) {
@@ -38,11 +41,15 @@ public class CetusUserController {
     @GetMapping("/{uid}")
     public String form(@PathVariable("uid") Long uid, Model model) {
         UserFullInfo info = service.findUserFullInfoByUserUid(uid);
+        model.addAttribute("form", info);
+
         model.addAttribute("userAuthorCd", UserAuthorCd.toList());
         model.addAttribute("userStatus", UserStatus.toList());
         model.addAttribute("userGroup", groupService.findGroupList());
         model.addAttribute("userPosition", positionService.findPositionList());
-        model.addAttribute("form", info);
+
+        model.addAttribute("bbsList", bbsService.findAllWorkplaceBbs());
+
         return "manager/user/form";
     }
 

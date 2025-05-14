@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cetusBbsctt">
+
+    <select id="bbscttList" resultType="BbscttList" parameterType="BbscttSearch">
+        /* cetusBbsctt.bbscttList */
+        SELECT CBBSCTT.BBSCTT_UID
+              ,CBBSCTT.BBS_UID
+              ,CBBSCTT.CL_UID
+              ,CBBSCTT.BBSCTT_NM
+              ,CBBSCTT.RD_CNT
+              ,CBBSCTT.BBSCTT_CNT
+              ,CBBSCTT.NOTICE_AT
+              ,CBBSCTT.FILE_UID
+              ,CBBSCTT.USE_AT
+              ,CBBSCTT.OPEN_AT
+              ,CBBSCTT.DELETE_AT
+              ,CBBSCTT.REG_UID
+              ,TO_CHAR(CBBSCTT.REG_DT, 'YYYY-MM-DD') AS REG_DT
+              ,CU.USER_NM AS REG_NM
+              ,CBBSCTT.THUMBNAIL_UID
+              ,CF_TH.FILE_ID AS THUMBNAIL_ID
+          FROM CETUS_BBSCTT CBBSCTT
+         INNER JOIN CETUS_BBS CBBS ON CBBS.BBS_UID = CBBSCTT.BBS_UID
+          LEFT JOIN CETUS_USER CU ON CU.UID = CBBSCTT.REG_UID
+          LEFT JOIN CETUS_FILE CF_TH ON CF_TH.FILE_UID = CBBSCTT.THUMBNAIL_UID::BIGINT AND CF_TH.USE_AT = 'Y' AND CF_TH.SAVED = 'Y'
+         WHERE CBBSCTT.BBS_UID = #{bbsUid}
+           AND CBBSCTT.DELETE_AT = 'N'
+    </select>
+
+    <select id="bbscttCount" resultType="int" parameterType="BbscttSearch">
+        /* cetusBbsctt.bbscttCount */
+        SELECT COUNT(*)
+          FROM CETUS_BBSCTT CBBSCTT
+         INNER JOIN CETUS_BBS CBBS ON CBBS.BBS_UID = CBBSCTT.BBS_UID
+          LEFT JOIN CETUS_USER CU ON CU.UID = CBBSCTT.REG_UID
+          LEFT JOIN CETUS_FILE CF_TH ON CF_TH.FILE_UID = CBBSCTT.THUMBNAIL_UID::BIGINT AND CF_TH.USE_AT = 'Y' AND CF_TH.SAVED = 'Y'
+         WHERE CBBSCTT.BBS_UID = #{bbsUid}
+           AND CBBSCTT.DELETE_AT = 'N'
+    </select>
+</mapper>

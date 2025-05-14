@@ -12,7 +12,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/manager/api/dept")
+@RequestMapping("/cetus/api/dept")
 public class CetusDeptRestController {
 
     private final CetusDeptService service;

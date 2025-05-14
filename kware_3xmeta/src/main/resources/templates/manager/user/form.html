@@ -101,7 +101,7 @@
 </th:block>
 
 <th:block layout:fragment="script">
-    <script th:src="@{'/assets/js/page/manager/user-form-profile.js'}"></script>
+    <script th:src="@{'/assets/js/page/manager/user/user-form-profile.js'}"></script>
     <th:block th:replace="manager/user/user-form-info-script::script"></th:block>
     <th:block th:replace="manager/user/user-form-password-script::script"></th:block>
     <th:block th:replace="manager/user/user-form-board-script::script"></th:block>
@@ -110,12 +110,6 @@
 
         const profileUid = [[${form.profileUid}]];
         const uid = [[${uid}]]
-
-        const userForm = [[${form}]]
-        const userGroupLst = [[${userGroup}]]
-        const userPositionLst = [[${userPosition}]]
-        const userStatusLst = [[${userStatus}]]
-        const userAuthorCdLst = [[${userAuthorCd}]]
 
         /** 모달 닫을때 생기는 warning 해결 **/
         $(document).on('hide.bs.modal', function () {
@@ -138,7 +132,6 @@
                 $('.menu-btn').first().addClass('active');
                 $('.tab-pane-form').first().addClass('show active');
             }
-
 
             $('.menu-btn').on('click', function () {
                 $('.menu-btn').removeClass('active');

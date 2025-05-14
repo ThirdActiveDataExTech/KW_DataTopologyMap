@@ -1,8 +1,12 @@
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<script th:src="@{'/assets/js/page/manager/user/user-form-board.js'}"></script>
 <script th:inline="javascript">
 
     $(function () {
 
+        userFormBoard.initTable();
+
+        /* [ 게시물 / 댓글 ] 헤더 탭 */
         $('.tab-header-custom a').on('click', function () {
             $('.tab-header-custom a').removeClass('active');
             $(this).addClass('active');
@@ -10,21 +14,24 @@
             const target = $(this).data('target');
             $(target).addClass('show active');
         });
+
+        /* [ 게시물 > 메뉴 ] 헤더 탭 */
         $('.bbsctt-header a').on('click', function () {
             $('.bbsctt-header a').removeClass('active');
             $(this).addClass('active');
-            $('.tab-pane-bbsctt-custom').removeClass('show active');
-            const target = $(this).data('target');
-            $(target).addClass('show active');
+            const uid = $(this).data('uid');
+            $('#bbsctt-hist-tab').val(uid);
+            userFormBoard.submitBbscttTable();
         });
+
+        /* [ 댓글 > 메뉴 ] 헤더 탭 */
         $('.answer-header a').on('click', function () {
             $('.answer-header a').removeClass('active');
             $(this).addClass('active');
-            $('.tab-pane-answer-custom').removeClass('show active');
-            const target = $(this).data('target');
-            $(target).addClass('show active');
+            const uid = $(this).data('uid');
+            $('#answer-hist-tab').val(uid);
+            userFormBoard.submitAnswerTable();
         });
-
     });
 
 </script>
