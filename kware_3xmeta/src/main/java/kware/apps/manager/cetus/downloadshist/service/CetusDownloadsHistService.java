@@ -26,4 +26,9 @@ public class CetusDownloadsHistService {
     public List<CetusDownloadsHistList> findAllUserDownloadsHist() {
         return dao.getAllUserDownloadsHist(UserUtil.getUser().getUid());
     }
+
+    @Transactional
+    public void deleteDownloadHistUser(Long fileUid) {
+        dao.deleteDownloadHistUser(fileUid);
+    }
 }

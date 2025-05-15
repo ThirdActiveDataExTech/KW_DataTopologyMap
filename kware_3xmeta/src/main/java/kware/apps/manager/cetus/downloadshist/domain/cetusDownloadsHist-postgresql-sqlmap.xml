@@ -41,4 +41,10 @@
            AND CF.SAVED = 'Y'
            AND CF.USE_AT = 'Y'
     </select>
+
+    <delete id="deleteDownloadHistUser" parameterType="Long">
+        /* cetusDownloadsHist.deleteDownloadHistUser */
+        DELETE FROM CETUS_DOWNLOADS_HIST
+         WHERE FILE_UID = #{fileUid}
+    </delete>
 </mapper>

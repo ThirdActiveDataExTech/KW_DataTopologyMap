@@ -34,6 +34,7 @@ public class CetusBbsService {
 
     @Transactional(readOnly = true)
     public Page<BbsList> findAllBbsPage(BbsSearch search, Pageable pageable) {
+        search.setWorkplaceUid(UserUtil.getUserWorkplaceUid());
         return dao.getAllBbsPage(search, pageable);
     }
 

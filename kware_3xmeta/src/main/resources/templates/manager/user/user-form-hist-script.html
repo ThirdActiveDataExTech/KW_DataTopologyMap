@@ -12,7 +12,29 @@
             $('.tab-hist-form').removeClass('show active');
             const target = $(this).data('target');
             $(target).addClass('show active');
+
+            if(target === "#login-hist") {
+                userFormHist.submitLoginHistTable();
+            } else if(target === "#download-hist") {
+                userFormHist.submitDownloadHistTable();
+            } else if(target === "#status-hist") {
+                userFormHist.submitStatusHistTable();
+            }
+
         });
+
+        $("#login-hist-list-download").on('click', function () {
+            userFormHist.loginHistListDownload();
+        });
+
+        $("#download-hist-list-download").on('click', function () {
+            userFormHist.downloadHistListDownload();
+        });
+
+        $("#status-hist-list-download").on('click', function () {
+            userFormHist.statusHistListDownload();
+        })
+
     });
 
 </script>

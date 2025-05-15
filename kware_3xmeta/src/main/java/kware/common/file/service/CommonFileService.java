@@ -100,8 +100,13 @@ public class CommonFileService {
                 commonFileLog.setFileUid(commonFile.getFileUid());
                 commonFileLog.setFileId(commonFile.getFileId());
 
+                String uri = req.getRequestURI();
+                String query = req.getQueryString();
+                String downloadUrl = uri + (query != null ? "?" + query : "");
+
                 commonFileLog.setWorkerUid(user != null ? user.getUid().toString() : WebUtil.getIpAddress(req));
                 commonFileLog.setWorkerNm(user != null ? user.getUserNm() : WebUtil.getIpAddress(req));
+                commonFileLog.setDownloadUrl(downloadUrl);
 
                 dao.increaseDownCnt(commonFile);  // file table - downCnt + 1
                 dao.insertLog(commonFileLog);  // file log table - log insert

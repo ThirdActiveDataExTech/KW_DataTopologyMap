@@ -51,6 +51,7 @@
           LEFT JOIN CETUS_USER CU ON CU.UID = CB.REG_UID
          INNER JOIN CETUS_WORKPLACE CW ON CW.UID = CB.WORKPLACE_UID
          WHERE CB.DELETE_AT = 'N'
+           AND CB.WORKPLACE_UID = #{workplaceUid}
         <if test="@Ognl@isNotEmpty(useAt)">
            AND CB.USE_AT = #{useAt}
         </if>
@@ -67,6 +68,7 @@
           LEFT JOIN CETUS_USER CU ON CU.UID = CB.REG_UID
          INNER JOIN CETUS_WORKPLACE CW ON CW.UID = CB.WORKPLACE_UID
          WHERE CB.DELETE_AT = 'N'
+           AND CB.WORKPLACE_UID = #{workplaceUid}
         <if test="@Ognl@isNotEmpty(useAt)">
            AND CB.USE_AT = #{useAt}
         </if>

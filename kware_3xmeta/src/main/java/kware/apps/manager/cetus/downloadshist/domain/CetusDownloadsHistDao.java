@@ -21,4 +21,8 @@ public class CetusDownloadsHistDao extends SuperDao<CetusDownloadsHist> {
     public List<CetusDownloadsHistList> getAllUserDownloadsHist(Long userUid) {
         return selectList("getAllUserDownloadsHist", userUid);
     }
+
+    public int deleteDownloadHistUser(Long uid) {
+        return delete("deleteDownloadHistUser", uid);
+    }
 }

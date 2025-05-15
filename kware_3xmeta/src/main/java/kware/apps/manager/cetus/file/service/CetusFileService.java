@@ -7,14 +7,10 @@ import kware.apps.manager.cetus.file.domain.CetusFileDao;
 import kware.apps.manager.cetus.filelog.domain.CetusFileLog;
 import kware.apps.manager.cetus.filelog.service.CetusFileLogService;
 import kware.common.config.auth.dto.SessionUserInfo;
-import kware.common.file.domain.CommonFile;
-import kware.common.file.domain.CommonFileLog;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ByteArrayResource;
-import org.springframework.core.io.FileSystemResource;
-import org.springframework.core.io.Resource;
 import org.springframework.http.ContentDisposition;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -26,8 +22,6 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -114,7 +108,8 @@ public class CetusFileService {
                 throw new FileNotFoundException("File does not exist: " + fileBean.getFilePath());
             }
 
-            CetusFileLog logBean = new CetusFileLog(fileBean.getFileUid(), fileId, workerUid, workerNm);
+            String downloadUrl = downloadPrefix + fileId;
+            CetusFileLog logBean = new CetusFileLog(fileBean.getFileUid(), fileId, workerUid, workerNm, downloadUrl);
             this.increaseDownCnt(fileId);
             logService.saveFileLog(logBean);
 

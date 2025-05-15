@@ -7,8 +7,14 @@ import lombok.Getter;
 public class BbsSearch {
 
     private String useAt;
+    private Long workplaceUid;
 
-    public BbsSearch(String useAt) {
+    public BbsSearch(String useAt, Long workplaceUid) {
         this.useAt = useAt;
+        this.workplaceUid = workplaceUid;
+    }
+
+    public void setWorkplaceUid(Long workplaceUid) {
+        this.workplaceUid = workplaceUid;
     }
 }

@@ -38,16 +38,25 @@
         </script>
         <th:block layout:fragment="script"></th:block>
         <script th:inline="javascript">
+
+            let CSV_CHECK_INTERVAL_ID = null;
+
             $(function() {
                 IntervalCheck();
             });
 
             const IntervalCheck = () => {
                 if (sessionStorage.getItem("_CSV_DOWNLOADING_") == 1) {
-                    checkByBell()
-                    setInterval(() => {
-                        checkByBell()
-                    }, 10000)
+                    checkByBell();
+                    CSV_CHECK_INTERVAL_ID = setInterval(() => {
+                        if (sessionStorage.getItem("_CSV_DOWNLOADING_") !== "1") {
+                            console.log("⛔ 체크 중단 감지됨. clearInterval 실행");
+                            clearInterval(CSV_CHECK_INTERVAL_ID);
+                            CSV_CHECK_INTERVAL_ID = null;
+                            return;
+                        }
+                        checkByBell();
+                    }, 10000);
                 }
             }
 
@@ -74,7 +83,9 @@
                 const urlWithParams = `${url}?${params.toString()}`
                 const options = { method: "get" }
                 const res = await fetch(urlWithParams, options)
-                Util.alert("다운로드 파일을 생성하고있습니다.")
+                Util.alert("다운로드 파일을 생성하고있습니다.").then(() => {
+                    window.location.reload();
+                })
             }
         </script>
     </div>

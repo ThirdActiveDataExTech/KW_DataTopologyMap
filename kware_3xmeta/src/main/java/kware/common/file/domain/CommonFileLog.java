@@ -16,6 +16,6 @@ public class CommonFileLog {
     private Integer downCnt;
 
     private String regDt;
-    private String fileUrl;
+    private String downloadUrl;
 
 }

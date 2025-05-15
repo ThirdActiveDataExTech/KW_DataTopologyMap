@@ -5,8 +5,7 @@
 
 <th:block layout:fragment="center-image">
     <th:block th:with="title1='게시판 등록', title2='시스템 관리 > 게시판 등록', leftImg='', rightImg=''">
-        <th:block
-                th:replace="fragments/center-image :: main-image-title(${title1}, ${title2}, ${leftImg}, ${rightImg})"></th:block>
+        <th:block th:replace="fragments/center-image :: main-image-title-no-header(${title1}, ${title2}, ${leftImg}, ${rightImg})"></th:block>
     </th:block>
 </th:block>
 

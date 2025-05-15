@@ -1,6 +1,7 @@
 package kware.common.config.auth;
 
 import cetus.config.CetusConfig;
+import kware.apps.manager.cetus.loginhist.service.CetusUserLoginHistService;
 import kware.apps.manager.cetus.menu.service.CetusMenuInfoService;
 import kware.apps.manager.cetus.user.service.CetusUserService;
 import kware.common.config.auth.handler.*;
@@ -65,8 +66,8 @@ public class WebSecurityConfig {
     }
 
     @Bean
-    public CustomLoginSuccessHandler loginSuccessHandler(CetusUserService userService) {
-        return new CustomLoginSuccessHandler(userService);
+    public CustomLoginSuccessHandler loginSuccessHandler(CetusUserService userService, CetusUserLoginHistService histService) {
+        return new CustomLoginSuccessHandler(userService, histService);
     }
 
     @Bean

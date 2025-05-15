@@ -39,7 +39,7 @@
           FROM CETUS_USER_STATUS_HIST CUSH
           LEFT JOIN CETUS_USER CU ON CU.UID = CUSH.REG_UID
          WHERE CUSH.USER_UID = #{userUid}
-         ORDER BY CU.REG_DT DESC
+         ORDER BY CUSH.REG_DT DESC
         <if test="@Ognl@isNotEmpty(startNumber) and  @Ognl@isNotEmpty(endNumber)">
         OFFSET ${startNumber} LIMIT ${endNumber}
         </if>
@@ -47,6 +47,38 @@
 
     <select id="userStatusHistCount" parameterType="UserStatusHistSearch" resultType="int">
         /* cetusUserStatusHist.userStatusHistCount */
+        SELECT COUNT(*)
+          FROM CETUS_USER_STATUS_HIST CUSH
+          LEFT JOIN CETUS_USER CU ON CU.UID = CUSH.REG_UID
+         WHERE CUSH.USER_UID = #{userUid}
+    </select>
+
+    <select id="userStatusHistExcelList" parameterType="UserStatusHistExcelSearch" resultType="UserStatusHistExcelList">
+        /* cetusUserStatusHist.userStatusHistExcelList */
+        SELECT CU.USER_ID || ' (' || CU.USER_NM || ')' AS USER_INFO
+              ,CW.NAME AS WORKPLACE_NM
+              ,CUSH.REASON
+              ,CUSH.STATUS
+              ,CASE WHEN CUSH.STATUS = 'APPROVED' THEN '사용중'
+                    WHEN CUSH.STATUS = 'WAIT' THEN '승인 대기'
+                    WHEN CUSH.STATUS = 'STOP' THEN '정지'
+                END AS STATUS_NM
+              ,TO_CHAR(CUSH.REG_DT, 'YYYY-MM-DD HH:MM') AS REG_DT
+              ,CU_REG.USER_ID || ' (' || CU_REG.USER_NM || ')' AS REG_INFO
+          FROM CETUS_USER_STATUS_HIST CUSH
+         INNER JOIN CETUS_USER CU ON CU.UID = CUSH.USER_UID
+         INNER JOIN CETUS_WORKPLACE_USER CWU ON CWU.USER_UID = CUSH.USER_UID
+         INNER JOIN CETUS_WORKPLACE CW ON CW.UID = CWU.WORKPLACE_UID
+          LEFT JOIN CETUS_USER CU_REG ON CU_REG.UID = CUSH.REG_UID
+         WHERE CUSH.USER_UID = #{userUid}
+         ORDER BY CUSH.REG_DT DESC
+        <if test="@Ognl@isNotEmpty(startNumber) and  @Ognl@isNotEmpty(endNumber)">
+        OFFSET ${startNumber} LIMIT ${endNumber}
+        </if>
+    </select>
+
+    <select id="userStatusHistExcelCount" parameterType="UserStatusHistExcelSearch" resultType="int">
+        /* cetusUserStatusHist.userStatusHistExcelCount */
         SELECT COUNT(*)
           FROM CETUS_USER_STATUS_HIST CUSH
           LEFT JOIN CETUS_USER CU ON CU.UID = CUSH.REG_UID

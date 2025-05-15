@@ -106,6 +106,7 @@
               , WORKER_UID
               , WORKER_NM
               , REG_DT
+              , DOWNLOAD_URL
             )
         VALUES
             (
@@ -114,6 +115,7 @@
               , #{workerUid}
               , #{workerNm}
               , NOW()
+              , #{downloadUrl}
             )
     </insert>
 

@@ -2,16 +2,12 @@ package kware.apps.manager.cetus.user.service;
 
 import cetus.bean.Page;
 import cetus.bean.Pageable;
-import cetus.config.CetusConfig;
 import cetus.user.UserUtil;
 import kware.apps.manager.cetus.dept.deptuser.service.CetusDeptUserService;
-import kware.apps.manager.cetus.downloadshist.service.CetusDownloadsHistService;
 import kware.apps.manager.cetus.enumstatus.DownloadTargetCd;
 import kware.apps.manager.cetus.enumstatus.UserAuthorCd;
 import kware.apps.manager.cetus.enumstatus.UserStatus;
-import kware.apps.manager.cetus.file.service.CetusFileService;
 import kware.apps.manager.cetus.group.groupuser.service.CetusGroupUserService;
-import kware.apps.manager.cetus.position.positionuser.domain.CetusPositionUser;
 import kware.apps.manager.cetus.position.positionuser.service.CetusPositionUserService;
 import kware.apps.manager.cetus.statushist.service.CetusUserStatusHistService;
 import kware.apps.manager.cetus.user.domain.CetusUser;
@@ -21,7 +17,7 @@ import kware.apps.manager.cetus.user.dto.response.UserExcelPage;
 import kware.apps.manager.cetus.user.dto.response.UserFullInfo;
 import kware.apps.manager.cetus.user.dto.response.UserList;
 import kware.apps.manager.cetus.user.dto.response.UserView;
-import kware.common.excel.ExcelRender;
+import kware.common.excel.ExcelCreate;
 import kware.common.exception.SimpleException;
 import kware.common.file.service.CommonFileService;
 import lombok.RequiredArgsConstructor;
@@ -30,11 +26,6 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.io.File;
-import java.io.IOException;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 
 @Service
 @Slf4j
@@ -48,9 +39,7 @@ public class CetusUserService {
     private final BCryptPasswordEncoder passwordEncoder;
     private final CetusUserDao dao;
     private final CommonFileService commonFileService;
-    private final CetusFileService cetusFileService;
-    private final CetusConfig cetusConfig;
-    private final CetusDownloadsHistService downloadsHistService;
+    private final ExcelCreate excelCreate;
 
     @Transactional
     public void saveUser(UserSave request) {
@@ -96,32 +85,16 @@ public class CetusUserService {
 
     @Async
     public void renderEXCEL(UserExcelSearch search) {
-        LocalDateTime now = LocalDateTime.now();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
-        String timestamp = now.format(formatter);
-        String fileName = "유저목록_다운로드_" + timestamp + ".xlsx";
-
-        Long fileUid = commonFileService.generateUid();
-        cetusFileService.saveFile(fileUid, fileName);
-        downloadsHistService.saveDownloadsHistUser(DownloadTargetCd.USER.name(), fileUid);
-
+        search.setWorkplaceUid(UserUtil.getUserWorkplaceUid());
         try {
-
-            Pageable pageable = new Pageable(1000);
-            search.setWorkplaceUid(UserUtil.getUserWorkplaceUid());
-            Page<UserExcelPage> paging = dao.userExcelPage(search, pageable);
-            ExcelRender excel = new ExcelRender(UserExcelPage.class);
-            for (int i = 0; i < paging.getTotalPages(); i++) {
-                pageable.setPageNumber(i + 1);
-                excel.renderExcel(dao.userExcelPage(search, pageable).getList());
-            }
-            File file = excel.writeWorkBookToFile(cetusConfig.getDownloadPath(), fileName);
-            cetusFileService.updateDownloadFile(fileUid, file);
-
-        } catch (IOException e) {
-            cetusFileService.deleteNotDownloadFile(fileUid);
+            excelCreate.createExcelFile(
+                    UserExcelPage.class,
+                    p -> dao.userExcelPage(search, p),
+                    DownloadTargetCd.USER
+            );
+        } catch (Exception e) {
+            log.error("엑셀 생성 실패", e);
         }
-
     }
 
     @Transactional(readOnly = true)
