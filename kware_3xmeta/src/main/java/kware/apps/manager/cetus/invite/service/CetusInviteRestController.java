@@ -1,7 +1,6 @@
 package kware.apps.manager.cetus.invite.service;
 
 import kware.apps.manager.cetus.invite.domain.CetusInvite;
-import kware.apps.manager.cetus.invite.domain.CetusInviteDao;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -10,11 +9,10 @@ import javax.mail.MessagingException;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/invite")
+@RequestMapping("/cetus/api/invite")
 public class CetusInviteRestController {
 
     private final CetusInviteService service;
-    private final CetusInviteDao dao;
 
     @PostMapping
     public ResponseEntity sendInvite(@RequestBody CetusInvite request) throws MessagingException {

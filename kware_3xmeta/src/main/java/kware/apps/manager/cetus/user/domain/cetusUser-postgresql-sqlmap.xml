@@ -30,7 +30,9 @@
 		   ,PASSWORD
 		   ,USER_NM
 		   ,USER_EMAIL
-		   ,APPROVE_AT
+			,STATUS
+		   ,AUTHOR_CD
+			,APPROVE_AT
 		   ,USE_AT
 		   ,REG_DT
 		   ,UPDT_DT
@@ -41,7 +43,9 @@
 		   ,#{password}
 		   ,#{userNm}
 		   ,#{userEmail}
-		   ,'Y'
+		   ,#{status}
+			,#{authorCd}
+			,'Y'
 		   ,'Y'
 		   ,NOW()
 		   ,NOW()
@@ -533,7 +537,7 @@
 			  ,PROFILE_UID = #{profileUid}
 		 WHERE UID = #{uid}
 	</update>
-	<select id="findByUserId" resultType="_int" parameterType="cetusUser">
+	<select id="findByUserId" resultType="_int" parameterType="String">
 		/* cetusUser.findByUserId */
 		SELECT count(*)
 		FROM cetus_user

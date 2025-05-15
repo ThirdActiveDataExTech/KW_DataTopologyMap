@@ -7,17 +7,24 @@ import javax.validation.ConstraintValidatorContext;
 
 public class YorNValidator implements ConstraintValidator<YOrN, String> {
 
+    private boolean allowNull;
+
     @Override
     public void initialize(YOrN constraintAnnotation) {
-        // 초기화 메서드
+        this.allowNull = constraintAnnotation.allowNull();
     }
 
     @Override
     public boolean isValid(String value, ConstraintValidatorContext context) {
-        if ( value == null ) {
-            return true;        // {null} 처리는 @NotNull, @NotBlank, @NotEmpty 로 잡기
+        if ( allowNull && value == null ) {
+            return true;
         }
-
-        return ("Y".equals(value) || "N".equals(value));
+        boolean isValid = "Y".equals(value) || "N".equals(value);
+        if(!isValid) {
+            context.disableDefaultConstraintViolation();;
+            context.buildConstraintViolationWithTemplate("{custom.validation.constraints.YOrN.message}")
+                    .addConstraintViolation();
+        }
+        return isValid;
     }
 }

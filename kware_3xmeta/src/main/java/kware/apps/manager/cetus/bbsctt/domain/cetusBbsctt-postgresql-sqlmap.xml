@@ -12,18 +12,26 @@
               ,CBBSCTT.BBSCTT_CNT
               ,CBBSCTT.NOTICE_AT
               ,CBBSCTT.FILE_UID
+              ,( SELECT COUNT(*)
+                   FROM CETUS_FILE CF2
+                  WHERE CF2.FILE_UID = CBBSCTT.FILE_UID::BIGINT
+                    AND CF2.USE_AT = 'Y'
+                    AND CF2.SAVED = 'Y' ) AS FILE_CNT
               ,CBBSCTT.USE_AT
               ,CBBSCTT.OPEN_AT
               ,CBBSCTT.DELETE_AT
               ,CBBSCTT.REG_UID
               ,TO_CHAR(CBBSCTT.REG_DT, 'YYYY-MM-DD') AS REG_DT
               ,CU.USER_NM AS REG_NM
+              ,CU.USER_EMAIL AS REG_EMAIL
+              ,CF_CU.FILE_ID AS REG_PROFILE_ID
               ,CBBSCTT.THUMBNAIL_UID
-              ,CF_TH.FILE_ID AS THUMBNAIL_ID
+              ,CF.FILE_ID AS THUMBNAIL_ID
           FROM CETUS_BBSCTT CBBSCTT
          INNER JOIN CETUS_BBS CBBS ON CBBS.BBS_UID = CBBSCTT.BBS_UID
           LEFT JOIN CETUS_USER CU ON CU.UID = CBBSCTT.REG_UID
-          LEFT JOIN CETUS_FILE CF_TH ON CF_TH.FILE_UID = CBBSCTT.THUMBNAIL_UID::BIGINT AND CF_TH.USE_AT = 'Y' AND CF_TH.SAVED = 'Y'
+          LEFT JOIN CETUS_FILE CF_CU ON CF_CU.FILE_UID = CU.PROFILE_UID::BIGINT AND CF_CU.USE_AT = 'Y' AND CF_CU.SAVED = 'Y'
+          LEFT JOIN CETUS_FILE CF ON CF.FILE_UID = CBBSCTT.THUMBNAIL_UID::BIGINT AND CF.USE_AT = 'Y' AND CF.SAVED = 'Y'
          WHERE CBBSCTT.BBS_UID = #{bbsUid}
            AND CBBSCTT.DELETE_AT = 'N'
     </select>
@@ -37,5 +45,117 @@
           LEFT JOIN CETUS_FILE CF_TH ON CF_TH.FILE_UID = CBBSCTT.THUMBNAIL_UID::BIGINT AND CF_TH.USE_AT = 'Y' AND CF_TH.SAVED = 'Y'
          WHERE CBBSCTT.BBS_UID = #{bbsUid}
            AND CBBSCTT.DELETE_AT = 'N'
+    </select>
+
+    <insert id="insert" parameterType="CetusBbsctt">
+        /* cetusBbsctt.insert */
+        INSERT INTO CETUS_BBSCTT (
+             BBS_UID
+            ,BBSCTT_NM
+            ,RD_CNT
+            ,BBSCTT_CNT
+            ,NOTICE_AT
+            ,FILE_UID
+            ,USE_AT
+            ,OPEN_AT
+            ,DELETE_AT
+            ,REG_UID
+            ,REG_DT
+            ,UPDT_UID
+            ,UPDT_DT
+        ) VALUES (
+             #{bbsUid}
+            ,#{bbscttNm}
+            ,0
+            ,#{bbscttCnt}
+            ,#{noticeAt}
+            ,#{fileUid}::BIGINT
+            ,'Y'
+            ,#{openAt}
+            ,'N'
+            ,#{regUid}
+            ,NOW()
+            ,#{updtUid}
+            ,NOW()
+        )
+    </insert>
+
+    <select id="view" parameterType="Long" resultType="CetusBbsctt">
+        /* cetusBbsctt.view */
+        SELECT BBSCTT_UID
+              ,BBS_UID
+              ,CL_UID
+              ,BBSCTT_NM
+              ,RD_CNT
+              ,BBSCTT_CNT
+              ,NOTICE_AT
+              ,FILE_UID
+              ,USE_AT
+              ,OPEN_AT
+              ,DELETE_AT
+              ,THUMBNAIL_UID
+          FROM CETUS_BBSCTT
+         WHERE BBSCTT_UID = #{bbscttUid}
+    </select>
+
+    <update id="update" parameterType="CetusBbsctt">
+        /* cetusBbsctt.update */
+        UPDATE CETUS_BBSCTT
+           SET BBSCTT_NM = #{bbscttNm}
+              ,BBSCTT_CNT = #{bbscttCnt}
+              ,OPEN_AT = #{openAt}
+              ,NOTICE_AT = #{noticeAt}
+              ,FILE_UID = #{fileUid}::BIGINT
+              ,UPDT_UID = #{updtUid}
+              ,UPDT_DT = NOW()
+         WHERE BBSCTT_UID = #{bbscttUid}
+    </update>
+
+    <delete id="delete" parameterType="Long">
+        /* cetusBbsctt.delete */
+        UPDATE CETUS_BBSCTT
+           SET DELETE_AT = 'Y'
+         WHERE BBSCTT_UID = #{bbscttUid}
+    </delete>
+
+    <update id="increaseViewCount" parameterType="Long">
+        /* cetusBbsctt.increaseViewCount */
+        UPDATE CETUS_BBSCTT
+           SET RD_CNT = RD_CNT + 1
+         WHERE BBSCTT_UID = #{bbscttUid}
+    </update>
+
+    <select id="getViewByBbscttUid" resultType="BbscttView" parameterType="Long">
+        /* cetusBbsctt.getViewByBbscttUid */
+        SELECT CBBSCTT.BBSCTT_UID
+              ,CBBSCTT.BBS_UID
+              ,CBBSCTT.CL_UID
+              ,CBBSCTT.BBSCTT_NM
+              ,CBBSCTT.RD_CNT
+              ,CBBSCTT.BBSCTT_CNT
+              ,CBBSCTT.NOTICE_AT
+              ,CBBSCTT.FILE_UID
+              ,( SELECT COUNT(*)
+                   FROM CETUS_FILE CF2
+                  WHERE CF2.FILE_UID = CBBSCTT.FILE_UID::BIGINT
+                    AND CF2.USE_AT = 'Y'
+                    AND CF2.SAVED = 'Y' ) AS FILE_CNT
+              ,CBBSCTT.USE_AT
+              ,CBBSCTT.OPEN_AT
+              ,CBBSCTT.DELETE_AT
+              ,CBBSCTT.REG_UID
+              ,TO_CHAR(CBBSCTT.REG_DT, 'YYYY-MM-DD HH:MM') AS REG_DT
+              ,CU.USER_NM AS REG_NM
+              ,CU.USER_ID AS REG_ID
+              ,CU.USER_EMAIL AS REG_EMAIL
+              ,CF_CU.FILE_ID AS REG_PROFILE_ID
+              ,CBBSCTT.THUMBNAIL_UID
+              ,CF.FILE_ID AS THUMBNAIL_ID
+          FROM CETUS_BBSCTT CBBSCTT
+         INNER JOIN CETUS_BBS CBBS ON CBBS.BBS_UID = CBBSCTT.BBS_UID
+          LEFT JOIN CETUS_USER CU ON CU.UID = CBBSCTT.REG_UID
+          LEFT JOIN CETUS_FILE CF_CU ON CF_CU.FILE_UID = CU.PROFILE_UID::BIGINT AND CF_CU.USE_AT = 'Y' AND CF_CU.SAVED = 'Y'
+          LEFT JOIN CETUS_FILE CF ON CF.FILE_UID = CBBSCTT.THUMBNAIL_UID::BIGINT AND CF.USE_AT = 'Y' AND CF.SAVED = 'Y'
+         WHERE CBBSCTT.BBSCTT_UID = #{bbscttUid}
     </select>
 </mapper>

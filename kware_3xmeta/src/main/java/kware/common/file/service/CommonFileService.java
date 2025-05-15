@@ -142,6 +142,24 @@ public class CommonFileService {
         }
     }
 
+    public Boolean checkFile(HttpServletRequest req) {
+        String fileId = req.getParameter("fileId");
+        if (req.getParameter("fileId").equals("null") || req.getParameter("fileId").equals("undefined") || req.getParameter("fileId").length() == 0) return Boolean.FALSE;
+        else {
+
+            CommonFile commonFile = new CommonFile();
+            commonFile.setFileId(fileId);
+            commonFile = dao.findFileInfo(commonFile);
+
+            String realPath = commonFile.getFilePath();
+            File file2 = new File(realPath);
+
+            if (file2.exists() && file2.isFile()) return Boolean.TRUE;
+
+            return Boolean.FALSE;
+        }
+    }
+
     @Transactional
     public ResponseEntity download2(final HttpServletRequest req) {
         String fileId = req.getParameter("fileId");

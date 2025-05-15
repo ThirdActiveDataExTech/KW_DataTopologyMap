@@ -17,6 +17,7 @@ import kware.apps.manager.cetus.user.dto.response.UserExcelPage;
 import kware.apps.manager.cetus.user.dto.response.UserFullInfo;
 import kware.apps.manager.cetus.user.dto.response.UserList;
 import kware.apps.manager.cetus.user.dto.response.UserView;
+import kware.apps.manager.cetus.workplace.workplaceuser.service.CetusWorkplaceUserService;
 import kware.common.excel.ExcelCreate;
 import kware.common.exception.SimpleException;
 import kware.common.file.service.CommonFileService;
@@ -40,12 +41,25 @@ public class CetusUserService {
     private final CetusUserDao dao;
     private final CommonFileService commonFileService;
     private final ExcelCreate excelCreate;
+    private final CetusWorkplaceUserService workplaceUserService;
 
     @Transactional
     public void saveUser(UserSave request) {
         String encodePassword = passwordEncoder.encode(request.getPassword());
         CetusUser bean = new CetusUser(request, encodePassword);
         dao.insert(bean);
+        workplaceUserService.saveWorkplaceUser(1L, bean.getUid());
+    }
+
+    @Transactional
+    public void saveUserAdmin(UserSaveAdmin request) {
+        String encodePassword = passwordEncoder.encode(request.getPassword());
+        CetusUser bean = new CetusUser(request, encodePassword);
+        dao.insert(bean);
+        workplaceUserService.saveWorkplaceUser(1L, bean.getUid());
+        deptUserService.saveDeptUser(request.getUserDept(), bean.getUid());
+        groupUserService.saveGroupUser(request.getUserGroup(), bean.getUid());
+        positionUserService.savePositionUser(request.getUserPosition(), bean.getUid());
     }
 
     @Transactional
@@ -187,7 +201,7 @@ public class CetusUserService {
     /**
      * 이미 등록된 userId 있는지 체크
      * */
-    public Integer findByUserId(CetusUser cetusUser) {
-        return dao.findByUserId(cetusUser);
+    public Integer findByUserId(String userId) {
+        return dao.findByUserId(userId);
     }
 }

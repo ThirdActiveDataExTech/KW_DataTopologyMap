@@ -40,6 +40,12 @@ public class CetusUserRestController {
         return ResponseEntity.ok().build();
     }
 
+    @PostMapping("/admin")
+    public ResponseEntity saveUserAdmin(@RequestBody @Valid UserSaveAdmin request) {
+        service.saveUserAdmin(request);
+        return ResponseEntity.ok().build();
+    }
+
     @PutMapping("/{uid}")
     public ResponseEntity changeUser(@PathVariable("uid") Long uid, @RequestBody @Valid UserChange request) {
         service.changeUser(uid, request);
@@ -88,9 +94,9 @@ public class CetusUserRestController {
     }
 
     @GetMapping("/checkId.json")
-    public Response checkId(CetusUser cetusUser) {
+    public Response checkId(@RequestParam("userId") String userId) {
         String message = "";
-        Integer findUserCnt = service.findByUserId(cetusUser);
+        Integer findUserCnt = service.findByUserId(userId);
         if(findUserCnt == 1) message = "이미 등록된 아이디입니다. 다른 아이디를 입력해주세요";
         else if(findUserCnt == 0) message = "사용 가능한 아이디 입니다.";
 

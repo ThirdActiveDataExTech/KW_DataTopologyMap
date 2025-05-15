@@ -6,7 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class BbscttList {
+public class BbscttView {
 
     private Long bbscttUid;
     private Long bbsUid;
@@ -23,6 +23,7 @@ public class BbscttList {
     private Long regUid;
     private String regDt;
     private String regNm;
+    private String regId;
     private String regEmail;
     private String regProfileId;
     private Long thumbnailUid;

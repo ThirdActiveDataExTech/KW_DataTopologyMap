@@ -1,6 +1,8 @@
 package kware.apps.manager.cetus.bbsctt.domain;
 
 import cetus.bean.AuditBean;
+import kware.apps.manager.cetus.bbsctt.dto.request.BbscttChange;
+import kware.apps.manager.cetus.bbsctt.dto.request.BbscttSave;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,5 +22,24 @@ public class CetusBbsctt extends AuditBean {
     private String openAt;
     private String deleteAt;
     private Long thumbnailUid;
+
+    public CetusBbsctt(BbscttSave request, Long fileUid) {
+        this.bbsUid = request.getBbsUid();
+        this.bbscttNm = request.getBbscttNm();
+        this.bbscttCnt = request.getBbscttCnt();
+        this.openAt = request.getOpenAt();
+        this.noticeAt = request.getNoticeAt();
+        this.fileUid = fileUid;
+    }
+
+    public CetusBbsctt changeBbsctt(Long bbscttUid, BbscttChange request, Long fileUid) {
+        this.bbscttUid = bbscttUid;
+        this.bbscttNm = (request.getBbscttNm() != null) ? request.getBbscttNm() : this.bbscttNm;
+        this.bbscttCnt = (request.getBbscttCnt() != null) ? request.getBbscttCnt() : this.bbscttCnt;
+        this.openAt = (request.getOpenAt() != null) ? request.getOpenAt() : this.openAt;
+        this.noticeAt = (request.getNoticeAt() != null) ? request.getNoticeAt() : this.noticeAt;
+        this.fileUid = fileUid;
+        return this;
+    }
 
 }

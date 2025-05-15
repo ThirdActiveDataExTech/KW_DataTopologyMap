@@ -85,4 +85,9 @@ public class CommonFileController {
     public ResponseEntity<Resource> download2(final HttpServletRequest req, final HttpServletResponse res) throws IOException {
         return fileService.download2(req);
     }
+
+    @GetMapping("/check-file")
+    public ResponseEntity<Boolean> checkFile(final HttpServletRequest req, final HttpServletResponse res) {
+        return ResponseEntity.ok(fileService.checkFile(req));
+    }
 }

@@ -4,6 +4,7 @@ import cetus.bean.AuditBean;
 import kware.apps.manager.cetus.user.dto.request.UserChange;
 import kware.apps.manager.cetus.user.dto.request.UserChangeInfo;
 import kware.apps.manager.cetus.user.dto.request.UserSave;
+import kware.apps.manager.cetus.user.dto.request.UserSaveAdmin;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -32,6 +33,18 @@ public class CetusUser extends AuditBean {
         this.userId = request.getUserId();
         this.password = encodePassword;
         this.userNm = request.getUserNm();
+        this.userEmail = request.getUserEmail();
+        this.authorCd = request.getAuthorCd();
+        this.status = request.getStatus();
+    }
+
+    public CetusUser(UserSaveAdmin request, String encodePassword) {
+        this.userId = request.getUserId();
+        this.password = encodePassword;
+        this.userNm = request.getUserNm();
+        this.userEmail = request.getUserEmail();
+        this.authorCd = request.getAuthorCd();
+        this.status = request.getStatus();
     }
 
     public CetusUser(String userId) {

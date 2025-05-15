@@ -81,8 +81,8 @@ public class CetusUserDao extends SuperDao<CetusUser> {
         return update("updateUserProfile", bean);
     }
 
-    public Integer findByUserId(CetusUser cetusUser) {
-        return selectOne("findByUserId", cetusUser);
+    public Integer findByUserId(String userId) {
+        return selectOne("findByUserId", userId);
     }
 
     public Integer findByEmail(String email) {

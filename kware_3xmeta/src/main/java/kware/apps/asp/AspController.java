@@ -82,8 +82,9 @@ public class AspController {
 
         model.addAttribute("isInvited", isInvited != null && isInvited);
         model.addAttribute("inviteToken", inviteToken);
+        model.addAttribute("isAdminJoin", false);
 
-        return "asp/page/signup";
+        return "manager/user/save";
     }
 
     @GetMapping("/expired")

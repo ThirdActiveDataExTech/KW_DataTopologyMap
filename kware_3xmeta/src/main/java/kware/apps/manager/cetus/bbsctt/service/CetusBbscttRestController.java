@@ -3,13 +3,13 @@ package kware.apps.manager.cetus.bbsctt.service;
 
 import cetus.bean.Page;
 import cetus.bean.Pageable;
+import kware.apps.manager.cetus.bbsctt.dto.request.BbscttChange;
+import kware.apps.manager.cetus.bbsctt.dto.request.BbscttSave;
 import kware.apps.manager.cetus.bbsctt.dto.request.BbscttSearch;
 import kware.apps.manager.cetus.bbsctt.dto.response.BbscttList;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
@@ -24,5 +24,23 @@ public class CetusBbscttRestController {
     public ResponseEntity findAllBbscttPage(@Valid BbscttSearch search, Pageable pageable) {
         Page<BbscttList> allBbscttPage = service.findAllBbscttPage(search, pageable);
         return ResponseEntity.ok(allBbscttPage);
+    }
+
+    @PostMapping
+    public ResponseEntity saveBbsctt(@RequestBody @Valid BbscttSave request) {
+        service.saveBbsctt(request);
+        return ResponseEntity.ok().build();
+    }
+
+    @PutMapping("/{uid}")
+    public ResponseEntity changeBbsctt(@PathVariable("uid") Long uid, @RequestBody @Valid BbscttChange request) {
+        service.changeBbsctt(uid, request);
+        return ResponseEntity.ok().build();
+    }
+
+    @DeleteMapping("/{uid}")
+    public ResponseEntity deleteBbsctt(@PathVariable("uid") Long uid) {
+        service.deleteBbsctt(uid);
+        return ResponseEntity.ok().build();
     }
 }

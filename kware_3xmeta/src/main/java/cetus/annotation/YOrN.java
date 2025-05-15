@@ -13,7 +13,8 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Constraint(validatedBy = YorNValidator.class)
 public @interface YOrN {
-    String message() default "값은 'Y' 또는 'N'이어야 합니다.";
+    String message() default "{custom.validation.constraints.YOrN.message}";
+    boolean allowNull() default true;   // null 허용 여부
     Class<?>[] groups() default {};
     Class<? extends Payload>[] payload() default {};
 }
