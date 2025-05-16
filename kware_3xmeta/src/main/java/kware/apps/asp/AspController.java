@@ -79,10 +79,12 @@ public class AspController {
     public String signup(HttpSession session, Model model) {
         Boolean isInvited = (Boolean) session.getAttribute("isInvited");
         String inviteToken = (String) session.getAttribute("inviteToken");
+        String inviteEmail = (String) session.getAttribute("inviteEmail");
 
         model.addAttribute("isInvited", isInvited != null && isInvited);
         model.addAttribute("inviteToken", inviteToken);
         model.addAttribute("isAdminJoin", false);
+        model.addAttribute("inviteEmail", inviteEmail);
 
         return "manager/user/save";
     }

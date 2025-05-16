@@ -35,6 +35,7 @@ public class CetusInviteController {
         dao.activateInvite(token);
         session.setAttribute("inviteToken", token);
         session.setAttribute("isInvited", true);
+        session.setAttribute("inviteEmail", invite.getEmail());
         return "redirect:/asp/signup";
     }
 }

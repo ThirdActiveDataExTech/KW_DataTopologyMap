@@ -4,7 +4,13 @@
       layout:decorate="~{layouts/default}">
 
 <th:block layout:fragment="center-image">
-    <th:block th:with="title='회원가입',title1='회원가입', title2='Home > 회원가입', leftImg='', rightImg=''">
+    <th:block th:with="
+        title=${isAdminJoin} ? '계정 추가' : '회원가입',
+        title1=${isAdminJoin} ? '계정 추가' : '회원가입',
+        title2=${isAdminJoin} ? '시스템 관리 > 사용자 관리 > 계정 추가' : 'Home > 회원가입',
+        leftImg='',
+        rightImg=''"
+    >
         <th:block th:replace="fragments/center-image :: center-image-title-custom(${title}, ${title1}, ${title2}, ${leftImg}, ${rightImg})"></th:block>
     </th:block>
 </th:block>
@@ -80,8 +86,17 @@
                                                             <div class="col-lg-6">
                                                                 <label class="custom-label required" for="userEmail">이메일<span class="req">*</span></label>
                                                                 <div class="input-group">
-                                                                    <input type="email" id="userEmail" name="userEmail" class="form-control custom-input" required="">
-                                                                    <button class="custom-button" id="userEmail-chk" type="button">중복 확인</button>
+                                                                    <input type="email"
+                                                                           id="userEmail"
+                                                                           name="userEmail"
+                                                                           class="form-control custom-input"
+                                                                           th:value="${inviteEmail}"
+                                                                           th:readonly="${isInvited}"
+                                                                           required />
+                                                                    <button class="custom-button"
+                                                                            id="userEmail-chk"
+                                                                            type="button"
+                                                                            th:if="${!isInvited}">중복 확인</button>
                                                                     <span class="validation-error-message" id="userEmail-error"></span>
                                                                 </div>
                                                             </div>
@@ -171,6 +186,7 @@
     <script th:src="@{'/assets/js/page/manager/user/user-save.js'}"></script>
     <script th:inline="javascript">
         const isAdminJoin = [[${isAdminJoin}]];
+        const isInvited = [[${isInvited}]];
         $(function () {
 
             $("#userId-chk").on('click', function() {
@@ -195,6 +211,11 @@
             $("#change-dept-cancel-btn").on('click', function () {
                 userSave.cancelChooseDept();
             });
+
+            if (isInvited) {
+                userSave.userEmailChk = true;
+                $("#userEmail").attr("readonly", true);
+            }
         });
     </script>
 </th:block>
