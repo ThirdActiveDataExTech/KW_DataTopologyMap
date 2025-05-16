@@ -233,8 +233,8 @@
 		 WHERE CU.UID = #{uid}
 	</select>
 
-	<select id="userList" resultType="UserList" parameterType="UserListSearch">
-		/* cetusUser.userList */
+	<select id="userPageList" resultType="UserList" parameterType="UserListSearch">
+		/* cetusUser.userPageList */
 		SELECT CU.UID
 			  ,CU.USER_ID
 			  ,CU.PASSWORD
@@ -323,8 +323,8 @@
 		</if>
 	</select>
 
-	<select id="userListCount" resultType="int" parameterType="UserListSearch">
-		/* cetusUser.userListCount */
+	<select id="userPageListCount" resultType="int" parameterType="UserListSearch">
+		/* cetusUser.userPageListCount */
 		SELECT COUNT(*)
 		  FROM CETUS_USER CU
 		  LEFT JOIN CETUS_FILE CF ON CF.FILE_UID = CU.PROFILE_UID::BIGINT AND CF.USE_AT = 'Y' AND CF.SAVED = 'Y'
@@ -379,8 +379,8 @@
 		</if>
 	</select>
 
-	<select id="userExcelList" resultType="UserExcelPage" parameterType="UserListSearch">
-		/* cetusUser.userExcelList */
+	<select id="userExcelPageList" resultType="UserExcelPage" parameterType="UserListSearch">
+		/* cetusUser.userExcelPageList */
 		SELECT CU.USER_ID
 			  ,CU.USER_NM
 		      ,CU.USER_EMAIL
@@ -457,8 +457,8 @@
 		</if>
 	</select>
 
-	<select id="userExcelCount" resultType="int" parameterType="UserListSearch">
-		/* cetusUser.userExcelCount */
+	<select id="userExcelPageCount" resultType="int" parameterType="UserListSearch">
+		/* cetusUser.userExcelPageCount */
 		SELECT COUNT(*)
 		  FROM CETUS_USER CU
 		  LEFT JOIN CETUS_FILE CF ON CF.FILE_UID = CU.PROFILE_UID::BIGINT AND CF.USE_AT = 'Y' AND CF.SAVED = 'Y'

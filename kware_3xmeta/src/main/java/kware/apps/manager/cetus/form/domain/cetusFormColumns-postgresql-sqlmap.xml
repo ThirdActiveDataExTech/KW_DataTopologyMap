@@ -7,26 +7,29 @@
 	<select id="list" resultType="ColumnsPage" parameterType="ColumnsSearch">
 		/* cetusFormColumns.list */
 		SELECT
-		  UID
-		, WORKPLACE_UID
-		, TYPE
-		, LABEL
-		, REQUIRED
-		, DESCRIPTION
-		, USE_AT
-		, NAME
-		, REG_UID
+		  CU.UID
+		, CU.WORKPLACE_UID
+		, CU.TYPE
+		, CU.LABEL
+		, CU.REQUIRED
+		, CU.DESCRIPTION
+		, CU.USE_AT
+		, CU.NAME
+		, CU.REG_UID
+		, CTU.USER_NM
 		, TO_CHAR(CU.REG_DT, 'YYYY-MM-DD HH24:MI') AS REG_DT
-		, UPDT_UID
+		, CU.UPDT_UID
 		, TO_CHAR(CU.UPDT_DT, 'YYYY-MM-DD HH24:MI') AS UPDT_DT
-		, PLACEHOLDER
-		, SORT_NUM
-		, FORM_GROUP
+		, CU.PLACEHOLDER
+		, CU.SORT_NUM
+		, CU.FORM_GROUP
 		FROM CETUS_FORM_COLUMNS CU
+		  LEFT JOIN CETUS_USER CTU
+		    ON CTU.uid = CU.reg_uid
 		WHERE 1 = 1
 		  AND WORKPLACE_UID = #{workplaceUid}
-		  AND FORM_GROUP = #{formGroup}
-		  AND USE_AT = 'Y'
+		  AND CU.FORM_GROUP = #{formGroup}
+		  AND CU.USE_AT = 'Y'
 		<if test="@Ognl@isNotEmpty(type)">
 			AND CU.TYPE = #{type}
 		</if>

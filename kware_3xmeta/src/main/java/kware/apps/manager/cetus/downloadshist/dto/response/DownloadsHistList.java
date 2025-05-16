@@ -5,7 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class CetusDownloadsHistList {
+public class DownloadsHistList {
 
     private Long uid;
     private Long targetUid;

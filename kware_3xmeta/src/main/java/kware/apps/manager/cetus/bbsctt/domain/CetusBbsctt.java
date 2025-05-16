@@ -42,4 +42,8 @@ public class CetusBbsctt extends AuditBean {
         return this;
     }
 
+    public CetusBbsctt(Long bbscttUid, String openAt) {
+        this.bbscttUid = bbscttUid;
+        this.openAt = openAt;
+    }
 }

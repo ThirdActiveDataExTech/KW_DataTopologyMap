@@ -7,8 +7,12 @@ import lombok.Getter;
 public class BbscttSearch {
 
     private Long bbsUid;
+    private Long regUid;
+    private String openAt;
 
-    public BbscttSearch(Long bbsUid) {
+    public BbscttSearch(Long bbsUid, Long regUid, String openAt) {
         this.bbsUid = bbsUid;
+        this.regUid = regUid;
+        this.openAt = openAt;
     }
 }

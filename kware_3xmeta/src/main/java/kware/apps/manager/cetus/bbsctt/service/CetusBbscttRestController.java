@@ -3,9 +3,7 @@ package kware.apps.manager.cetus.bbsctt.service;
 
 import cetus.bean.Page;
 import cetus.bean.Pageable;
-import kware.apps.manager.cetus.bbsctt.dto.request.BbscttChange;
-import kware.apps.manager.cetus.bbsctt.dto.request.BbscttSave;
-import kware.apps.manager.cetus.bbsctt.dto.request.BbscttSearch;
+import kware.apps.manager.cetus.bbsctt.dto.request.*;
 import kware.apps.manager.cetus.bbsctt.dto.response.BbscttList;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -41,6 +39,24 @@ public class CetusBbscttRestController {
     @DeleteMapping("/{uid}")
     public ResponseEntity deleteBbsctt(@PathVariable("uid") Long uid) {
         service.deleteBbsctt(uid);
+        return ResponseEntity.ok().build();
+    }
+
+    @PutMapping("/change-openAt")
+    public ResponseEntity changeBbscttOpenAt(@RequestBody @Valid BbscttChangeOpenAt request) {
+        service.changeBbscttOpenAt(request);
+        return ResponseEntity.ok().build();
+    }
+
+    @PutMapping("/delete-several")
+    public ResponseEntity deleteBbsctts(@RequestBody @Valid BbscttDelete request) {
+        service.deleteBbsctts(request);
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/excel")
+    public ResponseEntity renderBbscttExcelPage(@Valid BbscttExcelSearch search) {
+        service.renderEXCEL(search);
         return ResponseEntity.ok().build();
     }
 }

@@ -11,8 +11,6 @@ import kware.apps.manager.cetus.user.dto.response.UserList;
 import kware.apps.manager.cetus.user.dto.response.UserView;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
-
 
 @Component
 public class CetusUserDao extends SuperDao<CetusUser> {
@@ -54,19 +52,11 @@ public class CetusUserDao extends SuperDao<CetusUser> {
     }
 
     public Page<UserList> userPage(UserListSearch search, Pageable pageable) {
-        return page("userList", "userListCount", search, pageable);
+        return page("userPageList", "userPageListCount", search, pageable);
     }
 
     public Page<UserExcelPage> userExcelPage(UserExcelSearch search, Pageable pageable) {
-        return page("userExcelList", "userExcelCount", search, pageable);
-    }
-
-    public List<UserList> userExcelList(UserExcelSearch search) {
-        return selectList("userExcelList", search);
-    }
-
-    public int userExcelCount(UserExcelSearch search) {
-        return selectOne("userExcelCount", search);
+        return page("userExcelPageList", "userExcelPageCount", search, pageable);
     }
 
     public int updateUserStatus(CetusUser bean) {

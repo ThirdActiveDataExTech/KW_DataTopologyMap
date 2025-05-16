@@ -86,7 +86,6 @@
                     </div>
                 </div>
 
-
             </div>
             <!-- e:list -->
 
@@ -105,6 +104,20 @@
                 codeJS.createTable(item);
             });
 
+            const item = sessionStorage.getItem('formGroup')
+            if(item) {
+                const tabSelector = `.description-review-topbar a[data-type="${item}"]`;
+                const tabPaneId = `#${item.toLowerCase()}-tab`;
+
+                $(tabSelector).addClass('active').siblings().removeClass('active');
+                $('.tab-pane').removeClass('show active');
+                $(tabPaneId).addClass('show active');
+            }
+
+            $(".description-review-topbar a").on("click", function () {
+                const type = $(this).data('type');
+                sessionStorage.setItem('formGroup', type);
+            });
 
             $("#new-btn").on('click', function () {
                 window.location.href = '/asp/cetus/form/save'

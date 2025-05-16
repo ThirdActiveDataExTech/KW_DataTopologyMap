@@ -22,6 +22,7 @@ public class ColumnsPage {
     private String name;
     private String placeholder;
     private Long regUid;
+    private String userNm;
     private Long updtUid;
     private String regDt;
     private String updtDt;

@@ -1,5 +1,7 @@
 package kware.apps.manager.cetus.bbsctt.web;
 
+import kware.apps.manager.cetus.answer.dto.response.AnswerList;
+import kware.apps.manager.cetus.answer.service.CetusBbscttAnswerService;
 import kware.apps.manager.cetus.bbs.domain.CetusBbs;
 import kware.apps.manager.cetus.bbs.service.CetusBbsService;
 import kware.apps.manager.cetus.bbsctt.domain.CetusBbsctt;
@@ -14,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
@@ -22,62 +25,51 @@ public class CetusBbscttController {
 
     private final CetusBbscttService bbscttService;
     private final CetusBbsService bbsService;
+    private final CetusBbscttAnswerService answerService;
+
+    private void setBbscttBbsInfo(Long bbsUid, final Model model) {
+        CetusBbs bbs = bbsService.view(bbsUid);
+        model.addAttribute("title1", bbs.getBbsNm());
+        model.addAttribute("title2", bbs.getBbsNm());
+        model.addAttribute("bbsNm", bbs.getBbsNm());
+        model.addAttribute("bbs", bbs);
+    }
 
     @GetMapping("/{bbsUid}")
-    public String index(@PathVariable("bbsUid") Long bbsUid, Model model) {
-
-        CetusBbs view = bbsService.view(bbsUid);
-        model.addAttribute("title1", view.getBbsNm());
-        model.addAttribute("title2", view.getBbsNm());
-        model.addAttribute("bbsNm", view.getBbsNm());
-
+    public String index(@PathVariable("bbsUid") Long bbsUid, final Model model) {
+        this.setBbscttBbsInfo(bbsUid, model);
         return "asp/bbsctt/index";
     }
 
     @GetMapping("/save/{bbsUid}")
-    public String save(@PathVariable("bbsUid") Long bbsUid, Model model) {
-
-        CetusBbs view = bbsService.view(bbsUid);
-        model.addAttribute("title1", view.getBbsNm());
-        model.addAttribute("title2", view.getBbsNm());
-        model.addAttribute("bbsNm", view.getBbsNm());
-        model.addAttribute("view", view);
+    public String save(@PathVariable("bbsUid") Long bbsUid, final Model model) {
+        this.setBbscttBbsInfo(bbsUid, model);
         return "asp/bbsctt/save";
     }
 
     @GetMapping("/view/{bbscttUid}")
-    public String view(@PathVariable("bbscttUid") Long bbscttUid, Model model,
+    public String view(@PathVariable("bbscttUid") Long bbscttUid, final Model model,
                        HttpServletRequest req,
                        HttpServletResponse res) {
-
         BbscttView bbsctt = bbscttService.findViewByBbscttUid(bbscttUid);
         model.addAttribute("bbsctt", bbsctt);
 
-        CetusBbs bbs = bbsService.view(bbsctt.getBbsUid());
-        model.addAttribute("bbs", bbs);
-        model.addAttribute("title1", bbs.getBbsNm());
-        model.addAttribute("title2", bbs.getBbsNm());
-        model.addAttribute("bbsNm", bbs.getBbsNm());
-
+        this.setBbscttBbsInfo(bbsctt.getBbsUid(), model);
         bbscttService.increaseViewCount(bbscttUid, req, res);
+
+        List<AnswerList> answers = answerService.findAllAnswerList(bbscttUid);
+        model.addAttribute("answers", answers);
 
         return "asp/bbsctt/view";
     }
 
     @GetMapping("/form/{bbscttUid}")
-    public String form(@PathVariable("bbscttUid") Long bbscttUid, Model model,
+    public String form(@PathVariable("bbscttUid") Long bbscttUid, final Model model,
                        HttpServletRequest req,
                        HttpServletResponse res) {
-
         CetusBbsctt bbsctt = bbscttService.view(bbscttUid);
         model.addAttribute("bbsctt", bbsctt);
-
-        CetusBbs bbs = bbsService.view(bbsctt.getBbsUid());
-        model.addAttribute("bbs", bbs);
-        model.addAttribute("title1", bbs.getBbsNm());
-        model.addAttribute("title2", bbs.getBbsNm());
-        model.addAttribute("bbsNm", bbs.getBbsNm());
-
+        this.setBbscttBbsInfo(bbsctt.getBbsUid(), model);
         return "asp/bbsctt/form";
     }
 }

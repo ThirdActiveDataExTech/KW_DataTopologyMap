@@ -4,7 +4,7 @@
     <!-- 탭 컨텐츠 영역 -->
     <div class="myaccount-content">
 
-      <h3 class="tab-header-custom">
+      <h3 class="tab-header-custom tab-header-custom-board">
         <a class="active" data-target="#bbsctt-hist" aria-selected="true" role="tab">게시물</a>
         <a data-target="#answer-hist" aria-selected="false" role="tab">댓글</a>
       </h3>
@@ -36,6 +36,25 @@
           <th:block th:unless="${#lists.size(bbsList) == 0}">
             <div class="container">
               <input type="hidden" id="bbsctt-hist-tab" th:value="${bbsList.get(0).bbsUid}" />
+              <div class="topbar-container" style="border-bottom: none; padding: 0px;">
+                <div class="topbar-left">
+                  <span id="bbsctt-hist-total-num"></span>
+                </div>
+                <div class="topbar-right">
+                  <div class="btn-wrapper">
+                    <div class="dropdown-container">
+                      <button type="button" class="custom-button dropdown-toggle" id="bbsctt-hist-status-change">상태변경</button>
+                      <div class="bbsctt-hist-dropdown-menu" id="bbscttHistDropdown">
+                        <button class="custom-button" style="width: 100% !important;" id="openAt-to-N">비공개</button>
+                        <button class="custom-button" style="width: 100% !important; margin-bottom: 5px;" id="openAt-to-Y">공개</button>
+                        <button class="custom-button" style="width: 100% !important;" id="delete-bbsctt">삭제</button>
+                      </div>
+                    </div>
+                    <button type="button" class="custom-button" id="bbsctt-hist-list-download">리스트 다운로드</button>
+
+                  </div>
+                </div>
+              </div>
               <div class="table-responsive mt-3">
                 <table class="table table-bordered" id="bbsctt-hist-table">
                   <thead class="table-light">
@@ -78,6 +97,17 @@
           <th:block th:unless="${#lists.size(bbsList) == 0}">
             <div class="container">
               <input type="hidden" id="answer-hist-tab" th:value="${bbsList.get(0).bbsUid}" />
+              <div class="topbar-container" style="border-bottom: none; padding: 0px;">
+                <div class="topbar-left">
+                  <span id="answer-hist-total-num"></span>
+                </div>
+                <div class="topbar-right">
+                  <div class="btn-wrapper">
+                    <button type="button" class="custom-button" id="answer-hist-delete-row">삭제</button>
+                    <button type="button" class="custom-button" id="answer-hist-list-download">리스트 다운로드</button>
+                  </div>
+                </div>
+              </div>
               <div class="table-responsive mt-3">
                 <table class="table table-bordered" id="answer-hist-table">
                   <thead class="table-light">
@@ -85,7 +115,7 @@
                     <th></th>
                     <th>No</th>
                     <th>게시글 제목</th>
-                    <th>공개 여부</th>
+                    <th>댓글 내용</th>
                   </tr>
                   </thead>
                 </table>

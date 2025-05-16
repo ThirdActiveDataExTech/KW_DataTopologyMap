@@ -7,13 +7,16 @@ import cetus.user.UserUtil;
 import cetus.util.CookieUtil;
 import kware.apps.manager.cetus.bbsctt.domain.CetusBbsctt;
 import kware.apps.manager.cetus.bbsctt.domain.CetusBbscttDao;
-import kware.apps.manager.cetus.bbsctt.dto.request.BbscttChange;
-import kware.apps.manager.cetus.bbsctt.dto.request.BbscttSave;
-import kware.apps.manager.cetus.bbsctt.dto.request.BbscttSearch;
+import kware.apps.manager.cetus.bbsctt.dto.request.*;
+import kware.apps.manager.cetus.bbsctt.dto.response.BbscttExcelList;
 import kware.apps.manager.cetus.bbsctt.dto.response.BbscttList;
 import kware.apps.manager.cetus.bbsctt.dto.response.BbscttView;
+import kware.apps.manager.cetus.enumstatus.DownloadTargetCd;
+import kware.common.excel.ExcelCreate;
 import kware.common.file.service.CommonFileService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,10 +29,14 @@ public class CetusBbscttService {
 
     private final CetusBbscttDao dao;
     private final CommonFileService commonFileService;
+    private final ExcelCreate excelCreate;
+
+    @Value("${cetus.base-url}")
+    private String baseUrl;
 
     @Transactional(readOnly = true)
     public Page<BbscttList> findAllBbscttPage(BbscttSearch search, Pageable pageable) {
-        return dao.page("bbscttList", "bbscttCount", search, pageable);
+        return dao.page("bbscttPageList", "bbscttPageListCount", search, pageable);
     }
 
     @Transactional
@@ -56,7 +63,6 @@ public class CetusBbscttService {
         dao.delete(uid);
     }
 
-
     @Transactional
     public void increaseViewCount(Long bbscttUid, HttpServletRequest req, HttpServletResponse res) {
 
@@ -68,9 +74,32 @@ public class CetusBbscttService {
         }
     }
 
-
     @Transactional(readOnly = true)
     public BbscttView findViewByBbscttUid(Long bbscttUid) {
         return dao.getViewByBbscttUid(bbscttUid);
+    }
+
+    @Transactional
+    public void changeBbscttOpenAt(BbscttChangeOpenAt request) {
+        for(Long uid : request.getUids()) {
+            dao.updateBbscttOpenAt(new CetusBbsctt(uid, request.getOpenAt()));
+        }
+    }
+
+    @Transactional
+    public void deleteBbsctts(BbscttDelete request) {
+        for(Long uid : request.getUids()) {
+            dao.delete(uid);
+        }
+    }
+
+    @Async
+    public void renderEXCEL(BbscttExcelSearch search) {
+        search.setBaseUrl(baseUrl);
+        excelCreate.createExcelFile(
+                BbscttExcelList.class,
+                p -> dao.bbscttExcelPage(search, p),
+                DownloadTargetCd.USER_BBSCTT
+        );
     }
 }

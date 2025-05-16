@@ -16,8 +16,10 @@
 <th:block layout:fragment="content">
     <div class="related-product-area pb-100 pt-100">
         <div class="container">
+
             <div class="row info-row aos-init aos-animate" style="margin-bottom: 25px;" data-aos="fade-up" data-aos-delay="200">
                 <div class="col-lg-12 col-md-12">
+                    <!-- 상단 헤더 영역 -->
                     <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 30px;">
                         <div class="sidebar-widget" style="display: flex; align-items: center; gap: 10px;">
                             <div class="sidebar-widget-title-2 mb-20">
@@ -30,10 +32,10 @@
                         </div>
                     </div>
 
+                    <!-- 하단 폼 입력 영역 -->
                     <div style="margin-top: 20px;">
                         <div class="account-details-form">
                             <form id="bbsctt-save-form" class="needs-validation" novalidate="">
-
                                 <div class="row custom-row">
                                     <div class="col-lg-12">
                                         <div class="single-input-item">
@@ -59,7 +61,7 @@
                                         <span class="validation-error-message" id="openAt-error"></span>
                                     </div>
 
-                                    <div class="col-lg-6" th:if="${view?.bbsTpCd == 'NOTICE'}">
+                                    <div class="col-lg-6" th:if="${bbs?.bbsTpCd == 'NOTICE'}">
                                         <label for="noticeAt-form" class="custom-label">공지여부<span style="color: red">*</span></label>
                                         <div id="noticeAt-form" class="custom-check-form-flex">
                                             <div class="form-check">
@@ -73,7 +75,6 @@
                                         </div>
                                         <span class="validation-error-message" id="noticeAt-error"></span>
                                     </div>
-
                                 </div>
 
                                 <div class="row custom-row">
@@ -98,13 +99,12 @@
                                         </div>
                                     </div>
                                 </div>
-
                             </form>
                         </div>
-
                     </div>
                 </div>
             </div>
+
         </div>
     </div>
 </th:block>
