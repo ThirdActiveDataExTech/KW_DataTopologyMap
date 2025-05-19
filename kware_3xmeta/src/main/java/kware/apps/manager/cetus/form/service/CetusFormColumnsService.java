@@ -95,8 +95,8 @@ public class CetusFormColumnsService {
     }
 
     @Transactional(readOnly = true)
-    public List<ColumnsPage> getFormGroupColumns(ColumnsSearch request) {
-        List<ColumnsPage> list = columnsDao.findByTenanyAndFormGroup(request);
+    public List<ColumnsPage> getFormGroupColumns(String formGroup) {
+        List<ColumnsPage> list = columnsDao.findByTenanyAndFormGroup(new ColumnsSearch(null, formGroup));
         list.forEach(x -> {
             if(ElementType.from(x.getType()).requiresOption()) {
                 List<CetusColumnOptions> options = optionsDao.list(x.getUid());

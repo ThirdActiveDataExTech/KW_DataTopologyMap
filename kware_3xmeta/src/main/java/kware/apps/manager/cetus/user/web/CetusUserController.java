@@ -4,10 +4,11 @@ package kware.apps.manager.cetus.user.web;
 import kware.apps.manager.cetus.bbs.service.CetusBbsService;
 import kware.apps.manager.cetus.enumstatus.UserAuthorCd;
 import kware.apps.manager.cetus.enumstatus.UserStatus;
+import kware.apps.manager.cetus.form.dto.response.ColumnsPage;
+import kware.apps.manager.cetus.form.service.CetusFormColumnsService;
 import kware.apps.manager.cetus.group.service.CetusGroupService;
 import kware.apps.manager.cetus.position.service.CetusPositionService;
 import kware.apps.manager.cetus.user.dto.response.UserFullInfo;
-import kware.apps.manager.cetus.user.dto.response.UserView;
 import kware.apps.manager.cetus.user.service.CetusUserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -15,6 +16,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+
+import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
@@ -25,6 +28,7 @@ public class CetusUserController {
     private final CetusGroupService groupService;
     private final CetusPositionService positionService;
     private final CetusBbsService bbsService;
+    private final CetusFormColumnsService columnsService;
 
 
     @GetMapping({"", "/"})
@@ -47,9 +51,8 @@ public class CetusUserController {
         model.addAttribute("userStatus", UserStatus.toList());
         model.addAttribute("userGroup", groupService.findGroupList());
         model.addAttribute("userPosition", positionService.findPositionList());
-
         model.addAttribute("bbsList", bbsService.findAllWorkplaceBbs());
-
+        model.addAttribute("fields", columnsService.getFormGroupColumns("SIGNUP"));
         return "manager/user/form";
     }
 
@@ -62,4 +65,5 @@ public class CetusUserController {
         model.addAttribute("userPosition", positionService.findPositionList());
         return "manager/user/save";
     }
+
 }

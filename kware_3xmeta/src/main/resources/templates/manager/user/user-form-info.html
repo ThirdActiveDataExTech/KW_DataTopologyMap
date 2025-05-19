@@ -7,7 +7,6 @@
       <h3>사용자 정보</h3>
       <div class="account-details-form">
           <form class="needs-validation" id="user-info-form" novalidate="">
-
             <div class="row custom-row">
               <div class="col-lg-6">
                 <div class="single-input-item">
@@ -108,6 +107,19 @@
                           placeholder="사용자 상태 변경 사유를 입력하세요." disabled=""></textarea>
               </div>
             </div>
+              <hr style="border: 1px dashed #ccc; margin-top: 30px; margin-bottom: 30px;">
+              <th:block th:with="rowSize=2, colClass=${'col-lg-' + (12 / rowSize)}">
+                <th:block th:each="i : ${#numbers.sequence(0, fields.size() - 1, rowSize)}">
+                  <div class="row custom-row">
+                    <th:block th:each="j : ${#numbers.sequence(i, i + rowSize - 1)}"
+                              th:if="${j < fields.size()}">
+                      <th:block th:with="field=${fields[j]}">
+                        <div th:replace="fragments/form-field :: render(${field}, ${colClass}, null)"></div>
+                      </th:block>
+                    </th:block>
+                  </div>
+                </th:block>
+              </th:block>
             </div>
 
             <div class="custom-btn-wrap">
