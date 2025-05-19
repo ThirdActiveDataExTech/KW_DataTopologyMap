@@ -3,10 +3,7 @@ package kware.apps.manager.cetus.answer.service;
 
 import cetus.bean.Page;
 import cetus.bean.Pageable;
-import kware.apps.manager.cetus.answer.dto.request.AnswerDelete;
-import kware.apps.manager.cetus.answer.dto.request.AnswerExcelSearch;
-import kware.apps.manager.cetus.answer.dto.request.AnswerSave;
-import kware.apps.manager.cetus.answer.dto.request.AnswerSearch;
+import kware.apps.manager.cetus.answer.dto.request.*;
 import kware.apps.manager.cetus.answer.dto.response.AnswerList;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -30,6 +27,12 @@ public class CetusBbscttAnswerRestController {
     @DeleteMapping("/{uid}")
     public ResponseEntity deleteAnswer(@PathVariable("uid") Long uid) {
         service.deleteAnswer(uid);
+        return ResponseEntity.ok().build();
+    }
+
+    @PutMapping("/{uid}")
+    public ResponseEntity changeAnswer(@PathVariable("uid") Long uid, @RequestBody @Valid AnswerChange request) {
+        service.changeAnswer(uid, request);
         return ResponseEntity.ok().build();
     }
 

@@ -130,4 +130,13 @@
       </if>
     </select>
 
+    <update id="update" parameterType="CetusBbscttAnswer">
+        /* cetusBbscttAnswer.update */
+        UPDATE CETUS_BBSCTT_ANSWER
+           SET ANSWER_CNT = #{answerCnt}
+              ,UPDT_UID = #{updtUid}
+              ,UPDT_DT = NOW()
+         WHERE ANSWER_UID = #{answerUid}
+    </update>
+
 </mapper>

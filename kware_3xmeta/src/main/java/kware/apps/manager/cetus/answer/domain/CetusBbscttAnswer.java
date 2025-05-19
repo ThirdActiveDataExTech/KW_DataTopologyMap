@@ -1,6 +1,7 @@
 package kware.apps.manager.cetus.answer.domain;
 
 import cetus.bean.AuditBean;
+import kware.apps.manager.cetus.answer.dto.request.AnswerChange;
 import kware.apps.manager.cetus.answer.dto.request.AnswerSave;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -16,6 +17,11 @@ public class CetusBbscttAnswer extends AuditBean {
 
     public CetusBbscttAnswer(AnswerSave request) {
         this.bbscttUid = request.getBbscttUid();
+        this.answerCnt = request.getAnswerCnt();
+    }
+
+    public CetusBbscttAnswer(Long answerUid, AnswerChange request) {
+        this.answerUid = answerUid;
         this.answerCnt = request.getAnswerCnt();
     }
 }

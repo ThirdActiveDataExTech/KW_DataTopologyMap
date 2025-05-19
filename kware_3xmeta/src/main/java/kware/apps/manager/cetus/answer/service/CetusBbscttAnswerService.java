@@ -6,10 +6,7 @@ import cetus.bean.Pageable;
 import cetus.util.HtmlUtil;
 import kware.apps.manager.cetus.answer.domain.CetusBbscttAnswer;
 import kware.apps.manager.cetus.answer.domain.CetusBbscttAnswerDao;
-import kware.apps.manager.cetus.answer.dto.request.AnswerDelete;
-import kware.apps.manager.cetus.answer.dto.request.AnswerExcelSearch;
-import kware.apps.manager.cetus.answer.dto.request.AnswerSave;
-import kware.apps.manager.cetus.answer.dto.request.AnswerSearch;
+import kware.apps.manager.cetus.answer.dto.request.*;
 import kware.apps.manager.cetus.answer.dto.response.AnswerExcelList;
 import kware.apps.manager.cetus.answer.dto.response.AnswerList;
 import kware.apps.manager.cetus.enumstatus.DownloadTargetCd;
@@ -67,5 +64,10 @@ public class CetusBbscttAnswerService {
                 p -> dao.answerExcelPage(search, p),
                 DownloadTargetCd.USER_ANSWER
         );
+    }
+
+    @Transactional
+    public void changeAnswer(Long uid, AnswerChange request) {
+        dao.update(new CetusBbscttAnswer(uid, request));
     }
 }
