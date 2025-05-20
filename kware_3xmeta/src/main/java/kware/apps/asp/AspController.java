@@ -52,7 +52,6 @@ public class AspController {
 
     @GetMapping({"/home", "/", ""})
     public String home(Model model) {
-        /*model.addAttribute("title1", "title1 수정합니다요");*/
         return "asp/page/home";
     }
 

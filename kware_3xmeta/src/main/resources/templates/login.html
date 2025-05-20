@@ -26,10 +26,7 @@
 
                         <div class="login-register-tab-list nav">
                             <a class="active" data-bs-toggle="tab" href="#lg1">
-                                <h4> login </h4>
-                            </a>
-                            <a data-bs-toggle="tab" href="#lg2">
-                                <h4> register </h4>
+                                <h4> 로그인 </h4>
                             </a>
                         </div>
 
@@ -47,32 +44,18 @@
                                             </div>
                                             <div class="login-toggle-btn">
                                                 <input type="checkbox" id="rememberId">
-                                                <label for="rememberId">Remember me</label>
-                                                <a href="javascript:void(0);" class="forgot-password">Forgot Password?</a>
+                                                <label for="rememberId">아이디 기억하기</label>
+                                                <a href="javascript:void(0);" class="register-login">
+                                                    아직 회원이 아니신가요? <br> 회원 가입하기
+                                                </a>
                                             </div>
                                             <div class="button-box btn-hover">
-                                                <button id="loginBtn">Login</button>
+                                                <button id="loginBtn">로그인</button>
                                             </div>
                                         </form>
                                     </div>
                                 </div>
                                 <form action="/login/force.json" method="post" id="force"></form>
-                            </div>
-
-                            <!-- 회원가입 영역 -->
-                            <div id="lg2" class="tab-pane">
-                                <div class="login-form-container">
-                                    <div class="login-register-form">
-                                        <form action="#" method="post">
-                                            <input type="text" name="userId" placeholder="userId">
-                                            <input type="password" name="password" placeholder="password">
-                                            <input name="user-email" placeholder="userEmail" type="email">
-                                            <div class="button-box btn-hover">
-                                                <button type="submit">Register</button>
-                                            </div>
-                                        </form>
-                                    </div>
-                                </div>
                             </div>
 
                         </div>
@@ -111,7 +94,7 @@
 
             /* [Login] 아이디 기억하기 */
             const $userId = $("#userId")
-            const idItemKey = "AQUA_SMART_PLATFORM_ID"
+            const idItemKey = "3X_META_ID"
             document.getElementById('post-form').addEventListener('submit', () => {
                 Switch.isChecked('rememberId') && localStorage.setItem(idItemKey, $userId.val())
                 return true
@@ -122,9 +105,8 @@
                 $userId.val(rememberId)
             }
 
-            /* [Forgot passowrd] */
-            $(".forgot-password").on('click', function(e) {
-                // ,,,
+            $(".register-login").on('click', function(e) {
+                window.location.href = '/asp/signup'
             })
         })
     </script>
