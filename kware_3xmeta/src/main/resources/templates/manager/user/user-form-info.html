@@ -114,7 +114,7 @@
                     <th:block th:each="j : ${#numbers.sequence(i, i + rowSize - 1)}"
                               th:if="${j < fields.size()}">
                       <th:block th:with="field=${fields[j]}">
-                        <div th:replace="fragments/form-field :: render(${field}, ${colClass}, null)"></div>
+                        <div th:replace="fragments/form-field :: render(${field}, ${colClass}, ${metadata})"></div>
                       </th:block>
                     </th:block>
                   </div>

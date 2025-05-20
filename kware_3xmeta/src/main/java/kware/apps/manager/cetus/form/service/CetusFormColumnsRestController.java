@@ -1,5 +1,6 @@
 package kware.apps.manager.cetus.form.service;
 
+import cetus.Response;
 import cetus.bean.Page;
 import cetus.bean.Pageable;
 import kware.apps.manager.cetus.form.dto.request.ColumnsChange;
@@ -53,4 +54,15 @@ public class CetusFormColumnsRestController {
         service.deleteOption(uid);
         return ResponseEntity.ok().build();
     }
+
+    @GetMapping("/check-name")
+    public Response checkName(@RequestParam("name") String name, @RequestParam("formGroup") String formGroup) {
+        String message = "";
+        Integer findUserCnt = service.existFieldName(formGroup, name);
+        if(findUserCnt == 1) message = "이미 등록된 필드명입니다. 다른 필드명을 입력해주세요";
+        else if(findUserCnt == 0) message = "사용 가능한 필드명 입니다.";
+
+        return Response.ok(findUserCnt, message);
+    }
+
 }

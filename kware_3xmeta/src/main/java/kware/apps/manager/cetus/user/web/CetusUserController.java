@@ -4,7 +4,6 @@ package kware.apps.manager.cetus.user.web;
 import kware.apps.manager.cetus.bbs.service.CetusBbsService;
 import kware.apps.manager.cetus.enumstatus.UserAuthorCd;
 import kware.apps.manager.cetus.enumstatus.UserStatus;
-import kware.apps.manager.cetus.form.dto.response.ColumnsPage;
 import kware.apps.manager.cetus.form.service.CetusFormColumnsService;
 import kware.apps.manager.cetus.group.service.CetusGroupService;
 import kware.apps.manager.cetus.position.service.CetusPositionService;
@@ -17,7 +16,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequiredArgsConstructor
@@ -53,6 +55,17 @@ public class CetusUserController {
         model.addAttribute("userPosition", positionService.findPositionList());
         model.addAttribute("bbsList", bbsService.findAllWorkplaceBbs());
         model.addAttribute("fields", columnsService.getFormGroupColumns("SIGNUP"));
+        Map<String, Object> formData = new HashMap<>();
+        formData.put("companyAddress", "서울시 강남구");
+        List<String> nations = new ArrayList<>();
+        nations.add("south korea");
+        nations.add("china");
+        formData.put("nation", nations);
+        formData.put("writeAt", "Y");
+        formData.put("maximumAge", 19);
+        formData.put("hobby", "등산");
+        formData.put("birthday", "1995-08-15");
+        model.addAttribute("metadata", formData);
         return "manager/user/form";
     }
 

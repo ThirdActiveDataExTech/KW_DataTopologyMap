@@ -37,7 +37,7 @@ public class AspController {
      * */
     @ModelAttribute
     public void mainImageTitleInfo(Model model) {
-        model.addAttribute("title1", "AI기반 해양수산 지능형 플랫폼");
+        model.addAttribute("title1", "써드파티 데이터 활용 통합 플랫폼");
         model.addAttribute("title2", "");
         model.addAttribute("leftImg", "");
         model.addAttribute("rightImg", "");

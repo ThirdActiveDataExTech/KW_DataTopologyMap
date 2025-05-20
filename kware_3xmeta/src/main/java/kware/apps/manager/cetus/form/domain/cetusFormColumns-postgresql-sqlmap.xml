@@ -109,6 +109,14 @@
 		WHERE uid = #{uid}
 	</select>
 
+	<select id="existFieldName" parameterType="map" resultType="_int">
+		SELECT COUNT(*)
+		FROM CETUS_FORM_COLUMNS
+		WHERE WORKPLACE_UID = #{workplaceUid}
+		  AND FORM_GROUP = #{formGroup}
+		  AND NAME = #{name}
+	</select>
+
 	<select id="count" resultType="int" parameterType="ColumnsSearch">
 		/* cetusUser.userListCount */
 		SELECT COUNT(*)

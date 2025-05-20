@@ -2,6 +2,7 @@ package kware.apps.manager.cetus.form.service;
 
 import cetus.bean.Page;
 import cetus.bean.Pageable;
+import cetus.user.UserUtil;
 import kware.apps.manager.cetus.form.domain.CetusColumnOptions;
 import kware.apps.manager.cetus.form.domain.CetusColumnOptionsDao;
 import kware.apps.manager.cetus.form.domain.CetusFormColumns;
@@ -132,5 +133,11 @@ public class CetusFormColumnsService {
     @Transactional
     public void deleteOption (Long uid) {
         optionsDao.delete(uid);
+    }
+
+    @Transactional(readOnly = true)
+    public Integer existFieldName(String formGroup, String fieldName) {
+
+        return columnsDao.existFieldName(formGroup, fieldName, UserUtil.getUserWorkplaceUid());
     }
 }

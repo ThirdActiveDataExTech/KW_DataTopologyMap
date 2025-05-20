@@ -9,9 +9,10 @@ import kware.apps.manager.cetus.form.dto.response.ColumnsView;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Component;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
-
 
 @Component
 public class CetusFormColumnsDao extends SuperDao<CetusFormColumns> {
@@ -23,6 +24,7 @@ public class CetusFormColumnsDao extends SuperDao<CetusFormColumns> {
     public Page<ColumnsPage> page(ColumnsSearch bean, Pageable pageable) {
         return page("list", "count", bean , pageable);
     }
+
     public Optional<ColumnsView> findByUid(Long uid) {
         return Optional.of(selectOne("findByUid", uid));
     }
@@ -31,12 +33,24 @@ public class CetusFormColumnsDao extends SuperDao<CetusFormColumns> {
         return selectOne("findNextSortNum", formGroup);
     }
 
-    public List<ColumnsPage> findByTenanyAndFormGroup(ColumnsSearch baen) {
-        return selectList("findByTenanyAndFormGroup", baen);
+    public List<ColumnsPage> findByTenanyAndFormGroup(ColumnsSearch bean) {
+        return selectList("findByTenanyAndFormGroup", bean);
     }
 
     public void deleteColumns(@Param("uid") Long uid) {
         update("deleteColumns", uid);
     }
 
+
+    public Integer existFieldName(String formGroup, String fieldName, Long workplaceUid) {
+        Map<String, Object> param = new HashMap<>();
+        param.put("formGroup", formGroup);
+        param.put("name", fieldName);
+        param.put("workplaceUid", workplaceUid);
+
+        return selectOne("existFieldName", param);
+    }
+
 }
+
+

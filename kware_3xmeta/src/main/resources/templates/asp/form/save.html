@@ -132,9 +132,11 @@
                             </div>
 
                             <div class="col-lg-6">
-                                <label for="label">이름</label>
+                                <label class="custom-label required" for="name">필드명</label>
                                 <div class="input-group">
-                                    <input type="text" id="name" name="name" class="form-control" required="">
+                                    <input type="text" id="name" name="name" class="form-control custom-input" required>
+                                    <button class="custom-button" id="name-chk" type="button">중복 확인</button>
+                                    <span class="validation-error-message" id="name-error"></span>
                                 </div>
                             </div>
                         </div>
@@ -244,6 +246,10 @@
             $("#add-child").on('click', function () {
                 codeJS.addTr();
             });
+
+            $("#name-chk").on('click', function () {
+                codeJS.checkName();
+            })
             $(document).on('click', '.remove-tr-btn', function () {
                 codeJS.removeTr(this);
             });
