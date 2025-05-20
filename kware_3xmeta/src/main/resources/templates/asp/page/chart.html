@@ -44,161 +44,160 @@
         const myChart = echarts.init(chartDom);
         const resetBtn = document.getElementById('reset-btn');
 
-        // 이전 루트 스택
-        const prevStack = [];
-
-        // 트리 데이터 정의
-        const treeDB = {
-            "지옥에서 온 판사": {
-                type: "content",
-                people: ["박신혜"]
-            },
-            "박신혜": {
-                type: "person",
-                groups: {
-                    "드라마": ["장근석", "이규한", "김재영", "이민호"],
-                    "예능": ["유재석", "유연석"]
-                }
-            },
-            "장근석": {
-                type: "person",
-                groups: {
-                    "드라마": ["스위치", "대박", "미남이시네요"]
-                }
-            },
-            "미남이시네요": {
-                type: "content",
-                people: ["장근석", "이홍기", "정용화"]
-            },
-            "스위치": { type: "content", people: [] },
-            "대박": { type: "content", people: [] },
-            "이규한": { type: "person", groups: {} },
-            "김재영": { type: "person", groups: {} },
-            "이민호": { type: "person", groups: {} },
-            "유재석": { type: "person", groups: {} },
-            "유연석": { type: "person", groups: {} },
-            "이홍기": { type: "person", groups: {} },
-            "정용화": { type: "person", groups: {} }
-        };
-
-        let currentRoot = "지옥에서 온 판사";
-
-        // "이전으로" 버튼 생성
         const backBtn = document.createElement("button");
         backBtn.className = "btn btn-sm btn-outline-secondary me-1";
         backBtn.id = "back-btn";
+        backBtn.innerText = "이전노드";
         backBtn.style.display = "none";
-        backBtn.innerText = "이전으로";
         resetBtn.parentNode.insertBefore(backBtn, resetBtn);
 
-        backBtn.addEventListener("click", () => {
-            if (prevStack.length > 0) {
-                currentRoot = prevStack.pop();
-                renderTree(currentRoot);
+        const typeCategoryMap = {
+            content: 0,
+            group: 1,
+            person: 2,
+            default: 3
+        };
+
+        // 콘텐츠별 출연자 정보
+        const contentDB = {
+            "지옥에서 온 판사": ["박신혜"],
+            "미남이시네요": ["박신혜", "장근석"],
+            "닥터스": ["박신혜", "이규한"],
+            "런닝맨": ["박신혜", "유재석", "이광수"]
+        };
+
+        // 인물별 출연작 분류
+        const personWorks = {
+            "박신혜": {
+                드라마: ["미남이시네요", "닥터스", "지옥에서 온 판사"],
+                예능: ["런닝맨"]
+            },
+            "장근석": {
+                드라마: ["미남이시네요"],
+                예능: []
+            },
+            "이규한": {
+                드라마: ["닥터스"],
+                예능: []
+            },
+            "유재석": {
+                드라마: [],
+                예능: ["런닝맨"]
+            },
+            "이광수": {
+                드라마: [],
+                예능: ["런닝맨"]
             }
-        });
+        };
 
-        function getTreeData(rootName) {
-            const node = treeDB[rootName];
-            if (!node) return { name: rootName };
+        let currentRoot = "지옥에서 온 판사";
+        const prevStack = [];
 
-            const root = { name: rootName, children: [] };
+        function detectNodeType(name) {
+            if (personWorks.hasOwnProperty(name)) return "person";
+            if (contentDB.hasOwnProperty(name)) return "content";
+            return "other";
+        }
 
-            if (node.type === "content") {
-                (node.people || []).forEach(person => {
-                    root.children.push({
-                        name: person,
-                        children: makeGroupNodes(person)
+        // 노드 및 링크 구성
+        function buildGraph(rootName) {
+            const nodes = [];
+            const links = [];
+            const visited = new Set();
+
+            function addNode(name, type, size = 30) {
+                if (visited.has(name)) return;
+                visited.add(name);
+                nodes.push({
+                    name,
+                    category: typeCategoryMap[type],
+                    symbolSize: size
+                });
+            }
+
+            const nodeType = detectNodeType(rootName);
+
+            if (nodeType === "content") {
+                // 작품 중심일 경우 → 출연자만
+                addNode(rootName, "content", 60);
+                (contentDB[rootName] || []).forEach(person => {
+                    addNode(person, "person");
+                    links.push({ source: rootName, target: person });
+                });
+            } else if (nodeType === "person") {
+                // 인물 중심일 경우 → 그룹 → 콘텐츠 → 공동출연자
+                addNode(rootName, "person", 60);
+                const works = personWorks[rootName] || {};
+                Object.entries(works).forEach(([groupName, contents]) => {
+                    addNode(groupName, "group");
+                    links.push({ source: rootName, target: groupName });
+
+                    contents.forEach(content => {
+                        addNode(content, "content");
+                        links.push({ source: groupName, target: content });
+
+                        (contentDB[content] || []).forEach(coactor => {
+                            if (coactor !== rootName) {
+                                addNode(coactor, "person");
+                                links.push({ source: content, target: coactor });
+                            }
+                        });
                     });
                 });
-            } else if (node.type === "person") {
-                root.children = makeGroupNodes(rootName);
-            }
-
-            return root;
-        }
-
-        function makeGroupNodes(personName) {
-            const person = treeDB[personName];
-            const result = [];
-            if (!person || !person.groups) return result;
-
-            Object.entries(person.groups).forEach(([groupName, targets]) => {
-                result.push({
-                    name: groupName,
-                    children: targets.map(t => ({ name: t }))
+            } else {
+                // 루트가 작품이 아니고 사람도 아니면 (초기 상태 등)
+                addNode(rootName, "content", 60);
+                (contentDB[rootName] || []).forEach(person => {
+                    addNode(person, "person");
+                    links.push({ source: rootName, target: person });
                 });
-            });
-
-            return result;
-        }
-
-        function hasChildren(name) {
-            const node = treeDB[name];
-            if (!node) return false;
-
-            if (node.type === "content") {
-                return node.people && node.people.length > 0;
-            } else if (node.type === "person") {
-                return node.groups && Object.keys(node.groups).length > 0;
             }
 
-            return false;
+            return { nodes, links };
         }
 
-        function renderTree(rootName) {
-            const treeData = getTreeData(rootName);
+        function renderGraph(rootName) {
+            const { nodes, links } = buildGraph(rootName);
 
             myChart.clear();
             myChart.setOption({
-                tooltip: { trigger: 'item', triggerOn: 'mousemove' },
-                series: [
-                    {
-                        type: 'tree',
-                        data: [treeData],
-                        top: '5%',
-                        left: '10%',
-                        bottom: '5%',
-                        right: '10%',
-                        orient: 'TB',
-                        symbolSize: 30,
-                        edgeForkPosition: '50%',
-                        label: {
-                            position: 'top',
-                            verticalAlign: 'middle',
-                            align: 'center',
-                            fontSize: 14
-                        },
-                        leaves: {
-                            label: {
-                                position: 'bottom',
-                                verticalAlign: 'middle',
-                                align: 'center',
-                                fontSize: 12
-                            }
-                        },
-                        lineStyle: {
-                            width: 1,
-                            curveness: 0.5
-                        },
-                        expandAndCollapse: true,
-                        initialTreeDepth: 2,
-                        animationDuration: 300,
-                        animationDurationUpdate: 500
+                tooltip: { show: true },
+                series: [{
+                    type: 'graph',
+                    layout: 'force',
+                    roam: true,
+                    force: {
+                        repulsion: 250,
+                        edgeLength: 100
+                    },
+                    data: nodes,
+                    links: links,
+                    categories: [
+                        { name: "작품" },
+                        { name: "그룹" },
+                        { name: "출연자" },
+                        { name: "기타" }
+                    ],
+                    label: {
+                        show: true,
+                        position: 'right'
+                    },
+                    lineStyle: {
+                        color: 'source',
+                        curveness: 0.3
                     }
-                ]
+                }]
             });
 
             myChart.off('click');
             myChart.on('click', function (params) {
-                const name = params.data.name;
-                const type = treeDB[name]?.type;
+                const clicked = params.data.name;
+                const clickedType = detectNodeType(clicked);
 
-                // 노드가 person/content 이고 하위 노드가 있을 때만 클릭 처리
-                if ((type === "person" || type === "content") && hasChildren(name)) {
+                if ((clickedType === "person" || clickedType === "content") && clicked !== currentRoot) {
                     prevStack.push(currentRoot);
-                    currentRoot = name;
-                    renderTree(currentRoot);
+                    currentRoot = clicked;
+                    renderGraph(clicked);
                 }
             });
 
@@ -209,10 +208,17 @@
         resetBtn.addEventListener('click', () => {
             currentRoot = "지옥에서 온 판사";
             prevStack.length = 0;
-            renderTree(currentRoot);
+            renderGraph(currentRoot);
         });
 
-        renderTree(currentRoot);
+        backBtn.addEventListener("click", () => {
+            if (prevStack.length > 0) {
+                currentRoot = prevStack.pop();
+                renderGraph(currentRoot);
+            }
+        });
+
+        renderGraph(currentRoot);
     </script>
 </th:block>
 </html>

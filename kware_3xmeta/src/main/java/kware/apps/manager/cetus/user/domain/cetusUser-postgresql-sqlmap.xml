@@ -37,8 +37,8 @@
 		   ,FAIL_CNT
 		   ,REG_DT
 		   ,UPDT_DT
-		   ,REG_UID
-		   ,UPDT_UID
+		<if test="regUid != null">, REG_UID</if>
+		<if test="updtUid != null">, UPDT_UID</if>
 		) VALUES (
 			#{userId}
 		   ,#{password}
@@ -51,8 +51,8 @@
 		   ,0
 		   ,NOW()
 		   ,NOW()
-		   ,#{regUid}
-		   ,#{updtUid}
+		<if test="regUid != null">, #{regUid}</if>
+		<if test="updtUid != null">, #{updtUid}</if>
 		)
 	</insert>
 

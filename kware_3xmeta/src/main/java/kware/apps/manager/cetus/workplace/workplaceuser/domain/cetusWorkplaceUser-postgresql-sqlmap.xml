@@ -7,12 +7,12 @@
         INSERT INTO CETUS_WORKPLACE_USER (
                                       WORKPLACE_UID
                                     ,USER_UID
-                                    ,REG_UID
+                                    <if test="regUid != null">, REG_UID</if>
                                     ,REG_DT
         ) VALUES (
                    #{workplaceUid}
                  ,#{userUid}
-                 ,#{regUid}
+                    <if test="regUid != null">, #{regUid}</if>
                  ,NOW()
                  )
     </insert>
