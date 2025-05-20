@@ -64,6 +64,7 @@
 			  ,USER_NM = #{userNm}
 		      ,USER_EMAIL = #{userEmail}
 		      ,AUTHOR_CD = #{authorCd}
+		      ,META_DATA = #{metaData}::jsonb
 	     WHERE UID = #{uid}
 	</update>
 

@@ -13,7 +13,9 @@
     <link rel="stylesheet" th:href="@{'/assets/css/page/list.css'}" />
     <script src="https://cdn.jsdelivr.net/npm/echarts@5"></script>
     <style>
-
+        .filter-bar {
+            margin-bottom: 10px;
+        }
     </style>
 </th:block>
 
@@ -23,9 +25,11 @@
             <div class="row">
                 <div class="col-lg-12">
                     <div class="text-end mb-2">
-                        <button id="reset-btn" style="display: none;" class="btn btn-sm btn-outline-secondary">
-                            처음으로
-                        </button>
+                        <div class="filter-bar">
+<!--                            <label><input type="checkbox" value="person" checked onchange="updateFilter()"> 출연진</label>-->
+<!--                            <label><input type="checkbox" value="content" checked onchange="updateFilter()"> 작품</label>-->
+                        </div>
+                        <button id="reset-btn" style="display: none;" class="btn btn-sm btn-outline-secondary">처음으로</button>
                     </div>
                     <div id="mindmap-chart" style="width: 100%; height: 600px;"></div>
                 </div>
@@ -34,214 +38,182 @@
     </div>
 </th:block>
 
-
 <th:block layout:fragment="script">
     <script th:inline="javascript">
         const chartDom = document.getElementById('mindmap-chart');
         const myChart = echarts.init(chartDom);
         const resetBtn = document.getElementById('reset-btn');
 
-        const graphDB = {
+        // 이전 루트 스택
+        const prevStack = [];
+
+        // 트리 데이터 정의
+        const treeDB = {
             "지옥에서 온 판사": {
                 type: "content",
-                edges: [
-                    { target: "출연진" },
-                    { target: "카테고리" },
-                    { target: "언어" },
-                    { target: "제작" }
-                ]
-            },
-            "출연진": {
-                type: "group",
-                edges: [
-                    { target: "박신혜" },
-                    { target: "장근석" }
-                ]
-            },
-            "카테고리": {
-                type: "group",
-                edges: [
-                    { target: "드라마" }
-                ]
-            },
-            "언어": {
-                type: "group",
-                edges: [
-                    { target: "한국어" }
-                ]
-            },
-            "제작": {
-                type: "group",
-                edges: [
-                    { target: "SBS" }
-                ]
+                people: ["박신혜"]
             },
             "박신혜": {
                 type: "person",
-                edges: []
+                groups: {
+                    "드라마": ["장근석", "이규한", "김재영", "이민호"],
+                    "예능": ["유재석", "유연석"]
+                }
             },
             "장근석": {
                 type: "person",
-                edges: [
-                    { target: "스위치" },
-                    { target: "대박" },
-                    { target: "미남이시네요" }
-                ]
-            },
-            "스위치": {
-                type: "content",
-                edges: []
-            },
-            "대박": {
-                type: "content",
-                edges: []
+                groups: {
+                    "드라마": ["스위치", "대박", "미남이시네요"]
+                }
             },
             "미남이시네요": {
                 type: "content",
-                edges: [] //  초기엔 비워두기
+                people: ["장근석", "이홍기", "정용화"]
             },
-            "이홍기": {
-                type: "person",
-                edges: []
-            },
-            "정용화": {
-                type: "person",
-                edges: []
-            },
-            "드라마": {
-                type: "category",
-                edges: []
-            },
-            "한국어": {
-                type: "language",
-                edges: []
-            },
-            "SBS": {
-                type: "broadcaster",
-                edges: []
-            }
+            "스위치": { type: "content", people: [] },
+            "대박": { type: "content", people: [] },
+            "이규한": { type: "person", groups: {} },
+            "김재영": { type: "person", groups: {} },
+            "이민호": { type: "person", groups: {} },
+            "유재석": { type: "person", groups: {} },
+            "유연석": { type: "person", groups: {} },
+            "이홍기": { type: "person", groups: {} },
+            "정용화": { type: "person", groups: {} }
         };
 
-        const typeCategoryMap = {
-            content: 0,
-            group: 1,
-            person: 2,
-            broadcaster: 3,
-            category: 4,
-            language: 5,
-            default: 6
-        };
+        let currentRoot = "지옥에서 온 판사";
 
-        function renderGraph(rootName) {
-            //미남이시네요일 때만 속성 연결 주입
-            if (rootName === "미남이시네요") {
-                graphDB["미남이시네요"].edges = [
-                    { target: "출연진" },
-                    { target: "카테고리" },
-                    { target: "언어" },
-                    { target: "제작" }
-                ];
-                graphDB["출연진"] = {
-                    type: "group",
-                    edges: [
-                        { target: "장근석" },
-                        { target: "이홍기" },
-                        { target: "정용화" }
-                    ]
-                };
-                graphDB["카테고리"] = {
-                    type: "group",
-                    edges: [{ target: "드라마" }]
-                };
-                graphDB["언어"] = {
-                    type: "group",
-                    edges: [{ target: "한국어" }]
-                };
-                graphDB["제작"] = {
-                    type: "group",
-                    edges: [{ target: "SBS" }]
-                };
-            } else {
-                // 다른 노드로 갈 경우 미남이시네요 연결 제거
-                graphDB["미남이시네요"].edges = [];
+        // "이전으로" 버튼 생성
+        const backBtn = document.createElement("button");
+        backBtn.className = "btn btn-sm btn-outline-secondary me-1";
+        backBtn.id = "back-btn";
+        backBtn.style.display = "none";
+        backBtn.innerText = "이전으로";
+        resetBtn.parentNode.insertBefore(backBtn, resetBtn);
+
+        backBtn.addEventListener("click", () => {
+            if (prevStack.length > 0) {
+                currentRoot = prevStack.pop();
+                renderTree(currentRoot);
+            }
+        });
+
+        function getTreeData(rootName) {
+            const node = treeDB[rootName];
+            if (!node) return { name: rootName };
+
+            const root = { name: rootName, children: [] };
+
+            if (node.type === "content") {
+                (node.people || []).forEach(person => {
+                    root.children.push({
+                        name: person,
+                        children: makeGroupNodes(person)
+                    });
+                });
+            } else if (node.type === "person") {
+                root.children = makeGroupNodes(rootName);
             }
 
-            const nodes = [];
-            const links = [];
-            const visited = new Set();
-
-            function dfs(nodeName) {
-                if (visited.has(nodeName)) return;
-                visited.add(nodeName);
-
-                const node = graphDB[nodeName];
-                const type = node?.type ?? "default";
-
-                nodes.push({
-                    name: nodeName,
-                    category: typeCategoryMap[type],
-                    symbolSize: nodeName === rootName ? 50 : 30
-                });
-
-                (node?.edges || []).forEach(edge => {
-                    links.push({ source: nodeName, target: edge.target });
-                    dfs(edge.target);
-                });
-            }
-
-            dfs(rootName);
-            drawGraph(nodes, links);
-            resetBtn.style.display = rootName === "지옥에서 온 판사" ? "none" : "inline-block";
+            return root;
         }
 
-        function drawGraph(nodes, links) {
+        function makeGroupNodes(personName) {
+            const person = treeDB[personName];
+            const result = [];
+            if (!person || !person.groups) return result;
+
+            Object.entries(person.groups).forEach(([groupName, targets]) => {
+                result.push({
+                    name: groupName,
+                    children: targets.map(t => ({ name: t }))
+                });
+            });
+
+            return result;
+        }
+
+        function hasChildren(name) {
+            const node = treeDB[name];
+            if (!node) return false;
+
+            if (node.type === "content") {
+                return node.people && node.people.length > 0;
+            } else if (node.type === "person") {
+                return node.groups && Object.keys(node.groups).length > 0;
+            }
+
+            return false;
+        }
+
+        function renderTree(rootName) {
+            const treeData = getTreeData(rootName);
+
             myChart.clear();
             myChart.setOption({
-                tooltip: { show: true },
-                series: [{
-                    type: 'graph',
-                    layout: 'force',
-                    roam: true,
-                    force: {
-                        repulsion: 200,
-                        edgeLength: 100
-                    },
-                    data: nodes,
-                    links: links,
-                    categories: [
-                        { name: "작품" },
-                        { name: "속성그룹" },
-                        { name: "출연자" },
-                        { name: "방송사" },
-                        { name: "카테고리" },
-                        { name: "언어" },
-                        { name: "기타" }
-                    ],
-                    label: {
-                        show: true,
-                        position: 'right'
-                    },
-                    lineStyle: {
-                        color: 'source',
-                        curveness: 0.3
+                tooltip: { trigger: 'item', triggerOn: 'mousemove' },
+                series: [
+                    {
+                        type: 'tree',
+                        data: [treeData],
+                        top: '5%',
+                        left: '10%',
+                        bottom: '5%',
+                        right: '10%',
+                        orient: 'TB',
+                        symbolSize: 30,
+                        edgeForkPosition: '50%',
+                        label: {
+                            position: 'top',
+                            verticalAlign: 'middle',
+                            align: 'center',
+                            fontSize: 14
+                        },
+                        leaves: {
+                            label: {
+                                position: 'bottom',
+                                verticalAlign: 'middle',
+                                align: 'center',
+                                fontSize: 12
+                            }
+                        },
+                        lineStyle: {
+                            width: 1,
+                            curveness: 0.5
+                        },
+                        expandAndCollapse: true,
+                        initialTreeDepth: 2,
+                        animationDuration: 300,
+                        animationDurationUpdate: 500
                     }
-                }]
+                ]
             });
 
             myChart.off('click');
             myChart.on('click', function (params) {
-                const clicked = params.data.name;
-                const clickedType = graphDB[clicked]?.type;
-                if (!graphDB[clicked] || (clickedType !== 'content' && clickedType !== 'person')) return;
-                renderGraph(clicked);
+                const name = params.data.name;
+                const type = treeDB[name]?.type;
+
+                // 노드가 person/content 이고 하위 노드가 있을 때만 클릭 처리
+                if ((type === "person" || type === "content") && hasChildren(name)) {
+                    prevStack.push(currentRoot);
+                    currentRoot = name;
+                    renderTree(currentRoot);
+                }
             });
+
+            resetBtn.style.display = currentRoot === "지옥에서 온 판사" ? "none" : "inline-block";
+            backBtn.style.display = prevStack.length > 0 ? "inline-block" : "none";
         }
 
         resetBtn.addEventListener('click', () => {
-            renderGraph("지옥에서 온 판사");
+            currentRoot = "지옥에서 온 판사";
+            prevStack.length = 0;
+            renderTree(currentRoot);
         });
 
-        renderGraph("지옥에서 온 판사");
+        renderTree(currentRoot);
     </script>
 </th:block>
+</html>
 </html>

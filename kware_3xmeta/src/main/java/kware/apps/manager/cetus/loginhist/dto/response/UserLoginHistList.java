@@ -11,6 +11,7 @@ public class UserLoginHistList {
     private String userUid;
     private String loginDt;
     private String loginIp;
+    private String loginRegion;
     private String loginBrowser;
     private String loginAccessUrl;
     private String sessionId;

@@ -4,12 +4,13 @@ import cetus.annotation.DisplayName;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 
-@Getter @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Getter @NoArgsConstructor(access = AccessLevel.PROTECTED) @ToString
 public class UserChange {
 
     @NotBlank @DisplayName("사용자 이름")
@@ -32,4 +33,5 @@ public class UserChange {
 
     private String userStatus;
     private String changeReason;
+    private String metaData;
 }

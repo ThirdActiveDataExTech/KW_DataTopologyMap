@@ -18,8 +18,8 @@ public class CetusDownloadsHistDao extends SuperDao<CetusDownloadsHist> {
         return insert("insertDownloadsHist", bean);
     }
 
-    public List<DownloadsHistList> getAllUserDownloadsHist(Long userUid) {
-        return selectList("getAllUserDownloadsHist", userUid);
+    public List<DownloadsHistList> getAllUserDownloadsHistList(Long userUid) {
+        return selectList("getAllUserDownloadsHistList", userUid);
     }
 
     public int deleteDownloadHistUser(Long uid) {

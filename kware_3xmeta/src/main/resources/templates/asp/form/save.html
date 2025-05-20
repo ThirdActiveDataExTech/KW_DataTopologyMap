@@ -84,7 +84,7 @@
                                     <option value="" disabled selected>폼 선택</option>
                                     <option th:each="group : ${formGroups}"
                                             th:value="${group.name()}"
-                                            th:text="${group.label}"></option>
+                                            th:text="${group.label}" th:selected="${group.name() == 'SIGNUP'}"></option>
                                 </select>
                             </div>
                         </div>

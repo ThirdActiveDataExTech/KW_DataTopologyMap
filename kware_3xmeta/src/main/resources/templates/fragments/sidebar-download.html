@@ -6,7 +6,6 @@
       <div class="cart-content">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
           <h3>다운로드 항목</h3>
-          <button type="button" class="custom-button" id="reset-download-list">초기화</button>
         </div>
 
         <ul id="download-list-ul">
@@ -43,9 +42,6 @@
             </div>
           </li>
         </ul>
-        <div style="display: flex; align-items: center; justify-content: center; margin-top: 30px;">
-          <button type="button" class="custom-button" id="more-list">더보기</button>
-        </div>
       </div>
     </div>
   </div>
@@ -62,16 +58,6 @@
         e.preventDefault(); // 기본 이동 막기
         const fileUid = $(this).data('uid');
         sidebarDownload.deleteFile(fileUid);
-      });
-
-      $(document).on('click', '#reset-download-list', function (e) {
-        e.preventDefault();
-        sidebarDownload.resetList();
-      });
-
-      $(document).on('click', '#more-list', function (e) {
-        e.preventDefault();
-        sidebarDownload.moreList();
       });
 
     });

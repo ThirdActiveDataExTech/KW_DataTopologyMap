@@ -4,6 +4,7 @@ import cetus.config.CetusConfig;
 import kware.apps.manager.cetus.loginhist.service.CetusUserLoginHistService;
 import kware.apps.manager.cetus.menu.service.CetusMenuInfoService;
 import kware.apps.manager.cetus.user.service.CetusUserService;
+import kware.common.config.IpWhoService;
 import kware.common.config.auth.handler.*;
 import kware.common.config.support.Paths;
 import lombok.RequiredArgsConstructor;
@@ -66,8 +67,8 @@ public class WebSecurityConfig {
     }
 
     @Bean
-    public CustomLoginSuccessHandler loginSuccessHandler(CetusUserService userService, CetusUserLoginHistService histService) {
-        return new CustomLoginSuccessHandler(userService, histService);
+    public CustomLoginSuccessHandler loginSuccessHandler(CetusUserService userService, CetusUserLoginHistService histService, IpWhoService ipWhoService) {
+        return new CustomLoginSuccessHandler(userService, histService, ipWhoService);
     }
 
     @Bean

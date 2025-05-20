@@ -47,7 +47,7 @@
                                             <div class="myaccount-content" style="border: 0px; padding: 0px !important;">
                                                 <div class="account-details-form">
                                                     <form class="needs-validation" id="save-form" novalidate="">
-                                                        <input type="hidden" name="status" th:value="${isInvited} == true ? 'APPROVED' : 'WAIT'" />
+                                                        <input type="hidden" name="status" th:value="${isInvited or isAdminJoin} ? 'APPROVED' : 'WAIT'" />
                                                         <input type="hidden" name="authorCd" value="USER" th:if="${!isAdminJoin}" />
                                                         <div class="row custom-row">
                                                             <div class="col-lg-6">

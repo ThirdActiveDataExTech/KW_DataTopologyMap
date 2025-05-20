@@ -21,8 +21,8 @@
         )
     </insert>
 
-    <select id="downloadsHistPageList" parameterType="DownloadsHistSearch" resultType="DownloadsHistList">
-        /* cetusDownloadsHist.downloadsHistPageList */
+    <select id="getAllUserDownloadsHistList" parameterType="Long" resultType="DownloadsHistList">
+        /* cetusDownloadsHist.getAllUserDownloadsHistList */
         SELECT CDH.UID
               ,CDH.USER_UID
               ,CDH.TARGET_CD
@@ -41,19 +41,6 @@
            AND CF.SAVED = 'Y'
            AND CF.USE_AT = 'Y'
          ORDER BY CDH.REG_DT DESC
-        <if test="@Ognl@isNotEmpty(startNumber) and  @Ognl@isNotEmpty(endNumber)">
-        OFFSET ${startNumber} LIMIT ${endNumber}
-        </if>
-    </select>
-
-    <select id="downloadsHistPageListCount" parameterType="DownloadsHistSearch" resultType="int">
-        /* cetusDownloadsHist.downloadsHistPageListCount */
-        SELECT COUNT(*)
-          FROM CETUS_DOWNLOADS_HIST CDH
-         INNER JOIN CETUS_FILE CF ON CF.FILE_UID = CDH.FILE_UID::BIGINT
-         WHERE CDH.USER_UID = #{userUid}
-           AND CF.SAVED = 'Y'
-           AND CF.USE_AT = 'Y'
     </select>
 
     <delete id="deleteDownloadHistUser" parameterType="Long">

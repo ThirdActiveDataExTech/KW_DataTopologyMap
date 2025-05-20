@@ -9,6 +9,7 @@
             ,LOGIN_DT
             ,LOGIN_IP
             ,LOGIN_BROWSER
+            ,LOGIN_REGION
             ,LOGIN_ACCESS_URL
             ,SESSION_ID
         ) VALUES (
@@ -16,6 +17,7 @@
             ,NOW()
             ,#{loginIp}
             ,#{loginBrowser}
+            ,#{loginRegion}
             ,#{loginAccessUrl}
             ,#{sessionId}
         )
@@ -26,6 +28,7 @@
         SELECT CULH.USER_UID
               ,TO_CHAR(CULH.LOGIN_DT, 'YYYY-MM-DD HH:MM:SS') AS LOGIN_DT
               ,CULH.LOGIN_IP
+              ,CULH.LOGIN_REGION
               ,CULH.LOGIN_BROWSER
               ,CULH.LOGIN_ACCESS_URL
               ,CULH.SESSION_ID
@@ -49,6 +52,7 @@
         SELECT CU.USER_ID || ' (' || CU.USER_NM || ')' AS USER_INFO
               ,TO_CHAR(CULH.LOGIN_DT, 'YYYY-MM-DD HH:MM:SS') AS LOGIN_DT
               ,CULH.LOGIN_IP
+              ,CULH.LOGIN_REGION
               ,CULH.LOGIN_BROWSER
               ,CULH.LOGIN_ACCESS_URL
               ,CULH.SESSION_ID

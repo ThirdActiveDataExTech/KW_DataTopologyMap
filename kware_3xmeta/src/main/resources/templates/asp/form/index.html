@@ -50,7 +50,7 @@
             <hr>
             <!-- s:list -->
             <div>
-                <div class="description-review-topbar nav" data-aos-delay="200">
+                <div class="description-review-topbar nav" data-aos-delay="200" style="display: none;">
                     <th:block th:each="group, iterStat : ${formGroups}">
                         <a th:classappend="${iterStat.index == 0} ? ' active'"
                            th:attr="data-type=${group.name()}, data-bs-toggle='tab'"

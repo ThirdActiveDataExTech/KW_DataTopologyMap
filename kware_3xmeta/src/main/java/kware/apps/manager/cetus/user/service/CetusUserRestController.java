@@ -3,7 +3,6 @@ package kware.apps.manager.cetus.user.service;
 import cetus.Response;
 import cetus.bean.Page;
 import cetus.bean.Pageable;
-import kware.apps.manager.cetus.user.domain.CetusUser;
 import kware.apps.manager.cetus.user.dto.request.*;
 import kware.apps.manager.cetus.user.dto.response.UserList;
 import lombok.RequiredArgsConstructor;

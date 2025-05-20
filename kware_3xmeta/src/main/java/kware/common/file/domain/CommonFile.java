@@ -3,6 +3,8 @@ package kware.common.file.domain;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.Map;
+
 @Getter @Setter
 public class CommonFile {
 
@@ -26,4 +28,14 @@ public class CommonFile {
     private Long workerUid;
     private String workerNm;
     private String type;
+
+    public static CommonFile castMapToCommonFile(Map<String, Object> map) {
+        CommonFile file = new CommonFile();
+        file.setOrgFileNm((String) map.get("orgFileNm"));
+        file.setFileType((String) map.get("fileType"));
+        file.setFileId((String) map.get("fileId"));
+        file.setSaved((String) map.get("saved"));
+        file.setExtension((String) map.get("extension"));
+        return file;
+    }
 }

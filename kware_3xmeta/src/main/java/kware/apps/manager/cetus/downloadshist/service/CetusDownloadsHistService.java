@@ -1,16 +1,15 @@
 package kware.apps.manager.cetus.downloadshist.service;
 
 
-import cetus.bean.Page;
-import cetus.bean.Pageable;
 import cetus.user.UserUtil;
 import kware.apps.manager.cetus.downloadshist.domain.CetusDownloadsHist;
 import kware.apps.manager.cetus.downloadshist.domain.CetusDownloadsHistDao;
-import kware.apps.manager.cetus.downloadshist.dto.request.DownloadsHistSearch;
 import kware.apps.manager.cetus.downloadshist.dto.response.DownloadsHistList;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -24,9 +23,8 @@ public class CetusDownloadsHistService {
     }
 
     @Transactional(readOnly = true)
-    public Page<DownloadsHistList> findAllUserDownloadsHistPage(DownloadsHistSearch search, Pageable pageable) {
-        search.setUserUid(UserUtil.getUser().getUid());
-        return dao.page("downloadsHistPageList", "downloadsHistPageListCount", search, pageable);
+    public List<DownloadsHistList> findAllUserDownloadsHistList() {
+        return dao.getAllUserDownloadsHistList(UserUtil.getUser().getUid());
     }
 
     @Transactional

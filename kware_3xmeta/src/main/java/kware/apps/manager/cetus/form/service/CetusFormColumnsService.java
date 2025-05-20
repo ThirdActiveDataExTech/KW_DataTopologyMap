@@ -35,9 +35,14 @@ public class CetusFormColumnsService {
         // order 계산
         int nextOrder = columnsDao.findNextSortNum(request.getFormGroup());
         request.addOrder(nextOrder);
-        
-        CetusFormColumns formColumns = new CetusFormColumns(request);
 
+        Integer existFieldName = this.existFieldName(request.getFormGroup(), request.getName());
+
+        if(existFieldName != null && existFieldName == 1) {
+            throw new SimpleException("이미 존재하는 필드명입니다.", HttpStatus.CONFLICT);
+        }
+
+        CetusFormColumns formColumns = new CetusFormColumns(request);
         columnsDao.insert(formColumns);
 
         if (ElementType.from(request.getType()).requiresOption()) {

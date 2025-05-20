@@ -3,6 +3,7 @@ package kware.apps.manager.cetus.user.service;
 import cetus.bean.Page;
 import cetus.bean.Pageable;
 import cetus.user.UserUtil;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import kware.apps.manager.cetus.dept.deptuser.service.CetusDeptUserService;
 import kware.apps.manager.cetus.enumstatus.DownloadTargetCd;
 import kware.apps.manager.cetus.enumstatus.UserAuthorCd;
@@ -20,6 +21,7 @@ import kware.apps.manager.cetus.user.dto.response.UserView;
 import kware.apps.manager.cetus.workplace.workplaceuser.service.CetusWorkplaceUserService;
 import kware.common.excel.ExcelCreate;
 import kware.common.exception.SimpleException;
+import kware.common.file.domain.CommonFile;
 import kware.common.file.service.CommonFileService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,6 +29,11 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -67,9 +74,13 @@ public class CetusUserService {
         if(!UserAuthorCd.isValidCode(request.getUserAuthor())) {
             throw new SimpleException("유효하지 않은 사용자 권한 코드입니다.");
         }
+
+        // 0. metaData 묶기
+        String processedMetaData = this.processMetaData(request.getMetaData());
+
         // 1. user
         CetusUser userView = dao.view(uid);
-        dao.updateUserInfo(userView.changeUser(uid, request));
+        dao.updateUserInfo(userView.changeUser(uid, request, processedMetaData));
 
         // 2. dept
         deptUserService.resetDeptUser(uid);
@@ -87,6 +98,44 @@ public class CetusUserService {
         if( request.getUserStatus() != null ) {
             dao.updateUserStatus(new CetusUser("STATUS", request.getUserStatus(), uid));
             statusHistService.saveUserStatusHistWithReason(uid, request.getUserStatus(), request.getChangeReason());
+        }
+    }
+
+    // {metaData} 형태 만들기
+    // => value 값이 obj 인 경우를 첨부파일 영역으로 우선 판단
+    private String processMetaData(String jsonString) {
+        Map<String, Object> map = new HashMap<>();
+        try {
+            ObjectMapper objectMapper = new ObjectMapper();
+            Map<String, Object> parsedMap = objectMapper.readValue(jsonString, Map.class);
+            for (Map.Entry<String, Object> entry : parsedMap.entrySet()) {
+                String key = entry.getKey();
+                Object value = entry.getValue();
+                if (value instanceof Map) {
+                    Map<?, ?> valueMap = (Map<?, ?>) value;
+                    Long fileUid = null;
+                    if (valueMap.get("fileUid") != null) {
+                        fileUid = Long.valueOf(valueMap.get("fileUid").toString());
+                    }
+                    List<Map<String, Object>> fileAddRaw = (List<Map<String, Object>>) valueMap.get("fileAdd");
+                    List<Map<String, Object>> fileDelRaw = (List<Map<String, Object>>) valueMap.get("fileDel");
+                    List<CommonFile> fileAdd = fileAddRaw.stream()
+                            .map(m -> CommonFile.castMapToCommonFile(m))
+                            .collect(Collectors.toList());
+                    List<CommonFile> fileDel = fileDelRaw.stream()
+                            .map(m -> CommonFile.castMapToCommonFile(m))
+                            .collect(Collectors.toList());
+                    fileUid = commonFileService.processFileSeparately(fileAdd, fileDel, UserUtil.getUser(), fileUid);
+                    map.put(key, fileUid);
+                } else {
+                    map.put(key, value);
+                }
+            }
+            String resultJson = objectMapper.writeValueAsString(map);
+            return resultJson;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "{}";
         }
     }
 

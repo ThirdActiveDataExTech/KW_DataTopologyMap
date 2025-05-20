@@ -7,26 +7,26 @@
             <label th:for="${field.name}" class="custom-label" th:text="${field.label}">라벨</label>
 
             <input th:if="${field.type == 'TEXT'}" class="form-control custom-input" type="text" th:id="${field.name}"
-                   th:name="${field.name}"  th:value="${safeVal}" th:placeholder="${field.placeholder}">
+                   th:name="${field.name}"  th:value="${safeVal}" th:placeholder="${field.placeholder}" th:required="${field.required}">
 
             <textarea th:if="${field.type == 'TEXTAREA'}" class="form-control custom-textarea" th:id="${field.name}"
-                      th:name="${field.name}"  th:value="${safeVal}" th:placeholder="${field.placeholder}"/>
+                      th:name="${field.name}"  th:text="${safeVal}" th:placeholder="${field.placeholder}" th:required="${field.required}"/>
 
             <input th:if="${field.type == 'NUMBER'}" class="form-control custom-input" type="number"
                    th:id="${field.name}" th:name="${field.name}"  th:value="${safeVal}"
-                   th:placeholder="${field.placeholder}">
+                   th:placeholder="${field.placeholder}" th:required="${field.required}">
 
             <input th:if="${field.type == 'EMAIL'}" class="form-control custom-input" type="text" th:id="${field.name}"
-                   th:name="${field.name}" th:value="${safeVal}" th:placeholder="${field.placeholder}">
+                   th:name="${field.name}" th:value="${safeVal}" th:placeholder="${field.placeholder}" th:required="${field.required}">
 
             <input th:if="${field.type == 'DATE'}" type="date" class="form-control custom-input" th:id="${field.name}"
-                   th:name="${field.name}"  th:value="${safeVal}" th:placeholder="${field.placeholder}"/>
+                   th:name="${field.name}"  th:value="${safeVal}" th:placeholder="${field.placeholder}" th:required="${field.required}"/>
 
             <input th:if="${field.type == 'TEL'}" class="form-control custom-input" type="tel" th:id="${field.name}"
-                   th:name="${field.name}"  th:value="${safeVal}" th:placeholder="${field.placeholder}">
+                   th:name="${field.name}"  th:value="${safeVal}" th:placeholder="${field.placeholder}" th:required="${field.required}">
 
             <select th:if="${field.type == 'SELECT'}" class="nice-select nice-select-style-1 custom-select"
-                    th:id="${field.name}" th:name="${field.name}">
+                    th:id="${field.name}" th:name="${field.name}" th:required="${field.required}">
                 <option value="" disabled selected>-- SELECT TYPE --</option>
                 <option th:each="option : ${field.options}"
                         th:value="${option.name}"
@@ -53,7 +53,7 @@
             </div>
 
             <select th:if="${field.type == 'MULTISELECT'}" class="select2 form-select round border_line"
-                    th:id="${field.name}" th:name="${field.name}" th:placeholder="${field.placeholder}" multiple>
+                    th:id="${field.name}" th:name="${field.name}" th:placeholder="${field.placeholder}" multiple th:required="${field.required}">
                 <option th:each="option : ${field.options}"
                         th:value="${option.name}"
                         th:text="${option.label}"
@@ -63,19 +63,21 @@
 
             <div th:if="${field.type == 'IMAGE'}">
                 <div>
-                    <div th:id="${field.name}" style="display: none;"></div>
+                    <div th:id="|${field.name}-image|" style="display: none;"></div>
                     <img src="/assets/images/page/detail/profile_noimage.png" alt="Profile"
                          th:id="${field.name + '-id-1'}" class="profile-img">
                 </div>
                 <div class="custom-btn-wrap">
-                    <button class="custom-button delete-btn">삭제</button>
-                    <button class="custom-button upload-btn">업로드</button>
+                    <button type="button" class="custom-button delete-btn" th:id="|delete-btn-${field.name}|">삭제</button>
+                    <button type="button" class="custom-button upload-btn" th:id="|upload-btn-${field.name}|">업로드</button>
                 </div>
             </div>
 
             <div th:if="${field.type == 'FILE'}">
                 <div th:id="${field.name + '-doc'}" class="mt-1"></div>
             </div>
+
+            <div class="validation-error-message" th:id="|${field.name}-error|"></div>
         </div>
     </div>
 </th:block>

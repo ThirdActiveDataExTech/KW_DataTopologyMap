@@ -15,6 +15,8 @@ public class UserLoginHistExcelList {
     private String loginDt;
     @ExcelColumn(headerName = "로그인 IP")
     private String loginIp;
+    @ExcelColumn(headerName = "접속 지역")
+    private String loginRegion;
     @ExcelColumn(headerName = "접속 브라우저")
     private String loginBrowser;
     @ExcelColumn(headerName = "접속 URL")

@@ -104,7 +104,6 @@
 
 <th:block layout:fragment="script">
     <script th:src="@{'/assets/js/page/manager/user/user-form-profile.js'}"></script>
-    <script th:src="@{'/assets/js/comm/form-builder.js'}"></script>
     <th:block th:replace="popup/popup-script::script"></th:block>
     <th:block th:replace="manager/user/user-form-info-script::script"></th:block>
     <th:block th:replace="manager/user/user-form-password-script::script"></th:block>
@@ -114,10 +113,12 @@
 
         const profileUid = [[${form.profileUid}]];
         const uid = [[${uid}]]
-        const userUid = [[${user.uid}]]
-        const fields = [[${fields}]]
+        const userUid = [[${uid}]]
 
-        commomForm(fields)
+        const fields = [[${fields}]]
+        const metadata = [[${metadata}]]
+
+        const builder = new Formbuilder(fields, metadata);
 
         /** 모달 닫을때 생기는 warning 해결 **/
         $(document).on('hide.bs.modal', function () {

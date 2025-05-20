@@ -12,6 +12,7 @@ public class CetusUserLoginHist {
     private String loginDt;
     private String loginIp;
     private String loginBrowser;
+    private String loginRegion;
     private String loginAccessUrl;
     private String sessionId;
 
@@ -19,6 +20,7 @@ public class CetusUserLoginHist {
         this.userUid = request.getUserUid();
         this.loginIp = request.getLoginIp();
         this.loginBrowser = request.getLoginBrowser();
+        this.loginRegion = request.getLoginRegion();
         this.loginAccessUrl = request.getLoginAccessUrl();
         this.sessionId = request.getSessionId();
     }

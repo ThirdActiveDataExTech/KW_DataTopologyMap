@@ -51,11 +51,12 @@ public class CetusUser extends AuditBean {
         this.userId = userId;
     }
 
-    public CetusUser changeUser(Long uid, UserChange request) {
+    public CetusUser changeUser(Long uid, UserChange request, String metaData) {
         this.uid = uid;
         this.userNm = (request.getUserNm() != null) ? request.getUserNm() : this.userNm;
         this.userEmail = (request.getUserEmail() != null) ? request.getUserEmail() : this.userEmail;
         this.authorCd =  (request.getUserAuthor() != null) ? request.getUserAuthor() : this.authorCd;
+        this.metaData = metaData;
         return this;
     }
 
