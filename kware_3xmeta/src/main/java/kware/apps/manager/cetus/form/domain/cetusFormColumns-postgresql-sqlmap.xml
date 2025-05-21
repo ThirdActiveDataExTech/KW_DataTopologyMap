@@ -34,9 +34,6 @@
 			AND CU.TYPE = #{type}
 		</if>
 		ORDER BY CU.SORT_NUM
-		<if test="@Ognl@isNotEmpty(startNumber) and  @Ognl@isNotEmpty(endNumber)">
-			OFFSET ${startNumber} LIMIT ${endNumber}
-		</if>
 	</select>
 
 	<select id="findByTenanyAndFormGroup" resultType="ColumnsPage" parameterType="ColumnsSearch">
@@ -199,5 +196,67 @@
 		  USE_AT        = 'N'
 		, UPDT_DT       = now()
 		WHERE uid = #{uid}
+	</update>
+
+	<!-- 다음 항목 -->
+	<select id="selectNextByFormGroup" resultType="ColumnsView" parameterType="ColumnsOrder">
+		SELECT
+		       UID
+			 , TYPE
+			 , LABEL
+			 , REQUIRED
+			 , DESCRIPTION
+			 , USE_AT
+			 , NAME
+			 , REG_UID
+			 , REG_DT
+			 , UPDT_UID
+			 , UPDT_DT
+			 , PLACEHOLDER
+			 , WORKPLACE_UID
+			 , FORM_GROUP
+			 , SORT_NUM
+			 , DEFAULT_VALUE
+		FROM CETUS_FORM_COLUMNS
+		WHERE WORKPLACE_UID = #{workplaceUid}
+		  AND FORM_GROUP = #{formGroup}
+		  AND SORT_NUM <![CDATA[>]]> #{sortNum}
+		ORDER BY SORT_NUM ASC
+			LIMIT 1
+	</select>
+
+	<!-- 이전 항목 -->
+	<select id="selectPrevByFormGroup" resultType="ColumnsView" parameterType="ColumnsOrder">
+		SELECT
+			UID
+			 , TYPE
+			 , LABEL
+			 , REQUIRED
+			 , DESCRIPTION
+			 , USE_AT
+			 , NAME
+			 , REG_UID
+			 , REG_DT
+			 , UPDT_UID
+			 , UPDT_DT
+			 , PLACEHOLDER
+			 , WORKPLACE_UID
+			 , FORM_GROUP
+			 , SORT_NUM
+			 , DEFAULT_VALUE
+		FROM CETUS_FORM_COLUMNS
+		WHERE WORKPLACE_UID = #{workplaceUid}
+		  AND FORM_GROUP = #{formGroup}
+		  AND SORT_NUM <![CDATA[<]]> #{sortNum}
+		ORDER BY SORT_NUM DESC
+			LIMIT 1
+	</select>
+
+
+	<update id="updateOrder" parameterType="map">
+		UPDATE CETUS_FORM_COLUMNS
+		SET
+	      SORT_NUM = #{sortNum}
+		WHERE UID = #{uid}
 	</update>
 </mapper>

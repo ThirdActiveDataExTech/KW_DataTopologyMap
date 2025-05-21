@@ -140,6 +140,19 @@ public class CetusUserService {
     }
 
     @Transactional
+    public void changeMyInfo(Long uid, UserChangeMyInfo request) {
+        // 0. metaData 묶기
+        String processedMetaData = this.processMetaData(request.getMetaData());
+
+        // 1. password
+        String encodePassword = (request.getPassword() != null) ? passwordEncoder.encode(request.getPassword()) : null;
+
+        // 1. user
+        CetusUser userView = dao.view(uid);
+        dao.updateUserMyInfo(userView.changeMyInfo(uid, request, processedMetaData, encodePassword));
+    }
+
+    @Transactional
     public void changeUserPassword(Long uid, UserPasswordChange request) {
         String encodePassword = passwordEncoder.encode(request.getPassword());
         CetusUser userView = dao.view(uid);

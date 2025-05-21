@@ -1,9 +1,8 @@
 package kware.apps.manager.cetus.form.service;
 
 import cetus.Response;
-import cetus.bean.Page;
-import cetus.bean.Pageable;
 import kware.apps.manager.cetus.form.dto.request.ColumnsChange;
+import kware.apps.manager.cetus.form.dto.request.ColumnsOrder;
 import kware.apps.manager.cetus.form.dto.request.ColumnsSave;
 import kware.apps.manager.cetus.form.dto.request.ColumnsSearch;
 import kware.apps.manager.cetus.form.dto.response.ColumnsPage;
@@ -13,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 
 @RestController
@@ -34,8 +34,8 @@ public class CetusFormColumnsRestController {
     }
 
     @GetMapping
-    public ResponseEntity<Page<ColumnsPage>> page(ColumnsSearch request, Pageable pageable) {
-        return ResponseEntity.ok(service.columns(request, pageable));
+    public ResponseEntity<List<ColumnsPage>> page(ColumnsSearch request) {
+        return ResponseEntity.ok(service.columns(request));
     }
 
     @GetMapping("/{uid}")
@@ -63,6 +63,12 @@ public class CetusFormColumnsRestController {
         else if(findUserCnt == 0) message = "사용 가능한 필드명 입니다.";
 
         return Response.ok(findUserCnt, message);
+    }
+
+    @PutMapping("/order")
+    public ResponseEntity<Void> changeOrder(@RequestBody @Valid ColumnsOrder request) {
+        service.changeOrder(request);
+        return ResponseEntity.ok().build();
     }
 
 }

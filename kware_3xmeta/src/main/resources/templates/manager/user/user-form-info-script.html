@@ -14,10 +14,12 @@
             userFormInfo.cancelChooseDept();
         });
 
+        /* == 변경 적용 == */
         $("#save-btn").on('click', function () {
             userFormInfo.submitForm();
         });
 
+        /* == 유저 상태값 수정 이벤트 == */
         $('#userStatus').on('change', function () {
             const previousStatus = $('#status-before').val();
             const currentStatus = $(this).val();
@@ -26,6 +28,10 @@
             } else {
                 $('#changeReason').val('').prop('disabled', true);
             }
+        });
+
+        $("#userEmail-change").on('click', function () {
+           userFormInfo.userEmailChangeBtnClick();
         });
 
         $("#userJbgd").select2({

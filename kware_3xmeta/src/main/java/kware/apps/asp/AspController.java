@@ -4,9 +4,12 @@ package kware.apps.asp;
 import cetus.user.UserUtil;
 import cetus.util.DateTimeUtil;
 import cetus.util.HtmlUtil;
-import kware.apps.manager.cetus.bbsctt.dto.response.BbscttList;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import kware.apps.manager.cetus.bbsctt.dto.response.BbscttRecentList;
 import kware.apps.manager.cetus.bbsctt.service.CetusBbscttService;
+import kware.apps.manager.cetus.form.service.CetusFormColumnsService;
+import kware.apps.manager.cetus.user.dto.response.UserFullInfo;
 import kware.apps.manager.cetus.user.service.CetusUserService;
 import kware.common.config.auth.dto.SessionUserInfo;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +20,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.servlet.http.HttpSession;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -35,6 +39,7 @@ public class AspController {
 
     private final CetusUserService cetusUserService;
     private final CetusBbscttService bbscttService;
+    private final CetusFormColumnsService columnsService;
 
     /**
      * # 컨트롤러 내에서 모든 메서드가 실행되기 전에 호출되어 기본적인 모델 데이터를 자동으로 모델에 추가한다.
@@ -83,7 +88,23 @@ public class AspController {
     @GetMapping("/myInfo")
     public String myInfo(Model model) {
         SessionUserInfo user = UserUtil.getUser();
-        model.addAttribute("view", cetusUserService.view(user.getUid()));
+        UserFullInfo info = cetusUserService.findUserFullInfoByUserUid(user.getUid());
+        model.addAttribute("view", info);
+
+        model.addAttribute("fields", columnsService.getFormGroupColumns("SIGNUP"));
+
+        String metaData = info.getMetaData();
+        ObjectMapper objectMapper = new ObjectMapper();
+        Map<String, Object> map = new HashMap<>();
+        try {
+            if (metaData != null && !metaData.trim().isEmpty()) {
+                map = objectMapper.readValue(metaData, new TypeReference<Map<String, Object>>() {});
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        model.addAttribute("metadata", map);
+
         return "asp/myInfo/index";
     }
 
@@ -100,10 +121,10 @@ public class AspController {
 
         model.addAttribute("isInvited", isInvited != null && isInvited);
         model.addAttribute("inviteToken", inviteToken);
-        model.addAttribute("isAdminJoin", false);
         model.addAttribute("inviteEmail", inviteEmail);
+        model.addAttribute("fields", columnsService.getFormGroupColumns("SIGNUP"));
 
-        return "manager/user/save";
+        return "/signup";
     }
 
     @GetMapping("/expired")

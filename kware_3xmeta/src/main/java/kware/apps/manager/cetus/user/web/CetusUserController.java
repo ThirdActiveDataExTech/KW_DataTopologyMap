@@ -73,11 +73,10 @@ public class CetusUserController {
 
     @GetMapping("/save")
     public String save(Model model) {
-        model.addAttribute("isAdminJoin", true);
-        model.addAttribute("isInvited", false);
         model.addAttribute("userAuthorCd", UserAuthorCd.toList());
         model.addAttribute("userGroup", groupService.findGroupList());
         model.addAttribute("userPosition", positionService.findPositionList());
+        model.addAttribute("fields", columnsService.getFormGroupColumns("SIGNUP"));
         return "manager/user/save";
     }
 

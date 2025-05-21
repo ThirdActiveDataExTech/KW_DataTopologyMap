@@ -60,28 +60,34 @@
                     </th:block>
                 </div>
                 <div style="display: flex; justify-content: right;">
-                    <button type="button" class="custom-button" id="new-btn">새로 등록</button>
+                    <button type="button" class="custom-button m-2" style="width: 50px;" onclick="codeJS.sortColumns('prev')">↑</button>
+                    <button type="button" class="custom-button m-2" style="width: 50px;" onclick="codeJS.sortColumns('next')">↓</button>
+                    <button type="button" class="custom-button m-2" id="new-btn">새로 등록</button>
                 </div>
-                <div class="tab-content">
-                    <div class="tab-pane fade"
-                         th:each="group, iterStat : ${formGroups}"
-                         th:id="${group.name().toLowerCase()} + '-tab'"
-                         th:classappend="${iterStat.index == 0} ? ' show active'">
-                        <div class="table-responsive mt-3 text-center">
-                            <table class="table table-bordered" th:id="${group.name().toLowerCase() + '-table'}">
-                                <thead class="table-light">
-                                <tr>
-                                    <th>번호</th>
-                                    <th>빌더 타입</th>
-                                    <th>라벨</th>
-                                    <th>필드명</th>
-                                    <th>필수 여부</th>
-                                    <th>순서</th>
-                                    <th>등록일</th>
-                                    <th>등록자</th>
-                                </tr>
-                                </thead>
-                            </table>
+                <div class="container">
+                    <div class="tab-content">
+                        <div class="tab-pane fade"
+                             th:each="group, iterStat : ${formGroups}"
+                             th:id="${group.name().toLowerCase()} + '-tab'"
+                             th:classappend="${iterStat.index == 0} ? ' show active'">
+
+                            <div class="table-responsive mt-3 text-center">
+                                <table class="table table-bordered" th:id="${group.name().toLowerCase() + '-table'}">
+                                    <thead class="table-light">
+                                    <tr>
+                                        <th>번호</th>
+                                        <th></th>
+                                        <th>빌더 타입</th>
+                                        <th>라벨</th>
+                                        <th>필드명</th>
+                                        <th>필수 여부</th>
+                                        <th>순서</th>
+                                        <th>등록일</th>
+                                        <th>등록자</th>
+                                    </tr>
+                                    </thead>
+                                </table>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -104,8 +110,10 @@
                 codeJS.createTable(item);
             });
 
+
+
             const item = sessionStorage.getItem('formGroup')
-            if(item) {
+            if (item) {
                 const tabSelector = `.description-review-topbar a[data-type="${item}"]`;
                 const tabPaneId = `#${item.toLowerCase()}-tab`;
 

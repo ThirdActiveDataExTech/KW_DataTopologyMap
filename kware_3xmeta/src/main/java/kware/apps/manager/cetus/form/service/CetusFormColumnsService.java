@@ -1,13 +1,12 @@
 package kware.apps.manager.cetus.form.service;
 
-import cetus.bean.Page;
-import cetus.bean.Pageable;
 import cetus.user.UserUtil;
 import kware.apps.manager.cetus.form.domain.CetusColumnOptions;
 import kware.apps.manager.cetus.form.domain.CetusColumnOptionsDao;
 import kware.apps.manager.cetus.form.domain.CetusFormColumns;
 import kware.apps.manager.cetus.form.domain.CetusFormColumnsDao;
 import kware.apps.manager.cetus.form.dto.request.ColumnsChange;
+import kware.apps.manager.cetus.form.dto.request.ColumnsOrder;
 import kware.apps.manager.cetus.form.dto.request.ColumnsSave;
 import kware.apps.manager.cetus.form.dto.request.ColumnsSearch;
 import kware.apps.manager.cetus.form.dto.response.ColumnsPage;
@@ -86,10 +85,8 @@ public class CetusFormColumnsService {
     }
 
     @Transactional(readOnly = true)
-    public Page<ColumnsPage> columns(ColumnsSearch request, Pageable pageable) {
-        Page<ColumnsPage> page = columnsDao.page(request, pageable);
-
-        List<ColumnsPage> list = page.getList();
+    public List<ColumnsPage> columns(ColumnsSearch request) {
+        List<ColumnsPage> list = columnsDao.page(request);
 
         list.forEach(x -> {
             if(ElementType.from(x.getType()).requiresOption()) {
@@ -97,7 +94,7 @@ public class CetusFormColumnsService {
                 x.addOptions(options);
             }
         });
-        return page;
+        return list;
     }
 
     @Transactional(readOnly = true)
@@ -144,5 +141,19 @@ public class CetusFormColumnsService {
     public Integer existFieldName(String formGroup, String fieldName) {
 
         return columnsDao.existFieldName(formGroup, fieldName, UserUtil.getUserWorkplaceUid());
+    }
+
+    @Transactional
+    public void changeOrder(ColumnsOrder request) {
+        ColumnsView target = null;
+
+        if("prev".equals(request.getDirection())) {
+            target = columnsDao.selectPrevByFormGroup(request).orElseThrow(() -> new SimpleException("이전 컬럼이 없습니다.", HttpStatus.NOT_FOUND));
+        } else if("next".equals(request.getDirection())) {
+            target = columnsDao.selectNextByFormGroup(request).orElseThrow(() -> new SimpleException("다음 컬럼이 없습니다.", HttpStatus.NOT_FOUND));
+        }
+
+        columnsDao.updateOrder(request.getUid(), target.getSortNum());
+        columnsDao.updateOrder(target.getUid(), request.getSortNum());
     }
 }

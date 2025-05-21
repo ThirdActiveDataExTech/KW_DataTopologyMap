@@ -30,4 +30,5 @@ public class ColumnsChange {
     private String defaultValue;
 
     private List<CetusColumnOptions> options = new ArrayList<>();
+
 }

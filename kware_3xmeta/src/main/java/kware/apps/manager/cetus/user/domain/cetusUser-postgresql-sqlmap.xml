@@ -68,6 +68,18 @@
 	     WHERE UID = #{uid}
 	</update>
 
+	<update id="updateUserMyInfo" parameterType="cetusUser">
+		/* cetusUser.updateUserMyInfo */
+		UPDATE CETUS_USER
+		   SET UPDT_UID = #{updtUid}
+		      ,UPDT_DT = NOW()
+			  ,USER_NM = #{userNm}
+		      ,USER_EMAIL = #{userEmail}
+		      ,PASSWORD = #{password}
+		      ,META_DATA = #{metaData}::jsonb
+	     WHERE UID = #{uid}
+	</update>
+
 	<update id="updateUserPassword" parameterType="CetusUser">
 		/* cetusUser.updateUserPassword */
 		UPDATE CETUS_USER

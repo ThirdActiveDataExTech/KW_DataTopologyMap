@@ -51,6 +51,12 @@ public class CetusUserRestController {
         return ResponseEntity.ok().build();
     }
 
+    @PutMapping("/my-info/{uid}")
+    public ResponseEntity changeMyInfo(@PathVariable("uid") Long uid, @RequestBody @Valid UserChangeMyInfo request) {
+        service.changeMyInfo(uid, request);
+        return ResponseEntity.ok().build();
+    }
+
     @PutMapping("/change-password/{uid}")
     public ResponseEntity changeUserPassword(@PathVariable("uid") Long uid, @RequestBody @Valid UserPasswordChange request) {
         service.changeUserPassword(uid, request);

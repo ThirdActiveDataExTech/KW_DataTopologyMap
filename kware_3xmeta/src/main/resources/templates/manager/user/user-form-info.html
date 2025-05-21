@@ -23,12 +23,19 @@
             </div>
 
             <div class="row custom-row">
+
               <div class="col-lg-6">
-                <div class="single-input-item">
-                  <label for="userEmail" class="custom-label">이메일</label>
-                  <input class="form-control custom-input" type="text" id="userEmail" name="userEmail" th:value="${form?.userEmail}" placeholder="example@naver.com">
+                <div style="margin-bottom: 20px;">
+                  <label for="userEmail" class="custom-label">이메일<span class="req">*</span></label>
+                  <div class="input-group">
+                    <input type="hidden" id="userEmail-origin" th:value="${form?.userEmail}" />
+                    <input type="email" id="userEmail" name="userEmail" class="form-control custom-input" required="" th:value="${form?.userEmail}" readonly disabled>
+                    <button class="custom-button" id="userEmail-change" type="button">이메일 변경</button>
+                  </div>
+                  <span class="validation-error-message" id="userEmail-error"></span>
                 </div>
               </div>
+
               <div class="col-lg-6">
                 <div class="single-input-item">
                   <div for="userGroup" class="required">소속</div>
@@ -121,6 +128,8 @@
                   </th:block>
                 </th:block>
             </div>
+
+            <hr style="border: 1px dashed #ccc; margin-top: 30px; margin-bottom: 30px;">
 
             <div class="custom-btn-wrap">
               <button type="button" class="custom-button" id="cancel-btn">취소</button>

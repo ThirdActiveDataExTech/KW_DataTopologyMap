@@ -1,10 +1,7 @@
 package kware.apps.manager.cetus.user.domain;
 
 import cetus.bean.AuditBean;
-import kware.apps.manager.cetus.user.dto.request.UserChange;
-import kware.apps.manager.cetus.user.dto.request.UserChangeInfo;
-import kware.apps.manager.cetus.user.dto.request.UserSave;
-import kware.apps.manager.cetus.user.dto.request.UserSaveAdmin;
+import kware.apps.manager.cetus.user.dto.request.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -56,6 +53,15 @@ public class CetusUser extends AuditBean {
         this.userNm = (request.getUserNm() != null) ? request.getUserNm() : this.userNm;
         this.userEmail = (request.getUserEmail() != null) ? request.getUserEmail() : this.userEmail;
         this.authorCd =  (request.getUserAuthor() != null) ? request.getUserAuthor() : this.authorCd;
+        this.metaData = metaData;
+        return this;
+    }
+
+    public CetusUser changeMyInfo(Long uid, UserChangeMyInfo request, String metaData, String encodePassword) {
+        this.uid = uid;
+        this.password = (encodePassword != null) ? encodePassword : this.password;
+        this.userNm = (request.getUserNm() != null) ? request.getUserNm() : this.userNm;
+        this.userEmail = (request.getUserEmail() != null) ? request.getUserEmail() : this.userEmail;
         this.metaData = metaData;
         return this;
     }

@@ -23,6 +23,10 @@ public class CetusUserDao extends SuperDao<CetusUser> {
         return update("updateUserInfo", bean);
     }
 
+    public int updateUserMyInfo(CetusUser bean) {
+        return update("updateUserMyInfo", bean);
+    }
+
     public int updateUserPassword(CetusUser bean) {
         return update("updateUserPassword", bean);
     }

@@ -1,8 +1,7 @@
 package kware.apps.manager.cetus.form.domain;
 
-import cetus.bean.Page;
-import cetus.bean.Pageable;
 import cetus.dao.SuperDao;
+import kware.apps.manager.cetus.form.dto.request.ColumnsOrder;
 import kware.apps.manager.cetus.form.dto.request.ColumnsSearch;
 import kware.apps.manager.cetus.form.dto.response.ColumnsPage;
 import kware.apps.manager.cetus.form.dto.response.ColumnsView;
@@ -21,8 +20,8 @@ public class CetusFormColumnsDao extends SuperDao<CetusFormColumns> {
         super("cetusFormColumns");
     }
 
-    public Page<ColumnsPage> page(ColumnsSearch bean, Pageable pageable) {
-        return page("list", "count", bean , pageable);
+    public List<ColumnsPage> page(ColumnsSearch bean) {
+        return selectList("list",  bean);
     }
 
     public Optional<ColumnsView> findByUid(Long uid) {
@@ -49,6 +48,21 @@ public class CetusFormColumnsDao extends SuperDao<CetusFormColumns> {
         param.put("workplaceUid", workplaceUid);
 
         return selectOne("existFieldName", param);
+    }
+
+    public void updateOrder(Long uid, Integer sortNum) {
+        Map<String, Object> param = new HashMap<>();
+        param.put("uid", uid);
+        param.put("sortNum", sortNum);
+        update("updateOrder", param);
+    }
+
+    public Optional<ColumnsView> selectNextByFormGroup(ColumnsOrder bean) {
+        return Optional.ofNullable(selectOne("selectNextByFormGroup", bean));
+    }
+
+    public Optional<ColumnsView> selectPrevByFormGroup(ColumnsOrder bean) {
+        return Optional.ofNullable(selectOne("selectPrevByFormGroup", bean));
     }
 
 }

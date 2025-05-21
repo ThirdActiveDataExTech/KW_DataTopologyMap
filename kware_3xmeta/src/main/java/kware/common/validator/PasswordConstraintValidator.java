@@ -10,14 +10,18 @@ public class PasswordConstraintValidator implements ConstraintValidator<ValidPas
     private static final String PASSWORD_PATTERN =
             "^(?=.*[A-Za-z])(?=.*\\d)(?=.*[!@#$%^&*()_+=\\-{}|:;\"'<>,.?/~`]).{8,}$";
 
+    private boolean allowNull;
+
     @Override
     public void initialize(ValidPassword constraintAnnotation) {
-        // 초기화 필요시 사용
+        this.allowNull = constraintAnnotation.allowNull();
     }
 
     @Override
     public boolean isValid(String password, ConstraintValidatorContext context) {
-        if (password == null) return false;
+        if (password == null || password.isEmpty()) {
+            return allowNull;
+        }
         return password.matches(PASSWORD_PATTERN);
     }
 }

@@ -17,4 +17,7 @@ public @interface ValidPassword {
     Class<?>[] groups() default {};
 
     Class<? extends Payload>[] payload() default {};
+
+    // allowNull 속성 추가
+    boolean allowNull() default false;
 }
