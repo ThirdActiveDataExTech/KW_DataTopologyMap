@@ -29,6 +29,7 @@
 <!--                            <label><input type="checkbox" value="person" checked onchange="updateFilter()"> 출연진</label>-->
 <!--                            <label><input type="checkbox" value="content" checked onchange="updateFilter()"> 작품</label>-->
                         </div>
+                        <button id="back-btn" style="display: none;" class="btn btn-sm btn-outline-secondary me-1">이전 노드</button>
                         <button id="reset-btn" style="display: none;" class="btn btn-sm btn-outline-secondary">처음으로</button>
                     </div>
                     <div id="mindmap-chart" style="width: 100%; height: 600px;"></div>
@@ -39,187 +40,11 @@
 </th:block>
 
 <th:block layout:fragment="script">
+    <script th:src="@{'/assets/js/page/chart-data.js'}"></script>
     <script th:inline="javascript">
-        const chartDom = document.getElementById('mindmap-chart');
-        const myChart = echarts.init(chartDom);
-        const resetBtn = document.getElementById('reset-btn');
-
-        const backBtn = document.createElement("button");
-        backBtn.className = "btn btn-sm btn-outline-secondary me-1";
-        backBtn.id = "back-btn";
-        backBtn.innerText = "이전노드";
-        backBtn.style.display = "none";
-        resetBtn.parentNode.insertBefore(backBtn, resetBtn);
-
-        const typeCategoryMap = {
-            content: 0,
-            group: 1,
-            person: 2,
-            default: 3
-        };
-
-        // 콘텐츠별 출연자 정보
-        const contentDB = {
-            "지옥에서 온 판사": ["박신혜"],
-            "미남이시네요": ["박신혜", "장근석"],
-            "닥터스": ["박신혜", "이규한"],
-            "런닝맨": ["박신혜", "유재석", "이광수"]
-        };
-
-        // 인물별 출연작 분류
-        const personWorks = {
-            "박신혜": {
-                드라마: ["미남이시네요", "닥터스", "지옥에서 온 판사"],
-                예능: ["런닝맨"]
-            },
-            "장근석": {
-                드라마: ["미남이시네요"],
-                예능: []
-            },
-            "이규한": {
-                드라마: ["닥터스"],
-                예능: []
-            },
-            "유재석": {
-                드라마: [],
-                예능: ["런닝맨"]
-            },
-            "이광수": {
-                드라마: [],
-                예능: ["런닝맨"]
-            }
-        };
-
-        let currentRoot = "지옥에서 온 판사";
-        const prevStack = [];
-
-        function detectNodeType(name) {
-            if (personWorks.hasOwnProperty(name)) return "person";
-            if (contentDB.hasOwnProperty(name)) return "content";
-            return "other";
-        }
-
-        // 노드 및 링크 구성
-        function buildGraph(rootName) {
-            const nodes = [];
-            const links = [];
-            const visited = new Set();
-
-            function addNode(name, type, size = 30) {
-                if (visited.has(name)) return;
-                visited.add(name);
-                nodes.push({
-                    name,
-                    category: typeCategoryMap[type],
-                    symbolSize: size
-                });
-            }
-
-            const nodeType = detectNodeType(rootName);
-
-            if (nodeType === "content") {
-                // 작품 중심일 경우 → 출연자만
-                addNode(rootName, "content", 60);
-                (contentDB[rootName] || []).forEach(person => {
-                    addNode(person, "person");
-                    links.push({ source: rootName, target: person });
-                });
-            } else if (nodeType === "person") {
-                // 인물 중심일 경우 → 그룹 → 콘텐츠 → 공동출연자
-                addNode(rootName, "person", 60);
-                const works = personWorks[rootName] || {};
-                Object.entries(works).forEach(([groupName, contents]) => {
-                    addNode(groupName, "group");
-                    links.push({ source: rootName, target: groupName });
-
-                    contents.forEach(content => {
-                        addNode(content, "content");
-                        links.push({ source: groupName, target: content });
-
-                        (contentDB[content] || []).forEach(coactor => {
-                            if (coactor !== rootName) {
-                                addNode(coactor, "person");
-                                links.push({ source: content, target: coactor });
-                            }
-                        });
-                    });
-                });
-            } else {
-                // 루트가 작품이 아니고 사람도 아니면 (초기 상태 등)
-                addNode(rootName, "content", 60);
-                (contentDB[rootName] || []).forEach(person => {
-                    addNode(person, "person");
-                    links.push({ source: rootName, target: person });
-                });
-            }
-
-            return { nodes, links };
-        }
-
-        function renderGraph(rootName) {
-            const { nodes, links } = buildGraph(rootName);
-
-            myChart.clear();
-            myChart.setOption({
-                tooltip: { show: true },
-                series: [{
-                    type: 'graph',
-                    layout: 'force',
-                    roam: true,
-                    force: {
-                        repulsion: 250,
-                        edgeLength: 100
-                    },
-                    data: nodes,
-                    links: links,
-                    categories: [
-                        { name: "작품" },
-                        { name: "그룹" },
-                        { name: "출연자" },
-                        { name: "기타" }
-                    ],
-                    label: {
-                        show: true,
-                        position: 'right'
-                    },
-                    lineStyle: {
-                        color: 'source',
-                        curveness: 0.3
-                    }
-                }]
-            });
-
-            myChart.off('click');
-            myChart.on('click', function (params) {
-                const clicked = params.data.name;
-                const clickedType = detectNodeType(clicked);
-
-                if ((clickedType === "person" || clickedType === "content") && clicked !== currentRoot) {
-                    prevStack.push(currentRoot);
-                    currentRoot = clicked;
-                    renderGraph(clicked);
-                }
-            });
-
-            resetBtn.style.display = currentRoot === "지옥에서 온 판사" ? "none" : "inline-block";
-            backBtn.style.display = prevStack.length > 0 ? "inline-block" : "none";
-        }
-
-        resetBtn.addEventListener('click', () => {
-            currentRoot = "지옥에서 온 판사";
-            prevStack.length = 0;
-            renderGraph(currentRoot);
-        });
-
-        backBtn.addEventListener("click", () => {
-            if (prevStack.length > 0) {
-                currentRoot = prevStack.pop();
-                renderGraph(currentRoot);
-            }
-        });
-
-        renderGraph(currentRoot);
+        chartData.init("mindmap-chart", "reset-btn", "back-btn");
     </script>
+
 </th:block>
 </html>
 </html>

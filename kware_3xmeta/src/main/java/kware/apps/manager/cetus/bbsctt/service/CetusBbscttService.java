@@ -10,6 +10,7 @@ import kware.apps.manager.cetus.bbsctt.domain.CetusBbscttDao;
 import kware.apps.manager.cetus.bbsctt.dto.request.*;
 import kware.apps.manager.cetus.bbsctt.dto.response.BbscttExcelList;
 import kware.apps.manager.cetus.bbsctt.dto.response.BbscttList;
+import kware.apps.manager.cetus.bbsctt.dto.response.BbscttRecentList;
 import kware.apps.manager.cetus.bbsctt.dto.response.BbscttView;
 import kware.apps.manager.cetus.enumstatus.DownloadTargetCd;
 import kware.common.excel.ExcelCreate;
@@ -22,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -33,6 +35,12 @@ public class CetusBbscttService {
 
     @Value("${cetus.base-url}")
     private String baseUrl;
+
+    @Transactional(readOnly = true)
+    public List<BbscttRecentList> findRecentBbsctt(int recent) {
+        Long workplaceUid = UserUtil.getUserWorkplaceUid();
+        return dao.getRecentBbsctt(new BbscttRecentSearch(workplaceUid, recent));
+    }
 
     @Transactional(readOnly = true)
     public Page<BbscttList> findAllBbscttPage(BbscttSearch search, Pageable pageable) {

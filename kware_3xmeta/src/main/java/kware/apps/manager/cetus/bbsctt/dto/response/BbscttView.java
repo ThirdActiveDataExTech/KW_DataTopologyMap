@@ -26,6 +26,5 @@ public class BbscttView {
     private String regId;
     private String regEmail;
     private String regProfileId;
-    private Long thumbnailUid;
-    private String thumbnailId;
+    private String thumbnailSrc;
 }

@@ -1,9 +1,9 @@
 package cetus.util;
 
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-
+import java.time.LocalDate;
+import java.time.format.TextStyle;
+import java.util.*;
 
 
 /**
@@ -232,4 +232,18 @@ public class DateTimeUtil {
         return new Period(jdt1, jdt2);
     }
     */
+
+    public static Map<String, String> dateToEng(String dateString) {
+        LocalDate date = LocalDate.parse(dateString); // "2024-05-20"
+        String year = String.valueOf(date.getYear());
+        String month = date.getMonth().getDisplayName(TextStyle.SHORT, Locale.ENGLISH); // May
+        String day = String.format("%02d", date.getDayOfMonth());
+
+        Map<String, String> result = new HashMap<>();
+        result.put("year", year);
+        result.put("month", month);
+        result.put("day", day);
+        return result;
+    }
+
 }

@@ -2,18 +2,23 @@ package kware.apps.asp;
 
 
 import cetus.user.UserUtil;
+import cetus.util.DateTimeUtil;
+import cetus.util.HtmlUtil;
+import kware.apps.manager.cetus.bbsctt.dto.response.BbscttList;
+import kware.apps.manager.cetus.bbsctt.dto.response.BbscttRecentList;
+import kware.apps.manager.cetus.bbsctt.service.CetusBbscttService;
 import kware.apps.manager.cetus.user.service.CetusUserService;
 import kware.common.config.auth.dto.SessionUserInfo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpSession;
+import java.util.List;
+import java.util.Map;
 
 /**
 * @fileName AspController
@@ -29,6 +34,7 @@ import javax.servlet.http.HttpSession;
 public class AspController {
 
     private final CetusUserService cetusUserService;
+    private final CetusBbscttService bbscttService;
 
     /**
      * # 컨트롤러 내에서 모든 메서드가 실행되기 전에 호출되어 기본적인 모델 데이터를 자동으로 모델에 추가한다.
@@ -52,6 +58,18 @@ public class AspController {
 
     @GetMapping({"/home", "/", ""})
     public String home(Model model) {
+        List<BbscttRecentList> recentBbsctt = bbscttService.findRecentBbsctt(5);
+        recentBbsctt.forEach(recent -> {
+            // 1. 게시글 내용
+            String str = HtmlUtil.stripHtmlPreserveLines(recent.getBbscttCnt());
+            String customCnt = (str.length() <= 70) ? str : str.substring(0, 70) + "...";
+            recent.setBbscttCnt(customCnt);
+
+            // 2. 날짜
+            Map<String, String> map = DateTimeUtil.dateToEng(recent.getRegDt());
+            recent.setMonthDay(map.get("month"), map.get("day"));
+        });
+        model.addAttribute("recentBbsctt", recentBbsctt);
         return "asp/page/home";
     }
 

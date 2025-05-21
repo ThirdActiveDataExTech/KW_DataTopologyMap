@@ -25,13 +25,11 @@
               ,CU.USER_NM AS REG_NM
               ,CU.USER_EMAIL AS REG_EMAIL
               ,CF_CU.FILE_ID AS REG_PROFILE_ID
-              ,CBBSCTT.THUMBNAIL_UID
-              ,CF.FILE_ID AS THUMBNAIL_ID
+              ,CBBSCTT.THUMBNAIL_SRC
           FROM CETUS_BBSCTT CBBSCTT
          INNER JOIN CETUS_BBS CBBS ON CBBS.BBS_UID = CBBSCTT.BBS_UID
           LEFT JOIN CETUS_USER CU ON CU.UID = CBBSCTT.REG_UID
           LEFT JOIN CETUS_FILE CF_CU ON CF_CU.FILE_UID = CU.PROFILE_UID::BIGINT AND CF_CU.USE_AT = 'Y' AND CF_CU.SAVED = 'Y'
-          LEFT JOIN CETUS_FILE CF ON CF.FILE_UID = CBBSCTT.THUMBNAIL_UID::BIGINT AND CF.USE_AT = 'Y' AND CF.SAVED = 'Y'
          WHERE CBBSCTT.BBS_UID = #{bbsUid}
            AND CBBSCTT.DELETE_AT = 'N'
         <if test="@Ognl@isNotEmpty(openAt)">
@@ -52,7 +50,7 @@
           FROM CETUS_BBSCTT CBBSCTT
          INNER JOIN CETUS_BBS CBBS ON CBBS.BBS_UID = CBBSCTT.BBS_UID
           LEFT JOIN CETUS_USER CU ON CU.UID = CBBSCTT.REG_UID
-          LEFT JOIN CETUS_FILE CF_TH ON CF_TH.FILE_UID = CBBSCTT.THUMBNAIL_UID::BIGINT AND CF_TH.USE_AT = 'Y' AND CF_TH.SAVED = 'Y'
+          LEFT JOIN CETUS_FILE CF_CU ON CF_CU.FILE_UID = CU.PROFILE_UID::BIGINT AND CF_CU.USE_AT = 'Y' AND CF_CU.SAVED = 'Y'
          WHERE CBBSCTT.BBS_UID = #{bbsUid}
            AND CBBSCTT.DELETE_AT = 'N'
         <if test="@Ognl@isNotEmpty(openAt)">
@@ -95,7 +93,6 @@
          INNER JOIN CETUS_BBS CBBS ON CBBS.BBS_UID = CBBSCTT.BBS_UID
           LEFT JOIN CETUS_USER CU ON CU.UID = CBBSCTT.REG_UID
           LEFT JOIN CETUS_FILE CF_CU ON CF_CU.FILE_UID = CU.PROFILE_UID::BIGINT AND CF_CU.USE_AT = 'Y' AND CF_CU.SAVED = 'Y'
-          LEFT JOIN CETUS_FILE CF ON CF.FILE_UID = CBBSCTT.THUMBNAIL_UID::BIGINT AND CF.USE_AT = 'Y' AND CF.SAVED = 'Y'
          WHERE CBBSCTT.BBS_UID = #{bbsUid}
            AND CBBSCTT.DELETE_AT = 'N'
         <if test="@Ognl@isNotEmpty(openAt)">
@@ -116,7 +113,6 @@
           FROM CETUS_BBSCTT CBBSCTT
          INNER JOIN CETUS_BBS CBBS ON CBBS.BBS_UID = CBBSCTT.BBS_UID
           LEFT JOIN CETUS_USER CU ON CU.UID = CBBSCTT.REG_UID
-          LEFT JOIN CETUS_FILE CF_TH ON CF_TH.FILE_UID = CBBSCTT.THUMBNAIL_UID::BIGINT AND CF_TH.USE_AT = 'Y' AND CF_TH.SAVED = 'Y'
          WHERE CBBSCTT.BBS_UID = #{bbsUid}
            AND CBBSCTT.DELETE_AT = 'N'
         <if test="@Ognl@isNotEmpty(openAt)">
@@ -137,6 +133,7 @@
             ,NOTICE_AT
             ,FILE_UID
             ,USE_AT
+            ,THUMBNAIL_SRC
             ,OPEN_AT
             ,DELETE_AT
             ,REG_UID
@@ -151,6 +148,7 @@
             ,#{noticeAt}
             ,#{fileUid}::BIGINT
             ,'Y'
+            ,#{thumbnailSrc}
             ,#{openAt}
             ,'N'
             ,#{regUid}
@@ -173,7 +171,7 @@
               ,USE_AT
               ,OPEN_AT
               ,DELETE_AT
-              ,THUMBNAIL_UID
+              ,THUMBNAIL_SRC
           FROM CETUS_BBSCTT
          WHERE BBSCTT_UID = #{bbscttUid}
     </select>
@@ -186,6 +184,7 @@
               ,OPEN_AT = #{openAt}
               ,NOTICE_AT = #{noticeAt}
               ,FILE_UID = #{fileUid}::BIGINT
+              ,THUMBNAIL_SRC = #{thumbnailSrc}
               ,UPDT_UID = #{updtUid}
               ,UPDT_DT = NOW()
          WHERE BBSCTT_UID = #{bbscttUid}
@@ -229,13 +228,11 @@
               ,CU.USER_ID AS REG_ID
               ,CU.USER_EMAIL AS REG_EMAIL
               ,CF_CU.FILE_ID AS REG_PROFILE_ID
-              ,CBBSCTT.THUMBNAIL_UID
-              ,CF.FILE_ID AS THUMBNAIL_ID
+              ,CBBSCTT.THUMBNAIL_SRC
           FROM CETUS_BBSCTT CBBSCTT
          INNER JOIN CETUS_BBS CBBS ON CBBS.BBS_UID = CBBSCTT.BBS_UID
           LEFT JOIN CETUS_USER CU ON CU.UID = CBBSCTT.REG_UID
           LEFT JOIN CETUS_FILE CF_CU ON CF_CU.FILE_UID = CU.PROFILE_UID::BIGINT AND CF_CU.USE_AT = 'Y' AND CF_CU.SAVED = 'Y'
-          LEFT JOIN CETUS_FILE CF ON CF.FILE_UID = CBBSCTT.THUMBNAIL_UID::BIGINT AND CF.USE_AT = 'Y' AND CF.SAVED = 'Y'
          WHERE CBBSCTT.BBSCTT_UID = #{bbscttUid}
     </select>
 
@@ -247,4 +244,39 @@
               ,UPDT_DT = NOW()
          WHERE BBSCTT_UID = #{bbscttUid}
     </update>
+
+    <select id="getRecentBbsctt" resultType="BbscttRecentList" parameterType="BbscttRecentSearch">
+        /* cetusBbsctt.getRecentBbsctt */
+        SELECT CBBSCTT.BBSCTT_UID
+              ,CBBSCTT.BBS_UID
+              ,CBBSCTT.CL_UID
+              ,CBBSCTT.BBSCTT_NM
+              ,CBBSCTT.RD_CNT
+              ,CBBSCTT.BBSCTT_CNT
+              ,CBBSCTT.NOTICE_AT
+              ,CBBSCTT.FILE_UID
+              ,( SELECT COUNT(*)
+                   FROM CETUS_FILE CF2
+                  WHERE CF2.FILE_UID = CBBSCTT.FILE_UID::BIGINT
+                    AND CF2.USE_AT = 'Y'
+                    AND CF2.SAVED = 'Y' ) AS FILE_CNT
+              ,CBBSCTT.USE_AT
+              ,CBBSCTT.OPEN_AT
+              ,CBBSCTT.DELETE_AT
+              ,CBBSCTT.REG_UID
+              ,TO_CHAR(CBBSCTT.REG_DT, 'YYYY-MM-DD') AS REG_DT
+              ,CU.USER_NM AS REG_NM
+              ,CU.USER_EMAIL AS REG_EMAIL
+              ,CF_CU.FILE_ID AS REG_PROFILE_ID
+              ,CBBSCTT.THUMBNAIL_SRC
+          FROM CETUS_BBSCTT CBBSCTT
+         INNER JOIN CETUS_BBS CBBS ON CBBS.BBS_UID = CBBSCTT.BBS_UID
+          LEFT JOIN CETUS_USER CU ON CU.UID = CBBSCTT.REG_UID
+          LEFT JOIN CETUS_FILE CF_CU ON CF_CU.FILE_UID = CU.PROFILE_UID::BIGINT AND CF_CU.USE_AT = 'Y' AND CF_CU.SAVED = 'Y'
+         WHERE CBBS.WORKPLACE_UID = #{workplaceUid}
+           AND CBBSCTT.DELETE_AT = 'N'
+           AND CBBSCTT.OPEN_AT = 'Y'
+         ORDER BY CBBSCTT.REG_DT DESC
+         LIMIT #{count}
+    </select>
 </mapper>

@@ -27,4 +27,6 @@ public class BbscttSave extends FileBean {
 
     @YOrN(allowNull = true) @DisplayName("공지 여부")
     private String noticeAt;
+
+    private String thumbnailSrc;
 }

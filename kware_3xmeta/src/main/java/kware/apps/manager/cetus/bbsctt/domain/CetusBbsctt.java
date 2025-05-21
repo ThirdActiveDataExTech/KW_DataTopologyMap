@@ -21,7 +21,7 @@ public class CetusBbsctt extends AuditBean {
     private String useAt;
     private String openAt;
     private String deleteAt;
-    private Long thumbnailUid;
+    private String thumbnailSrc;
 
     public CetusBbsctt(BbscttSave request, Long fileUid) {
         this.bbsUid = request.getBbsUid();
@@ -29,6 +29,7 @@ public class CetusBbsctt extends AuditBean {
         this.bbscttCnt = request.getBbscttCnt();
         this.openAt = request.getOpenAt();
         this.noticeAt = request.getNoticeAt();
+        this.thumbnailSrc = request.getThumbnailSrc();
         this.fileUid = fileUid;
     }
 
@@ -38,6 +39,7 @@ public class CetusBbsctt extends AuditBean {
         this.bbscttCnt = (request.getBbscttCnt() != null) ? request.getBbscttCnt() : this.bbscttCnt;
         this.openAt = (request.getOpenAt() != null) ? request.getOpenAt() : this.openAt;
         this.noticeAt = (request.getNoticeAt() != null) ? request.getNoticeAt() : this.noticeAt;
+        this.thumbnailSrc = (request.getThumbnailSrc() != null) ? request.getThumbnailSrc() : null;
         this.fileUid = fileUid;
         return this;
     }

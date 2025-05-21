@@ -230,114 +230,75 @@
             <div class="container">
                 <div class="row">
 
-                    <!-- S: 좌측 게시글 리스트 -->
-                    <div class="col-lg-8" id="post-wrap-left-01">
+
+                    <div th:class="${recentBbsctt.size() <= 2} ? 'col-lg-12' : 'col-lg-8'" id="post-wrap-left-01">
                         <div class="row" id="post-wrap-left-row-01">
-                            <div class="col-lg-6 col-md-6 col-sm-6">
-                                <div class="blog-wrap aos-init aos-animate">
-                                    <div class="blog-img-date-wrap mb-25">
-                                        <div class="blog-img">
-                                            <a href="javascript:void(0);">
-                                                <img th:src="@{'/assets/images/blog/blog-1.png'}" alt="">
-                                            </a>
-                                        </div>
-                                        <div class="blog-date">
-                                            <h5>05 <span>May</span></h5>
-                                        </div>
-                                    </div>
-                                    <div class="blog-content">
-                                        <div class="blog-meta">
-                                            <ul>
-                                                <li>By:<a href="javascript:void(0);"> Admin03</a></li>
-                                            </ul>
-                                        </div>
-                                        <h3>
-                                            <a href="javascript:void(0);">Post Title1</a>
-                                        </h3>
-                                        <p>
-                                            Description of the Content1 <br> Description of the Content1 <br> Description of the Content1
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-lg-6 col-md-6 col-sm-6">
-                                <div class="blog-wrap aos-init aos-animate" data-aos="fade-up" data-aos-delay="200">
-                                    <div class="blog-img-date-wrap mb-25">
-                                        <div class="blog-img">
-                                            <a href="javascript:void(0);"><img th:src="@{'/assets/images/blog/blog-1.png'}" alt=""></a>
-                                        </div>
-                                        <div class="blog-date">
-                                            <h5>05 <span>May</span></h5>
+                            <th:block th:each="recent, recentStatus : ${recentBbsctt}">
+                                <th:block th:if="${recentStatus.index < 2}">
+                                    <div class="col-lg-6 col-md-6 col-sm-6">
+                                        <div class="blog-wrap aos-init aos-animate">
+                                            <div class="blog-img-date-wrap mb-25">
+                                                <div class="blog-img">
+                                                    <a href="javascript:void(0);">
+                                                        <img th:src="${recent?.thumbnailSrc}" alt="" onerror="this.src='/assets/images/page/thumbnail_default.png'" width="370">
+                                                    </a>
+                                                </div>
+                                                <div class="blog-date">
+                                                    <h5>
+                                                        <span th:text="${recent?.day}"></span>
+                                                        <span th:text="${recent?.month}"></span>
+                                                    </h5>
+                                                </div>
+                                            </div>
+                                            <div class="blog-content">
+                                                <div class="blog-meta">
+                                                    <ul>
+                                                        <li>By:&nbsp;<span th:text="${recent?.regNm}"></span></li>
+                                                    </ul>
+                                                </div>
+                                                <h3>
+                                                    <a th:href="@{/asp/cetus/bbsctt/view/{id}(id=${recent?.bbscttUid})}" th:text="${recent?.bbscttNm}"></a>
+                                                </h3>
+                                                <p th:text="${recent?.bbscttCnt}"></p>
+                                            </div>
                                         </div>
                                     </div>
-                                    <div class="blog-content">
-                                        <div class="blog-meta">
-                                            <ul>
-                                                <li>By:<a href="javascript:void(0);"> Admin03</a></li>
-                                            </ul>
-                                        </div>
-                                        <h3>
-                                            <a href="javascript:void(0);">Post Title2</a>
-                                        </h3>
-                                        <p>
-                                            Description of the Content2 <br> Description of the Content2 <br> Description of the Content2
-                                        </p>
-                                    </div>
+
+                                </th:block>
+                            </th:block>
+                        </div>
+                    </div>
+
+                    <th:block th:if="${recentBbsctt.size() >= 3}">
+                        <div class="col-lg-4" id="post-wrap-right-01">
+                            <div class="sidebar-widget mb-40 aos-init aos-animate" data-aos="fade-up" data-aos-delay="200">
+                                <div class="latest-post-wrap" id="post-wrap-right-latest-01">
+
+                                    <th:block th:each="recent, recentStatus : ${recentBbsctt}">
+                                        <th:block th:if="${recentStatus.index >= 2 and recentStatus.index <= 4}">
+                                            <div class="single-latest-post">
+                                                <div class="latest-post-img">
+                                                    <a th:href="@{/asp/cetus/bbsctt/view/{id}(id=${recent?.bbscttUid})}">
+                                                        <img th:src="${recent?.thumbnailSrc}" alt="" onerror="this.src='/assets/images/page/thumbnail_default.png'" width="115">
+                                                    </a>
+                                                </div>
+                                                <div class="latest-post-content">
+                                                    <span th:text="${recent?.regDt}"></span>
+                                                    <h4>
+                                                        <a th:href="@{/asp/cetus/bbsctt/view/{id}(id=${recent?.bbscttUid})}" th:text="${recent?.bbscttNm}"></a>
+                                                    </h4>
+                                                    <div class="latest-post-btn">
+                                                        <a th:href="@{/asp/cetus/bbsctt/view/{id}(id=${recent?.bbscttUid})}" th:text="${recent?.bbscttCnt}"></a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </th:block>
+                                    </th:block>
+
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <!-- E: 좌측 게시글 리스트 -->
-
-
-                    <!-- S: 우측 게시글 리스트 -->
-                    <div class="col-lg-4" id="post-wrap-right-01">
-                        <div class="sidebar-widget mb-40 aos-init aos-animate" data-aos="fade-up" data-aos-delay="200">
-                            <div class="latest-post-wrap" id="post-wrap-right-latest-01">
-
-                                <div class="single-latest-post">
-                                    <div class="latest-post-img">
-                                        <a href="javascript:void(0);"><img th:src="@{'/assets/images/blog/latest-post-1.png'}" alt=""></a>
-                                    </div>
-                                    <div class="latest-post-content">
-                                        <span>2025-01-01</span>
-                                        <h4><a href="javascript:void(0);">Post Title1</a></h4>
-                                        <div class="latest-post-btn">
-                                            <a href="javascript:void(0);">Description of This Content1</a>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="single-latest-post">
-                                    <div class="latest-post-img">
-                                        <a href="javascript:void(0);"><img th:src="@{'/assets/images/blog/latest-post-1.png'}" alt=""></a>
-                                    </div>
-                                    <div class="latest-post-content">
-                                        <span>2025-01-01</span>
-                                        <h4><a href="javascript:void(0);">Post Title2</a></h4>
-                                        <div class="latest-post-btn">
-                                            <a href="javascript:void(0);">Description of This Content2</a>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="single-latest-post">
-                                    <div class="latest-post-img">
-                                        <a href="javascript:void(0);"><img th:src="@{'/assets/images/blog/latest-post-1.png'}" alt=""></a>
-                                    </div>
-                                    <div class="latest-post-content">
-                                        <span>2025-01-01</span>
-                                        <h4><a href="javascript:void(0);">Post Title3</a></h4>
-                                        <div class="latest-post-btn">
-                                            <a href="javascript:void(0);">Description of This Content3</a>
-                                        </div>
-                                    </div>
-                                </div>
-
-                            </div>
-                        </div>
-                    </div>
-                    <!-- E: 우측 게시글 리스트 -->
+                    </th:block>
 
                 </div>
             </div>
@@ -350,6 +311,10 @@
 <th:block layout:fragment="script">
     <script th:src="@{'/assets/js/page/home.js'}"></script>
     <script th:inline="javascript">
+
+        const recentBbsctt = [[${recentBbsctt}]]
+        console.log(">> recentBbsctt : ", recentBbsctt)
+
         $(function(e) {
 
             window.history.replaceState({}, "", home.startPage);
