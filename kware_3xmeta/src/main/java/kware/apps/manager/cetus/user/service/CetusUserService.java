@@ -194,6 +194,11 @@ public class CetusUserService {
         return dao.view(uid);
     }
 
+    @Transactional(readOnly = true)
+    public CetusUser viewById(String userId) {
+        return dao.viewById(userId);
+    }
+
     @Transactional
     public void changeFailCnt(String userId) {
         dao.updateFailCnt(new CetusUser(userId));

@@ -1,6 +1,7 @@
 package kware.common.config.auth;
 
 
+import kware.apps.manager.cetus.enumstatus.UserStatus;
 import kware.common.config.auth.dto.SessionUserInfo;
 import lombok.EqualsAndHashCode;
 import org.springframework.security.core.GrantedAuthority;
@@ -55,7 +56,7 @@ public class PrincipalDetails implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return UserStatus.APPROVED.toString().equals(user.getStatus());
     }
 
 }

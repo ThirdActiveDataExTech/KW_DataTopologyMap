@@ -42,6 +42,9 @@
                                             <div th:if="${param.error}">
                                                 <p style="margin-top: 5px; color: red;" class="error-message" id="errorMessage"></p>
                                             </div>
+                                            <div th:if="${param.before}">
+                                                <p style="margin-top: 5px; color: red;" class="error-message" id="beforeMessage"></p>
+                                            </div>
                                             <div class="login-toggle-btn">
                                                 <input type="checkbox" id="rememberId">
                                                 <label for="rememberId">아이디 기억하기</label>
@@ -88,6 +91,14 @@
             } else if (params.has("expired")) {
 
                 Util.alert("세션이 만료되었습니다. 다시 로그인 해주세요.")
+
+            } else if(params.has("before")) {
+
+                const userId = decodeURIComponent(params.get("userId"));
+                const errorMessage = decodeURIComponent(params.get("before"));
+                $("#beforeMessage").html(errorMessage.replace("\n", "<br>"));
+                history.replaceState({}, null, '/login');
+                console.log("errorMessage : ", errorMessage)
 
             }
 

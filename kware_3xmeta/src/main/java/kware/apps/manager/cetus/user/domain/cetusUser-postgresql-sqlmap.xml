@@ -23,6 +23,24 @@
 	     WHERE CU.UID = #{uid}
 	</select>
 
+	<select id="viewById" resultType="cetusUser" parameterType="String">
+		/* cetusUser.viewById */
+		SELECT CU.UID
+			  ,CU.USER_ID
+			  ,CU.PASSWORD
+			  ,CU.USER_NM
+		      ,CU.USER_EMAIL
+		      ,CU.AUTHOR_CD
+			  ,CU.STATUS
+			  ,CU.FAIL_CNT
+		      ,CU.PROFILE_UID
+		      ,CU.META_DATA
+			  ,CU.USE_AT
+			  ,CU.APPROVE_AT
+		  FROM CETUS_USER CU
+	     WHERE CU.USER_ID = #{userId}
+	</select>
+
 	<insert id="insert" parameterType="cetusUser" useGeneratedKeys="true" keyProperty="uid">
 		/* cetusUser.insert */
 		INSERT INTO CETUS_USER (

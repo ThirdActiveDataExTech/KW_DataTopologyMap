@@ -82,4 +82,8 @@ public class CetusUserDao extends SuperDao<CetusUser> {
     public Integer findByEmail(String email) {
         return selectOne("findByEmail", email);
     }
+
+    public CetusUser viewById(String userId) {
+        return selectOne("viewById", userId);
+    }
 }

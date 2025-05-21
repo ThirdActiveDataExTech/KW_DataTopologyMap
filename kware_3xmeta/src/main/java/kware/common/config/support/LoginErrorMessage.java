@@ -14,6 +14,8 @@ public enum LoginErrorMessage {
     AccountExpiredException("계정이 만료되었습니다."),
     CredentialsExpiredException( "비밀번호가 만료되었습니다. \n 비밀번호를 변경해주세요."),
     DisabledException( "권한이 없는 페이지입니다."),
+    DisabledException_STOP( "정지된 계정입니다. \n 관리자에게 문의해주세요."),
+    DisabledException_WAIT( "현재 가입승인 대기 상태입니다. \n 관리자의 승인을 기다려주세요."),
     LockedException( "비활성화된 계정입니다. \n 비밀번호 변경 후 다시 로그인 해주세요."),
     AuthorizationException("권한이 없는 페이지입니다."),
     NoneException("알 수 없는 에러 입니다.");
