@@ -11,12 +11,12 @@ import kware.apps.manager.cetus.bbsctt.service.CetusBbscttService;
 import kware.apps.manager.cetus.form.service.CetusFormColumnsService;
 import kware.apps.manager.cetus.user.dto.response.UserFullInfo;
 import kware.apps.manager.cetus.user.service.CetusUserService;
+import kware.common.config.auth.MenuNavigationManager;
 import kware.common.config.auth.dto.SessionUserInfo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.servlet.http.HttpSession;
@@ -40,29 +40,12 @@ public class AspController {
     private final CetusUserService cetusUserService;
     private final CetusBbscttService bbscttService;
     private final CetusFormColumnsService columnsService;
-
-    /**
-     * # 컨트롤러 내에서 모든 메서드가 실행되기 전에 호출되어 기본적인 모델 데이터를 자동으로 모델에 추가한다.
-     *   각각의 html 페이지에서 ${title1} ${title2} ${leftImg} ${rightImg} 와 같이 값을 불러 사용이 가능하다.
-     *   -> 만약 각각의 메소드에서 값을 변경해서 보내고 싶다면 아래 [home] 메소드와 같이 진행한다.
-     * */
-    @ModelAttribute
-    public void mainImageTitleInfo(Model model) {
-        model.addAttribute("title1", "써드파티 데이터 활용 통합 플랫폼");
-        model.addAttribute("title2", "");
-        model.addAttribute("leftImg", "");
-        model.addAttribute("rightImg", "");
-    }
-
-
-    @GetMapping("/detail")
-    public String openDetail() {
-        return "asp/page/detail";
-    }
+    private final MenuNavigationManager menuNavigationManager;
 
 
     @GetMapping({"/home", "/", ""})
     public String home(Model model) {
+        menuNavigationManager.renderingPage("/asp/home", "HOME", true, model);
         List<BbscttRecentList> recentBbsctt = bbscttService.findRecentBbsctt(5);
         recentBbsctt.forEach(recent -> {
             // 1. 게시글 내용
@@ -80,17 +63,22 @@ public class AspController {
 
 
     @GetMapping("/list")
-    public String list() {
+    public String list(Model model) {
+        menuNavigationManager.renderingPage("/asp/list", "LIST", true, model);
         return "asp/page/list";
     }
 
+    @GetMapping("/detail")
+    public String openDetail(Model model) {
+        menuNavigationManager.renderingPage("/asp/list", "Detail", false, model);
+        return "asp/page/detail";
+    }
 
     @GetMapping("/myInfo")
     public String myInfo(Model model) {
         SessionUserInfo user = UserUtil.getUser();
         UserFullInfo info = cetusUserService.findUserFullInfoByUserUid(user.getUid());
         model.addAttribute("view", info);
-
         model.addAttribute("fields", columnsService.getFormGroupColumns("SIGNUP"));
 
         String metaData = info.getMetaData();
@@ -109,7 +97,8 @@ public class AspController {
     }
 
     @GetMapping("/chart")
-    public String chart() {
+    public String chart(Model model) {
+        menuNavigationManager.renderingPage("/asp/chart", "관계데이터 다차원 탐색", true, model);
         return "asp/page/chart";
     }
 

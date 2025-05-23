@@ -4,14 +4,11 @@
       layout:decorate="~{layouts/default}">
 
 <th:block layout:fragment="center-image">
-  <th:block th:with="backtitle='테스트 화면', title1=${title1}, title2=${title2}, leftImg='', rightImg=''">
-    <th:block th:replace="fragments/center-image :: center-image-title(${backtitle}, ${title1}, ${title2}, ${leftImg}, ${rightImg})"></th:block>
-  </th:block>
+  <th:block th:replace="fragments/center-image :: center-image(title='샘플 CSS 화면')"></th:block>
 </th:block>
 
-
 <th:block layout:fragment="content">
-  <div class="my-account-wrapper pb-100 pt-30">
+  <div class="my-account-wrapper pb-100 pt-80">
     <div class="container">
       <div class="row">
         <div class="col-lg-12">

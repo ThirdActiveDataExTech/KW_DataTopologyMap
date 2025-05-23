@@ -4,9 +4,7 @@
       layout:decorate="~{layouts/default}">
 
 <th:block layout:fragment="center-image">
-  <th:block th:with="title1='내 정보 수정', title2='내 정보 수정', leftImg='', rightImg=''">
-    <th:block th:replace="fragments/center-image :: main-image-title-no-header(${title1}, ${title2}, ${leftImg}, ${rightImg})"></th:block>
-  </th:block>
+  <th:block th:replace="fragments/center-image :: center-image(title='내 정보 수정')"></th:block>
 </th:block>
 
 <th:block layout:fragment="head">
@@ -26,8 +24,7 @@
 </th:block>
 
 <th:block layout:fragment="content">
-  <div class="my-account-wrapper pt-100" data-aos="fade-up" data-aos-delay="200">
-
+  <div class="my-account-wrapper pt-80" data-aos="fade-up" data-aos-delay="200">
     <div class="container">
       <div class="section-title-2 st-border-center text-center mb-35">
         <h2>내 정보 수정</h2>
@@ -70,6 +67,7 @@
                                 <div class="input-group">
                                   <input type="password" id="password" name="password" class="form-control custom-input" placeholder="영문 + 숫자 + 특수문자 조합 8자 이상" disabled readonly>
                                   <button class="custom-button" id="password-change" type="button">비밀번호 변경</button>
+                                  <div class="invalid-feedback">영문 + 숫자 + 특수문자 조합 8자 이상</div>
                                 </div>
                                 <span class="validation-error-message" id="password-error"></span>
                               </div>

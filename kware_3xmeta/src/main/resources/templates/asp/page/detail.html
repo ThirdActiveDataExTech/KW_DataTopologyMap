@@ -3,10 +3,8 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layouts/default2}">
 
-<!-- (방법1) [title1, title2]처럼 [AspController]에서 모델로 내려준다. (추후 DB 사용 고려) -->
-<!-- (방법2) [leftImg, rightImg]처럼 각각의 html 페이지에서 하드코딩 -->
 <th:block layout:fragment="center-image">
-    <th:block th:with="title1=${title1}, title2=${title2}, leftImg='', rightImg='/assets/images/page/right_slide.png'">
+    <th:block th:with="title1=${currentPageName}, title2=${navigation}, leftImg=${centerLeftImage}, rightImg=${centerRightImage}">
         <th:block th:replace="fragments/center-image :: main-image-title(${title1}, ${title2}, ${leftImg}, ${rightImg})"></th:block>
     </th:block>
 </th:block>
@@ -19,7 +17,7 @@
 </th:block>
 
 <th:block layout:fragment="content">
-  <div class="page-details-area pb-100 pt-100" style="padding: 30px 0px 50px 0px;">
+  <div class="page-details-area pb-100 pt-80" style="padding: 30px 0px 50px 0px;">
     <div class="container">
       <div class="row">
         <div class="col-lg-3">

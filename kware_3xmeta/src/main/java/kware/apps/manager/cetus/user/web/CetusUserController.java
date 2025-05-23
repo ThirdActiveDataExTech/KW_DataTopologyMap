@@ -11,6 +11,7 @@ import kware.apps.manager.cetus.group.service.CetusGroupService;
 import kware.apps.manager.cetus.position.service.CetusPositionService;
 import kware.apps.manager.cetus.user.dto.response.UserFullInfo;
 import kware.apps.manager.cetus.user.service.CetusUserService;
+import kware.common.config.auth.MenuNavigationManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -31,6 +32,7 @@ public class CetusUserController {
     private final CetusPositionService positionService;
     private final CetusBbsService bbsService;
     private final CetusFormColumnsService columnsService;
+    private final MenuNavigationManager menuNavigationManager;
 
 
     @GetMapping({"", "/"})
@@ -40,6 +42,7 @@ public class CetusUserController {
         model.addAttribute("userStatus", UserStatus.toList());
         model.addAttribute("userGroup", groupService.findGroupList());
         model.addAttribute("userPosition", positionService.findPositionList());
+        menuNavigationManager.renderingPage("/manager/cetus/user", "사용자 관리", true, model);
 
         return "manager/user/index";
     }
@@ -68,6 +71,8 @@ public class CetusUserController {
         }
         model.addAttribute("metadata", map);
 
+        menuNavigationManager.renderingPage("/manager/cetus/user", "사용자 상세 정보", false, model);
+
         return "manager/user/form";
     }
 
@@ -77,6 +82,7 @@ public class CetusUserController {
         model.addAttribute("userGroup", groupService.findGroupList());
         model.addAttribute("userPosition", positionService.findPositionList());
         model.addAttribute("fields", columnsService.getFormGroupColumns("SIGNUP"));
+        menuNavigationManager.renderingPage("/manager/cetus/user", "계정 추가", false, model);
         return "manager/user/save";
     }
 

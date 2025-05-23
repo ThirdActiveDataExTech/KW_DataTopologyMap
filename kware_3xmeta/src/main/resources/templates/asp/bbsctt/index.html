@@ -4,8 +4,8 @@
       layout:decorate="~{layouts/default}">
 
 <th:block layout:fragment="center-image">
-    <th:block th:with="title1=${title1}, title2=${title2}, leftImg='', rightImg=''">
-        <th:block th:replace="fragments/center-image :: main-image-title-no-header(${title1}, ${title2}, ${leftImg}, ${rightImg})"></th:block>
+    <th:block th:with="title1=${currentPageName}, title2=${navigation}, leftImg=${centerLeftImage}, rightImg=${centerRightImage}">
+        <th:block th:replace="fragments/center-image :: main-image-title(${title1}, ${title2}, ${leftImg}, ${rightImg})"></th:block>
     </th:block>
 </th:block>
 
@@ -14,7 +14,7 @@
 </th:block>
 
 <th:block layout:fragment="content">
-    <div class="related-product-area pb-100 pt-100"  data-aos="fade-up" data-aos-delay="200">
+    <div class="related-product-area pb-100 pt-80"  data-aos="fade-up" data-aos-delay="200">
         <div class="container">
             <div class="section-title-2 st-border-center text-center mb-35">
                 <h2 th:text="${bbsNm}"></h2>
