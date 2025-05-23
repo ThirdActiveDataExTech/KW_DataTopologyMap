@@ -1,13 +1,13 @@
 package kware.apps.manager.cetus.menu.domain;
 
 import cetus.annotation.Key;
-import cetus.annotation.TableName;
 import cetus.bean.AuditBean;
-import cetus.bean.CetusBean;
+import kware.apps.manager.cetus.enumstatus.UserAuthorCd;
+import kware.apps.manager.cetus.menu.dto.request.MenuChange;
+import kware.apps.manager.cetus.menu.dto.request.MenuSave;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import org.springframework.util.StringUtils;
 
 
@@ -24,4 +24,52 @@ public class CetusMenuInfo extends AuditBean {
 	private String menuDc;
 	private String useAt;
 	private String deleteAt;
+
+	private String authorCd;
+	private String menuStyle1;
+	private String menuStyle2;
+	private String rootMenuCd;
+	private Long workplaceUid;
+
+	private String menuPath;
+	private String url;
+	private String isLeaf;
+
+	private Integer depth;
+
+	public String getUrl() {
+		return StringUtils.hasText(url) ? url : "";
+	}
+
+	public Integer getSortNoForTreeMenu() {
+		return sortNo != null ? sortNo : -1;
+	}
+
+	public CetusMenuInfo(String authorCd, String rootMenuCd, Long workplaceUid) {
+		this.authorCd = authorCd;
+		this.rootMenuCd = rootMenuCd;
+		this.workplaceUid = workplaceUid;
+	}
+
+	public CetusMenuInfo(MenuSave request, Long workplaceUid) {
+		this.upperMenuNo = request.getUpperMenuNo();
+		this.sortNo = request.getSortNo();
+		this.menuNm = request.getMenuNm();
+		this.authorCd = request.getAuthorCd();
+		this.workplaceUid = workplaceUid;
+	}
+
+	public CetusMenuInfo changeMenu(Long menuNo, MenuChange request) {
+		this.menuNo = menuNo;
+		this.programUid = (request.getProgramUid() != null) ? request.getProgramUid() : this.programUid;
+		this.menuNm = (request.getMenuNm() != null) ? request.getMenuNm() : this.menuNm;
+		this.menuIcon = (request.getMenuIcon() != null) ? request.getMenuIcon() : this.menuIcon;
+		this.sortNo = (request.getSortNo() != null) ? request.getSortNo() : this.sortNo;
+		this.menuDc = (request.getMenuDc() != null) ? request.getMenuDc() : this.menuDc;
+		this.useAt = (request.getUseAt() != null) ? request.getUseAt() : this.useAt;
+		this.menuStyle1 = (request.getMenuStyle1() != null) ? request.getMenuStyle1() : this.menuStyle1;
+		this.menuStyle2 = (request.getMenuStyle2() != null) ? request.getMenuStyle2() : this.menuStyle2;
+		return this;
+	}
+
 }

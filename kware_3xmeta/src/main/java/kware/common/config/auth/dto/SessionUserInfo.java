@@ -37,7 +37,8 @@ public class SessionUserInfo implements Serializable {
     private String positionNm;
 
     private List<String> authorizedMenuUrls;
-    private List<CetusMenu> menus;
+    private List<CetusMenu> menusTop;
+    private List<CetusMenu> menusFooter;
 
     public SessionUserInfo(UserFullInfo user) {
         this.uid = user.getUid();
@@ -64,8 +65,9 @@ public class SessionUserInfo implements Serializable {
         this.positionNm = user.getPositionNm();
     }
 
-    public void addMenuAndAuthorizedMenuUrls(List<CetusMenu> menus, List<String> authorizedMenuUrls) {
-        this.menus = menus;
+    public void addMenuAndAuthorizedMenuUrls(List<CetusMenu> menusTop, List<CetusMenu> menusFooter, List<String> authorizedMenuUrls) {
+        this.menusTop = menusTop;
+        this.menusFooter = menusFooter;
         this.authorizedMenuUrls = authorizedMenuUrls;
     }
 

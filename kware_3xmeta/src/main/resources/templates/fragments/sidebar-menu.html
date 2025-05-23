@@ -1,7 +1,7 @@
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
-<th:block th:fragment="sidebar-menu">
+<th:block th:fragment="sidebar-menu(show)">
   <!-- Mobile Menu start -->
-  <div class="off-canvas-active">
+  <div class="off-canvas-active" th:data-show="${show}">
     <a class="off-canvas-close"><i class=" ti-close "></i></a>
     <div class="off-canvas-wrap">
       <div class="welcome-text off-canvas-margin-padding">
@@ -19,77 +19,53 @@
   <!-- Mobile Menu end -->
   <script th:src="@{'/assets/js/vendor/jquery-3.6.0.min.js'}"></script>
   <script th:inline="javascript">
+
+    const sidebarMenu = [[${user}]] ? [[${user?.menusTop}]] : []
   
   var mMenuObj = {
 
-    menuDataUrl: "/assets/data/menu_data.json",
-        
-    getMenuData: async function () {
-
-        let response = await fetch(this.menuDataUrl);
-
-        if (!response.ok) {
-
-            throw new Error("Failed to fetch menu data");
-        }
-        return await response.json();
-    },
-
     createMenu: async function (targetEle) {
-
-        try {
-            
-            // 메뉴 데이터 가져오기
-            let menuDataObj = await this.getMenuData();
-            const self = this; // `this` 참조 유지
-
-            $.each(menuDataObj, function (idx, val) {
-
-                const topMenuEle = self.createMobileMenuElement(val); // `self`로 메서드 호출
-                targetEle.append(topMenuEle);
-            });
-
-            mMenuObj.loadSlinkyStyle();
-        } 
-        catch (error) {
-
-            console.error("Error fetching menu data:", error);
-        }
+      const self = this; // `this` 참조 유지
+      $.each(sidebarMenu, function (idx, val) {
+        const topMenuEle = self.createMobileMenuElement(val); // `self`로 메서드 호출
+        targetEle.append(topMenuEle);
+      });
+      mMenuObj.loadSlinkyStyle();
     },
 
     createMobileMenuElement: function (_menuObj) {
 
-        const liEle = $("<li/>");
-        const aEle = $("<a/>").text(_menuObj.name);
+      const liEle = $("<li/>");
+      const aEle = $("<a/>").text(_menuObj.menuNm);
 
-        if (_menuObj.link) {
+      if (_menuObj.url) {
 
-            aEle.attr("href", _menuObj.link)
-                .addClass("menu-a-link")
+        aEle.attr("href", _menuObj.url)
+                .addClass("menu-a-url")
                 .attr("data-uid", _menuObj['uid']);
-        } 
-        else{
+      }
+      else{
 
-          aEle.attr("href", "#");
-        }
+        aEle.attr("href", "#");
+      }
 
-        liEle.append(aEle);
+      liEle.append(aEle);
 
-        // 하위 메뉴가 있는 경우
-        if (_menuObj.subMenu && Array.isArray(_menuObj.subMenu)) {
+      // 하위 메뉴가 있는 경우
+      if (_menuObj.children && Array.isArray(_menuObj.children) && _menuObj.children.length !== 0) {
 
-          let ulEle = $("<ul/>");
+        let ulEle = $("<ul/>");
 
-          $.each(_menuObj.subMenu, (idx, subMenuObj) => {
+        $.each(_menuObj.children, (idx, childrenObj) => {
 
-            const subMenuEle = this.createMobileMenuElement(subMenuObj);
-            ulEle.append(subMenuEle);
-          });
+          const subMenuEle = this.createMobileMenuElement(childrenObj);
+          ulEle.append(subMenuEle);
+        });
 
-          liEle.append(ulEle);
-        }
+        liEle.append(ulEle);
+      }
 
-        return liEle;
+      return liEle;
     },
 
     // [TODO] 모바일 메뉴에 메뉴데이터를 동적으로 넣으면 시점차 때문에 정상동작이 안되서 main.js에 선언된 아래 로직을 재호출함(개선 필요)
@@ -99,40 +75,48 @@
       const slinky = $('#mobile-menu').slinky();
       const slinky2 = $('#mobile-currency').slinky();
       const slinky3 = $('#mobile-language').slinky();
-      
+
       /*====== off canvas active ======*/
       function mobileMainMenu() {
-          var navbarTrigger = $('.mobile-menu-active-button'),
-              endTrigger = $('.off-canvas-close'),
-              container = $('.off-canvas-active'),
-              wrapper = $('.main-wrapper-2');
-          
-          wrapper.prepend('<div class="body-overlay-2"></div>');
-          
-          navbarTrigger.on('click', function(e) {
-              e.preventDefault();
-              container.addClass('inside');
-              wrapper.addClass('overlay-active-2');
-          });
-          
-          endTrigger.on('click', function() {
-              container.removeClass('inside');
-              wrapper.removeClass('overlay-active-2');
-          });
-          
-          $('.body-overlay-2').on('click', function() {
-              container.removeClass('inside');
-              wrapper.removeClass('overlay-active-2');
-          });
+        var navbarTrigger = $('.mobile-menu-active-button'),
+                endTrigger = $('.off-canvas-close'),
+                container = $('.off-canvas-active'),
+                wrapper = $('.main-wrapper-2');
+
+        wrapper.prepend('<div class="body-overlay-2"></div>');
+
+        navbarTrigger.on('click', function(e) {
+          e.preventDefault();
+          container.addClass('inside');
+          wrapper.addClass('overlay-active-2');
+        });
+
+        endTrigger.on('click', function() {
+          container.removeClass('inside');
+          wrapper.removeClass('overlay-active-2');
+        });
+
+        $('.body-overlay-2').on('click', function() {
+          container.removeClass('inside');
+          wrapper.removeClass('overlay-active-2');
+        });
+
+        // 페이지 전환 후 간헐적으로 height가 0이 되는 버그 수정 .nckim 20250226
+        if($('#mobile-menu').css("height") === 0 || $('#mobile-menu').css("height") === "0px"){
+
+          $('#mobile-menu').css("height", "auto");
+        }
       };
       mobileMainMenu();
     },
   };
 
-  $(function() {
-
-    let mobileMenuWrap = $("#mobile-menu ul");
-    mMenuObj.createMenu(mobileMenuWrap);
+  $(async function () {
+    const dataMenuShow = $(".header-area").data('show')
+    if (dataMenuShow === "Y") {
+      let mobileMenuWrap = $("#mobile-menu ul");
+      await mMenuObj.createMenu(mobileMenuWrap);
+    }
   });
 
   </script>

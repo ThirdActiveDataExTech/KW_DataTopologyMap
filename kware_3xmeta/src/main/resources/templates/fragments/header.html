@@ -6,51 +6,8 @@
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <!-- S: 로그인 이후에 메인로고+메뉴 있는 헤더 -->
 <th:block th:fragment="header(show)">
-    <style>
-    .main-menu .megamenu-title-wrap .megamenu-top-title{
-        position: relative;
-        padding-left: 12px;
-        margin: 0;
-        line-height: 1;
-    }
-    .main-menu .megamenu-title-wrap .megamenu-top-title:before {
-        position: absolute;
-        content: "";
-        left: 0;
-        top: 0;
-        width: 2px;
-        height: 100%;
-        background-color: #e97730;
-    }
-    .main-menu > nav > ul.megamenu-title-wrap > li{
-        position: static !important;
-    }
-    .main-menu > nav > ul.megamenu-title-wrap > li > ul.mega-menu-style.mega-menu-mrg-1 {
-        display: flex;
-        justify-content: center;
-        flex-wrap: wrap;
-        max-height: 80vh;
-        overflow-y: auto;
-        padding: 28px 5%;
-    }   
-    .main-menu > nav > ul.megamenu-title-wrap > li > ul li {
-        flex: 1 1 calc(33.33% - 10px);
-    }
-    .main-menu > nav > ul.megamenu-title-wrap > li > ul li:last-child {
-        padding-bottom: 25px;
-    }
-    .main-menu > nav > ul.megamenu-title-wrap > li > ul.mega-menu-style {
-        width: calc(100vw - 18px);
-        left: 0px;
-    }
-    .logo a img {
-        max-width: 160px;
-    }
-    .bg-red {
-        background-color: #e71313 !important;
-    }
-    </style>
-    <header class="header-area header-responsive-padding header-height-1">
+    <link rel="stylesheet" th:href="@{'/assets/css/page/header.css'}" />
+    <header class="header-area header-responsive-padding header-height-1" th:data-show="${show}">
         <div class="header-bottom sticky-bar">
             <div class="container">
                 <div class="row align-items-center">
@@ -66,8 +23,7 @@
                     <div class="col-lg-6 d-none d-lg-block d-flex justify-content-center">
                         <div class="main-menu text-center" style="min-height: 120px;">
                             <nav style="display: flex; justify-content: center; flex-direction: column; min-height: 120px;">
-                                <ul th:attr="style=${show == 'Y'} ? 'visibility: visible;' : 'visibility: hidden;'">
-                                </ul>
+                                <ul th:attr="style=${show == 'Y'} ? 'visibility: visible;' : 'visibility: hidden;'"></ul>
                             </nav>
                         </div>
                     </div>
@@ -118,301 +74,99 @@
     <script th:src="@{'/assets/js/vendor/jquery-3.6.0.min.js'}"></script>
     <script th:inline="javascript">
 
-    // 일반-메가메뉴 혼용 메뉴(기존 방식)
-    var currentMenuObj = {
-
-        menuDataUrl: "/assets/data/menu_data.json",
-        
-        getMenuData: async function () {
-
-            let response = await fetch(this.menuDataUrl);
-
-            if (!response.ok) {
-
-                throw new Error("Failed to fetch menu data");
-            }
-            return await response.json();
-        },
-
-        createMenu: async function (targetEle) {
-
-            try {
-                
-                let menuDataObj = await this.getMenuData();
-                const self = this; // `this` 참조 유지
-
-                $.each(menuDataObj, function (idx, val) {
-
-                    const topMenuEle = self.createMenuElement(val); // `self`로 메서드 호출
-                    targetEle.append(topMenuEle);
-                });
-            } 
-            catch (error) {
-
-                console.error("Error fetching menu data:", error);
-            }
-        },
-
-        createMenuElement: function (_menuObj) {
-
-            const liEle = $("<li/>");
-            const aEle = $("<a/>").text(_menuObj.name);
-
-            // link가 존재하면 하이퍼링크 처리
-            if (_menuObj.link) {
-
-                aEle.attr("href", _menuObj.link)
-                    .addClass("menu-a-link")
-                    .attr("data-uid", _menuObj['uid']);
-            } 
-            // 메인 타이틀
-            else if (_menuObj.menuStyle === "dropdown-title") {
-
-                aEle.addClass("dropdown-title");
-            }
-            // 서브 타이틀
-            else if (_menuObj.menuStyle === "sub-dropdown-title") {
-
-                aEle.addClass("sub-dropdown-title");
-                aEle.css({
-                    "font-size": "14px",
-                    "font-weight": "600",
-                    "margin-bottom": "20px"
-                });
-            }
-
-            liEle.append(aEle);
-
-            // 하위 메뉴가 있는 경우
-            if (_menuObj.subMenu && Array.isArray(_menuObj.subMenu)) {
-
-                let ulEle = $("<ul/>");
-
-                // 메뉴 스타일 적용
-                if (_menuObj.menuStyle === "mega-menu-style") {
-
-                    ulEle.addClass("mega-menu-style mega-menu-mrg-1");
-
-                    // 메가 메뉴 내부 구조
-                    const megaMenuLi = $("<li/>");
-                    const innerUl = $("<ul/>");
-
-                    $.each(_menuObj.subMenu, (idx, subMenuObj) => {
-
-                        const subLiEle = this.createMenuElement(subMenuObj);
-                        innerUl.append(subLiEle);
-                    });
-
-                    if (_menuObj.upperUid === null) { // 최상위 메뉴인지 확인
-                        const repeatMenuLi = $("<li/>");
-                        const repeatMenuLink = $("<a/>").text(_menuObj.name).addClass("dropdown-title").css({
-                            "font-size": "16px",
-                            "font-weight": "600",
-                            "margin-bottom": "30px"
-                        });
-                        repeatMenuLi.append(repeatMenuLink);
-                        
-                        const repeatMenuUl = $("<ul/>");
-
-                        $.each(_menuObj.subMenu, (idx, subMenuObj) => {
-                            const subLiEle = this.createMenuElement(subMenuObj);
-                            repeatMenuUl.append(subLiEle);
-                        });
-
-                        repeatMenuLi.append(repeatMenuUl);
-                        ulEle.append(repeatMenuLi);
-                    }
-                    else {
-
-                        megaMenuLi.append(innerUl);
-                        ulEle.append(megaMenuLi);
-                    }
-                } 
-                else if (_menuObj.menuStyle === "sub-menu-style") {
-
-                    ulEle.addClass("sub-menu-style");
-
-                    $.each(_menuObj.subMenu, (idx, subMenuObj) => {
-
-                        const subMenuEle = this.createMenuElement(subMenuObj);
-                        ulEle.append(subMenuEle);
-                    });
-                } 
-                else {
-
-                    // 기본 하위 메뉴 구조
-                    $.each(_menuObj.subMenu, (idx, subMenuObj) => {
-
-                        const subLiEle = this.createMenuElement(subMenuObj);
-                        ulEle.append(subLiEle);
-                    });
-                }
-
-                // 메뉴배경 이미지 삽입
-                if(typeof _menuObj.bgImage !== "undefined"){
-
-                    const bgImageWrapLi = $("<li/>");
-                    const bgImageALi = $("<a/>", {"href" : _menuObj.bgImage.link});
-                    const bgImageLi = $("<img/>", {"src" : _menuObj.bgImage.imgUrl}).css({
-                        "width" : "200px"
-                    });
-
-                    bgImageALi.append(bgImageLi);
-                    bgImageWrapLi.append(bgImageALi);
-
-                    ulEle.append(bgImageWrapLi);
-                }
-                liEle.append(ulEle);
-            }
-
-            return liEle;
-        },
-    };
-    
-    // ============================================================== //
+    const topMenu = [[${user?.menusTop}]]
 
     // 새로운 메가메뉴 object
     var megaMenuObj = {
 
-        menuDataUrl: "/assets/data/menu_data.json",
-
-        getMenuData: async function () {
-
-            let response = await fetch(this.menuDataUrl);
-
-            if (!response.ok) {
-
-                throw new Error("Failed to fetch menu data");
-            }
-            return await response.json();
-        },
-
         createMenu: async function (targetEle) {
-
-            try {
-
-                let menuDataObj = await this.getMenuData();
-                const commonMegaMenu = this.createCommonMegaMenu(menuDataObj); // 공통 메가 메뉴 생성
-
-                $.each(menuDataObj, (idx, val) => {
-
-                    const topMenuEle = $("<li/>").append($("<a/>").text(val.name));
-                    topMenuEle.append(commonMegaMenu.clone()); // 공통 메가 메뉴를 복제하여 삽입
-                    targetEle.append(topMenuEle);
-                    targetEle.addClass("megamenu-title-wrap");
-
-                    // active 표시
-                    topMenuEle.find("ul.mega-menu-style.mega-menu-mrg-1 > li > a").eq(idx).css("color", "#e97730");
-                });
-                $("header.header-area").css("position", "relative");
-            } 
-            catch (error) {
-
-                console.error("Error fetching menu data:", error);
-            }
+            const commonMegaMenu = this.createCommonMegaMenu(); // 공통 메가 메뉴 생성
+            $.each(topMenu, (idx, val) => {
+                const topMenuEle = $("<li/>").append($("<a/>").text(val.menuNm));
+                topMenuEle.append(commonMegaMenu.clone()); // 공통 메가 메뉴를 복제하여 삽입
+                targetEle.append(topMenuEle);
+                targetEle.addClass("megamenu-title-wrap");
+                // active 표시
+                topMenuEle.find("ul.mega-menu-style.mega-menu-mrg-1 > li > a").eq(idx).css("color", "#e97730");
+            });
+            $("header.header-area").css("position", "relative");
         },
 
-        createCommonMegaMenu: function (menuDataObj) {
-
+        createCommonMegaMenu: function () {
             const ulEle = $("<ul/>").addClass("mega-menu-style mega-menu-mrg-1");
-
-            $.each(menuDataObj, (idx, val) => {
-
-                if (val.subMenu && Array.isArray(val.subMenu)) {
-
+            $.each(topMenu, (idx, val) => {
+                if (val.children && Array.isArray(val.children)) {
                     const categoryLi = $("<li/>");
                     const categoryTitle = $("<a/>", {"class": "dropdown-title megamenu-top-title"})
-                        .text(val.name)
+                        .text(val.menuNm)
                         .css({
                             "font-size": "16px",
                             "font-weight": "600",
                             "margin-bottom": "30px"
                         });
-                    
+
                     categoryLi.append(categoryTitle);
+                    const childrenUl = $("<ul/>");
 
-                    const subMenuUl = $("<ul/>");
-
-                    $.each(val.subMenu, (subIdx, subMenuObj) => {
-
-                        const subMenuEle = this.createMenuElement(subMenuObj);
-                        subMenuUl.append(subMenuEle);
+                    $.each(val.children, (subIdx, childrenObj) => {
+                        const childrenEle = this.createMenuElement(childrenObj);
+                        childrenUl.append(childrenEle);
                     });
-
-                    categoryLi.append(subMenuUl);
+                    categoryLi.append(childrenUl);
                     ulEle.append(categoryLi);
                 }
             });
-
             return ulEle;
         },
 
         createMenuElement: function (_menuObj) {
 
             const liEle = $("<li/>");
-            const aEle = $("<a/>").text(_menuObj.name);
 
-            if (_menuObj.link) {
+            // 메뉴항목 개행 처리
+            if(_menuObj.menuNm.indexOf("|") > -1){
+                _menuObj.menuNm = _menuObj.menuNm.replace(/\|/g, "<br/>");
+            }
 
-                aEle.attr("href", _menuObj.link)
-                    .addClass("menu-a-link")
+            const aEle = $("<a/>").html(_menuObj.menuNm);
+
+            if (_menuObj.url) {
+                aEle.attr("href", _menuObj.url)
+                    .addClass("menu-a-url")
                     .attr("data-uid", _menuObj.uid);
-            } 
+            }
             // 메인 타이틀
-            else if (_menuObj.menuStyle === "dropdown-title") {
-
+            else if (_menuObj.menuIcon === "dropdown-title") {
                 aEle.addClass("dropdown-title");
+                liEle.addClass("dropdown-title");
             }
             // 서브 타이틀
-            else if (_menuObj.menuStyle === "sub-dropdown-title") {
-
+            else if (_menuObj.menuIcon === "sub-dropdown-title") {
                 aEle.addClass("sub-dropdown-title");
                 aEle.css({
                     "font-size": "14px",
                     "font-weight": "600",
                     "margin-bottom": "20px"
                 });
+                liEle.addClass("sub-dropdown-title");
             }
-
             liEle.append(aEle);
 
-            if (_menuObj.subMenu && Array.isArray(_menuObj.subMenu)) {
-
+            if (_menuObj.children && Array.isArray(_menuObj.children)) {
                 const ulEle = $("<ul/>");
-
-                $.each(_menuObj.subMenu, (idx, subMenuObj) => {
-
-                    const subLiEle = this.createMenuElement(subMenuObj);
+                $.each(_menuObj.children, (idx, childrenObj) => {
+                    const subLiEle = this.createMenuElement(childrenObj);
                     ulEle.append(subLiEle);
                 });
-                
                 liEle.append(ulEle);
-
-                // 메뉴배경 이미지 삽입
-                if(typeof _menuObj.bgImage !== "undefined"){
-
-                    const bgImageWrapLi = $("<li/>");
-                    const bgImageALi = $("<a/>", {"href" : _menuObj.bgImage.link});
-                    const bgImageLi = $("<img/>", {"src" : _menuObj.bgImage.imgUrl}).css({
-                        "width" : "200px"
-                    });
-
-                    bgImageALi.append(bgImageLi);
-                    bgImageWrapLi.append(bgImageALi);
-
-                    ulEle.append(bgImageWrapLi);
-                }
             }
-
             return liEle;
         },
     };
 
     $(function () {
-
         let mainMenuWrap = $(".main-menu nav ul");
         megaMenuObj.createMenu(mainMenuWrap);
-        // currentMenuObj.createMenu(mainMenuWrap);
     });
 
     const logout = () => {

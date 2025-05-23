@@ -16,20 +16,24 @@ public class CetusMenu implements Serializable {
     private final String url;
     private final int sortNo;
     private final String menuIcon;
+    private final String menuStyle1;
+    private final String menuStyle2;
     private final List<CetusMenu> children = new ArrayList<>();
 
-    public CetusMenu(MenuList menu) {
+    public CetusMenu(CetusMenuInfo menuInfo) {
 
-        this.menuNo = menu.getMenuNo();
-        this.menuNm = menu.getMenuNm();
-        this.menuIcon = menu.getMenuIcon();
-        if (menu.getUrl() != null) {
-            this.url = menu.getUrl().equals("/") ? "#" : menu.getUrl();
+        this.menuNo = menuInfo.getMenuNo();
+        this.menuNm = menuInfo.getMenuNm();
+        this.menuIcon = menuInfo.getMenuIcon();
+        this.menuStyle1 = menuInfo.getMenuStyle1();
+        this.menuStyle2 = menuInfo.getMenuStyle2();
+        if (menuInfo.getUrl() != null) {
+            this.url = menuInfo.getUrl().equals("/") ? "#" : menuInfo.getUrl();
         } else {
             this.url = "#";
         }
 
-        this.sortNo = menu.getSortNo();
+        this.sortNo = menuInfo.getSortNo();
     }
 
     public boolean hasChild() {

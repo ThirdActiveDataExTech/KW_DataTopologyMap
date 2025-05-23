@@ -44,7 +44,7 @@
                     <button class="menu-btn custom-button active" data-target="#ckeditor">ckeditor</button>
                     <button class="menu-btn custom-button" data-target="#thumbnail">썸네일 첨부파일</button>
                     <button class="menu-btn custom-button" data-target="#file-upload">일반 첨부파일</button>
-                    <button class="menu-btn custom-button" data-target="#select2-tree">select2, tree</button>
+                    <button class="menu-btn custom-button" data-target="#select2-tree">select2</button>
                     <button class="menu-btn custom-button" data-target="#popup">popup</button>
                   </div>
                 </div>
@@ -165,36 +165,12 @@
                     </div>
                   </div>
 
-                  <!-- [4] select2-tree 탭 -->
+                  <!-- [4] select2 탭 -->
                   <div class="tab-pane fade" id="select2-tree" role="tabpanel">
                     <div class="row info-row" style="margin-bottom: 25px;" data-aos="fade-up" data-aos-delay="200">
                       <div class="myaccount-content">
-                        <h3>select2-tree</h3>
+                        <h3>select2</h3>
                         <div>
-
-                          <div class="row">
-                            <div class="col-12 col-md-6">
-                              <div class="card">
-                                <div class="pb-3 border-bottom" style="padding: 30px;">
-                                  <span>체크박스 트리</span>
-                                </div>
-                                <div class="card-body">
-                                  <div class="mt-2" id="menu-tree1"></div>
-                                </div>
-                              </div>
-                            </div>
-
-                            <div class="col-12 col-md-6">
-                              <div class="card">
-                                <div class="pb-3 border-bottom" style="padding: 30px;">
-                                  <span>우클릭 insert 트리</span>
-                                </div>
-                                <div class="card-body">
-                                  <div class="mt-2" id="menu-tree2"></div>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
 
                           <div class="row info-row" style="margin-top: 20px;">
                             <div class="col-lg-6">
@@ -288,11 +264,6 @@
     /* ==== file uploader === */
     let fileUploader = new Upload("#upload-container3")
 
-
-    /* ==== tree === */
-    let testTree1 = new Tree("menu-tree1", false)
-    let testTree2 = new Tree("menu-tree2", true, false)
-
     $(function () {
 
       $('.menu-btn').on('click', function () {
@@ -382,27 +353,11 @@
       });
 
 
-      /* ================== select2, tree ================== */
-      // tree 초기화
-      testTree1.drawTree("/cetus/api/menu/tree", {})
-      testTree2.drawTree("/cetus/api/menu/tree", {})
-      // tree add event
-      testTree2.customAddFunction("기타 추가", (data) => {
-        const inst = $.jstree.reference(data.reference);
-        const obj = inst.get_node(data.reference);
-        console.log("sortNo > ", obj.children.length + 1);
-        console.log("id - upperNo > ", obj.id);
-      });
-
+      /* ================== select2 ================== */
       $("#save-btn4").on("click", function () {
-        const jsTreeSelected1 = testTree1.getSelectedData()
-        const jsTreeSelected2 = testTree2.getSelectedData()
         const userTeamSelected = $('#userTeam').val();
         const userDepthSelected = $('#userDepth').val();
-
-        console.log("### select2, tree ###");
-        console.log("tree select1 > ", jsTreeSelected1);
-        console.log("tree select2 > ", jsTreeSelected2);
+        console.log("### select2 ###");
         console.log("select2 #1 > ", userTeamSelected);
         console.log("select2 #2 > ", userDepthSelected);
       });

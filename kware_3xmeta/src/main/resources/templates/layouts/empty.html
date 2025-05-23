@@ -24,8 +24,8 @@
   <!-- E: main image -->
 
   <th:block layout:fragment="content"></th:block>
-  <th:block th:replace="fragments/footer :: footer"></th:block>
-  <th:block th:replace="fragments/sidebar-menu :: sidebar-menu"></th:block>
+  <th:block th:replace="fragments/footer :: footer(show = 'N')"></th:block>
+  <th:block th:replace="fragments/sidebar-menu :: sidebar-menu(show = 'N')"></th:block>
   <th:block th:replace="fragments/script :: script"></th:block>
   <th:block layout:fragment="script"></th:block>
 </div>

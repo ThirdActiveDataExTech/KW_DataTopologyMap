@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/default}">
+
+<th:block layout:fragment="center-image">
+  <th:block th:with="title1='프로그램 관리', title2='시스템 관리 > 프로그램 관리', leftImg='', rightImg=''">
+    <th:block th:replace="fragments/center-image :: main-image-title-no-header(${title1}, ${title2}, ${leftImg}, ${rightImg})"></th:block>
+  </th:block>
+</th:block>
+
+<th:block layout:fragment="head">
+  <style>
+    .dataTable tr.odd:hover,
+    .dataTable tr.even:hover {
+      cursor: pointer; /* 선택적으로 커서도 포인터로 */
+    }
+  </style>
+</th:block>
+
+<th:block layout:fragment="content">
+  <div class="related-product-area pb-100 pt-100"  data-aos="fade-up" data-aos-delay="200">
+    <div class="container">
+      <div class="section-title-2 st-border-center text-center mb-35">
+        <h2>프로그램 관리</h2>
+      </div>
+      <hr>
+      <!-- s:list -->
+      <div>
+        <div style="display: flex; justify-content: right; margin-right: 15px; margin-bottom: 15px;">
+          <button type="button" class="custom-button" id="new-btn">프로그램 추가</button>
+        </div>
+        <div class="">
+          <div class="table-responsive text-nowrap">
+            <table class="table table-bordered" id="program-table">
+              <thead>
+                <tr>
+                  <th>번호</th>
+                  <th>프로그램명</th>
+                  <th>URL</th>
+                  <th>사용여부</th>
+                  <th>등록일</th>
+                  <th>등록자</th>
+                </tr>
+              </thead>
+            </table>
+          </div>
+        </div>
+      </div>
+      <!-- e:list -->
+
+    </div>
+  </div>
+</th:block>
+
+<th:block layout:fragment="script">
+  <script th:src="@{'/assets/js/page/manager/program/program-list-form.js'}"></script>
+  <script th:inline="javascript">
+
+    $(function () {
+
+      programJS.initTable();
+
+      $("#new-btn").on('click', function () {
+        window.location.href = '/manager/cetus/program/save'
+      });
+
+    });
+
+  </script>
+</th:block>
+</html>

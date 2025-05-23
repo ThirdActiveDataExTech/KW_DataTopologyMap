@@ -6,7 +6,7 @@
 <th:block layout:fragment="center-image">
     <th:block th:with="title1='폼 관리', title2='시스템 관리 > 폼 관리', leftImg='', rightImg=''">
         <th:block
-                th:replace="fragments/center-image :: main-image-title(${title1}, ${title2}, ${leftImg}, ${rightImg})"></th:block>
+                th:replace="fragments/center-image :: main-image-title-no-header(${title1}, ${title2}, ${leftImg}, ${rightImg})"></th:block>
     </th:block>
 </th:block>
 
@@ -75,13 +75,12 @@
                                 <table class="table table-bordered" th:id="${group.name().toLowerCase() + '-table'}">
                                     <thead class="table-light">
                                     <tr>
-                                        <th>번호</th>
                                         <th></th>
+                                        <th>순서</th>
                                         <th>빌더 타입</th>
                                         <th>라벨</th>
                                         <th>필드명</th>
                                         <th>필수 여부</th>
-                                        <th>순서</th>
                                         <th>등록일</th>
                                         <th>등록자</th>
                                     </tr>

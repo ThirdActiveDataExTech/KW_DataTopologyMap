@@ -9,7 +9,6 @@ import java.util.stream.Collectors;
 @Getter
 public enum UserAuthorCd {
 
-    SUPER("슈퍼 권한"),
     SYSTEM("시스템 권한"),
     MANAGER("운영자 권한"),
     USER("유저 권한");
@@ -28,6 +27,6 @@ public enum UserAuthorCd {
 
     public static boolean isValidCode(String code) {
         return Arrays.stream(UserAuthorCd.values())
-                .anyMatch(status -> status.name().equals(code));
+                .anyMatch(e -> e.name().equals(code));
     }
 }

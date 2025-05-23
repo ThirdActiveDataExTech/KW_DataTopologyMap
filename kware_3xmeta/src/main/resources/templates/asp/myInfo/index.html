@@ -63,40 +63,36 @@
                               </div>
                             </div>
 
-                            <div class="row" style="margin-bottom: 20px;">
+                            <div class="row custom-row">
 
                               <div class="col-lg-6">
-                                <div style="margin-bottom: 20px;">
-                                  <label for="password" class="custom-label">비밀번호</label>
-                                  <div class="input-group">
-                                    <input type="password" id="password" name="password" class="form-control custom-input" placeholder="영문 + 숫자 + 특수문자 조합 8자 이상" required="" disabled readonly>
-                                    <button class="custom-button" id="password-change" type="button">비밀번호 변경</button>
-                                    <div class="invalid-feedback">영문 + 숫자 + 특수문자 조합 8자 이상</div>
-                                  </div>
-                                  <span class="validation-error-message" id="password-error"></span>
+                                <label for="password" class="custom-label">비밀번호</label>
+                                <div class="input-group">
+                                  <input type="password" id="password" name="password" class="form-control custom-input" placeholder="영문 + 숫자 + 특수문자 조합 8자 이상" disabled readonly>
+                                  <button class="custom-button" id="password-change" type="button">비밀번호 변경</button>
                                 </div>
+                                <span class="validation-error-message" id="password-error"></span>
                               </div>
 
                               <div class="col-lg-6">
                                 <div class="single-input-item">
                                   <label for="confirmPassword" class="custom-label">비밀번호 확인</label>
-                                  <input class="form-control custom-input" type="password" id="confirmPassword" placeholder="영문 + 숫자 + 특수문자 조합 8자 이상" required="">
+                                  <input class="form-control custom-input" type="password" id="confirmPassword" placeholder="영문 + 숫자 + 특수문자 조합 8자 이상" required="" disabled readonly>
                                   <div class="invalid-feedback">새 패스워드가 일치하지 않습니다.</div>
                                 </div>
                               </div>
                             </div>
 
                             <div class="row custom-row" >
+
                               <div class="col-lg-6">
-                                <div style="margin-bottom: 20px;">
-                                  <label for="userEmail" class="custom-label">이메일<span class="req">*</span></label>
-                                  <div class="input-group">
-                                    <input type="hidden" id="userEmail-origin" th:value="${view?.userEmail}" />
-                                    <input type="email" id="userEmail" name="userEmail" class="form-control custom-input" required="" th:value="${view?.userEmail}" readonly disabled>
-                                    <button class="custom-button" id="userEmail-change" type="button">이메일 변경</button>
-                                  </div>
-                                  <span class="validation-error-message" id="userEmail-error"></span>
+                                <label for="userEmail" class="custom-label">이메일<span class="req">*</span></label>
+                                <input type="hidden" id="userEmail-origin" th:value="${view?.userEmail}" />
+                                <div class="input-group">
+                                  <input type="email" id="userEmail" name="userEmail" class="form-control custom-input" required="" th:value="${view?.userEmail}" readonly disabled>
+                                  <button class="custom-button" id="userEmail-change" type="button">이메일 변경</button>
                                 </div>
+                                <span class="validation-error-message" id="userEmail-error"></span>
                               </div>
                             </div>
 

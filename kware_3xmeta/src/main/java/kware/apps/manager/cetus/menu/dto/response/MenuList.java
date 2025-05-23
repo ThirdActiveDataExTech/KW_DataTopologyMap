@@ -24,6 +24,11 @@ public class MenuList {
     private Long updtUid;
     private String updtDt;
     private String updtNm;
+    private String authorCd;
+    private String menuStyle1;
+    private String menuStyle2;
+    private String rootMenuCd;
+    private Long workplaceUid;
     private String url;
     private Integer depth;
     private String menuPath;
