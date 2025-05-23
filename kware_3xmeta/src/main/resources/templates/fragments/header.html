@@ -75,6 +75,7 @@
     <script th:inline="javascript">
 
     const topMenu = [[${user?.menusTop}]]
+    const parentMenuUrl = [[${parentMenuUrl}]] ? [[${parentMenuUrl}]] : ""
 
     // 새로운 메가메뉴 object
     var megaMenuObj = {
@@ -134,6 +135,9 @@
                 aEle.attr("href", _menuObj.url)
                     .addClass("menu-a-url")
                     .attr("data-uid", _menuObj.uid);
+                if (_menuObj.url === parentMenuUrl) {
+                    aEle.addClass("active");
+                }
             }
             // 메인 타이틀
             else if (_menuObj.menuIcon === "dropdown-title") {

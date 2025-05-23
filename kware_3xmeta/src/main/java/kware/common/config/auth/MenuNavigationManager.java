@@ -36,6 +36,7 @@ public class MenuNavigationManager {
         String centerRightImage = "/assets/images/page/right_slide.png";//parentMenu != null ? parentMenu.getMenuStyle2() : "";
 
         // 4. 뷰에 전달
+        model.addAttribute("parentMenuUrl", parentMenuUrl);
         model.addAttribute("currentPageName", currentPageName);
         model.addAttribute("navigation", String.join(" > ", navPath));
         model.addAttribute("centerLeftImage", centerLeftImage);
