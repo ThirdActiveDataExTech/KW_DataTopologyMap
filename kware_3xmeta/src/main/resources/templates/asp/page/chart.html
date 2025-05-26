@@ -16,6 +16,11 @@
         .filter-bar {
             margin-bottom: 10px;
         }
+        #mindmap-chart {
+            width: 100%;
+            height: 600px;
+            overflow: auto;
+        }
     </style>
 </th:block>
 
@@ -26,13 +31,10 @@
                 <div class="col-lg-12">
                     <div class="text-end mb-2">
                         <div class="filter-bar">
-<!--                            <label><input type="checkbox" value="person" checked onchange="updateFilter()"> 출연진</label>-->
-<!--                            <label><input type="checkbox" value="content" checked onchange="updateFilter()"> 작품</label>-->
+
                         </div>
-                        <button id="back-btn" style="display: none;" class="btn btn-sm btn-outline-secondary me-1">이전 노드</button>
-                        <button id="reset-btn" style="display: none;" class="btn btn-sm btn-outline-secondary">처음으로</button>
                     </div>
-                    <div id="mindmap-chart" style="width: 100%; height: 600px;"></div>
+                    <div id="mindmap-chart"></div>
                 </div>
             </div>
         </div>
@@ -42,7 +44,7 @@
 <th:block layout:fragment="script">
     <script th:src="@{'/assets/js/page/chart-data.js'}"></script>
     <script th:inline="javascript">
-        chartData.init("mindmap-chart", "reset-btn", "back-btn");
+        chartData.init();
     </script>
 
 </th:block>
