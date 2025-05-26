@@ -28,6 +28,8 @@ public class UserSave {
 
     private String status;
 
+    private String metaData;
+
 //    private Long userDept;
 //    private Long userGroup;
 //    private Long userPosition;

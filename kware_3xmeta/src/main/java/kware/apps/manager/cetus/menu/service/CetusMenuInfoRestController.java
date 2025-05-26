@@ -1,10 +1,7 @@
 package kware.apps.manager.cetus.menu.service;
 
-import kware.apps.manager.cetus.enumstatus.UserAuthorCd;
-import kware.apps.manager.cetus.menu.domain.CetusMenu;
 import kware.apps.manager.cetus.menu.dto.request.MenuChange;
 import kware.apps.manager.cetus.menu.dto.request.MenuSave;
-import kware.apps.manager.cetus.menu.dto.request.MenuSessionTreeListSearch;
 import kware.apps.manager.cetus.menu.dto.request.MenuTreeSearch;
 import kware.apps.manager.cetus.menu.dto.response.MenuTreeList;
 import lombok.RequiredArgsConstructor;
@@ -12,7 +9,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController

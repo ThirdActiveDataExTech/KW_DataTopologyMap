@@ -13,9 +13,6 @@ public class BbsChange {
     @NotBlank @DisplayName("게시판 이름")
     private String bbsNm;
 
-    @NotBlank @DisplayName("게시판 유형")
-    private String bbsTpCd;
-
     @NotBlank @DisplayName("사용 여부")
     private String useAt;
 }

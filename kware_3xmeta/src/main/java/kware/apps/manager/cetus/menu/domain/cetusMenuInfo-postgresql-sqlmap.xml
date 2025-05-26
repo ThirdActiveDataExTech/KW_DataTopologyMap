@@ -5,8 +5,8 @@
 
 <mapper namespace="cetusMenuInfo">
 
-	<select id="list" resultType="CetusMenuInfo" parameterType="MenuSessionTreeListSearch">
-		/* cetusMenuInfo.list */
+	<select id="findSessionMenuList" resultType="SessionMenuList" parameterType="SessionMenuListSearch">
+		/* cetusMenuInfo.findSessionMenuList */
 		WITH RECURSIVE MENU_LIST(MENU_NO
 							   , PROGRAM_UID
 							   , UPPER_MENU_NO
@@ -15,11 +15,13 @@
 							   , SORT_NO
 							   , MENU_DC
 							   , USE_AT
+		    				   , DELETE_AT
 							   , REG_UID
 							   , REG_DT
 							   , UPDT_UID
 							   , UPDT_DT
 		    				   , AUTHOR_CD
+		    				   , MENU_STYLE
 		    				   , MENU_STYLE1
 		    	 			   , MENU_STYLE2
 		    			  	   , ROOT_MENU_CD
@@ -37,11 +39,13 @@
             		 , A.SORT_NO
             		 , A.MENU_DC
             		 , A.USE_AT
+			         , A.DELETE_AT
             		 , A.REG_UID
             		 , A.REG_DT
             		 , A.UPDT_UID
             		 , A.UPDT_DT
 			         , A.AUTHOR_CD
+			         , A.MENU_STYLE
 			         , A.MENU_STYLE1
 			         , A.MENU_STYLE2
 			         , A.ROOT_MENU_CD
@@ -75,11 +79,13 @@
             		 , A.SORT_NO
             		 , A.MENU_DC
             		 , A.USE_AT
+				     , A.DELETE_AT
             		 , A.REG_UID
             		 , A.REG_DT
             		 , A.UPDT_UID
             		 , A.UPDT_DT
 				     , A.AUTHOR_CD
+				     , A.MENU_STYLE
 				     , A.MENU_STYLE1
 				     , A.MENU_STYLE2
 				     , A.ROOT_MENU_CD
@@ -111,6 +117,7 @@
              		 , A.SORT_NO
              		 , A.MENU_DC
              		 , A.USE_AT
+				     , A.DELETE_AT
              		 , A.REG_UID
              		 , TO_CHAR(A.REG_DT, 'YYYY-MM-DD HH24:MI:SS') AS REG_DT
 					 , CU_REG.USER_NM AS REG_NM
@@ -118,6 +125,7 @@
              		 , TO_CHAR(A.UPDT_DT, 'YYYY-MM-DD HH24:MI:SS') AS UPDT_DT
 					 , CU_UPDT.USER_NM AS UPDT_NM
 				     , A.AUTHOR_CD
+				     , A.MENU_STYLE
 				     , A.MENU_STYLE1
 				     , A.MENU_STYLE2
 				     , A.ROOT_MENU_CD
@@ -127,7 +135,8 @@
 			 		 , REPLACE(REPLACE(array_to_string(PATH_NM, ','), ',', '<![CDATA[<]]>'), 'root <![CDATA[<]]>', '') AS MENU_PATH
 			 		 , CASE WHEN EXISTS(SELECT 1 
 			 		 					  FROM CETUS_MENU_INFO
-					 					 WHERE UPPER_MENU_NO = A.MENU_NO) THEN 'N' ELSE 'Y'
+					 					 WHERE UPPER_MENU_NO = A.MENU_NO
+										   AND DELETE_AT = 'N') THEN 'N' ELSE 'Y'
 					 		 END AS IS_LEAF
 		  		 FROM MENU_LIST A
 		  		 LEFT JOIN CETUS_USER CU_REG ON CU_REG.UID = A.REG_UID
@@ -151,6 +160,7 @@
 							   , UPDT_UID
 							   , UPDT_DT
 		    				   , AUTHOR_CD
+		    				   , MENU_STYLE
 		    				   , MENU_STYLE1
 		    				   , MENU_STYLE2
 		    				   , ROOT_MENU_CD
@@ -173,6 +183,7 @@
             		 , A.UPDT_UID
             		 , A.UPDT_DT
 			         , A.AUTHOR_CD
+			         , A.MENU_STYLE
 			         , A.MENU_STYLE1
 			         , A.MENU_STYLE2
 			         , A.ROOT_MENU_CD
@@ -203,6 +214,7 @@
             		 , A.UPDT_UID
             		 , A.UPDT_DT
 				     , A.AUTHOR_CD
+				     , A.MENU_STYLE
 				     , A.MENU_STYLE1
 				     , A.MENU_STYLE2
 				     , A.ROOT_MENU_CD
@@ -236,6 +248,7 @@
              		 , TO_CHAR(A.UPDT_DT, 'YYYY-MM-DD HH24:MI:SS') AS UPDT_DT
 					 , CU_UPDT.USER_NM AS UPDT_NM
 				     , A.AUTHOR_CD
+				     , A.MENU_STYLE
 				     , A.MENU_STYLE1
 				     , A.MENU_STYLE2
 				     , A.ROOT_MENU_CD
@@ -248,7 +261,8 @@
 			 		 , REPLACE(REPLACE(array_to_string(PATH_NM, ','), ',', '<![CDATA[<]]>'), 'root <![CDATA[<]]>', '') AS MENU_PATH
 			 		 , CASE WHEN EXISTS(SELECT 1
 			 		 					  FROM CETUS_MENU_INFO
-					 					 WHERE UPPER_MENU_NO = A.MENU_NO) THEN 'N' ELSE 'Y'
+					 					 WHERE UPPER_MENU_NO = A.MENU_NO
+										   AND DELETE_AT = 'N') THEN 'N' ELSE 'Y'
 					 		 END AS IS_LEAF
 		  		 FROM MENU_LIST A
 		  		 LEFT JOIN CETUS_USER CU_REG ON CU_REG.UID = A.REG_UID
@@ -257,7 +271,7 @@
 	</select>
 
 
-	<select id="getRootMenuNo" parameterType="cetusMenuInfo" resultType="Long">
+	<select id="getRootMenuNo" parameterType="MenuRootSearch" resultType="Long">
 		/* cetusMenuInfo.getRootMenuNo */
 		SELECT CMI.MENU_NO
 		  FROM CETUS_MENU_INFO CMI
@@ -290,6 +304,9 @@
 		<if test="@Ognl@isNotEmpty(menuDc)">
 			,MENU_DC
 		</if>
+		<if test="@Ognl@isNotEmpty(menuStyle)">
+			,MENU_STYLE
+		</if>
 		<if test="@Ognl@isNotEmpty(menuStyle1)">
 			,MENU_STYLE1
 		</if>
@@ -320,6 +337,9 @@
 		<if test="@Ognl@isNotEmpty(menuDc)">
 			,#{menuDc}
 		</if>
+		<if test="@Ognl@isNotEmpty(menuStyle)">
+			,#{menuStyle}
+		</if>
 		<if test="@Ognl@isNotEmpty(menuStyle1)">
 			,#{menuStyle1}
 		</if>
@@ -343,6 +363,7 @@
 			  ,MENU_DC
 			  ,USE_AT
 			  ,AUTHOR_CD
+			  ,MENU_STYLE
 			  ,MENU_STYLE1
 			  ,MENU_STYLE2
 			  ,ROOT_MENU_CD
@@ -360,6 +381,7 @@
 			  ,SORT_NO = #{sortNo}
 			  ,MENU_DC = #{menuDc}
 			  ,USE_AT = #{useAt}
+			  ,MENU_STYLE = #{menuStyle}
 			  ,MENU_STYLE1 = #{menuStyle1}
 			  ,MENU_STYLE2 = #{menuStyle2}
 		 WHERE MENU_NO = #{menuNo}

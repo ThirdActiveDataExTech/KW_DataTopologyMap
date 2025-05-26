@@ -16,6 +16,7 @@
       cursor: pointer; /* 선택적으로 커서도 포인터로 */
     }
   </style>
+  <link rel="stylesheet" th:href="@{'/assets/css/page/manager/user-list.css'}"/>
 </th:block>
 
 <th:block layout:fragment="content">
@@ -25,11 +26,43 @@
         <h2>프로그램 관리</h2>
       </div>
       <hr>
-      <!-- s:list -->
+
       <div>
-        <div style="display: flex; justify-content: right; margin-right: 15px; margin-bottom: 15px;">
-          <button type="button" class="custom-button" id="new-btn">프로그램 추가</button>
-        </div>
+        <!-- s:search -->
+        <form id="search-form-id">
+          <div class="topbar-container">
+            <div class="topbar-left">
+              <span id="total-num"></span>
+              <div class="btn-wrapper">
+                <div class="col-12 col-xl-4 mb-1 mb-lg-0">
+                  <select class="form-select round select_line custom-input" id="useAt" name="useAt">
+                    <option value="">사용 전체</option>
+                    <option value="Y">사용</option>
+                    <option value="N">미사용</option>
+                  </select>
+                </div>
+                <div class="col-12 col-xl-7 mb-1 mb-lg-0">
+                  <div class="search_wrap">
+                    <input
+                        type="text"
+                        id="search_txt1"
+                        class="form-control round border_line custom-input"
+                        name="browseText"
+                        placeholder="프로그램명, URL, 등록자 검색"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="topbar-right">
+              <div class="btn-wrapper">
+                <button type="button" class="custom-button m-2" id="new-btn">프로그램 추가</button>
+              </div>
+            </div>
+          </div>
+        </form>
+        <!-- e:search -->
+        <!-- s:list -->
         <div class="">
           <div class="table-responsive text-nowrap">
             <table class="table table-bordered" id="program-table">
@@ -46,8 +79,8 @@
             </table>
           </div>
         </div>
+        <!-- e:list -->
       </div>
-      <!-- e:list -->
 
     </div>
   </div>
@@ -63,6 +96,18 @@
 
       $("#new-btn").on('click', function () {
         window.location.href = '/manager/cetus/program/save'
+      });
+
+      /* 검색 이벤트 */
+      $('#search_txt1').keypress(function (e) {
+        if (e.keyCode === 13 || e.keyCode === 10 || e.key === 'Enter') {
+          e.preventDefault();
+          programJS.searchTable();
+        }
+      });
+      /* 검색 이벤트 */
+      $('#useAt').on('change', function () {
+        programJS.searchTable();
       });
 
     });

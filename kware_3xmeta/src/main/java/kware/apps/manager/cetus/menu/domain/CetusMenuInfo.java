@@ -14,6 +14,7 @@ import org.springframework.util.StringUtils;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class CetusMenuInfo extends AuditBean {
+
 	@Key
 	private Long menuNo;
 	private Long programUid;
@@ -26,30 +27,11 @@ public class CetusMenuInfo extends AuditBean {
 	private String deleteAt;
 
 	private String authorCd;
+	private String menuStyle;
 	private String menuStyle1;
 	private String menuStyle2;
 	private String rootMenuCd;
 	private Long workplaceUid;
-
-	private String menuPath;
-	private String url;
-	private String isLeaf;
-
-	private Integer depth;
-
-	public String getUrl() {
-		return StringUtils.hasText(url) ? url : "";
-	}
-
-	public Integer getSortNoForTreeMenu() {
-		return sortNo != null ? sortNo : -1;
-	}
-
-	public CetusMenuInfo(String authorCd, String rootMenuCd, Long workplaceUid) {
-		this.authorCd = authorCd;
-		this.rootMenuCd = rootMenuCd;
-		this.workplaceUid = workplaceUid;
-	}
 
 	public CetusMenuInfo(MenuSave request, Long workplaceUid) {
 		this.upperMenuNo = request.getUpperMenuNo();
@@ -67,6 +49,7 @@ public class CetusMenuInfo extends AuditBean {
 		this.sortNo = (request.getSortNo() != null) ? request.getSortNo() : this.sortNo;
 		this.menuDc = (request.getMenuDc() != null) ? request.getMenuDc() : this.menuDc;
 		this.useAt = (request.getUseAt() != null) ? request.getUseAt() : this.useAt;
+		this.menuStyle = (request.getMenuStyle() != null) ? request.getMenuStyle() : this.menuStyle;
 		this.menuStyle1 = (request.getMenuStyle1() != null) ? request.getMenuStyle1() : this.menuStyle1;
 		this.menuStyle2 = (request.getMenuStyle2() != null) ? request.getMenuStyle2() : this.menuStyle2;
 		return this;

@@ -138,6 +138,8 @@
     <script th:src="@{'/assets/js/page/signup.js'}"></script>
     <script th:inline="javascript">
         const isInvited = [[${isInvited}]];
+        const fields = [[${fields}]]
+        const builder = new Formbuilder(fields, {});
         $(function () {
 
             $("#userId-chk").on('click', function() {

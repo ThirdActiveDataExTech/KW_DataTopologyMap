@@ -25,7 +25,6 @@ public class CetusBbs extends AuditBean {
     public CetusBbs changeBbs(Long uid, BbsChange request) {
         this.bbsUid = uid;
         this.bbsNm = (request.getBbsNm() != null) ? request.getBbsNm() : this.bbsNm;
-        this.bbsTpCd = (request.getBbsTpCd() != null) ? request.getBbsTpCd() : this.bbsTpCd;
         this.useAt = (request.getUseAt() != null) ? request.getUseAt() : this.useAt;
         return this;
     }

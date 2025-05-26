@@ -13,6 +13,7 @@ public class MenuChange {
     private Integer sortNo;
     private String menuDc;
     private String useAt;
+    private String menuStyle;
     private String menuStyle1;
     private String menuStyle2;
 

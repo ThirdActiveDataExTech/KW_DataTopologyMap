@@ -13,8 +13,10 @@ public class Paths {
             "/cetus/api/user/checkId.json",
             "/cetus/api/user",
             "/invite/validate",
-            "/asp/expired"
-            ,"/asp/signup"
+            "/asp/expired",
+            "/asp/signup",
+            "/api/tus/file/**",
+            "/cetus/files/**"
     };
 }
 

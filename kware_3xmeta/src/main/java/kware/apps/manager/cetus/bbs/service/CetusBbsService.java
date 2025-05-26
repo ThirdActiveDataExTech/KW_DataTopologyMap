@@ -11,6 +11,8 @@ import kware.apps.manager.cetus.bbs.dto.request.BbsSave;
 import kware.apps.manager.cetus.bbs.dto.request.BbsSearch;
 import kware.apps.manager.cetus.bbs.dto.response.BbsList;
 import kware.apps.manager.cetus.enumstatus.BbsTpCd;
+import kware.apps.manager.cetus.program.dto.request.ProgramSave;
+import kware.apps.manager.cetus.program.service.CetusProgrmInfoService;
 import kware.common.exception.SimpleException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -23,13 +25,20 @@ import java.util.List;
 public class CetusBbsService {
 
     private final CetusBbsDao dao;
+    private final CetusProgrmInfoService progrmInfoService;
 
     @Transactional
     public void saveBbs(BbsSave request) {
         if(!BbsTpCd.isValidCode(request.getBbsTpCd())) {
             throw new SimpleException("유효하지 않은 게시판 유형 코드입니다.");
         }
-        dao.insert(new CetusBbs(request));
+        CetusBbs bean = new CetusBbs(request);
+        dao.insert(bean);
+
+        Long bbsUid = bean.getBbsUid();
+        String progrmNm = bean.getBbsNm() + " 게시판";
+        String url = "/asp/cetus/bbsctt/" + bbsUid;
+        progrmInfoService.saveProgram(new ProgramSave(progrmNm, url, "Y"));
     }
 
     @Transactional(readOnly = true)
@@ -45,9 +54,6 @@ public class CetusBbsService {
 
     @Transactional
     public void changeBbs(Long uid, BbsChange request) {
-        if(!BbsTpCd.isValidCode(request.getBbsTpCd())) {
-            throw new SimpleException("유효하지 않은 게시판 유형 코드입니다.");
-        }
         CetusBbs view = dao.view(uid);
         dao.update(view.changeBbs(uid, request));
     }

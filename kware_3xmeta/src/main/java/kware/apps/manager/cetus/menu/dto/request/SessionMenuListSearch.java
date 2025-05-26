@@ -4,20 +4,20 @@ import lombok.Getter;
 
 
 @Getter
-public class MenuSessionTreeListSearch {
+public class SessionMenuListSearch {
 
     private String useAt;
     private String authorCd;
     private Long workplaceUid;
-    private Long menuNo;
+    private Long menuNo;        // 부모 root menu no
 
-    public MenuSessionTreeListSearch(String useAt, String authorCd, Long workplaceUid) {
+    public SessionMenuListSearch(String useAt, String authorCd, Long workplaceUid) {
         this.useAt = useAt;
         this.authorCd = authorCd;
         this.workplaceUid = workplaceUid;
     }
 
-    public MenuSessionTreeListSearch(String useAt, String authorCd, Long workplaceUid, Long menuNo) {
+    public SessionMenuListSearch(String useAt, String authorCd, Long workplaceUid, Long menuNo) {
         this.useAt = useAt;
         this.authorCd = authorCd;
         this.workplaceUid = workplaceUid;

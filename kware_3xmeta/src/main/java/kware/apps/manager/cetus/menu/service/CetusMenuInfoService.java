@@ -3,16 +3,11 @@ package kware.apps.manager.cetus.menu.service;
 import java.util.List;
 
 import cetus.user.UserUtil;
-import kware.apps.manager.cetus.enumstatus.MenuRootCd;
-import kware.apps.manager.cetus.enumstatus.UserAuthorCd;
-import kware.apps.manager.cetus.menu.domain.CetusMenu;
 import kware.apps.manager.cetus.menu.domain.CetusMenuInfo;
 import kware.apps.manager.cetus.menu.domain.CetusMenuInfoDao;
-import kware.apps.manager.cetus.menu.dto.request.MenuChange;
-import kware.apps.manager.cetus.menu.dto.request.MenuSave;
-import kware.apps.manager.cetus.menu.dto.request.MenuSessionTreeListSearch;
-import kware.apps.manager.cetus.menu.dto.request.MenuTreeSearch;
+import kware.apps.manager.cetus.menu.dto.request.*;
 import kware.apps.manager.cetus.menu.dto.response.MenuTreeList;
+import kware.apps.manager.cetus.menu.dto.response.SessionMenuList;
 import kware.common.config.auth.MenuManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -30,8 +25,8 @@ public class CetusMenuInfoService {
     * 로그인 시점 > 세션에 담기 위한 메뉴 조회
     * */
     @Transactional(readOnly = true)
-    public List<CetusMenuInfo> getSessionMenuList(MenuSessionTreeListSearch search) {
-        return dao.list(search);
+    public List<SessionMenuList> getSessionMenuList(SessionMenuListSearch search) {
+        return dao.findSessionMenuList(search);
     }
 
     @Transactional(readOnly = true)
@@ -42,8 +37,8 @@ public class CetusMenuInfoService {
 
     @Transactional(readOnly = true)
     public Long getRootMenuNo(String authorCd, String rootMenuCd, Long workplaceUid) {
-        CetusMenuInfo cetusMenuInfo = new CetusMenuInfo(authorCd, rootMenuCd, workplaceUid);
-        return dao.getRootMenuNo(cetusMenuInfo);
+        MenuRootSearch search = new MenuRootSearch(authorCd, rootMenuCd, workplaceUid);
+        return dao.getRootMenuNo(search);
     }
 
     @Transactional

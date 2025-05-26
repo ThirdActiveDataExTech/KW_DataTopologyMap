@@ -52,20 +52,40 @@ public class CetusUserService {
 
     @Transactional
     public void saveUser(UserSave request) {
+
+        // 0. metaData 묶기
+        String processedMetaData = this.processMetaData(request.getMetaData());
+
+        // 1. user
         String encodePassword = passwordEncoder.encode(request.getPassword());
-        CetusUser bean = new CetusUser(request, encodePassword);
+        CetusUser bean = new CetusUser(request, encodePassword, processedMetaData);
         dao.insert(bean);
+
+        // 2. workplace
         workplaceUserService.saveWorkplaceUser(1L, bean.getUid());
     }
 
     @Transactional
     public void saveUserAdmin(UserSaveAdmin request) {
+
+        // 0. metaData 묶기
+        String processedMetaData = this.processMetaData(request.getMetaData());
+
+        // 1. user
         String encodePassword = passwordEncoder.encode(request.getPassword());
-        CetusUser bean = new CetusUser(request, encodePassword);
+        CetusUser bean = new CetusUser(request, encodePassword, processedMetaData);
         dao.insert(bean);
+
+        // 2. workplace
         workplaceUserService.saveWorkplaceUser(1L, bean.getUid());
+
+        // 3. dept
         deptUserService.saveDeptUser(request.getUserDept(), bean.getUid());
+
+        // 4. group
         groupUserService.saveGroupUser(request.getUserGroup(), bean.getUid());
+
+        // 5. position
         positionUserService.savePositionUser(request.getUserPosition(), bean.getUid());
     }
 
@@ -125,7 +145,9 @@ public class CetusUserService {
                     List<CommonFile> fileDel = fileDelRaw.stream()
                             .map(m -> CommonFile.castMapToCommonFile(m))
                             .collect(Collectors.toList());
-                    fileUid = commonFileService.processFileSeparately(fileAdd, fileDel, UserUtil.getUser(), fileUid);
+
+                    fileUid = commonFileService.processFileSeparately(fileAdd, fileDel, fileUid);
+
                     map.put(key, fileUid);
                 } else {
                     map.put(key, value);

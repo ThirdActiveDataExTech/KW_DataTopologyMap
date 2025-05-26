@@ -21,4 +21,10 @@ public class ProgramSave {
     private String useAt;
 
     private String progrmDc;
+
+    public ProgramSave(String progrmNm, String url, String useAt) {
+        this.progrmNm = progrmNm;
+        this.url = url;
+        this.useAt = useAt;
+    }
 }

@@ -83,6 +83,7 @@
                                     <div class="form-check form-switch align-items-center"
                                          style="margin-bottom: 10px;">
                                         <input class="form-check-input swtich-chk" type="checkbox" role="switch"
+                                               style="width: 3em; height: 1.5em"
                                                id="useAt" name="useAt" th:checked="${view?.useAt == 'Y'}">
                                     </div>
                                     <span class="validation-error-message" id="useAt-error"></span>
@@ -162,6 +163,7 @@
                                                 <div class="form-check form-switch align-items-center d-flex justify-content-center">
                                                     <input class="form-check-input swtich-chk" type="checkbox"
                                                            role="switch" id="child-useAt" name="useAt"
+                                                           style="width: 3em; height: 1.5em"
                                                            th:checked="${child?.useAt == 'Y'}">
                                                 </div>
                                             </td>

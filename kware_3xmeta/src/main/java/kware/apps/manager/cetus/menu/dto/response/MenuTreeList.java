@@ -25,6 +25,7 @@ public class MenuTreeList {
     private String updtDt;
     private String updtNm;
     private String authorCd;
+    private String menuStyle;
     private String menuStyle1;
     private String menuStyle2;
     private String rootMenuCd;

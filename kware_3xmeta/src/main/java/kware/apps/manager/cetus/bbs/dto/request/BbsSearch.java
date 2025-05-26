@@ -6,10 +6,12 @@ import lombok.Getter;
 @Getter
 public class BbsSearch {
 
+    private String browseText;
     private String useAt;
     private Long workplaceUid;
 
-    public BbsSearch(String useAt, Long workplaceUid) {
+    public BbsSearch(String browseText, String useAt, Long workplaceUid) {
+        this.browseText = browseText;
         this.useAt = useAt;
         this.workplaceUid = workplaceUid;
     }

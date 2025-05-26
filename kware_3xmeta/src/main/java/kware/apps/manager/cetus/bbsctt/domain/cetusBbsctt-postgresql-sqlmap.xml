@@ -17,6 +17,10 @@
                   WHERE CF2.FILE_UID = CBBSCTT.FILE_UID::BIGINT
                     AND CF2.USE_AT = 'Y'
                     AND CF2.SAVED = 'Y' ) AS FILE_CNT
+              ,( SELECT COUNT(*)
+                   FROM CETUS_BBSCTT_ANSWER CBA
+                  WHERE CBA.BBSCTT_UID = CBBSCTT.BBSCTT_UID
+                    AND CBA.DELETE_AT = 'N' ) AS ANSWER_CNT
               ,CBBSCTT.USE_AT
               ,CBBSCTT.OPEN_AT
               ,CBBSCTT.DELETE_AT

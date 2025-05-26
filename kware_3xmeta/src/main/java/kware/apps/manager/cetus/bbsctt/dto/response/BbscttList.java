@@ -17,6 +17,7 @@ public class BbscttList {
     private String noticeAt;
     private Long fileUid;
     private int fileCnt;
+    private int answerCnt;
     private String useAt;
     private String openAt;
     private String deleteAt;

@@ -189,6 +189,9 @@
 <th:block layout:fragment="script">
     <script th:src="@{'/assets/js/page/manager/user/user-save.js'}"></script>
     <script th:inline="javascript">
+        const fields = [[${fields}]]
+        const builder = new Formbuilder(fields, {});
+
         $(function () {
 
             $("#userId-chk").on('click', function() {

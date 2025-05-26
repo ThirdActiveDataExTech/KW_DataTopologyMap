@@ -2,6 +2,7 @@ package kware.apps.manager.cetus.menu.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import kware.apps.manager.cetus.menu.dto.response.MenuList;
+import kware.apps.manager.cetus.menu.dto.response.SessionMenuList;
 import lombok.Getter;
 
 import java.io.Serializable;
@@ -16,15 +17,17 @@ public class CetusMenu implements Serializable {
     private final String url;
     private final int sortNo;
     private final String menuIcon;
+    private final String menuStyle;
     private final String menuStyle1;
     private final String menuStyle2;
     private final List<CetusMenu> children = new ArrayList<>();
 
-    public CetusMenu(CetusMenuInfo menuInfo) {
+    public CetusMenu(SessionMenuList menuInfo) {
 
         this.menuNo = menuInfo.getMenuNo();
         this.menuNm = menuInfo.getMenuNm();
         this.menuIcon = menuInfo.getMenuIcon();
+        this.menuStyle = menuInfo.getMenuStyle();
         this.menuStyle1 = menuInfo.getMenuStyle1();
         this.menuStyle2 = menuInfo.getMenuStyle2();
         if (menuInfo.getUrl() != null) {

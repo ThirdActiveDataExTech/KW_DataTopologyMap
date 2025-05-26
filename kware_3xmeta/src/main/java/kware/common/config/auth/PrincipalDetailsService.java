@@ -3,8 +3,8 @@ package kware.common.config.auth;
 
 import kware.apps.manager.cetus.enumstatus.MenuRootCd;
 import kware.apps.manager.cetus.menu.domain.CetusMenu;
-import kware.apps.manager.cetus.menu.domain.CetusMenuInfo;
-import kware.apps.manager.cetus.menu.dto.request.MenuSessionTreeListSearch;
+import kware.apps.manager.cetus.menu.dto.request.SessionMenuListSearch;
+import kware.apps.manager.cetus.menu.dto.response.SessionMenuList;
 import kware.apps.manager.cetus.menu.service.CetusMenuInfoService;
 import kware.apps.manager.cetus.user.dto.response.UserFullInfo;
 import kware.apps.manager.cetus.user.service.CetusUserService;
@@ -43,12 +43,12 @@ public class PrincipalDetailsService implements UserDetailsService {
         Long topMenuNo = cetusMenuInfoService.getRootMenuNo(role, MenuRootCd.TOP_ROOT.name(), workplaceUid);
         Long footerMenuNo = cetusMenuInfoService.getRootMenuNo(role, MenuRootCd.FOOTER_ROOT.name(), workplaceUid);
 
-        List<CetusMenuInfo> menuTopList = cetusMenuInfoService.getSessionMenuList(new MenuSessionTreeListSearch("Y", role, workplaceUid, topMenuNo));
-        List<CetusMenuInfo> menuFooterList = cetusMenuInfoService.getSessionMenuList(new MenuSessionTreeListSearch("Y", role, workplaceUid, footerMenuNo));
+        List<SessionMenuList> menuTopList = cetusMenuInfoService.getSessionMenuList(new SessionMenuListSearch("Y", role, workplaceUid, topMenuNo));
+        List<SessionMenuList> menuFooterList = cetusMenuInfoService.getSessionMenuList(new SessionMenuListSearch("Y", role, workplaceUid, footerMenuNo));
 
         List<String> urls = Stream.concat(
-                menuTopList.stream().map(CetusMenuInfo::getUrl),
-                menuFooterList.stream().map(CetusMenuInfo::getUrl)
+                menuTopList.stream().map(SessionMenuList::getUrl),
+                menuFooterList.stream().map(SessionMenuList::getUrl)
         ).collect(Collectors.toList());
 
         List<CetusMenu> topMenus = menuManager.parseInfoListToTreeList(menuTopList, topMenuNo);

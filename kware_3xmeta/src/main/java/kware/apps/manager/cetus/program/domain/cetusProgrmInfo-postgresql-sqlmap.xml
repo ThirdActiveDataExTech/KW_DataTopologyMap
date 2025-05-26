@@ -59,6 +59,12 @@
           LEFT JOIN CETUS_WORKPLACE CW ON CW.UID = CPI.WORKPLACE_UID
          WHERE 1 = 1
            AND CPI.WORKPLACE_UID = #{workplaceUid}::bigint
+        <if test="@Ognl@isNotEmpty(useAt)">
+           AND CPI.USE_AT = #{useAt}
+        </if>
+        <if test="@Ognl@isNotEmpty(browseText)">
+           AND (CPI.PROGRM_NM LIKE '%' || #{browseText} || '%' OR CPI.URL LIKE '%' || #{browseText} || '%' OR CU_REG.USER_NM LIKE '%' || #{browseText} || '%' )
+        </if>
          ORDER BY CPI.REG_DT DESC
         <if test="@Ognl@isNotEmpty(startNumber) and  @Ognl@isNotEmpty(endNumber)">
         OFFSET ${startNumber} LIMIT ${endNumber}
@@ -72,6 +78,12 @@
           LEFT JOIN CETUS_USER CU_REG ON CU_REG.UID = CPI.REG_UID
          WHERE 1 = 1
            AND CPI.WORKPLACE_UID = #{workplaceUid}::bigint
+        <if test="@Ognl@isNotEmpty(useAt)">
+           AND CPI.USE_AT = #{useAt}
+        </if>
+        <if test="@Ognl@isNotEmpty(browseText)">
+           AND (CPI.PROGRM_NM LIKE '%' || #{browseText} || '%' OR CPI.URL LIKE '%' || #{browseText} || '%' OR CU_REG.USER_NM LIKE '%' || #{browseText} || '%' )
+        </if>
     </select>
     
     <insert id="insert" parameterType="CetusProgrmInfo">

@@ -4,6 +4,7 @@ package kware.common.file.service;
 import cetus.bean.FileBean;
 import cetus.user.UserUtil;
 import cetus.util.WebUtil;
+import kware.common.config.auth.PrincipalDetails;
 import kware.common.config.auth.dto.SessionUserInfo;
 import kware.common.file.domain.CommonFile;
 import kware.common.file.domain.CommonFileDao;
@@ -18,6 +19,8 @@ import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -222,14 +225,22 @@ public class CommonFileService {
     }
 
     @Transactional
-    public <T extends FileBean> Long processFileSeparately(List<CommonFile> fileAdd, List<CommonFile> fileDel, SessionUserInfo user, Long fileUid) {
+    public <T extends FileBean> Long processFileSeparately(List<CommonFile> fileAdd, List<CommonFile> fileDel, Long fileUid) {
         if (fileAdd != null) {
             for (CommonFile f : fileAdd) {
                 if(fileUid == null) {
                     fileUid = this.generateUid();
                 }
-                f.setRegId(user.getUserId());
+
+                String userId = "비화원유저";
+                Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+                if (UserUtil.isAuthenticated(authentication)) {
+                    PrincipalDetails details = (PrincipalDetails) authentication.getPrincipal();
+                    userId = details.getUser().getUserId();
+                }
+                f.setRegId(userId);
                 f.setFileUid(fileUid);
+
                 try {
                     f = this.moveToDetaultStorage(f);
                 } catch (IOException e) {

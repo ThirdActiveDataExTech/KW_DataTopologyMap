@@ -26,22 +26,24 @@ public class CetusUser extends AuditBean {
     private String approveAt;
     private String userEmail;
 
-    public CetusUser(UserSave request, String encodePassword) {
+    public CetusUser(UserSave request, String encodePassword, String metaData) {
         this.userId = request.getUserId();
         this.password = encodePassword;
         this.userNm = request.getUserNm();
         this.userEmail = request.getUserEmail();
         this.authorCd = request.getAuthorCd();
         this.status = request.getStatus();
+        this.metaData = metaData;
     }
 
-    public CetusUser(UserSaveAdmin request, String encodePassword) {
+    public CetusUser(UserSaveAdmin request, String encodePassword, String metaData) {
         this.userId = request.getUserId();
         this.password = encodePassword;
         this.userNm = request.getUserNm();
         this.userEmail = request.getUserEmail();
         this.authorCd = request.getAuthorCd();
         this.status = request.getStatus();
+        this.metaData = metaData;
     }
 
     public CetusUser(String userId) {

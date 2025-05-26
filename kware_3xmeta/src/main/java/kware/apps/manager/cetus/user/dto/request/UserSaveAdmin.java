@@ -41,4 +41,5 @@ public class UserSaveAdmin {
     private Long userPosition;
 
     private String status;
+    private String metaData;
 }
