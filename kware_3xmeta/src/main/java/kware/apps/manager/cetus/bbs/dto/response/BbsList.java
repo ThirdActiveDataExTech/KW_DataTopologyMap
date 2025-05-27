@@ -19,4 +19,9 @@ public class BbsList {
     private String deleteAt;
     private String workplaceNm;
     private Long workplaceUid;
+    private String bbsClUseAt;
+    private String atchAt;
+    private Integer atchNum;
+    private Integer uploadCpcty;
+    private String answerUseAt;
 }

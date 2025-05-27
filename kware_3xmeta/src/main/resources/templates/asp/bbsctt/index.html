@@ -17,7 +17,7 @@
     <div class="related-product-area pb-100 pt-80"  data-aos="fade-up" data-aos-delay="200">
         <div class="container">
             <div class="section-title-2 st-border-center text-center mb-35">
-                <h2 th:text="${bbsNm}"></h2>
+                <h2 th:text="${bbs?.bbsNm}"></h2>
             </div>
             <hr>
             <!-- s:list -->
@@ -33,8 +33,8 @@
                                     <th>번호</th>
                                     <th>작성자</th>
                                     <th>제목</th>
-                                    <th>첨부파일</th>
-                                    <th>댓글수</th>
+                                    <th th:if="${bbs?.atchAt == 'Y'}">첨부파일</th>
+                                    <th th:if="${bbs?.answerUseAt == 'Y'}">댓글수</th>
                                     <th>작성일</th>
                                     <th>조회수</th>
                                 </tr>
@@ -55,6 +55,7 @@
 
         const bbsUid = [[${bbsUid}]]
         const role = [[${user.role}]]
+        const bbs = [[${bbs}]]
 
         $(function () {
             bbscttJS.initTable();

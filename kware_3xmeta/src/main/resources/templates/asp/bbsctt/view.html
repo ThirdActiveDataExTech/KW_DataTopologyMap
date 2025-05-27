@@ -45,9 +45,9 @@
                                     </div>
                                 </div>
 
-                                <div class="bbscttCnt-view-divider"></div>
+                                <div class="bbscttCnt-view-divider" th:if="${bbs?.atchAt == 'N'}"></div>    <!-- 게시글 내용 & 버튼영역 구분선 -->
 
-                                <div id="fileUploadSection">
+                                <div id="fileUploadSection" th:if="${bbs?.atchAt == 'Y'}">
                                     <div class="file-meta-divider"></div>
                                     <div id="upload-container" class="mt-1"></div>
                                     <div class="file-meta-divider"></div>
@@ -63,7 +63,7 @@
                     </div>
 
                     <!-- 하단 댓글 영역 -->
-                    <div style="margin-top: 50px;" data-aos="fade-up" data-aos-delay="200">
+                    <div style="margin-top: 50px;" data-aos="fade-up" data-aos-delay="200" th:if="${bbs?.answerUseAt == 'Y'}">
                         <!-- 댓글 개수 -->
                         <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 30px;">
                             <div class="sidebar-widget" style="display: flex; align-items: center; gap: 10px;">
@@ -142,6 +142,7 @@
     <script th:src="@{'/assets/js/page/bbsctt/bbsctt-list-form.js'}"></script>
     <script th:inline="javascript">
 
+        const bbs = [[${bbs}]]
         const bbsUid = [[${bbs?.bbsUid}]]
         const bbscttUid = [[${bbscttUid}]]
         const fileUid = [[${bbsctt?.fileUid}]]
@@ -150,9 +151,10 @@
 
             bbscttJS.initForm(fileUid, [[${bbsctt?.bbscttCnt}]], true);
 
-            bbscttJS.initAnswer();
-            bbscttJS.initAnswerListForm([[${answers}]])
-
+            if(bbs['answerUseAt'] == 'Y') {
+                bbscttJS.initAnswer();
+                bbscttJS.initAnswerListForm([[${answers}]])
+            }
 
             $("#update-btn").on('click', function () {
                 window.location.href = `/asp/cetus/bbsctt/form/${bbscttUid}`;

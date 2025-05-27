@@ -1,6 +1,7 @@
 package kware.apps.manager.cetus.bbs.dto.request;
 
 import cetus.annotation.DisplayName;
+import cetus.annotation.YOrN;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,6 +17,19 @@ public class BbsSave {
     @NotBlank @DisplayName("게시판 유형")
     private String bbsTpCd;
 
-    @NotBlank @DisplayName("사용 여부")
+    @YOrN
     private String useAt;
+
+    @YOrN
+    private String bbsClUseAt;
+
+    @YOrN
+    private String atchAt;
+
+    private Integer atchNum;
+
+    private Integer uploadCpcty;
+
+    @YOrN
+    private String answerUseAt;
 }

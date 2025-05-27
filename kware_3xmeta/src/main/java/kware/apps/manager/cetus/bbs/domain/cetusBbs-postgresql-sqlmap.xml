@@ -9,6 +9,11 @@
             ,BBS_TP_CD
             ,USE_AT
             ,WORKPLACE_UID
+            ,BBS_CL_USE_AT
+            ,ATCH_AT
+            ,ATCH_NUM
+            ,UPLOAD_CPCTY
+            ,ANSWER_USE_AT
             ,REG_UID
             ,REG_DT
             ,UPDT_UID
@@ -19,6 +24,11 @@
             ,#{bbsTpCd}
             ,#{useAt}
             ,#{workplaceUid}
+            ,#{bbsClUseAt}
+            ,#{atchAt}
+            ,#{atchNum}::bigint
+            ,#{uploadCpcty}::bigint
+            ,#{answerUseAt}
             ,#{regUid}
             ,NOW()
             ,#{updtUid}
@@ -43,6 +53,11 @@
               ,CU.USER_NM AS REG_NM
               ,CB.WORKPLACE_UID
               ,CW.NAME AS WORKPLACE_NM
+              ,CB.BBS_CL_USE_AT
+              ,CB.ATCH_AT
+              ,CB.ATCH_NUM
+              ,CB.UPLOAD_CPCTY
+              ,CB.ANSWER_USE_AT
               ,( SELECT COUNT(*)
                    FROM CETUS_BBSCTT CBBSCTT
                   WHERE CBBSCTT.BBS_UID = CB.BBS_UID
@@ -86,6 +101,11 @@
               ,BBS_NM
               ,BBS_TP_CD
               ,USE_AT
+              ,BBS_CL_USE_AT
+              ,ATCH_AT
+              ,ATCH_NUM
+              ,UPLOAD_CPCTY
+              ,ANSWER_USE_AT
           FROM CETUS_BBS
          WHERE BBS_UID = #{bbsUid}
     </select>
@@ -95,6 +115,11 @@
         UPDATE CETUS_BBS
            SET BBS_NM = #{bbsNm}
               ,USE_AT = #{useAt}
+              ,BBS_CL_USE_AT = #{bbsClUseAt}
+              ,ATCH_AT = #{atchAt}
+              ,ATCH_NUM = #{atchNum}::bigint
+              ,UPLOAD_CPCTY = #{uploadCpcty}::bigint
+              ,ANSWER_USE_AT = #{answerUseAt}
               ,UPDT_UID = #{updtUid}
               ,UPDT_DT = NOW()
          WHERE BBS_UID = #{bbsUid}
@@ -123,6 +148,11 @@
               ,CU.USER_NM AS REG_NM
               ,CB.WORKPLACE_UID
               ,CW.NAME AS WORKPLACE_NM
+              ,CB.BBS_CL_USE_AT
+              ,CB.ATCH_AT
+              ,CB.ATCH_NUM
+              ,CB.UPLOAD_CPCTY
+              ,CB.ANSWER_USE_AT
               ,( SELECT COUNT(*)
                    FROM CETUS_BBSCTT CBBSCTT
                   WHERE CBBSCTT.BBS_UID = CB.BBS_UID

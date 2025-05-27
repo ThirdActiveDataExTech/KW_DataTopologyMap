@@ -29,55 +29,48 @@ public class CetusBbscttController {
     private final CetusBbscttAnswerService answerService;
     private final MenuNavigationManager menuNavigationManager;
 
-    private CetusBbs setBbscttBbsInfo(Long bbsUid, final Model model) {
-        CetusBbs bbs = bbsService.view(bbsUid);
-        model.addAttribute("title1", bbs.getBbsNm());
-        model.addAttribute("title2", bbs.getBbsNm());
-        model.addAttribute("bbsNm", bbs.getBbsNm());
-        model.addAttribute("bbs", bbs);
-        return bbs;
-    }
-
     @GetMapping("/{bbsUid}")
     public String index(@PathVariable("bbsUid") Long bbsUid, final Model model) {
-        CetusBbs bbsInfo = this.setBbscttBbsInfo(bbsUid, model);
-        menuNavigationManager.renderingPage("/asp/cetus/bbsctt/"+bbsUid, bbsInfo.getBbsNm(), true, model);
+        CetusBbs bbs = bbsService.view(bbsUid);
+        model.addAttribute("bbs", bbs);
+        menuNavigationManager.renderingPage("/asp/cetus/bbsctt/"+bbsUid, bbs.getBbsNm(), true, model);
         return "asp/bbsctt/index";
     }
 
     @GetMapping("/save/{bbsUid}")
     public String save(@PathVariable("bbsUid") Long bbsUid, final Model model) {
-        this.setBbscttBbsInfo(bbsUid, model);
+        CetusBbs bbs = bbsService.view(bbsUid);
+        model.addAttribute("bbs", bbs);
         menuNavigationManager.renderingPage("/asp/cetus/bbsctt/"+bbsUid, "게시글 등록", false, model);
         return "asp/bbsctt/save";
     }
 
     @GetMapping("/view/{bbscttUid}")
-    public String view(@PathVariable("bbscttUid") Long bbscttUid, final Model model,
-                       HttpServletRequest req,
-                       HttpServletResponse res) {
+    public String view(@PathVariable("bbscttUid") Long bbscttUid, final Model model, HttpServletRequest req, HttpServletResponse res) {
         BbscttView bbsctt = bbscttService.findViewByBbscttUid(bbscttUid);
         model.addAttribute("bbsctt", bbsctt);
 
-        CetusBbs bbsInfo = this.setBbscttBbsInfo(bbsctt.getBbsUid(), model);
+        CetusBbs bbs = bbsService.view(bbsctt.getBbsUid());
+        model.addAttribute("bbs", bbs);
         bbscttService.increaseViewCount(bbscttUid, req, res);
 
         List<AnswerList> answers = answerService.findAllAnswerList(bbscttUid);
         model.addAttribute("answers", answers);
 
-        menuNavigationManager.renderingPage("/asp/cetus/bbsctt/"+bbsInfo.getBbsUid(), "게시글 조회", false, model);
+        menuNavigationManager.renderingPage("/asp/cetus/bbsctt/"+bbs.getBbsUid(), "게시글 조회", false, model);
 
         return "asp/bbsctt/view";
     }
 
     @GetMapping("/form/{bbscttUid}")
-    public String form(@PathVariable("bbscttUid") Long bbscttUid, final Model model,
-                       HttpServletRequest req,
-                       HttpServletResponse res) {
+    public String form(@PathVariable("bbscttUid") Long bbscttUid, final Model model) {
         CetusBbsctt bbsctt = bbscttService.view(bbscttUid);
         model.addAttribute("bbsctt", bbsctt);
-        CetusBbs bbsInfo = this.setBbscttBbsInfo(bbsctt.getBbsUid(), model);
-        menuNavigationManager.renderingPage("/asp/cetus/bbsctt/"+bbsInfo.getBbsUid(), "게시글 수정", false, model);
+
+        CetusBbs bbs = bbsService.view(bbsctt.getBbsUid());
+        model.addAttribute("bbs", bbs);
+
+        menuNavigationManager.renderingPage("/asp/cetus/bbsctt/"+bbs.getBbsUid(), "게시글 수정", false, model);
         return "asp/bbsctt/form";
     }
 }

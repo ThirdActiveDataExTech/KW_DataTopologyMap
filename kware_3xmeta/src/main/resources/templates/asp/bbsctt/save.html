@@ -89,13 +89,26 @@
                                     </div>
                                 </div>
 
-                                <div class="row custom-row">
+                                <div class="row custom-row" th:if="${bbs?.atchAt == 'Y'}">
                                     <div class="col-lg-12">
-                                        <div style="margin-bottom: 20px;">
+                                        <div style="margin-bottom: 5px;">
                                             <label for="upload-container" class="custom-label">첨부파일</label>
                                             <div>
                                                 <div id="upload-container" class="mt-1"></div>
                                             </div>
+                                        </div>
+                                        <div>
+                                            <div class="progress progress-bar-primary" style="margin-top: 5px;">
+                                                <div id="bbscttAtchProgressBar" class="progress-bar" role="progressbar"
+                                                     aria-valuenow="50" aria-valuemin="50" aria-valuemax="100" style="width: 0%; background-color: #5f9def"
+                                                     aria-describedby="bbscttAtchProgressBar"></div>
+                                            </div>
+                                            <span style="font-size: 12px;" id="uploadCpcty-span">
+                                                * 현재 업로드된 파일 크기: <span id="total-uploadCpcty"> 0.00 </span> MB
+                                                / 최대 <span id="max-uploadCpcty"> 20 </span> MB
+                                            </span>
+                                            <br>
+                                            <span style="color: firebrick; font-size: 12px;" th:text="|* 업로드 가능한 첨부파일 개수 : ${bbs?.atchNum}개|"></span>
                                         </div>
                                     </div>
                                 </div>
@@ -117,6 +130,7 @@
     <script th:src="@{'/assets/js/page/bbsctt/bbsctt-list-form.js'}"></script>
     <script th:inline="javascript">
 
+        const bbs = [[${bbs}]]
         const bbsUid = [[${bbsUid}]]
         const fileUid = null;
 
