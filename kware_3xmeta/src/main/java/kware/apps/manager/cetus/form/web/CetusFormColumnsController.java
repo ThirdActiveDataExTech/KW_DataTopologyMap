@@ -27,6 +27,14 @@ public class CetusFormColumnsController {
         return "asp/form/index";
     }
 
+    @GetMapping("/dual")
+    public String dual(Model model) {
+        menuNavigationManager.renderingPage("/asp/cetus/form/dual", "폼 관리", true, model);
+        model.addAttribute("types", ElementType.values());
+        model.addAttribute("formGroups", FormGroup.values());
+        return "asp/form/dual";
+    }
+
     @GetMapping("/save")
     public String save(Model model) {
         model.addAttribute("types", ElementType.values());

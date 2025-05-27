@@ -25,7 +25,7 @@
             <input th:if="${field.type == 'TEL'}" class="form-control custom-input" type="tel" th:id="${field.name}"
                    th:name="${field.name}"  th:value="${safeVal}" th:placeholder="${field.placeholder}" th:required="${field.required}">
 
-            <select th:if="${field.type == 'SELECT'}" class="nice-select nice-select-style-1 custom-select"
+            <select th:if="${field.type == 'SELECT'}" class="nice-select nice-select-style-1 custom-select preview-select"
                     th:id="${field.name}" th:name="${field.name}" th:required="${field.required}">
                 <option value="" disabled selected>-- SELECT TYPE --</option>
                 <option th:each="option : ${field.options}"
@@ -74,7 +74,7 @@
             </div>
 
             <div th:if="${field.type == 'FILE'}">
-                <div th:id="${field.name + '-doc'}" class="mt-1"></div>
+                <div th:id="${field.name + '-doc'}" class="mt-1 file-container"></div>
             </div>
 
             <div class="validation-error-message" th:id="|${field.name}-error|"></div>
