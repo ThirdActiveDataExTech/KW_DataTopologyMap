@@ -21,6 +21,22 @@
             height: 600px;
             overflow: auto;
         }
+        .chart-toggle {
+            margin-bottom: 10px;
+            text-align: left;
+        }
+        .chart-toggle button {
+            margin-left: 5px;
+            padding: 4px 12px;
+            font-size: 13px;
+            border: 1px solid #ccc;
+            background-color: #f9f9f9;
+            cursor: pointer;
+        }
+        .chart-toggle button.active {
+            background-color: #007bff;
+            color: #fff;
+        }
     </style>
 </th:block>
 
@@ -28,11 +44,21 @@
     <div class="my-account-wrapper pb-100 pt-80" data-aos="fade-up" data-aos-delay="200">
         <div class="container">
             <div class="row">
-                <div class="col-lg-12">
-                    <div class="text-end mb-2">
-                        <div class="filter-bar">
-
+                <div class="col-lg-3">
+                    <div class="sidebar-wrapper" id="sidebar-widgets-container">
+                        <div class="sidebar-widget sidebar-widget-border mb-40 pb-35" data-aos="fade-up" data-aos-delay="200">
+                            <div class="sidebar-widget-title mb-25">
+                                <h3>Filter</h3>
+                            </div>
+                            <div class="sidebar-widget-color sidebar-list-style">
+                            </div>
                         </div>
+                    </div>
+                </div>
+                <div class="col-lg-9">
+                    <div class="chart-toggle">
+                        <button class="chart-btn active" onclick="switchChart('tree')">트리형</button>
+                        <button class="chart-btn" onclick="switchChart('force')">포스형</button>
                     </div>
                     <div id="mindmap-chart"></div>
                 </div>
@@ -44,7 +70,12 @@
 <th:block layout:fragment="script">
     <script th:src="@{'/assets/js/page/chart-data.js'}"></script>
     <script th:inline="javascript">
-        chartData.init();
+        function switchChart(mode) {
+            document.querySelectorAll(".chart-btn").forEach(btn => btn.classList.remove("active"));
+            document.querySelector(`.chart-btn[onclick="switchChart('${mode}')"]`).classList.add("active");
+            chartData.init(mode);
+        }
+        chartData.init("tree");
     </script>
 
 </th:block>

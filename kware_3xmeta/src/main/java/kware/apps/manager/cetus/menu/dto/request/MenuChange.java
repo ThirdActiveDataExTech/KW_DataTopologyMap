@@ -17,4 +17,9 @@ public class MenuChange {
     private String menuStyle1;
     private String menuStyle2;
 
+    public MenuChange(String menuNm, String useAt) {
+        this.menuNm = menuNm;
+        this.useAt = useAt;
+    }
+
 }

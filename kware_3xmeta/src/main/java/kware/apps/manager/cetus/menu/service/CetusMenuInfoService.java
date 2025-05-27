@@ -52,6 +52,11 @@ public class CetusMenuInfoService {
         dao.update(view.changeMenu(menuNo, request));
     }
 
+    @Transactional(readOnly = true)
+    public List<CetusMenuInfo> findMenuByProgramUid(Long programUid) {
+        return dao.getMenuByProgramUid(programUid);
+    }
+
     @Transactional
     public void deleteMenu(Long menuNo) {
         dao.delete(menuNo);

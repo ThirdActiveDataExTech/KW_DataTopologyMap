@@ -40,6 +40,11 @@ public class CetusProgrmInfoService {
         return dao.view(uid);
     }
 
+    @Transactional(readOnly = true)
+    public CetusProgrmInfo findProgramByUrl(String url) {
+        return dao.getProgramByUrl(url);
+    }
+
     @Transactional
     public void saveProgram(ProgramSave request) {
         dao.insert(new CetusProgrmInfo(request, UserUtil.getUserWorkplaceUid()));

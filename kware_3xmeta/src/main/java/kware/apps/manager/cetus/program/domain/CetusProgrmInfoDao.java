@@ -9,4 +9,8 @@ public class CetusProgrmInfoDao extends SuperDao<CetusProgrmInfo> {
     public CetusProgrmInfoDao() {
         super("cetusProgrmInfo");
     }
+
+    public CetusProgrmInfo getProgramByUrl(String url) {
+        return selectOne("getProgramByUrl", url);
+    }
 }

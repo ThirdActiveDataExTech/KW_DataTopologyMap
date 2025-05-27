@@ -21,4 +21,9 @@ public class ProgramChange {
     private String useAt;
 
     private String progrmDc;
+
+    public ProgramChange(String progrmNm, String useAt) {
+        this.progrmNm = progrmNm;
+        this.useAt = useAt;
+    }
 }

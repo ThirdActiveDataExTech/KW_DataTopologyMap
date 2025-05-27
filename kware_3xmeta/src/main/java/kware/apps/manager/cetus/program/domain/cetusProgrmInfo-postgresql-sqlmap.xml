@@ -134,4 +134,16 @@
           FROM CETUS_PROGRM_INFO
          WHERE UID = #{uid}
     </select>
+
+    <select id="getProgramByUrl" resultType="CetusProgrmInfo" parameterType="String">
+        /* cetusProgrmInfo.getProgramByUrl */
+        SELECT UID
+              ,PROGRM_NM
+              ,URL
+              ,PROGRM_DC
+              ,USE_AT
+              ,WORKPLACE_UID
+          FROM CETUS_PROGRM_INFO
+         WHERE URL = #{url}
+    </select>
 </mapper>

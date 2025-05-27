@@ -393,4 +393,25 @@
 		   SET DELETE_AT = 'Y'
 		 WHERE MENU_NO = #{menuNo}
 	</delete>
+
+	<select id="getMenuByProgramUid" parameterType="Long" resultType="CetusMenuInfo">
+		/* cetusMenuInfo.getMenuByProgramUid */
+		SELECT MENU_NO
+			  ,PROGRAM_UID
+			  ,UPPER_MENU_NO
+			  ,MENU_NM
+			  ,MENU_ICON
+			  ,SORT_NO
+			  ,MENU_DC
+			  ,USE_AT
+			  ,DELETE_AT
+			  ,AUTHOR_CD
+			  ,MENU_STYLE1
+			  ,MENU_STYLE2
+			  ,ROOT_MENU_CD
+			  ,WORKPLACE_UID
+			  ,MENU_STYLE
+		  FROM CETUS_MENU_INFO
+		 WHERE PROGRAM_UID = #{programUid}
+	</select>
 </mapper>
