@@ -1,11 +1,29 @@
 package kware.apps.asp;
 
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpSession;
+
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import cetus.user.UserUtil;
 import cetus.util.DateTimeUtil;
 import cetus.util.HtmlUtil;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import kware.apps.asp.contents.dto.response.HomeConfigData;
+import kware.apps.asp.contents.dto.response.HomeData;
 import kware.apps.manager.cetus.bbsctt.dto.response.BbscttRecentList;
 import kware.apps.manager.cetus.bbsctt.service.CetusBbscttService;
 import kware.apps.manager.cetus.form.service.CetusFormColumnsService;
@@ -18,11 +36,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-
-import javax.servlet.http.HttpSession;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
 * @fileName AspController
@@ -58,6 +71,28 @@ public class AspController {
             recent.setMonthDay(map.get("month"), map.get("day"));
         });
         model.addAttribute("recentBbsctt", recentBbsctt);
+
+        try {
+            ClassPathResource resource = new ClassPathResource("static/assets/data/3xmeta/list_data.json");
+            byte[] jsonData = Files.readAllBytes(resource.getFile().toPath());
+
+            ObjectMapper objectMapper = new ObjectMapper();
+            List<HomeData> dataList = objectMapper.readValue(jsonData, new TypeReference<List<HomeData>>() {});
+
+
+            ClassPathResource configResource = new ClassPathResource("static/assets/data/3xmeta/type_config_data.json");
+            byte[] configJson = Files.readAllBytes(configResource.getFile().toPath());
+
+            List<HomeConfigData> configDataList = objectMapper.readValue(configJson, new TypeReference<List<HomeConfigData>>() {});
+
+            model.addAttribute("homeDataList", dataList);
+            model.addAttribute("configDataList", configDataList);
+            
+        } catch (IOException e) {
+            e.printStackTrace();
+            model.addAttribute("homeDataList", null);
+        }
+
         return "asp/page/home";
     }
 

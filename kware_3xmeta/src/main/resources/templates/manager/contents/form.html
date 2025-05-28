@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/default2}">
+
+<!-- (방법1) [title1, title2]처럼 [AspController]에서 모델로 내려준다. (추후 DB 사용 고려) -->
+<!-- (방법2) [leftImg, rightImg]처럼 각각의 html 페이지에서 하드코딩 -->
+<th:block layout:fragment="center-image">
+    <th:block th:with="title1=${title1}, title2=${title2}, leftImg='', rightImg='/assets/images/page/right_slide.png'">
+        <th:block th:replace="fragments/center-image :: main-image-title(${title1}, ${title2}, ${leftImg}, ${rightImg})"></th:block>
+    </th:block>
+</th:block>
+
+<th:block layout:fragment="head">
+    <link rel="stylesheet" th:href="@{'/assets/css/page/detail.css'}" />
+    <link rel="stylesheet" th:href="@{'/assets/css/page/detail-template02.css'}" />
+    <link rel="stylesheet" th:href="@{'/assets/css/page/detail-template03.css'}" />
+    <link rel="stylesheet" th:href="@{'/assets/css/page/detail-template04.css'}" />
+</th:block>
+
+<th:block layout:fragment="content">
+<div class="ratting-edit-area pb-95">
+  <div class="container">
+     <div class="section-title-2 st-border-center text-center mb-35 aos-init aos-animate" data-aos="fade-up" data-aos-delay="200">
+        <h2>폼 관리</h2>
+      </div>
+      <hr>
+
+      <!-- s:buttons -->
+      <div>
+
+        <div class="d-flex justify-content-end pe-4">
+          <div class="btn-container" style="margin-top: 0px !important;">
+            <!-- 왼쪽 버튼 -->
+            <!-- 오른쪽 버튼들 -->
+            <div class="right-buttons">
+              <button type="button" class="custom-button" id="update-btn">저장</button>
+              <button type="button" class="custom-button" id="del-btn">삭제</button>
+              <button type="button" class="custom-button" id="list-btn">목록</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- e:buttons -->
+
+    <div class="card" style="margin-top: 30px">
+        <div class="pb-3 border-bottom" style="padding: 30px;">
+          <div class="row align-items-center">
+            <h3 class="mb-0">기본 정보</h3>
+          </div>
+        </div>
+
+         <form class="needs-validation" id="update-form-parent" novalidate="">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-lg-6">
+                        <label for="label">UID</label>
+                        <div class="input-group">
+                        <input type="text" id="uid" name="uid" class="form-control" th:value="${content.uid}" disabled>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <label for="workplaceUid">워크플레이스 UID</label>
+                        <div class="input-group">
+                        <input type="text" id="workplaceUid" name="workplaceUid" class="form-control" th:value="${content.workplaceUid}" disabled>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-lg-12">
+                        <label for="title">컨텐츠 제목</label>
+                        <div class="input-group">
+                        <input type="text" id="title" name="title" class="form-control" th:value="${content.title}">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-lg-6">
+                        <label for="description">컨텐츠 설명</label>
+                        <div class="input-group">
+                        <input type="text" id="description" name="description" class="form-control" th:value="${content.description}">
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <label for="contents">워크플레이스 내용</label>
+                        <div class="input-group">
+                        <input type="text" id="contents" name="contents" class="form-control" th:value="${content.contents}">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-lg-6">
+                        <label for="metadata">메타데이터 (json)</label>
+                        <div class="input-group">
+                        <input type="text" id="metadata" name="metadata" class="form-control" th:value="${content.metadata}">
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <label for="sampleData">샘플 데이터 (json)</label>
+                        <div class="input-group">
+                        <input type="text" id="sampleData" name="sampleData" class="form-control" th:value="${content.sampleData}">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-lg-6">
+                        <label for="metadata">썸네일 UID</label>
+                        <div class="input-group">
+                        <input type="text" id="metadata" name="metadata" class="form-control">
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <label for="sampleData">파일 UID</label>
+                        <div class="input-group">
+                        <input type="text" id="sampleData" name="sampleData" class="form-control">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-lg-6">
+                        <label for="metadata">등록자</label>
+                        <div class="input-group">
+                        <input type="text" id="metadata" name="metadata" class="form-control">
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <label for="sampleData">등록일</label>
+                        <div class="input-group">
+                        <input type="text" id="sampleData" name="sampleData" class="form-control">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-lg-6">
+                        <label for="metadata">수정자</label>
+                        <div class="input-group">
+                        <input type="text" id="metadata" name="metadata" class="form-control">
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <label for="sampleData">수정일</label>
+                        <div class="input-group">
+                        <input type="text" id="sampleData" name="sampleData" class="form-control">
+                        </div>
+                    </div>
+                </div>
+            </div>
+         </form>
+    </div>
+
+    </div>
+  </div>
+</div>
+
+
+
+</th:block>
+
+<th:block layout:fragment="script">
+
+  <script th:inline="javascript">
+    const uid = [[${content}]]
+    $(function() {
+        const table = new Table('contents-table')
+            .switchDiv()
+            .get(`/cetus/api/contents?workplaceUid=${1}`)
+            .add(new Column("uid").center())
+            .add(new Column("title").center())
+            .add(new Column("workplaceUid").center())
+            .add(new Column("regUid").center())
+            .add(new Column("regDt").center())
+            .selectable()
+            .select(function (data) {
+                location.href = `/manager/cetus/contents/${data.uid}`
+            })
+            .init();
+
+    });
+
+  </script>
+</th:block>
+</html>

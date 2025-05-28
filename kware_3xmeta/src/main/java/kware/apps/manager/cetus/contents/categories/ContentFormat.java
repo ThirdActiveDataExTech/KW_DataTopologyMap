@@ -1,4 +1,4 @@
-package kware.apps.manager.cetus.categories;
+package kware.apps.manager.cetus.contents.categories;
 
 import java.util.List;
 
