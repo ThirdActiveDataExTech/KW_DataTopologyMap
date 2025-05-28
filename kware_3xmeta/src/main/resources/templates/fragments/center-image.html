@@ -7,8 +7,6 @@
 
 <!-- S: { 중앙 센터 } + { 양쪽 사이드 이미지 } + { 바디에 상단 헤더바 있음 } -->
 <th:block th:fragment="main-image-title(title1='', title2='', leftImg='', rightImg='')">
-    <!--  [title1, title2, leftImg, rightImg] 정보값은 각각의 HTML 페이지에서 파라미터로 넘겨준다. -->
-    <!--  * 만일 빈값('')으로 넘어온다면, 기본값으로 보여지도록 한다. -->
     <link rel="stylesheet" th:href="@{'/assets/css/page/center/breadcrumb.css'}" />
     <div>
         <div class="breadcrumb-area bg-gray-4 breadcrumb-padding-1">
@@ -22,11 +20,11 @@
             </div>
             <!-- 좌측 이미지 -->
             <div class="breadcrumb-img-1 aos-init aos-animate">
-                <img th:src="${#strings.isEmpty(leftImg) ? '/assets/images/page/left_slide.png' : leftImg}" alt="" data-aos="fade-right" data-aos-delay="200" style="aspect-ratio: 300 / 250; object-fit: contain; object-position: left bottom;">
+                <img th:src="|/cetus/files/download?fileId=${leftImg}|" onerror="this.src='/assets/images/page/left_slide.png'" alt="" data-aos="fade-right" data-aos-delay="200" style="aspect-ratio: 300 / 250; object-fit: contain; object-position: left bottom;">
             </div>
             <!-- 우측 이미지 -->
             <div class="breadcrumb-img-2 aos-init aos-animate">
-                <img th:src="${#strings.isEmpty(rightImg) ? '/assets/images/page/right_slide.png' : rightImg}" alt="" data-aos="fade-left" data-aos-delay="200" style="aspect-ratio: 300 / 250; object-fit: contain; object-position: right bottom;">
+                <img th:src="|/cetus/files/download?fileId=${rightImg}|" onerror="this.src='/assets/images/page/right_slide.png'" alt="" data-aos="fade-left" data-aos-delay="200" style="aspect-ratio: 300 / 250; object-fit: contain; object-position: right bottom;">
             </div>
         </div>
         <div class="container" style="margin-top: 50px;" data-aos="fade-up" data-aos-delay="200">
@@ -61,8 +59,6 @@
 
 <!-- S: { 중앙 센터 } + { 양쪽 사이드 이미지 } + { 바디에 상단 헤더바 없음 } -->
 <th:block th:fragment="main-image-title-no-header(title1='', title2='', leftImg='', rightImg='')">
-    <!--  [title1, title2, leftImg, rightImg] 정보값은 각각의 HTML 페이지에서 파라미터로 넘겨준다. -->
-    <!--  * 만일 빈값('')으로 넘어온다면, 기본값으로 보여지도록 한다. -->
     <link rel="stylesheet" th:href="@{'/assets/css/page/center/breadcrumb.css'}" />
     <div>
         <div class="breadcrumb-area bg-gray-4 breadcrumb-padding-1">
@@ -76,11 +72,11 @@
             </div>
             <!-- 좌측 이미지 -->
             <div class="breadcrumb-img-1 aos-init aos-animate">
-                <img th:src="${#strings.isEmpty(leftImg) ? '/assets/images/page/left_slide.png' : leftImg}" alt="" data-aos="fade-right" data-aos-delay="200" style="aspect-ratio: 300 / 250; object-fit: contain; object-position: left bottom;">
+                <img th:src="|/cetus/files/download?fileId=${leftImg}|" onerror="this.src='/assets/images/page/left_slide.png'" alt="" data-aos="fade-right" data-aos-delay="200" style="aspect-ratio: 300 / 250; object-fit: contain; object-position: left bottom;">
             </div>
             <!-- 우측 이미지 -->
             <div class="breadcrumb-img-2 aos-init aos-animate">
-                <img th:src="${#strings.isEmpty(rightImg) ? '/assets/images/page/right_slide.png' : rightImg}" alt="" data-aos="fade-left" data-aos-delay="200" style="aspect-ratio: 300 / 250; object-fit: contain; object-position: right bottom;">
+                <img th:src="|/cetus/files/download?fileId=${rightImg}|" onerror="this.src='/assets/images/page/right_slide.png'" alt="" data-aos="fade-left" data-aos-delay="200" style="aspect-ratio: 300 / 250; object-fit: contain; object-position: right bottom;">
             </div>
         </div>
     </div>
@@ -90,7 +86,7 @@
 
 
 <!-- S: 중앙 센터 (메뉴 데이터에 없는 경우) -->
-<th:block th:fragment="center-image(title)">
+<th:block th:fragment="center-image(title, leftImg, rightImg)">
     <link rel="stylesheet" th:href="@{'/assets/css/page/center/breadcrumb.css'}" />
     <div class="breadcrumb-area bg-gray-4 breadcrumb-padding-1">
         <div class="container" style="z-index: 1; position: relative; text-shadow: 1px 1px 1px #eaeaea;">
@@ -103,11 +99,11 @@
         </div>
         <!-- 좌측 이미지 -->
         <div class="breadcrumb-img-1 aos-init aos-animate">
-            <img th:src="@{'/assets/images/page/left_slide.png'}" alt="" data-aos="fade-right" data-aos-delay="200" style="aspect-ratio: 300 / 250; object-fit: contain; object-position: left bottom;">
+            <img th:src="|/cetus/files/download?fileId=${leftImg}|" onerror="this.src='/assets/images/page/left_slide.png'" alt="" data-aos="fade-right" data-aos-delay="200" style="aspect-ratio: 300 / 250; object-fit: contain; object-position: left bottom;">
         </div>
         <!-- 우측 이미지 -->
         <div class="breadcrumb-img-2 aos-init aos-animate">
-            <img th:src="@{'/assets/images/page/right_slide.png'}" alt="" data-aos="fade-left" data-aos-delay="200" style="aspect-ratio: 300 / 250; object-fit: contain; object-position: right bottom;">
+            <img th:src="|/cetus/files/download?fileId=${rightImg}|" onerror="this.src='/assets/images/page/right_slide.png'" alt="" data-aos="fade-left" data-aos-delay="200" style="aspect-ratio: 300 / 250; object-fit: contain; object-position: right bottom;">
         </div>
     </div>
 </th:block>
@@ -117,9 +113,6 @@
 
 <!-- S: { 중앙 센터 } + { 양쪽 사이드 이미지 } + { 바디에 상단 헤더바 있음 } + { 기존 바디 컨테이너보다 살짝 width 값이 큼 } -->
 <th:block th:fragment="center-image-title-custom(title='', title1='', title2='', leftImg='', rightImg='')">
-    <!--  [title, title1, title2, leftImg, rightImg] 정보값은 각각의 HTML 페이지에서 파라미터로 넘겨준다. -->
-    <!--  * 만일 빈값('')으로 넘어온다면, 기본값으로 보여지도록 한다. -->
-    <!--  * [title]값은 기본적으로 넘겨주도록 한다. -->
     <link rel="stylesheet" th:href="@{'/assets/css/page/center/breadcrumb.css'}" />
     <div id="center-image-title-custom">
         <div class="breadcrumb-area bg-gray-4 breadcrumb-padding-1">
@@ -133,11 +126,11 @@
             </div>
             <!-- 좌측 이미지 -->
             <div class="breadcrumb-img-1 aos-init aos-animate">
-                <img th:src="${#strings.isEmpty(leftImg) ? '/assets/images/page/left_slide.png' : leftImg}" alt="" data-aos="fade-right" data-aos-delay="200" style="aspect-ratio: 300 / 250; object-fit: contain; object-position: left bottom;">
+                <img th:src="|/cetus/files/download?fileId=${leftImg}|" onerror="this.src='/assets/images/page/left_slide.png'" alt="" data-aos="fade-right" data-aos-delay="200" style="aspect-ratio: 300 / 250; object-fit: contain; object-position: left bottom;">
             </div>
             <!-- 우측 이미지 -->
             <div class="breadcrumb-img-2 aos-init aos-animate">
-                <img th:src="${#strings.isEmpty(rightImg) ? '/assets/images/page/right_slide.png' : rightImg}" alt="" data-aos="fade-left" data-aos-delay="200" style="aspect-ratio: 300 / 250; object-fit: contain; object-position: right bottom;">
+                <img th:src="|/cetus/files/download?fileId=${rightImg}|" onerror="this.src='/assets/images/page/right_slide.png'" alt="" data-aos="fade-left" data-aos-delay="200" style="aspect-ratio: 300 / 250; object-fit: contain; object-position: right bottom;">
             </div>
         </div>
         <div class="container custom-container" style="margin-top: 50px;" data-aos="fade-up" data-aos-delay="200">
@@ -172,9 +165,6 @@
 
 <!-- S: { 중앙 센터 } + { 양쪽 사이드 이미지 } + { 기존 바디 컨테이너보다 살짝 width 값이 큼 } + { 이전 돌아가기 버튼 포함 } -->
 <th:block th:fragment="center-image-title-back(title1='', title2='', leftImg='', rightImg='', useCustom = true)">
-    <!--  [title, title1, title2, leftImg, rightImg] 정보값은 각각의 HTML 페이지에서 파라미터로 넘겨준다. -->
-    <!--  * 만일 빈값('')으로 넘어온다면, 기본값으로 보여지도록 한다. -->
-    <!--  * [title]값은 기본적으로 넘겨주도록 한다. -->
     <link rel="stylesheet" th:href="@{'/assets/css/page/center/breadcrumb.css'}" />
     <div>
         <div class="breadcrumb-area bg-gray-4 breadcrumb-padding-1">
@@ -188,11 +178,11 @@
             </div>
             <!-- 좌측 이미지 -->
             <div class="breadcrumb-img-1 aos-init aos-animate">
-                <img th:src="${#strings.isEmpty(leftImg) ? '/assets/images/page/left_slide.png' : leftImg}" alt="" data-aos="fade-right" data-aos-delay="200" style="aspect-ratio: 300 / 250; object-fit: contain; object-position: left bottom;">
+                <img th:src="|/cetus/files/download?fileId=${leftImg}|" onerror="this.src='/assets/images/page/left_slide.png'" alt="" data-aos="fade-right" data-aos-delay="200" style="aspect-ratio: 300 / 250; object-fit: contain; object-position: left bottom;">
             </div>
             <!-- 우측 이미지 -->
             <div class="breadcrumb-img-2 aos-init aos-animate">
-                <img th:src="${#strings.isEmpty(rightImg) ? '/assets/images/page/right_slide.png' : rightImg}" alt="" data-aos="fade-left" data-aos-delay="200" style="aspect-ratio: 300 / 250; object-fit: contain; object-position: right bottom;">
+                <img th:src="|/cetus/files/download?fileId=${rightImg}|" onerror="this.src='/assets/images/page/right_slide.png'" alt="" data-aos="fade-left" data-aos-delay="200" style="aspect-ratio: 300 / 250; object-fit: contain; object-position: right bottom;">
             </div>
         </div>
         <div class="container custom-container" style="margin-top: 50px;" data-aos="fade-up" data-aos-delay="200">

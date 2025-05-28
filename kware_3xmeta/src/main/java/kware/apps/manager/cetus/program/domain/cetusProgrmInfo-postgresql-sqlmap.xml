@@ -98,6 +98,14 @@
             ,UPDT_UID
             ,UPDT_DT
             ,WORKPLACE_UID
+            ,LEFT_SLIDE_IMG
+            ,RIGHT_SLIDE_IMG
+            ,LOGO_IMG
+            ,COMPANY_LOGO_IMG
+            ,TITLE1
+            ,TITLE2
+            ,TITLE3
+            ,IS_ROOT_URL
         ) VALUES (
              #{progrmNm}
             ,#{url}
@@ -108,6 +116,14 @@
             ,#{updtUid}
             ,NOW()
             ,#{workplaceUid}
+            ,#{leftSlideImg}::bigint
+            ,#{rightSlideImg}::bigint
+            ,#{logoImg}::bigint
+            ,#{companyLogoImg}::bigint
+            ,#{title1}
+            ,#{title2}
+            ,#{title3}
+            ,#{isRootUrl}
         )
     </insert>
 
@@ -118,6 +134,14 @@
               ,URL = #{url}
               ,PROGRM_DC = #{progrmDc}
               ,USE_AT = #{useAt}
+              ,LEFT_SLIDE_IMG = #{leftSlideImg}::bigint
+              ,RIGHT_SLIDE_IMG = #{rightSlideImg}::bigint
+              ,LOGO_IMG = #{logoImg}::bigint
+              ,COMPANY_LOGO_IMG = #{companyLogoImg}::bigint
+              ,TITLE1 = #{title1}
+              ,TITLE2 = #{title2}
+              ,TITLE3 = #{title3}
+              ,IS_ROOT_URL = #{isRootUrl}
               ,UPDT_UID = #{updtUid}
               ,UPDT_DT = NOW()
          WHERE UID = #{uid}
@@ -131,6 +155,14 @@
               ,PROGRM_DC
               ,USE_AT
               ,WORKPLACE_UID
+              ,LEFT_SLIDE_IMG
+              ,RIGHT_SLIDE_IMG
+              ,LOGO_IMG
+              ,COMPANY_LOGO_IMG
+              ,TITLE1
+              ,TITLE2
+              ,TITLE3
+              ,IS_ROOT_URL
           FROM CETUS_PROGRM_INFO
          WHERE UID = #{uid}
     </select>
@@ -145,5 +177,19 @@
               ,WORKPLACE_UID
           FROM CETUS_PROGRM_INFO
          WHERE URL = #{url}
+    </select>
+
+    <select id="getProgramFullInfoByUrl" resultType="ProgrmFullInfo" parameterType="String">
+        /* cetusProgrmInfo.getProgramFullInfoByUrl */
+        SELECT CPI.UID
+              ,CPI.PROGRM_NM
+              ,CPI.URL
+              ,CPI.USE_AT
+              ,CF_LEFT.FILE_ID AS LEFT_SLIDE_IMG_ID
+              ,CF_RIGHT.FILE_ID AS RIGHT_SLIDE_IMG_ID
+          FROM CETUS_PROGRM_INFO CPI
+          LEFT JOIN CETUS_FILE CF_LEFT ON CF_LEFT.FILE_UID = CPI.LEFT_SLIDE_IMG AND CF_LEFT.USE_AT = 'Y' AND CF_LEFT.SAVED = 'Y'
+          LEFT JOIN CETUS_FILE CF_RIGHT ON CF_RIGHT.FILE_UID = CPI.RIGHT_SLIDE_IMG AND CF_RIGHT.USE_AT = 'Y' AND CF_RIGHT.SAVED = 'Y'
+         WHERE CPI.URL = #{url}
     </select>
 </mapper>

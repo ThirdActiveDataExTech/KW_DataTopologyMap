@@ -34,6 +34,14 @@ public class SessionMenuList {
     private String rootMenuCd;
     private Long workplaceUid;
 
+    private String leftSlideImgId;
+    private String rightSlideImgId;
+    private String logoImgId;
+    private String companyLogoImgId;
+    private String title1;
+    private String title2;
+    private String title3;
+
     private String url;
     private Integer depth;
     private String menuPath;

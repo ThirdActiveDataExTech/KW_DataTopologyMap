@@ -33,4 +33,8 @@ public class CetusMenuInfoDao extends SuperDao<CetusMenuInfo> {
 		return selectList("getMenuByProgramUid", programUid);
 	}
 
+	public SessionMenuList getRootMenuInfo(Long rootMenuNo) {
+		return selectOne("getRootMenuInfo", rootMenuNo);
+	}
+
 }

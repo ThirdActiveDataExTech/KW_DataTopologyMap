@@ -25,21 +25,40 @@
                         <div class="col-lg-3 col-md-6 col-sm-6 col-12 section00">
                             <div class="footer-widget footer-about mb-40">
                                 <div class="footer-logo">
-                                    <a href="#">
-                                        <img src="/assets/images/logo/logo.png">
+                                    <a href="/asp/home">
+                                        <th:block th:if="${user == null}">
+                                            <img src="/assets/images/logo/logo.png" alt="logo">
+                                        </th:block>
+                                        <th:block th:unless="${user == null}">
+                                            <img th:src="|/cetus/files/download?fileId=${user.brandingInfo.footerLogo}|" onerror="this.src='/assets/images/logo/logo.png'" alt="logo">
+                                        </th:block>
                                     </a>
                                 </div>
-                                <p id="systemNm">
+
+                                <th:block th:if="${user == null}">
                                     <div style="font-size: 13px; letter-spacing: -0.5px; margin-bottom: 4px;">엑티브 메타데이터 기반 능동형 데이터 확장 기술 개발</div>
                                     <div style="font-size: 30px; line-height: normal; font-weight: 600; margin-bottom: 4px;">
                                         써드파티 데이터 활용 통합 플랫폼
                                     </div>
                                     <div style="font-size:13px;">SW 컴퓨팅 산업원천기술 개발사업</div>
-                                </p>
+                                </th:block>
+                                <th:block th:unless="${user == null}">
+                                    <div style="font-size: 13px; letter-spacing: -0.5px; margin-bottom: 4px;" th:text="${user.brandingInfo.title1}"></div>
+                                    <div style="font-size: 30px; line-height: normal; font-weight: 600; margin-bottom: 4px;" th:text="${user.brandingInfo.title2}" ></div>
+                                    <div style="font-size:13px;" th:text="${user.brandingInfo.title3}"></div>
+                                </th:block>
+
+                                <p id="systemNm"></p>
+
                                 <div class="partner-wrap">
                                     <div class="payment-img">
                                         <a href="#">
-                                            <img src="/assets/images/icon-img/company.png" alt="logo">
+                                            <th:block th:if="${user == null}">
+                                                <img src="/assets/images/icon-img/company.png" alt="logo">
+                                            </th:block>
+                                            <th:block th:unless="${user == null}">
+                                                <img th:src="|/cetus/files/download?fileId=${user.brandingInfo.companyLogo}|" onerror="this.src='/assets/images/icon-img/company.png'" alt="logo">
+                                            </th:block>
                                         </a>
                                     </div>
                                 </div>

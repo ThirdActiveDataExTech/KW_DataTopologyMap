@@ -39,6 +39,7 @@ public class SessionUserInfo implements Serializable {
     private List<String> authorizedMenuUrls;
     private List<CetusMenu> menusTop;
     private List<CetusMenu> menusFooter;
+    private CetusBrandingInfo brandingInfo;
 
     public SessionUserInfo(UserFullInfo user) {
         this.uid = user.getUid();
@@ -69,6 +70,10 @@ public class SessionUserInfo implements Serializable {
         this.menusTop = menusTop;
         this.menusFooter = menusFooter;
         this.authorizedMenuUrls = authorizedMenuUrls;
+    }
+
+    public void addBrandingInfo(CetusBrandingInfo brandingInfo) {
+        this.brandingInfo = brandingInfo;
     }
 
 }

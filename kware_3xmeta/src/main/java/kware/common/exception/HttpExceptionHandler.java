@@ -1,10 +1,8 @@
 package kware.common.exception;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -12,11 +10,6 @@ import javax.servlet.http.HttpServletRequest;
 
 @ControllerAdvice
 public class HttpExceptionHandler {
-
-    @ModelAttribute
-    public void addCommonAttribute(Model model) {
-        model.addAttribute("testModel", "모델 테스트01");
-    }
 
     @ExceptionHandler(ResourceNotFoundException.class)
     public ModelAndView handleNotFoundException(ResourceNotFoundException ex) {

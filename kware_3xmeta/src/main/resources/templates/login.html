@@ -4,8 +4,11 @@
       layout:decorate="~{layouts/empty}">
 
 <th:block layout:fragment="center-image">
-    <th:block th:replace="fragments/center-image :: center-image(title='로그인')"></th:block>
+    <th:block th:with="title='로그인', leftImg=${centerLeftImage}, rightImg=${centerRightImage}">
+        <th:block th:replace="fragments/center-image :: center-image(${title}, ${leftImg}, ${rightImg})"></th:block>
+    </th:block>
 </th:block>
+
 <th:block layout:fragment="head">
     <style>
         .error-message {

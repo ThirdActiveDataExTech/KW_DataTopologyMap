@@ -3,6 +3,10 @@ package kware.apps.manager.cetus.enumstatus;
 
 import lombok.Getter;
 
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Getter
 public enum MenuRootCd {
 
@@ -13,5 +17,11 @@ public enum MenuRootCd {
 
     MenuRootCd(String description) {
         this.description = description;
+    }
+
+    public static List<EnumCodeDto> toList() {
+        return Arrays.stream(values())
+                .map(e -> new EnumCodeDto(e.name(), e.description))
+                .collect(Collectors.toList());
     }
 }

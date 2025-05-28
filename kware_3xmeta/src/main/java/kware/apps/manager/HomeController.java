@@ -63,14 +63,4 @@ public class HomeController {
         return Response.ok();
     }
 
-    @GetMapping("/sample")
-    public String test(){
-        return "/sample";
-    }
-
-    @GetMapping("/css-sample")
-    public String test2(){
-        return "/sample-css";
-    }
-
 }

@@ -36,6 +36,11 @@ public class CetusMenuInfoService {
     }
 
     @Transactional(readOnly = true)
+    public SessionMenuList getRootMenuInfo(Long rootMenuNo) {
+        return dao.getRootMenuInfo(rootMenuNo);
+    }
+
+    @Transactional(readOnly = true)
     public Long getRootMenuNo(String authorCd, String rootMenuCd, Long workplaceUid) {
         MenuRootSearch search = new MenuRootSearch(authorCd, rootMenuCd, workplaceUid);
         return dao.getRootMenuNo(search);

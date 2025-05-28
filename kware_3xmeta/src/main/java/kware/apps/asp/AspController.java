@@ -127,6 +127,7 @@ public class AspController {
             e.printStackTrace();
         }
         model.addAttribute("metadata", map);
+        menuNavigationManager.renderingPage("/asp/myInfo", "내 정보 수정", true, model);
 
         return "asp/myInfo/index";
     }

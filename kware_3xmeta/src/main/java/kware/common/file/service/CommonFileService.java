@@ -118,14 +118,13 @@ public class CommonFileService {
 
             String realPath = commonFile.getFilePath();
             String orgFileNm = commonFile.getOrgFileNm();
-            log.info("download file realPath : {} , orgFileNm : {}", realPath, orgFileNm);
             File file2 = new File(realPath);
 
             Resource resource = new FileSystemResource(realPath);
 
             if (file2.exists() && file2.isFile()) {
-                if (log.isDebugEnabled())
-                    log.debug("파일이 존재합니다. filepath:{}, orgFileNam:{}", realPath, orgFileNm);
+                /*if (log.isDebugEnabled())
+                    log.debug("파일이 존재합니다. filepath:{}, orgFileNam:{}", realPath, orgFileNm);*/
             } else {
                 log.error("파일이 존재하지 않습니다. filepath:{}, orgFileNam:{}", realPath, orgFileNm);
                 return ResponseEntity.ok("file is not existed");
@@ -179,8 +178,8 @@ public class CommonFileService {
             Resource resource = new FileSystemResource(filePath);
 
             if (file2.exists() && file2.isFile()) {
-                if (log.isDebugEnabled())
-                    log.debug("파일이 존재합니다. filepath:{}, orgFileNam:{}", filePath, fileName);
+                /*if (log.isDebugEnabled())
+                    log.debug("파일이 존재합니다. filepath:{}, orgFileNam:{}", filePath, fileName);*/
             } else {
                 log.error("파일이 존재하지 않습니다. filepath:{}, orgFileNam:{}", filePath, fileName);
             }
@@ -225,7 +224,7 @@ public class CommonFileService {
     }
 
     @Transactional
-    public <T extends FileBean> Long processFileSeparately(List<CommonFile> fileAdd, List<CommonFile> fileDel, Long fileUid) {
+    public Long processFileSeparately(List<CommonFile> fileAdd, List<CommonFile> fileDel, Long fileUid) {
         if (fileAdd != null) {
             for (CommonFile f : fileAdd) {
                 if(fileUid == null) {

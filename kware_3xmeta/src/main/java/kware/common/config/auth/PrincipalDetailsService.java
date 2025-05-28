@@ -8,6 +8,7 @@ import kware.apps.manager.cetus.menu.dto.response.SessionMenuList;
 import kware.apps.manager.cetus.menu.service.CetusMenuInfoService;
 import kware.apps.manager.cetus.user.dto.response.UserFullInfo;
 import kware.apps.manager.cetus.user.service.CetusUserService;
+import kware.common.config.auth.dto.CetusBrandingInfo;
 import kware.common.config.auth.dto.SessionUserInfo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -42,6 +43,10 @@ public class PrincipalDetailsService implements UserDetailsService {
 
         Long topMenuNo = cetusMenuInfoService.getRootMenuNo(role, MenuRootCd.TOP_ROOT.name(), workplaceUid);
         Long footerMenuNo = cetusMenuInfoService.getRootMenuNo(role, MenuRootCd.FOOTER_ROOT.name(), workplaceUid);
+
+        SessionMenuList rootMenuInfo = cetusMenuInfoService.getRootMenuInfo(topMenuNo);
+        SessionMenuList footerMenuInfo = cetusMenuInfoService.getRootMenuInfo(footerMenuNo);
+        sessionUserInfo.addBrandingInfo(new CetusBrandingInfo(rootMenuInfo, footerMenuInfo));
 
         List<SessionMenuList> menuTopList = cetusMenuInfoService.getSessionMenuList(new SessionMenuListSearch("Y", role, workplaceUid, topMenuNo));
         List<SessionMenuList> menuFooterList = cetusMenuInfoService.getSessionMenuList(new SessionMenuListSearch("Y", role, workplaceUid, footerMenuNo));
