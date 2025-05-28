@@ -221,6 +221,7 @@
 		WHERE WORKPLACE_UID = #{workplaceUid}
 		  AND FORM_GROUP = #{formGroup}
 		  AND SORT_NUM <![CDATA[>]]> #{sortNum}
+		  AND USE_AT = 'Y'
 		ORDER BY SORT_NUM ASC
 			LIMIT 1
 	</select>
@@ -248,6 +249,7 @@
 		WHERE WORKPLACE_UID = #{workplaceUid}
 		  AND FORM_GROUP = #{formGroup}
 		  AND SORT_NUM <![CDATA[<]]> #{sortNum}
+		  AND USE_AT = 'Y'
 		ORDER BY SORT_NUM DESC
 			LIMIT 1
 	</select>
