@@ -21,21 +21,23 @@
             height: 600px;
             overflow: auto;
         }
+        #force-chart {
+            width: 100%;
+            height: 600px;
+        }
         .chart-toggle {
             margin-bottom: 10px;
-            text-align: left;
+        }
+        .chart-toggle select {
+            font-size: 14px;
+            padding: 6px 10px;
         }
         .chart-toggle button {
-            margin-left: 5px;
-            padding: 4px 12px;
-            font-size: 13px;
+            padding: 5px 12px;
+            font-size: 14px;
             border: 1px solid #ccc;
             background-color: #f9f9f9;
             cursor: pointer;
-        }
-        .chart-toggle button.active {
-            background-color: #007bff;
-            color: #fff;
         }
     </style>
 </th:block>
@@ -51,16 +53,32 @@
                                 <h3>Filter</h3>
                             </div>
                             <div class="sidebar-widget-color sidebar-list-style">
+                                <!-- 필터 내용 삽입 -->
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="col-lg-9">
-                    <div class="chart-toggle">
-                        <button class="chart-btn active" onclick="switchChart('tree')">트리형</button>
-                        <button class="chart-btn" onclick="switchChart('force')">포스형</button>
+                    <div class="d-flex justify-content-between align-items-center chart-toggle mb-2">
+                        <div>
+                            <select class="nice-select nice-select-style-1 custom-select" id="chart-selector" onchange="onChartSelectChange()">
+                                <option value="tree">트리 차트</option>
+                                <option value="force">포스 차트</option>
+                            </select>
+                        </div>
+                        <div>
+                            <button onclick="goBack()">이전노드</button>
+                            <button onclick="goHome()">처음으로</button>
+                        </div>
                     </div>
-                    <div id="mindmap-chart"></div>
+
+                    <div id="tree-chart-container" style="display: block;">
+                        <div id="mindmap-chart"></div>
+                    </div>
+
+                    <div id="force-chart-container" style="display: none;">
+                        <div id="force-chart"></div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -68,16 +86,54 @@
 </th:block>
 
 <th:block layout:fragment="script">
-    <script th:src="@{'/assets/js/page/chart-data.js'}"></script>
+    <script th:src="@{'/assets/js/page/chart-tree-data.js'}"></script>
+    <script th:src="@{'/assets/js/page/chart-force-data.js'}"></script>
     <script th:inline="javascript">
-        function switchChart(mode) {
-            document.querySelectorAll(".chart-btn").forEach(btn => btn.classList.remove("active"));
-            document.querySelector(`.chart-btn[onclick="switchChart('${mode}')"]`).classList.add("active");
-            chartData.init(mode);
-        }
-        chartData.init("tree");
-    </script>
+        let forceChartInitialized = false;
+        let currentTab = "tree";
 
+        function showTab(tab) {
+            document.getElementById("tree-chart-container").style.display = "none";
+            document.getElementById("force-chart-container").style.display = "none";
+
+            currentTab = tab;
+
+            if (tab === 'tree') {
+                document.getElementById("tree-chart-container").style.display = "block";
+                chartTreeData.chart && chartTreeData.chart.resize();
+            } else if (tab === 'force') {
+                document.getElementById("force-chart-container").style.display = "block";
+
+                if (!forceChartInitialized) {
+                    chartForceData.init();
+                    forceChartInitialized = true;
+                } else {
+                    chartForceData.chart && chartForceData.chart.resize();
+                }
+            }
+        }
+
+        function onChartSelectChange() {
+            const selected = document.getElementById("chart-selector").value;
+            showTab(selected);
+        }
+
+        function goBack() {
+            if (currentTab === "tree") {
+                chartTreeData.goBack();
+            } else if (currentTab === "force") {
+                chartForceData.goBack();
+            }
+        }
+        function goHome() {
+            if (currentTab === "tree") {
+                chartTreeData.render("컨텐츠");
+            } else if (currentTab === "force") {
+                chartForceData.render("컨텐츠");
+            }
+        }
+
+        chartTreeData.init();
+    </script>
 </th:block>
-</html>
 </html>

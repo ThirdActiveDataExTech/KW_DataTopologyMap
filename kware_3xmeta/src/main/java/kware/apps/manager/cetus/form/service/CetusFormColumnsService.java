@@ -5,10 +5,7 @@ import kware.apps.manager.cetus.form.domain.CetusColumnOptions;
 import kware.apps.manager.cetus.form.domain.CetusColumnOptionsDao;
 import kware.apps.manager.cetus.form.domain.CetusFormColumns;
 import kware.apps.manager.cetus.form.domain.CetusFormColumnsDao;
-import kware.apps.manager.cetus.form.dto.request.ColumnsChange;
-import kware.apps.manager.cetus.form.dto.request.ColumnsOrder;
-import kware.apps.manager.cetus.form.dto.request.ColumnsSave;
-import kware.apps.manager.cetus.form.dto.request.ColumnsSearch;
+import kware.apps.manager.cetus.form.dto.request.*;
 import kware.apps.manager.cetus.form.dto.response.ColumnsPage;
 import kware.apps.manager.cetus.form.dto.response.ColumnsView;
 import kware.apps.manager.cetus.form.dto.response.ElementType;
@@ -37,7 +34,7 @@ public class CetusFormColumnsService {
 
         Integer existFieldName = this.existFieldName(request.getFormGroup(), request.getName());
 
-        if(existFieldName != null && existFieldName == 1) {
+        if (existFieldName != null && existFieldName == 1) {
             throw new SimpleException("이미 존재하는 필드명입니다.", HttpStatus.CONFLICT);
         }
 
@@ -66,20 +63,22 @@ public class CetusFormColumnsService {
         CetusFormColumns view = columnsDao.view(uid);
         columnsDao.update(view.changeColumns(uid, request));
 
-        if(ElementType.from(request.getType()).requiresOption()) {
+        if (ElementType.from(request.getType()).requiresOption()) {
             if (request.getOptions() == null && request.getOptions().isEmpty()) {
                 throw new SimpleException("옵션이 필요한 컬럼입니다.", HttpStatus.NO_CONTENT);
             }
 
             var options = request.getOptions();
             options.forEach(option -> {
-               option.addColumnsUid(view.getUid());
-               option.addAuthor(view.getRegUid());
-               if(option.getUid() != null) {
-                   optionsDao.update(option);
-               } else {
-                   optionsDao.insert(option);
-               }
+                option.addColumnsUid(view.getUid());
+                option.addAuthor(view.getRegUid());
+                if (option.getUid() != null) {
+                    optionsDao.update(option);
+                } else {
+                    Integer nextSortNum = optionsDao.findNextSortNum(uid);
+                    option.addSortNum(nextSortNum);
+                    optionsDao.insert(option);
+                }
             });
         }
     }
@@ -89,7 +88,7 @@ public class CetusFormColumnsService {
         List<ColumnsPage> list = columnsDao.page(request);
 
         list.forEach(x -> {
-            if(ElementType.from(x.getType()).requiresOption()) {
+            if (ElementType.from(x.getType()).requiresOption()) {
                 List<CetusColumnOptions> options = optionsDao.list(x.getUid());
                 x.addOptions(options);
             }
@@ -101,7 +100,7 @@ public class CetusFormColumnsService {
     public List<ColumnsPage> getFormGroupColumns(String formGroup) {
         List<ColumnsPage> list = columnsDao.findByTenanyAndFormGroup(new ColumnsSearch(null, formGroup));
         list.forEach(x -> {
-            if(ElementType.from(x.getType()).requiresOption()) {
+            if (ElementType.from(x.getType()).requiresOption()) {
                 List<CetusColumnOptions> options = optionsDao.list(x.getUid());
                 x.addOptions(options);
             }
@@ -113,7 +112,7 @@ public class CetusFormColumnsService {
     @Transactional(readOnly = true)
     public ColumnsView column(Long uid) {
         var data = columnsDao.findByUid(uid).orElseThrow();
-        if(ElementType.from(data.getType()).requiresOption()) {
+        if (ElementType.from(data.getType()).requiresOption()) {
             List<CetusColumnOptions> options = optionsDao.list(data.getUid());
             data.addOptions(options);
         }
@@ -133,7 +132,7 @@ public class CetusFormColumnsService {
     }
 
     @Transactional
-    public void deleteOption (Long uid) {
+    public void deleteOption(Long uid) {
         optionsDao.delete(uid);
     }
 
@@ -145,15 +144,15 @@ public class CetusFormColumnsService {
 
     @Transactional
     public void changeOrder(ColumnsOrder request) {
-        ColumnsView target = null;
-
-        if("prev".equals(request.getDirection())) {
-            target = columnsDao.selectPrevByFormGroup(request).orElseThrow(() -> new SimpleException("이전 컬럼이 없습니다.", HttpStatus.NOT_FOUND));
-        } else if("next".equals(request.getDirection())) {
-            target = columnsDao.selectNextByFormGroup(request).orElseThrow(() -> new SimpleException("다음 컬럼이 없습니다.", HttpStatus.NOT_FOUND));
+        for (int i = 0; i < request.getReorderedUid().size(); i++) {
+            columnsDao.updateOrder(request.getReorderedUid().get(i), i + 1);
         }
+    }
 
-        columnsDao.updateOrder(request.getUid(), target.getSortNum());
-        columnsDao.updateOrder(target.getUid(), request.getSortNum());
+    @Transactional
+    public void changeOptionsOrder(OptionsOrder request) {
+        for (int i = 0; i < request.getNameList().size(); i++) {
+            optionsDao.updateOrder(request.getColumnsUid(), request.getNameList().get(i), i + 1);
+        }
     }
 }

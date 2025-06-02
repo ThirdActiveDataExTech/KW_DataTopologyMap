@@ -1,10 +1,7 @@
 package kware.apps.manager.cetus.form.service;
 
 import cetus.Response;
-import kware.apps.manager.cetus.form.dto.request.ColumnsChange;
-import kware.apps.manager.cetus.form.dto.request.ColumnsOrder;
-import kware.apps.manager.cetus.form.dto.request.ColumnsSave;
-import kware.apps.manager.cetus.form.dto.request.ColumnsSearch;
+import kware.apps.manager.cetus.form.dto.request.*;
 import kware.apps.manager.cetus.form.dto.response.ColumnsPage;
 import kware.apps.manager.cetus.form.dto.response.ColumnsView;
 import lombok.RequiredArgsConstructor;
@@ -71,4 +68,9 @@ public class CetusFormColumnsRestController {
         return ResponseEntity.ok().build();
     }
 
+    @PutMapping("/options/order")
+    public ResponseEntity<Void> changeOptionsOrder(@RequestBody @Valid OptionsOrder request) {
+        service.changeOptionsOrder(request);
+        return ResponseEntity.ok().build();
+    }
 }

@@ -17,14 +17,24 @@
             background-repeat: no-repeat;
             background-position: center center;
         }
+        .clamp-multiline {
+            display: -webkit-box !important;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            -webkit-line-clamp: var(--line-clamp, 3);
+        }
+        .card-text-shadow {
+            z-index: 1;
+            position: relative;
+            text-shadow: 1px 1px 1px #eaeaea;
+        }
     </style>
 </th:block>
 
 <th:block layout:fragment="content">
 
-    <div class="checkout-main-area pb-100 pt-80">
-
-
+    <div class="checkout-main-area pt-80">
     </div>
 
 </th:block>

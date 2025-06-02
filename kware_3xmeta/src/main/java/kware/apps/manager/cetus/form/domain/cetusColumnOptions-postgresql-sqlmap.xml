@@ -18,7 +18,7 @@
 		FROM CETUS_COLUMN_OPTIONS CU
 		WHERE 1 = 1
 		  AND COLUMNS_UID = #{columnsUid}
-		ORDER BY REG_DT DESC
+		ORDER BY SORT_NUM
 	</select>
 
 	<select id="findByUid" parameterType="long" resultType="ColumnsView">
@@ -33,6 +33,7 @@
 			 , UPDT_DT
 		FROM CETUS_FORM_COLUMNS
 		WHERE uid = #{uid}
+		ORDER BY SORT_NUM
 	</select>
 
 	<insert id="insert" parameterType="CetusColumnOptions">
@@ -80,4 +81,12 @@
 		DELETE FROM CETUS_COLUMN_OPTIONS
 		WHERE UID = #{uid}
 	</delete>
+
+	<update id="updateOrder" parameterType="map">
+		UPDATE CETUS_COLUMN_OPTIONS
+		SET
+			SORT_NUM = #{sortNum}
+		WHERE NAME = #{name}
+		 AND COLUMNS_UID = #{columnsUid}
+	</update>
 </mapper>

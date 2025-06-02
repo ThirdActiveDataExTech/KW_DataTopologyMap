@@ -34,7 +34,6 @@ public class CetusFormColumnsController {
         model.addAttribute("formGroups", FormGroup.values());
         return "asp/form/dual";
     }
-
     @GetMapping("/save")
     public String save(Model model) {
         model.addAttribute("types", ElementType.values());

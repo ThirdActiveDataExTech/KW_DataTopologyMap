@@ -74,6 +74,18 @@
             background-color: #f5f5f5; /* 선택 불가처럼 보여주기 위한 시각적 효과 */
             color: #666;
         }
+
+        .dragging-real {
+            background-color: #d7e4f5;
+            color: white;
+            transform: scale(1.02);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        }
+        .chosen {
+            background-color: #d7e4f5;
+            outline: 1px dashed #d7e4f5;
+        }
+
     </style>
     <link rel="stylesheet" th:href="@{'/assets/css/page/manager/user-list.css'}"/>
     <link rel="stylesheet" th:href="@{'/assets/css/page/manager/user-form.css'}"/>
@@ -104,12 +116,6 @@
                             <div style="display: flex; justify-content: space-between; align-items: center;">
                                 <!-- 왼쪽: 폼 미리보기 -->
                                 <button class="custom-button" id="preview-btn">폼 미리보기</button>
-
-                                <!-- 오른쪽: 정렬 버튼 -->
-                                <div>
-                                    <button type="button" class="custom-button mr-2" style="width: 50px;" onclick="formJS.sortColumns('prev')">↑</button>
-                                    <button type="button" class="custom-button mr-2" style="width: 50px;" onclick="formJS.sortColumns('next')">↓</button>
-                                </div>
                             </div>
                             <div class="tab-content">
                                 <div class="tab-pane fade"
@@ -118,21 +124,22 @@
                                      th:classappend="${iterStat.index == 0} ? ' show active'">
 
                                     <div class="table-responsive mt-3 text-center">
-                                        <table class="table table-bordered"
-                                               th:id="${group.name().toLowerCase() + '-table'}">
-                                            <thead class="table-light">
-                                            <tr>
-                                                <th></th>
-                                                <th>순서</th>
-                                                <th>빌더 타입</th>
-                                                <th>라벨</th>
-                                                <th>필드명</th>
-                                                <th>필수 여부</th>
-                                                <th>등록일</th>
-                                                <th>등록자</th>
-                                            </tr>
-                                            </thead>
-                                        </table>
+                                        <div id="field-sortable-wrapper">
+                                            <table class="table table-bordered"
+                                                   th:id="${group.name().toLowerCase() + '-table'}">
+                                                <thead class="table-light">
+                                                <tr>
+                                                    <th>순서</th>
+                                                    <th>빌더 타입</th>
+                                                    <th>라벨</th>
+                                                    <th>필드명</th>
+                                                    <th>필수 여부</th>
+                                                    <th>등록일</th>
+                                                    <th>등록자</th>
+                                                </tr>
+                                                </thead>
+                                            </table>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -167,11 +174,17 @@
                                         <div class="col-12 d-flex justify-content-between align-items-center">
                                             <h6 class="mb-0">기본 정보</h6>
                                             <div class="right-buttons">
-                                                <button type="button" class="custom-button m-1" id="new-btn" style="width:50px;">초기화</button>
-                                                <button type="button" class="custom-button m-1" id="save-btn" style="width:50px;">등록</button>
-                                                <button type="button" class="custom-button m-1" id="update-btn" style="width: 50px; display: none;">수정
-                                                <button type="button" class="custom-button m-1" id="delete-btn" style="width: 50px; display: none;">삭제
+                                                <button type="button" class="custom-button m-1" id="new-btn"
+                                                        style="width:50px;">초기화
                                                 </button>
+                                                <button type="button" class="custom-button m-1" id="save-btn"
+                                                        style="width:50px;">등록
+                                                </button>
+                                                <button type="button" class="custom-button m-1" id="update-btn"
+                                                        style="width: 50px; display: none;">수정
+                                                    <button type="button" class="custom-button m-1" id="delete-btn"
+                                                            style="width: 50px; display: none;">삭제
+                                                    </button>
                                             </div>
                                             <div id="select-wrapper" style="display: none;">
                                                 <select class="nice-select nice-select-style-1" id="groupSelect"
@@ -194,7 +207,9 @@
                                             <div class="input-group">
                                                 <input type="text" id="name" name="name"
                                                        class="form-control custom-input" required>
-                                                <button class="custom-button" id="name-chk" type="button" style="width: 60px;">중복확인</button>
+                                                <button class="custom-button" id="name-chk" type="button"
+                                                        style="width: 60px;">중복확인
+                                                </button>
                                                 <span class="validation-error-message" id="name-error"></span>
                                             </div>
                                         </div>
@@ -330,8 +345,8 @@
 
 <th:block layout:fragment="script">
     <script th:src="@{'/assets/js/page/manager/form-builder-dual.js'}"></script>
+    <script th:src="@{'/assets/js/sortablejs-1.15.6.js'}"></script>
     <script th:inline="javascript">
-
         let selectedUid;
         const formGroup = [[${formGroups}]]
         const updtChild = $("#save-form-child");
@@ -352,23 +367,21 @@
             })
 
             $("#add-child").on('click', formJS.addTr);
-
             $("#name-chk").on('click', formJS.checkName);
-
-            $(document).on('click', '.remove-tr-btn', function () {
-                formJS.removeTr(this);
-            });
-
+            $(document).on('click', '.remove-tr-btn', formJS.removeTr);
+            $("#new-btn").on('click', formJS.newInfo);
             $("#save-btn").on('click', formJS.saveForm);
             $("#update-btn").on('click', formJS.updateForm)
             $("#delete-btn").on('click', formJS.deleteForm)
             $("#preview-btn").on('click', formJS.previewModal)
             $("#col-num").on('change', formJS.previewModal)
+
             // 초기 로딩
             $.each(formGroup, function (index, item) {
                 formJS.createTable(item);
             });
             const item = sessionStorage.getItem('formGroup')
+
             if (item) {
                 const tabSelector = `.description-review-topbar a[data-type="${item}"]`;
                 const tabPaneId = `#${item.toLowerCase()}-tab`;
@@ -383,7 +396,8 @@
                 sessionStorage.setItem('formGroup', type);
             });
 
-            $("#new-btn").on('click', formJS.newInfo);
+            formJS.optionControl()
+
         });
 
     </script>

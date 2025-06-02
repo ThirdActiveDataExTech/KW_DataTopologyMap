@@ -1,22 +1,19 @@
 package kware.apps.manager.cetus.form.dto.request;
 
-import cetus.user.UserUtil;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class ColumnsOrder {
+public class OptionsOrder {
     @NotEmpty
-    private List<Long> reorderedUid = new ArrayList<>();
-    @NotBlank
-    private String formGroup;
-
-    private Long workplaceUid = UserUtil.getUser().getWorkplaceUid();
+    private List<String> nameList = new ArrayList<>();
+    @NotNull
+    private Long columnsUid;
 }

@@ -73,7 +73,7 @@ public class AspController {
         model.addAttribute("recentBbsctt", recentBbsctt);
 
         try {
-            ClassPathResource resource = new ClassPathResource("static/assets/data/3xmeta/list_data.json");
+            ClassPathResource resource = new ClassPathResource("static/assets/data/list_data.json");
             byte[] jsonData = Files.readAllBytes(resource.getFile().toPath());
 
             ObjectMapper objectMapper = new ObjectMapper();
