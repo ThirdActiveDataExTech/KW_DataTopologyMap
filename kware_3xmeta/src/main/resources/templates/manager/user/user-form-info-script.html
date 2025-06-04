@@ -18,6 +18,10 @@
         $("#save-btn").on('click', function () {
             userFormInfo.submitForm();
         });
+        /* == 변경 취소 == */
+        $("#cancel-btn").on('click', function () {
+            userFormInfo.cancelForm();
+        });
 
         /* == 유저 상태값 수정 이벤트 == */
         $('#userStatus').on('change', function () {
