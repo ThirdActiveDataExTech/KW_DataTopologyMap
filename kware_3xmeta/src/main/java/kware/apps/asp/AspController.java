@@ -72,27 +72,6 @@ public class AspController {
         });
         model.addAttribute("recentBbsctt", recentBbsctt);
 
-        try {
-            ClassPathResource resource = new ClassPathResource("static/assets/data/list_data.json");
-            byte[] jsonData = Files.readAllBytes(resource.getFile().toPath());
-
-            ObjectMapper objectMapper = new ObjectMapper();
-            List<HomeData> dataList = objectMapper.readValue(jsonData, new TypeReference<List<HomeData>>() {});
-
-
-            ClassPathResource configResource = new ClassPathResource("static/assets/data/3xmeta/type_config_data.json");
-            byte[] configJson = Files.readAllBytes(configResource.getFile().toPath());
-
-            List<HomeConfigData> configDataList = objectMapper.readValue(configJson, new TypeReference<List<HomeConfigData>>() {});
-
-            model.addAttribute("homeDataList", dataList);
-            model.addAttribute("configDataList", configDataList);
-            
-        } catch (IOException e) {
-            e.printStackTrace();
-            model.addAttribute("homeDataList", null);
-        }
-
         return "asp/page/home";
     }
 
@@ -100,6 +79,7 @@ public class AspController {
     @GetMapping("/list")
     public String list(Model model) {
         menuNavigationManager.renderingPage("/asp/list", "LIST", true, model);
+        model.addAttribute("userUid", UserUtil.getUser().getUid());
         return "asp/page/list";
     }
 
