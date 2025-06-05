@@ -86,4 +86,9 @@ public class CetusBbsService {
     public List<BbsList> findAllWorkplaceBbs() {
         return dao.getAllWorkplaceBbs(UserUtil.getUserWorkplaceUid());
     }
+
+    @Transactional(readOnly = true)
+    public int findBbscttCountByBbsUid(Long bbsUid) {
+        return dao.getBbscttCountByBbsUid(bbsUid);
+    }
 }

@@ -163,4 +163,12 @@
          WHERE CB.DELETE_AT = 'N'
            AND CB.WORKPLACE_UID = #{workplaceUid}
     </select>
+
+    <select id="getBbscttCountByBbsUid" parameterType="Long" resultType="int">
+        /* cetusBbs.getBbscttCountByBbsUid */
+        SELECT COUNT(*)
+          FROM CETUS_BBSCTT CB
+         WHERE CB.BBS_UID = #{bbsUid}
+           AND CB.DELETE_AT = 'N'
+    </select>
 </mapper>

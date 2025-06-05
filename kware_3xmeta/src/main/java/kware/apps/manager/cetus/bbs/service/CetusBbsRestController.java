@@ -51,4 +51,10 @@ public class CetusBbsRestController {
         List<BbsList> allWorkplaceBbs = service.findAllWorkplaceBbs();
         return ResponseEntity.ok(allWorkplaceBbs);
     }
+
+    @GetMapping("/{uid}/child")
+    public ResponseEntity findBbscttCountByBbsUid(@PathVariable("uid") Long uid) {
+        int countByBbsUid = service.findBbscttCountByBbsUid(uid);
+        return ResponseEntity.ok(countByBbsUid);
+    }
 }

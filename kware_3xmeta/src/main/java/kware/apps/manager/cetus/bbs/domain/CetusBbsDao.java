@@ -23,4 +23,8 @@ public class CetusBbsDao extends SuperDao<CetusBbs> {
     public List<BbsList> getAllWorkplaceBbs(Long workplaceUid) {
         return selectList("getAllWorkplaceBbs", workplaceUid);
     }
+
+    public int getBbscttCountByBbsUid(Long bbsUid) {
+        return selectOne("getBbscttCountByBbsUid", bbsUid);
+    }
 }
