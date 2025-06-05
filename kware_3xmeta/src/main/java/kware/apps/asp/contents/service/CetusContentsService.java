@@ -33,7 +33,7 @@ public class CetusContentsService {
     public List<CetusCategories> categoriesList() {
         return List.of(
             new CetusCategories(Categories.FIELD, Categories.FIELDNAME, Categories.ITEMS),
-            new CetusCategories(ContentFormat.FIELD, ContentFormat.FIELDNAME, ContentFormat.ITEMS),
+            // new CetusCategories(ContentFormat.FIELD, ContentFormat.FIELDNAME, ContentFormat.ITEMS),
             // new CetusCategories(ContentRatings.FIELD, ContentRatings.FIELDNAME, ContentRatings.ITEMS),
             // new CetusCategories(DateRange.FIELD, DateRange.FIELDNAME, DateRange.ITEMS),
             // new CetusCategories(Language.FIELD, Language.FIELDNAME, Language.ITEMS),

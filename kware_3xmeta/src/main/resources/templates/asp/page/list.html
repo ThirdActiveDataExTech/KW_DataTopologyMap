@@ -12,26 +12,20 @@
 <th:block layout:fragment="head">
     <link rel="stylesheet" th:href="@{'/assets/css/page/list.css'}" />
     <style>
-        .badge {
-            display: inline-flex;
-            align-items: center;
-            padding: 4px 8px;
-            margin: 2px;
-            background: #007bff;
-            color: white;
-            border-radius: 12px;
-            font-size: 12px;
-            user-select: none;
+        .page-list-content .tag-content {
+            cursor: pointer;
         }
-        .badge .close-btn {
+
+        .tag-content .close-btn {
             cursor: pointer;
             margin-left: 6px;
             font-weight: bold;
         }
 
+
         .select2-selection__rendered > li.select2-selection__choice {
             display: none !important;
-            }
+        }
     </style>
 </th:block>
 <th:block layout:fragment="content">
@@ -121,7 +115,7 @@
 
           <div class="sidebar-widget sidebar-widget-border mb-40 pb-35" data-aos="fade-up" data-aos-delay="600">
                     <div class="sidebar-widget-title mb-30">
-                        <h3>등록일</h3>
+                        <h3>Date</h3>
                     </div>
                     <div class="page-filter">
                         <div id="slider-range"></div>
@@ -139,7 +133,7 @@
                 </div>
                 <div class="sidebar-widget" data-aos="fade-up" data-aos-delay="700">
                     <div class="sidebar-widget-title mb-25">
-                        <h3>태그</h3>
+                        <h3>Tags</h3>
                     </div>
                     <div class="sidebar-widget-tag">
                         <select class="select2 form-select round border_line" id="tags" name="tags" multiple>
@@ -165,9 +159,6 @@
         const filterList = await Http.get('/cetus/api/contents/categories');
         list.filterList = filterList;
         
-        console.log(filterList);
-        
-
         $('#showing-list').hide();
 
         list.pageList();
@@ -187,12 +178,29 @@
 
         $('#tags').on('change', function() {
             const selectedValues = $(this).val() || [];
-            renderBadges(selectedValues);
+            selectedValues.forEach(val => {
+                if (!list.param['tags'].includes(val)) {
+                    list.param['tags'].push(val);
+                }
+            });
+
+            renderBadges();
+            list.fnPage(1);
         });
 
         $('#tags').on('select2:select', function(e) {
-            // 선택 후 input에서 포커스 아웃 (blur)
-            $(this).select2('close'); // 드롭다운 닫기 효과와 함께 포커스 해제
+            $('#tags').val('');
+            $(this).select2('close'); 
+        });
+
+        $(document).on('click', '.page-list-content .tag-content', function () {
+            const selectedValues = $(this).text()
+            if (!list.param['tags'].includes(selectedValues)) {
+                list.param['tags'].push(selectedValues);
+            }
+            
+            renderBadges();
+            list.fnPage(1);
         });
 
         // 등록일 slider
@@ -202,8 +210,6 @@
             max: parseDate(),
             values: [0, parseDate()],
             slide: function(event, ui) {
-                console.log(ui.values[0])
-                console.log(ui.values[1])
                 $('#amount1').val(list.dateFormat(ui.values[0]))
                 $('#amount2').val(list.dateFormat(ui.values[1]))
             }
@@ -242,13 +248,12 @@
 
         // 검색조건 검색
         $(document).on('change', 'input[type="checkbox"]', function() {
-            console.log("checkbox")
 
             const type = $(this).attr('id').split('_')[0];
             const value = $(this).attr('value');
 
             if ($(this).is(':checked')) {
-                list.param[type].push(value);
+                list.param[type]?.push(value);
             } else {
                 list.param[type] = list.param[type].filter(item => item !== value);
             }
@@ -291,24 +296,25 @@
         return amount = Math.floor(diffInMs / (1000 * 60 * 60 * 24));
     }
 
-     function renderBadges(values) {
+     function renderBadges() {
         const container = $('#badgeContainer');
         container.empty();
 
-        values.forEach(val => {
-        const text = $('#tags option[value="'+val+'"]').text() || val; // 옵션에 없으면 입력한 값 그대로
+        list.param['tags'].forEach(val => {
+            const text = $('#tags option[value="'+val+'"]').text() || val; // 옵션에 없으면 입력한 값 그대로
 
-        const badge = $('<span>').addClass('badge').text(text);
+            const badge = $('<span>').addClass('tag-content').text(text);
 
-        const closeBtn = $('<span>').addClass('close-btn').html('&times;');
+            const closeBtn = $('<span>').addClass('close-btn').html('&times;');
 
-        closeBtn.on('click', function(e) {
-            e.stopPropagation();
-            // 선택값에서 제거 후 select2 갱신
-            const selected = $('#tags').val() || [];
-            const newSelected = selected.filter(v => v !== val);
-            $('#tags').val(newSelected).trigger('change');
-        });
+            closeBtn.on('click', function(e) {
+                e.stopPropagation();
+                // 선택값에서 제거 후 select2 갱신
+                // const selected = $('#tags').val() || [];
+                list.param['tags'] = list.param['tags'].filter(v => v !== val);
+                badge.remove();
+                list.fnPage(1);
+            });
 
             badge.append(closeBtn);
             container.append(badge);
