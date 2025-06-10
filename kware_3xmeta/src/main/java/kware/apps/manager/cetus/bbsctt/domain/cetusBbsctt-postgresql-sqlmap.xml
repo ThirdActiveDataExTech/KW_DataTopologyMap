@@ -42,7 +42,14 @@
         <if test="@Ognl@isNotEmpty(regUid)">
            AND CBBSCTT.REG_UID = #{regUid}
         </if>
-         ORDER BY CBBSCTT.REG_DT DESC
+        <choose>
+            <when test="orderByNotice == 'Y'.toString()">
+                ORDER BY CBBSCTT.NOTICE_AT DESC, CBBSCTT.REG_DT DESC
+            </when>
+            <otherwise>
+                ORDER BY CBBSCTT.REG_DT DESC
+            </otherwise>
+        </choose>
         <if test="@Ognl@isNotEmpty(startNumber) and  @Ognl@isNotEmpty(endNumber)">
         OFFSET ${startNumber} LIMIT ${endNumber}
         </if>
