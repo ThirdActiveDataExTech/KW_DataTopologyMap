@@ -3,6 +3,41 @@
 
 $(function () {
 
+    const jsonStr = /*[[${content.metadata}]]*/ '{}';
+    const jsonObj = JSON.parse(jsonStr);
+    
+    console.log(jsonObj);
+    const $tableBody = $('.specification-wrap table tbody');
+    $tableBody.empty(); // 기존 내용 제거
+    
+    // 2개의 열로 나누기
+    const itemsPerRow = 2;
+    const totalItems = jsonObj.labels.length;
+    const totalRows = Math.ceil(totalItems / itemsPerRow);
+    
+    for (let i = 0; i < totalRows; i++) {
+        const row = $('<tr>');
+        
+        for (let j = 0; j < itemsPerRow; j++) {
+          const index = i * itemsPerRow + j;
+          if (index < totalItems) {
+            const item = jsonObj.labels[index];
+            const value = Array.isArray(jsonObj[item.key]) 
+              ? jsonObj[item.key].join(', ') 
+              : jsonObj[item.key] || '';
+            
+            row.append(`
+              <td class="col-2 width1">${item.label}</td>
+              <td class="col-4">${value}</td>
+            `);
+          }
+        }
+        
+        $tableBody.append(row);
+    }
+
+    
+
     detail02.drawTemplate02();
 
     $(document).on("click", ".api-tab", function (e) {

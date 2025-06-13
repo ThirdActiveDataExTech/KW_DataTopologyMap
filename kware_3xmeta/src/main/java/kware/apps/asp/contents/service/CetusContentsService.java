@@ -10,25 +10,24 @@ import cetus.bean.Pageable;
 import kware.apps.asp.contents.domain.CetusCategories;
 import kware.apps.asp.contents.domain.CetusContents;
 import kware.apps.asp.contents.domain.CetusContentsDao;
+import kware.apps.asp.contents.domain.CetusTags;
 import kware.apps.asp.contents.dto.request.ContentsSearch;
 import kware.apps.asp.contents.dto.response.ContentsPage;
-import kware.apps.manager.cetus.bbs.domain.CetusBbs;
+import kware.apps.asp.contents.dto.response.ContentsView;
+import kware.apps.asp.contents.request.ContentChange;
 import kware.apps.manager.cetus.contents.categories.Categories;
-import kware.apps.manager.cetus.contents.categories.ContentFormat;
-import kware.apps.manager.cetus.contents.categories.ContentRatings;
-import kware.apps.manager.cetus.contents.categories.DateRange;
-import kware.apps.manager.cetus.contents.categories.Language;
-import kware.apps.manager.cetus.contents.categories.Regions;
-import kware.apps.manager.cetus.contents.categories.Sns;
 import kware.apps.manager.cetus.contents.categories.Sources;
 import kware.apps.manager.cetus.contents.categories.Types;
+import kware.common.file.service.CommonFileService;
 import lombok.RequiredArgsConstructor;
+
 
 @Service
 @RequiredArgsConstructor
 public class CetusContentsService {
 
     private final CetusContentsDao dao;
+    private final CommonFileService commonFileService;
 
     public List<CetusCategories> categoriesList() {
         return List.of(
@@ -50,8 +49,25 @@ public class CetusContentsService {
     }
 
     @Transactional(readOnly = true)
-    public CetusContents view(Long uid) {
-        return dao.view(uid);
+    public ContentsView view(Long uid) {
+        ContentsView contents = dao.contentsView(uid);
+        List<CetusTags> tags = dao.findTagsByContentsUid(uid);
+        contents.setTags(tags);
+        return contents;
+    }
+    
+    @Transactional
+    public void changeContent(Long uid, ContentChange request) {
+        CetusContents view = dao.view(uid);
+
+        // img
+        Long contentFile = commonFileService.processFileSeparately(request.getContentFile(), request.getContentFileDel(), request.getContentFileUid());
+        Long thumbnail = commonFileService.processFileSeparately(request.getThumbnail(), request.getThumbnailDel(), request.getThumbnailUid());
+
+        CetusContents bean = view.changeContent(uid, request);
+        bean.setFileUids(contentFile, thumbnail);
+
+        dao.update(bean);
     }
 
 }

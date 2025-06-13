@@ -14,6 +14,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -22,8 +23,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import cetus.user.UserUtil;
 import cetus.util.DateTimeUtil;
 import cetus.util.HtmlUtil;
+import kware.apps.asp.contents.domain.CetusContents;
+import kware.apps.asp.contents.dto.response.ContentsView;
 import kware.apps.asp.contents.dto.response.HomeConfigData;
 import kware.apps.asp.contents.dto.response.HomeData;
+import kware.apps.asp.contents.service.CetusContentsService;
 import kware.apps.manager.cetus.bbsctt.dto.response.BbscttRecentList;
 import kware.apps.manager.cetus.bbsctt.service.CetusBbscttService;
 import kware.apps.manager.cetus.form.service.CetusFormColumnsService;
@@ -54,6 +58,7 @@ public class AspController {
     private final CetusBbscttService bbscttService;
     private final CetusFormColumnsService columnsService;
     private final MenuNavigationManager menuNavigationManager;
+    private final CetusContentsService contentsService;
 
 
     @GetMapping({"/home", "/", ""})
@@ -83,9 +88,13 @@ public class AspController {
         return "asp/page/list";
     }
 
-    @GetMapping("/detail")
-    public String openDetail(Model model) {
+    @GetMapping("/detail/{uid}")
+    public String openDetail(@PathVariable("uid") Long uid, Model model) {
         menuNavigationManager.renderingPage("/asp/list", "Detail", false, model);
+        model.addAttribute("userUid", UserUtil.getUser().getUid());
+
+        ContentsView content = contentsService.view(uid);
+        model.addAttribute("content", content);
         return "asp/page/detail";
     }
 

@@ -38,7 +38,7 @@
             <div class="page-details-content" data-aos="fade-up" data-aos-delay="400">
                 <div class="row">
                   <div class="col-lg-8">
-                    <h2 id="contentTitle"></h2>
+                    <h2 id="contentTitle" th:text="${content.title}"></h2>
                   </div>
                   <div class="col-lg-4 justify-content-end" style="flex-direction: row; display: flex;">
                     <div class="page-details-action-wrap">
@@ -62,18 +62,20 @@
                   </div>
                 </div>
                 <div class="page-color page-color-active page-details-color">
-                  <span id="descriptTitle"></span>
+                  <span id="descriptTitle" th:text="${content.description}"></span>
                 </div>
                 <div class="page-details-meta data-description-area">
                   <ul>
-                    <li id="description"></li>
+                    <li id="description" th:text="${content.contents}"></li>
                   </ul>
                 </div>
                 <div class="page-details-meta data-description-area list-tag-pnl">
                   <ul>
                       <li>
                           <ul class="tag">
-                              
+                            <li th:each="tag : ${content.tags}" class="tag-content">
+                                <a href="#" th:text="${tag.tagName}"></a>
+                            </li>
                           </ul>
                       </li>
                   </ul>
@@ -120,6 +122,7 @@
         </div>
     </div>
   </div>
+  
 
 <div class="ratting-edit-area pb-95">
   <div class="container">

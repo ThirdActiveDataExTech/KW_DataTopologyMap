@@ -34,23 +34,56 @@
     </select>
 
 
-     <select id="view" resultType="CetusContents" parameterType="Long">
+    <select id="view" resultType="ContentsView" parameterType="Long">
         /* cetusContents.view */
-        SELECT uid
-             , workplace_uid
-             , title
-             , description
-             , contents
-             , metadata
-             , ratings
-             , sample_data
-             , file_uid
-             , thumbnail_uid
+        SELECT cc.uid
+             , cc.workplace_uid
+             , cc.title
+             , cc.description
+             , cc.contents
+             , cc.metadata
+             , cc.ratings
+             , cc.sample_data
+             , cc.file_uid
+             , cf.file_id
+             , cc.thumbnail_uid
+             , cc.reg_uid
+             , TO_CHAR(cc.reg_dt, 'YYYY-MM-DD HH24:MM') AS reg_dt
+             , cc.updt_uid
+             , TO_CHAR(cc.updt_dt, 'YYYY-MM-DD HH24:MM') AS updt_dt
+          FROM cetus_contents cc
+          LEFT JOIN k_3xmeta.cetus_file cf
+            ON cc.file_uid = cf.file_uid    
+         WHERE cc.uid = #{uid}
+    </select>
+
+    <update id="update" parameterType="cetusContents">
+		/* cetusContents.update */
+		UPDATE cetus_contents
+		   SET title = #{title}
+			  ,description = #{description}
+			  ,contents = #{contents}
+			  ,metadata = #{metadata}::jsonb
+			  ,sample_data = #{sampleData}::jsonb
+              <if test="@Ognl@isNotEmpty(fileUid)">
+			  ,file_uid = #{fileUid}
+              </if>
+              <if test="@Ognl@isNotEmpty(thumbnailUid)">
+			  ,thumbnail_uid = #{thumbnailUid}
+              </if>
+			  ,updt_uid = #{updtUid}
+			  ,updt_dt = NOW()
+		 WHERE uid = #{uid}
+	</update>
+
+    <select id="findTagsByContentsUid" resultType="CetusTags" parameterType="Long">
+        /* cetusContents.findTagsByContentsUid */
+        SELECT contents_uid
+             , tag_name
              , reg_uid
              , TO_CHAR(reg_dt, 'YYYY-MM-DD HH24:MM') AS reg_dt
-             , updt_uid
-             , TO_CHAR(updt_dt, 'YYYY-MM-DD HH24:MM') AS updt_dt
-          FROM cetus_contents
-         WHERE uid = #{uid}
+          FROM cetus_tag_mapping
+         WHERE contents_uid = #{uid}
+         ORDER BY reg_dt DESC
     </select>
 </mapper>

@@ -50,7 +50,7 @@
           </div>
         </div>
 
-         <form class="needs-validation" id="update-form-parent" novalidate="">
+         <form class="needs-validation" id="content-update-form" novalidate="">
             <div class="card-body">
                 <div class="row">
                     <div class="col-lg-6">
@@ -84,7 +84,7 @@
                         </div>
                     </div>
                     <div class="col-lg-6">
-                        <label for="contents">워크플레이스 내용</label>
+                        <label for="contents">컨텐츠 내용</label>
                         <div class="input-group">
                         <input type="text" id="contents" name="contents" class="form-control" th:value="${content.contents}">
                         </div>
@@ -117,6 +117,20 @@
                         <label for="sampleData">파일 UID</label>
                         <div class="input-group">
                         <input type="text" id="sampleData" name="sampleData" class="form-control">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="single-input-item">
+                            <div for="contentFile" class="required">컨텐츠 파일</div>
+                            <div>
+                                <div id="contentFile-upload-container" class="mt-1"></div>
+                            </div>
+                            <div>
+                                <span style="font-size: 11px;color: #868181;">* 최대 1개의 파일만 업로드가 가능힙니다.</span>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -163,26 +177,33 @@
 </th:block>
 
 <th:block layout:fragment="script">
+    <script th:src="@{'/assets/js/page/manager/contents/contents-list-form.js'}"></script>
+    <script th:inline="javascript">
+        const content = [[${content}]]
 
-  <script th:inline="javascript">
-    const uid = [[${content}]]
-    $(function() {
-        const table = new Table('contents-table')
-            .switchDiv()
-            .get(`/cetus/api/contents?workplaceUid=${1}`)
-            .add(new Column("uid").center())
-            .add(new Column("title").center())
-            .add(new Column("workplaceUid").center())
-            .add(new Column("regUid").center())
-            .add(new Column("regDt").center())
-            .selectable()
-            .select(function (data) {
-                location.href = `/manager/cetus/contents/${data.uid}`
-            })
-            .init();
+        $(function() {
+            contentsJS.initUploaders(content.fileUid);
 
-    });
+            // const table = new Table('contents-table')
+            //     .switchDiv()
+            //     .get(`/cetus/api/contents?workplaceUid=${1}`)
+            //     .add(new Column("uid").center())
+            //     .add(new Column("title").center())
+            //     .add(new Column("workplaceUid").center())
+            //     .add(new Column("regUid").center())
+            //     .add(new Column("regDt").center())
+            //     .selectable()
+            //     .select(function (data) {
+            //         location.href = `/manager/cetus/contents/${data.uid}`
+            //     })
+            //     .init();
 
-  </script>
+        });
+
+        $("#update-btn").on('click', function () {
+            contentsJS.updateForm();
+        });
+
+    </script>
 </th:block>
 </html>

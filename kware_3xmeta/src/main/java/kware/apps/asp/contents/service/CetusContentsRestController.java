@@ -1,10 +1,14 @@
 package kware.apps.asp.contents.service;
 
-
 import java.util.List;
+
+import javax.validation.Valid;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -13,6 +17,7 @@ import cetus.bean.Pageable;
 import kware.apps.asp.contents.domain.CetusCategories;
 import kware.apps.asp.contents.dto.request.ContentsSearch;
 import kware.apps.asp.contents.dto.response.ContentsPage;
+import kware.apps.asp.contents.request.ContentChange;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -32,5 +37,11 @@ public class CetusContentsRestController {
     public ResponseEntity getContentPageList(ContentsSearch search, Pageable pageable) {
         Page<ContentsPage> contentPageList = service.getContentPageList(search, pageable);
         return ResponseEntity.ok(contentPageList);
+    }
+
+    @PutMapping("/{uid}")
+    public ResponseEntity changeContent(@PathVariable("uid") Long uid, @RequestBody @Valid ContentChange request) {
+        service.changeContent(uid, request);
+        return ResponseEntity.ok().build();
     }
 }

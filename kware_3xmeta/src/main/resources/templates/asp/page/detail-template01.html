@@ -1,13 +1,13 @@
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <th:block th:fragment="divTabDetailData"> 
   <div class="row" style="margin-bottom: 25px;" data-aos="fade-up" data-aos-delay="200">
-    <div class="col-lg-6">
+    <div class="col-lg-12">
       <div class="specification-wrap table-responsive">
-        <table>
+        <table class="table">
             <tbody>
                 <tr>
                     <td class="width1">데이터 제목</td>
-                    <td id="dataTitle"></td>
+                    <td id="dataTitle" th:text="${content.metadata}"></td>
                 </tr>
                 <tr>
                     <td class="width1">고유식별자</td>
@@ -45,7 +45,7 @@
         </table>
       </div>
     </div>
-    <div class="col-lg-6">
+    <!-- <div class="col-lg-6">
       <div class="specification-wrap table-responsive">
         <table>
             <tbody>
@@ -84,7 +84,7 @@
             </tbody>
         </table>
       </div>
-    </div>
+    </div> -->
   </div>
 
   <div class="row" style="margin-bottom: 25px;" data-aos="fade-up" data-aos-delay="200">
@@ -110,6 +110,12 @@
             </div>
           </div>
           <div class="wishlist-table-content">
+            <div class="video-container">
+                <div style="width: 100%;">
+                    <video th:src="|/cetus/files/download?fileId=${content.fileId}|" controls 
+                    style="width: 100%; object-fit: contain;"></video>
+                  </div>
+            </div>
             <div class="table-content table-responsive">
               <table>
                   <thead>
@@ -177,4 +183,19 @@
     </div>
   </div>
 </th:block>
+
+<style>
+.video-container {
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.video-container video {
+  width: 100%;
+  height: auto;
+  max-height: 450px;
+  object-fit: contain;
+}
+</style>
 </html>
