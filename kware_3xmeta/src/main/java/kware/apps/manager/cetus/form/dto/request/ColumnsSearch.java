@@ -11,6 +11,6 @@ public class ColumnsSearch {
      public ColumnsSearch(String type, String formGroup) {
          this.type = type;
          this.formGroup = formGroup;
-         this.workplaceUid = 1l;
+         this.workplaceUid = UserUtil.getUserWorkplaceUid();
      }
  }
