@@ -192,22 +192,36 @@ $(function () {
     $("#tabRating #btnTabRatingSubmit").click(function(e){
 
         let obj = {
-            rating : Common.getRattingStar($("#tabRating .your-rating.tab-state")),
-            ratingType : $("#tabRating [name=tab-ratting-group]:checked").val(),
-            detailContents : $("#tabRating .rating-form-style input[type=text]").val()
+            ratings : Common.getRattingStar($("#tabRating .your-rating.tab-state")),
+            type : $("#tabRating [name=tab-ratting-group]:checked").val(),
+            comment : $("#tabRating .rating-form-style input[type=text]").val(),
+            contentsUid : contentUid
         };
         console.log(obj);
 
         // 내용 출력
         let strMsg = "";
-        strMsg += "평점 : " + obj.rating + "<br/>";
-        strMsg += "타입 선택 : " + obj.ratingType + "<br/>";
-        strMsg += "작성 내용 : " + obj.detailContents;
+        strMsg += "평점 : " + obj.ratings + "<br/>";
+        strMsg += "타입 선택 : " + obj.type + "<br/>";
+        strMsg += "작성 내용 : " + obj.comment;
 
         Util.alert(strMsg);
 
         e.preventDefault();
         e.stopPropagation();
+
+        Http.post(`/cetus/api/contents/comments`, obj, true).then((res) => {
+            Util.alert("평점 정보가 저장되었습니다.").then(() => {
+                window.location.href = `/asp/page/detail/${contentUid}`
+            })
+        }).fail((e) => {
+            if (e.status === 400) {
+                if (e.hasOwnProperty('responseJSON')) {
+                    const response = e['responseJSON'];
+                    ValidationError.setValidationMssg('save-bbs', response)
+                }
+            }
+        });
     });
 });
 </script>

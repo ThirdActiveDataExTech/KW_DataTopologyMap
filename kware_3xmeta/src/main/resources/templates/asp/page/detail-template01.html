@@ -100,7 +100,7 @@
               <div class="form-submit" style="display: flex; justify-content: end;">
                 <div class="page-more-update-wrapper btn-control-wrapper">
                   <div class="page-more-update btn-hover">
-                    <a href="javascript:void(0);" id="btnFileDownload">
+                    <a th:href="|/api/tus/file/download/${content.filePath}/${content.fileName}|" id="">
                       <i class="ti-cloud-down"></i>&nbsp;
                       <span>파일 다운로드</span>
                     </a>
@@ -112,11 +112,27 @@
           <div class="wishlist-table-content">
             <div class="video-container">
                 <div style="width: 100%;">
-                    <video th:src="|/cetus/files/download?fileId=${content.fileId}|" controls 
-                    style="width: 100%; object-fit: contain;"></video>
-                  </div>
+                    <!-- 비디오 파일인 경우 -->
+                    <th:block th:if="${#strings.startsWith(content.fileType, 'video/')}">
+                        <video th:src="|/cetus/files/download?fileId=${content.fileId}|" controls 
+                            style="width: 100%; object-fit: contain;"></video>
+                    </th:block>
+                    
+                    <!-- 이미지 파일인 경우 -->
+                    <th:block th:if="${#strings.startsWith(content.fileType, 'image/')}">
+                        <img th:src="|/cetus/files/download?fileId=${content.fileId}|" 
+                            style="width: 100%; object-fit: contain;" />
+                    </th:block>
+                    
+                    <!-- 기타 파일인 경우 -->
+                    <th:block th:unless="${#strings.startsWith(content.fileType, 'video/') || #strings.startsWith(content.fileType, 'image/')}">
+                        <a th:href="|/cetus/files/download?fileId=${content.fileId}|" class="btn btn-primary">
+                            <i class="fas fa-download"></i> 파일 다운로드
+                        </a>
+                    </th:block>
+                </div>
             </div>
-            <div class="table-content table-responsive">
+            <!-- <div class="table-content table-responsive">
               <table>
                   <thead>
                       <tr>
@@ -165,7 +181,7 @@
                       </tr>
                   </tbody>
               </table>
-            </div>
+            </div> -->
           </div>
         </div>
         <div id="des-details1-2" class="tab-pane">

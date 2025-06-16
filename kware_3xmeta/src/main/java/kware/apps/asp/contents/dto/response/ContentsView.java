@@ -2,7 +2,6 @@ package kware.apps.asp.contents.dto.response;
 
 import java.util.List;
 
-import kware.apps.asp.contents.domain.CetusContents;
 import kware.apps.asp.contents.domain.CetusTags;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -14,6 +13,7 @@ import lombok.Setter;
 public class ContentsView {
 
     private Long uid;
+    private Long workplaceUid;
     private String title;
     private String description;
     private String contents;
@@ -22,10 +22,15 @@ public class ContentsView {
     private String sampleData;
     private Long fileUid;
     private String fileId;
+    private String filePath;
+    private String fileType;
+    private String fileName;
     private Long thumbnailUid;
     private String thumbnailId;
     private String regDt;
     private String updtDt;
+    private String regUid;
+    private String updtUid;
 
     private List<CetusTags> tags;
 }

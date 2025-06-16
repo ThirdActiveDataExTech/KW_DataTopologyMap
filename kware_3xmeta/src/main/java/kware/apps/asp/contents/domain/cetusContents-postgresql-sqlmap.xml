@@ -46,6 +46,9 @@
              , cc.sample_data
              , cc.file_uid
              , cf.file_id
+             , cf.file_path
+             , cf.file_type
+             , cf.org_file_nm AS file_name
              , cc.thumbnail_uid
              , cc.reg_uid
              , TO_CHAR(cc.reg_dt, 'YYYY-MM-DD HH24:MM') AS reg_dt
@@ -86,4 +89,44 @@
          WHERE contents_uid = #{uid}
          ORDER BY reg_dt DESC
     </select>
+
+    <insert id="insertComment" parameterType="CetusContentsComment">
+        /* cetusContents.insertComment */
+        INSERT INTO cetus_contents_comments (
+            contents_uid,
+            type,
+            ratings,
+            comment,
+            reg_uid,
+            reg_dt,
+            updt_uid,
+            updt_dt
+        ) VALUES (
+            #{contentsUid},
+            #{type},
+            #{ratings},
+            #{comment},
+            #{regUid},
+            NOW(),
+            #{updtUid},
+            NOW()
+        )
+    </insert>
+
+    <select id="listComments" resultType="CetusContentsComment" parameterType="Long">
+        /* cetusContents.listComments */
+        SELECT uid,
+               contents_uid,
+               type,
+               ratings,
+               comment,
+               reg_uid,
+               TO_CHAR(reg_dt, 'YYYY-MM-DD HH24:MM') AS reg_dt,
+               updt_uid,
+               TO_CHAR(updt_dt, 'YYYY-MM-DD HH24:MM') AS updt_dt
+          FROM cetus_contents_comments
+         WHERE contents_uid = #{contentsUid}
+         ORDER BY reg_dt DESC
+    </select>
+
 </mapper>

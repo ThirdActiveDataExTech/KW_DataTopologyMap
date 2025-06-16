@@ -241,8 +241,10 @@
   <th:block th:replace="asp/page/detail-template04-script::script"></th:block>
   <th:block th:replace="asp/page/detail-template05-script::script"></th:block>
   <script th:inline="javascript">
-    $(function() {
 
+    const contentUid = /*[[${content.uid}]]*/ 0;
+    
+    $(function() {
       detail.fnPageSearch();
 
       // 북마크 버튼

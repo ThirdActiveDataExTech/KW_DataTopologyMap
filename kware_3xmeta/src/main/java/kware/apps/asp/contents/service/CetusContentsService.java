@@ -9,6 +9,7 @@ import cetus.bean.Page;
 import cetus.bean.Pageable;
 import kware.apps.asp.contents.domain.CetusCategories;
 import kware.apps.asp.contents.domain.CetusContents;
+import kware.apps.asp.contents.domain.CetusContentsComment;
 import kware.apps.asp.contents.domain.CetusContentsDao;
 import kware.apps.asp.contents.domain.CetusTags;
 import kware.apps.asp.contents.dto.request.ContentsSearch;
@@ -19,6 +20,7 @@ import kware.apps.manager.cetus.contents.categories.Categories;
 import kware.apps.manager.cetus.contents.categories.Sources;
 import kware.apps.manager.cetus.contents.categories.Types;
 import kware.common.file.service.CommonFileService;
+import kware.common.file.tus.util.EncryptionUtil;
 import lombok.RequiredArgsConstructor;
 
 
@@ -50,12 +52,20 @@ public class CetusContentsService {
 
     @Transactional(readOnly = true)
     public ContentsView view(Long uid) {
-        ContentsView contents = dao.contentsView(uid);
+        ContentsView content = dao.contentsView(uid);
         List<CetusTags> tags = dao.findTagsByContentsUid(uid);
-        contents.setTags(tags);
-        return contents;
+        content.setTags(tags);
+
+        if(content.getFilePath() != null) {
+            content.setFilePath(EncryptionUtil.encrypt(content.getFilePath()));
+        }
+        if(content.getFileName() != null) {
+            content.setFileName(EncryptionUtil.encrypt(content.getFileName()));
+        }
+
+        return content;
     }
-    
+
     @Transactional
     public void changeContent(Long uid, ContentChange request) {
         CetusContents view = dao.view(uid);
@@ -68,6 +78,16 @@ public class CetusContentsService {
         bean.setFileUids(contentFile, thumbnail);
 
         dao.update(bean);
+    }
+
+    @Transactional
+    public void insertComment(CetusContentsComment comment) {
+        dao.insertComment(comment);
+    }
+
+    @Transactional(readOnly = true)
+    public List<CetusContentsComment> listComments(Long contentsUid) {
+        return dao.listComments(contentsUid);
     }
 
 }

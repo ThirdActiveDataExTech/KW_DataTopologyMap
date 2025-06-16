@@ -23,4 +23,12 @@ public class CetusContentsDao extends SuperDao<CetusContents> {
         return selectList("findTagsByContentsUid", uid);
     }
 
+    public void insertComment(CetusContentsComment comment) {
+        insert("insertComment", comment);
+    }
+
+    public List<CetusContentsComment> listComments(Long contentsUid) {
+        return selectList("listComments", contentsUid);
+    }
+
 }

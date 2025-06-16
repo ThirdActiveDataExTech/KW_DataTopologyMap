@@ -7,6 +7,7 @@ import javax.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import cetus.bean.Page;
 import cetus.bean.Pageable;
 import kware.apps.asp.contents.domain.CetusCategories;
+import kware.apps.asp.contents.domain.CetusContentsComment;
 import kware.apps.asp.contents.dto.request.ContentsSearch;
 import kware.apps.asp.contents.dto.response.ContentsPage;
 import kware.apps.asp.contents.request.ContentChange;
@@ -42,6 +44,18 @@ public class CetusContentsRestController {
     @PutMapping("/{uid}")
     public ResponseEntity changeContent(@PathVariable("uid") Long uid, @RequestBody @Valid ContentChange request) {
         service.changeContent(uid, request);
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/{uid}/comments")
+    public ResponseEntity getContentComments(@PathVariable("uid") Long uid) {
+        List<CetusContentsComment> contentComments = service.listComments(uid);
+        return ResponseEntity.ok(contentComments);
+    }
+
+    @PostMapping("/comments")
+    public ResponseEntity insertContentComment(@RequestBody @Valid CetusContentsComment comment) {
+        service.insertComment(comment);
         return ResponseEntity.ok().build();
     }
 }
