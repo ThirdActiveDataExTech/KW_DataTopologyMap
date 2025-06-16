@@ -167,7 +167,7 @@
          WHERE UID = #{uid}
     </select>
 
-    <select id="getProgramByUrl" resultType="CetusProgrmInfo" parameterType="String">
+    <select id="getProgramByUrl" resultType="CetusProgrmInfo" parameterType="ProgrmFullInfoSearch">
         /* cetusProgrmInfo.getProgramByUrl */
         SELECT UID
               ,PROGRM_NM
@@ -177,9 +177,10 @@
               ,WORKPLACE_UID
           FROM CETUS_PROGRM_INFO
          WHERE URL = #{url}
+           AND WORKPLACE_UID = #{workplaceUid}::bigint
     </select>
 
-    <select id="getProgramFullInfoByUrl" resultType="ProgrmFullInfo" parameterType="String">
+    <select id="getProgramFullInfoByUrl" resultType="ProgrmFullInfo" parameterType="ProgrmFullInfoSearch">
         /* cetusProgrmInfo.getProgramFullInfoByUrl */
         SELECT CPI.UID
               ,CPI.PROGRM_NM
@@ -191,5 +192,6 @@
           LEFT JOIN CETUS_FILE CF_LEFT ON CF_LEFT.FILE_UID = CPI.LEFT_SLIDE_IMG AND CF_LEFT.USE_AT = 'Y' AND CF_LEFT.SAVED = 'Y'
           LEFT JOIN CETUS_FILE CF_RIGHT ON CF_RIGHT.FILE_UID = CPI.RIGHT_SLIDE_IMG AND CF_RIGHT.USE_AT = 'Y' AND CF_RIGHT.SAVED = 'Y'
          WHERE CPI.URL = #{url}
+           AND CPI.WORKPLACE_UID = #{workplaceUid}::bigint
     </select>
 </mapper>

@@ -63,7 +63,6 @@ public class CustomLoginSuccessHandler implements AuthenticationSuccessHandler {
 			} else {
 				loginRegion = (String) geoInfo.get("message");		// why success fail
 			}
-			System.out.println("geoInfo = " + geoInfo);
 		}
 
 		// 접근 URL

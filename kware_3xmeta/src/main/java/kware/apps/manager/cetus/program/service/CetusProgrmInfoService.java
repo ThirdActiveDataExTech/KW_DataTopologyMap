@@ -6,10 +6,7 @@ import cetus.bean.Pageable;
 import cetus.user.UserUtil;
 import kware.apps.manager.cetus.program.domain.CetusProgrmInfo;
 import kware.apps.manager.cetus.program.domain.CetusProgrmInfoDao;
-import kware.apps.manager.cetus.program.dto.request.MenuProgrmInfoSearch;
-import kware.apps.manager.cetus.program.dto.request.ProgramChange;
-import kware.apps.manager.cetus.program.dto.request.ProgramSave;
-import kware.apps.manager.cetus.program.dto.request.ProgrmInfoSearch;
+import kware.apps.manager.cetus.program.dto.request.*;
 import kware.apps.manager.cetus.program.dto.response.MenuProgrmInfoList;
 import kware.apps.manager.cetus.program.dto.response.ProgrmFullInfo;
 import kware.apps.manager.cetus.program.dto.response.ProgrmInfoList;
@@ -44,12 +41,14 @@ public class CetusProgrmInfoService {
 
     @Transactional(readOnly = true)
     public CetusProgrmInfo findProgramByUrl(String url) {
-        return dao.getProgramByUrl(url);
+        ProgrmFullInfoSearch fullInfoSearch = new ProgrmFullInfoSearch(url, UserUtil.getUserWorkplaceUid());
+        return dao.getProgramByUrl(fullInfoSearch);
     }
 
     @Transactional(readOnly = true)
     public ProgrmFullInfo findProgramFullInfoByUrl(String url) {
-        return dao.getProgramFullInfoByUrl(url);
+        ProgrmFullInfoSearch fullInfoSearch = new ProgrmFullInfoSearch(url, UserUtil.getUserWorkplaceUid());
+        return dao.getProgramFullInfoByUrl(fullInfoSearch);
     }
 
     @Transactional

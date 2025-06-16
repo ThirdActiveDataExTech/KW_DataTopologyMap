@@ -40,5 +40,6 @@ public class ProgramSave {
         this.progrmNm = progrmNm;
         this.url = url;
         this.useAt = useAt;
+        this.isRootUrl = "Y";
     }
 }

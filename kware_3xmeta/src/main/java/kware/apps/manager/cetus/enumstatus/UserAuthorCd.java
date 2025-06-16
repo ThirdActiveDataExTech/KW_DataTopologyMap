@@ -9,7 +9,7 @@ import java.util.stream.Collectors;
 @Getter
 public enum UserAuthorCd {
 
-    SYSTEM("시스템 권한"),
+    /*SYSTEM("시스템 권한"),*/
     MANAGER("운영자 권한"),
     USER("유저 권한");
 
