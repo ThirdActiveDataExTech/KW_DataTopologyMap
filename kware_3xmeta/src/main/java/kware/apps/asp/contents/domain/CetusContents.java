@@ -1,7 +1,7 @@
 package kware.apps.asp.contents.domain;
 
 import cetus.bean.AuditBean;
-import kware.apps.asp.contents.request.ContentChange;
+import kware.apps.asp.contents.dto.request.ContentChange;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

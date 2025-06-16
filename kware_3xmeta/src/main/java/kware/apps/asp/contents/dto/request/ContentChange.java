@@ -1,4 +1,4 @@
-package kware.apps.asp.contents.request;
+package kware.apps.asp.contents.dto.request;
 
 import cetus.annotation.DisplayName;
 import cetus.annotation.YOrN;

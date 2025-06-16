@@ -1,32 +1,12 @@
 package kware.apps.asp;
 
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.servlet.http.HttpSession;
-
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import cetus.user.UserUtil;
 import cetus.util.DateTimeUtil;
 import cetus.util.HtmlUtil;
-import kware.apps.asp.contents.domain.CetusContents;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import kware.apps.asp.contents.dto.response.ContentsView;
-import kware.apps.asp.contents.dto.response.HomeConfigData;
-import kware.apps.asp.contents.dto.response.HomeData;
 import kware.apps.asp.contents.service.CetusContentsService;
 import kware.apps.manager.cetus.bbsctt.dto.response.BbscttRecentList;
 import kware.apps.manager.cetus.bbsctt.service.CetusBbscttService;
@@ -39,15 +19,15 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-/**
-* @fileName AspController
-* @author dahyeon
-* @version 1.0.0
-* @date 2025-01-13
-* @summary  urdan 템플릿 붙이기 위한 테스트용 컨트롤러
-**/
+import javax.servlet.http.HttpSession;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+
 
 @Controller
 @RequestMapping("/asp")
@@ -92,7 +72,6 @@ public class AspController {
     public String openDetail(@PathVariable("uid") Long uid, Model model) {
         menuNavigationManager.renderingPage("/asp/list", "Detail", false, model);
         model.addAttribute("userUid", UserUtil.getUser().getUid());
-
         ContentsView content = contentsService.view(uid);
         model.addAttribute("content", content);
         return "asp/page/detail";

@@ -11,7 +11,6 @@
 
 <th:block layout:fragment="head">
     <link rel="stylesheet" th:href="@{'/assets/css/page/detail.css'}" />
-    <link rel="stylesheet" th:href="@{'/assets/css/page/detail-template02.css'}" />
     <link rel="stylesheet" th:href="@{'/assets/css/page/detail-template03.css'}" />
     <link rel="stylesheet" th:href="@{'/assets/css/page/detail-template04.css'}" />
 </th:block>
@@ -43,9 +42,9 @@
                   <div class="col-lg-4 justify-content-end" style="flex-direction: row; display: flex;">
                     <div class="page-details-action-wrap">
                       <div class="single-page-wishlist">
-                          <button class="justify-content-center btn-custom-control" id="btnPageBookmark" data-like="N" data-uid="1">
+                          <button class="justify-content-center btn-custom-control" id="btnPageBookmark" th:data-like="${content?.bookmark}" th:data-uid="${content?.uid}">
                               <a class="justify-content-center" title="Wishlist" href="javascript:void(0);">
-                                <i class="pe-7s-like"></i>
+                                  <i th:class="${content.bookmark == 'Y'} ? 'fa fa-heart' : 'pe-7s-like'"></i>
                               </a>
                               <span class="txt-label justify-content-center">북마크</span>
                           </button>
@@ -81,12 +80,10 @@
                   </ul>
                 </div>
                 <div class="page-details-review">
-                    <div class="page-rating">
-                        <i class="ti-star"></i>
-                        <i class="ti-star"></i>
-                        <i class="ti-star"></i>
-                        <i class="ti-star"></i>
-                        <i class="ti-star"></i>
+                    <div class="page-rating" id="page-content-avg-rating">
+                        <th:block th:each="i : ${#numbers.sequence(1, 5)}">
+                            <i class="ti-star" th:classappend="${i <= content.ratings} ? ' filled' : ''"></i>
+                        </th:block>
                     </div>
                 </div>
             </div>
@@ -101,7 +98,6 @@
             <a data-bs-toggle="tab" href="#des-details2" class=""> API </a>
             <a data-bs-toggle="tab" href="#des-details3" class=""> 관련 데이터 </a>
             <a data-bs-toggle="tab" href="#des-details4" class=""> 문의/오류신고 </a>
-            <!--<a data-bs-toggle="tab" href="#des-details5" class=""> Swagger </a>-->
         </div>
         <div class="tab-content">
             <div id="des-details1" class="tab-pane active">
@@ -111,103 +107,35 @@
                 <div th:replace="asp/page/detail-template05::divTabSwaggerTest"></div>
             </div>
             <div id="des-details3" class="tab-pane">
-              <div th:replace="asp/page/detail-template03::divTabDetailRelactionData"></div>  
+              <div th:replace="asp/page/detail-template03::divTabDetailRelactionData"></div>
             </div>
             <div id="des-details4" class="tab-pane">
-              <div th:replace="asp/page/detail-template04::divTabDetailReport"></div>  
+              <div th:replace="asp/page/detail-template04::divTabDetailReport"></div>
             </div>
-            <!--<div id="des-details5" class="tab-pane">
-                <div th:replace="asp/page/detail-template02::divTabDetailAPI"></div>
-            </div>-->
         </div>
     </div>
   </div>
-  
 
-<div class="ratting-edit-area pb-95">
-  <div class="container">
-    <div id="detailRating" class="ratting-form-wrapper" data-aos="fade-up" data-aos-delay="200">
-      <div class="section-title-2 st-border-center text-center mb-75">
-        <h2>평점 등록</h2>
-      </div>
-      <div class="your-rating-wrap">
-          <span>
-            <h3 style="margin: 0px;">평점</h3>
-          </span>
-          <div class="your-rating">
-              <i class="ti-star"></i>
-              <i class="ti-star"></i>
-              <i class="ti-star"></i>
-              <i class="ti-star"></i>
-              <i class="ti-star"></i>
-          </div>
-      </div>
-
-      <div class="grand-total-wrap">
-        <div class="grand-total-content" style="padding: 0px; background: transparent;">
-          <div class="grand-shipping" style="padding: 0px;">
-            <ul style="display: flex; gap: 60px;">
-              <li style="margin: 0px;">
-                <input type="radio" name="detail-ratting-group" id="rdoOpinion" value="opinion" checked="checked">
-                <label for="rdoOpinion">의견</label>
-              </li>
-              <li style="margin: 0px;">
-                <input type="radio" name="detail-ratting-group" id="rdoInquiry" value="question">
-                <label for="rdoInquiry">문의</label>
-              </li>
-              <li style="margin: 0px;">
-                <input type="radio" name="detail-ratting-group" id="rdoError" value="report">
-                <label for="rdoError">오류신고</label>
-              </li>
-            </ul>
-          </div>
-        </div>
-      </div>
-
-      <div class="ratting-form">
-        <form action="#">
-            <div class="row">
-              <div class="col-md-12">
-                  <div class="rating-form-style mb-15">
-                    <input type="text" placeholder="데이터에 대한 의견 또는 문의, 오류신고 등록">
-                    <div class="form-submit" style="display: flex; justify-content: end;">
-                      <div class="page-more-update-wrapper btn-control-wrapper">
-                        <div class="page-more-update btn-hover">
-                          <a href="javascript:void(0);" id="btnRatingSubmit">
-                            <span>등록하기</span>
-                          </a>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+    <div class="related-page-area pb-95">
+        <div class="container">
+            <div class="section-title-2 st-border-center text-center mb-75" data-aos="fade-up" data-aos-delay="200">
+                <h2>관련 데이터</h2>
+            </div>
+            <div class="related-product-active swiper-container">
+              <div class="swiper-wrapper"></div>
+              <div class="swiper-button-next"></div>
+              <div class="swiper-button-prev"></div>
+            </div>
+            <div class="page-more-update-wrapper relation-wrap-pnl" data-aos="fade-up" data-aos-delay="200">
+              <div class="page-more-update btn-hover">
+                <a href="javascript:void(0);" id="btnPageMoveList">
+                  <i class="ti-angle-right"></i>
+                  <span>더보기</span>
+                </a>
               </div>
             </div>
-        </form>
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="related-page-area pb-95">
-    <div class="container">
-        <div class="section-title-2 st-border-center text-center mb-75" data-aos="fade-up" data-aos-delay="200">
-            <h2>관련 데이터</h2>
-        </div>
-        <div class="related-product-active swiper-container">
-          <div class="swiper-wrapper"></div>
-          <div class="swiper-button-next"></div>
-          <div class="swiper-button-prev"></div>
-        </div>
-        <div class="page-more-update-wrapper relation-wrap-pnl" data-aos="fade-up" data-aos-delay="200">
-          <div class="page-more-update btn-hover">
-            <a href="javascript:void(0);" id="btnPageMoveList">
-              <i class="ti-angle-right"></i>
-              <span>더보기</span>
-            </a>
-          </div>
         </div>
     </div>
-  </div>
 
   <div class="bottom-navigation-area pb-95" data-aos="fade-up" data-aos-delay="200">
     <div class="container">
@@ -234,80 +162,47 @@
 
 <th:block layout:fragment="script">
   <script th:src="@{'https://cdn.jsdelivr.net/npm/echarts@latest/dist/echarts.min.js'}"></script>
-  <script th:src="@{'/assets/js/page/detail.js'}"></script>
-  <th:block th:replace="asp/page/detail-template01-script::script"></th:block>
-  <th:block th:replace="asp/page/detail-template02-script::script"></th:block>
+  <script th:src="@{'/assets/js/page/detail/detail.js'}"></script>
   <th:block th:replace="asp/page/detail-template03-script::script"></th:block>
   <th:block th:replace="asp/page/detail-template04-script::script"></th:block>
-  <th:block th:replace="asp/page/detail-template05-script::script"></th:block>
   <script th:inline="javascript">
 
     const contentUid = /*[[${content.uid}]]*/ 0;
-    
+    const jsonStr = /*[[${content.metadata}]]*/ '{}';
+
     $(function() {
-      detail.fnPageSearch();
+        detail.fnPageSearch();
+        detail.setDataTable(jsonStr);
 
-      // 북마크 버튼
-      $("#btnPageBookmark").click(function(e){
+        // 북마크 버튼
+        $("#btnPageBookmark").click(function(e){
+            detail.likeClickEvent(this);
+            e.preventDefault();
+            e.stopPropagation();
+        });
 
-        detail.likeClickEvent(this);
+        // 공유 버튼
+        $("#btnPageShare").click(function(e){
+            const pathStr = `/asp/detail/${contentUid}`;
+            const fullUrl = window.location.origin + pathStr;
+            navigator.clipboard.writeText(fullUrl)
+                .then(() => {
+                    Util.alert('클립보드에 복사되었습니다.');
+                })
+                .catch(err => {
+                    console.error(err)
+                    Util.alert('복사에 실패했습니다.');
+                });
+            e.preventDefault();
+            e.stopPropagation();
+        });
 
-        e.preventDefault();
-        e.stopPropagation();
-      });
-
-      // 공유 버튼
-      $("#btnPageShare").click(function(e){
-
-          Util.alert("해당 컨텐츠 공유");
-
-        e.preventDefault();
-        e.stopPropagation();
-      });
-
-      // 평점 클릭 이벤트 적용
-        Common.setRattingStarOnClick($("#detailRating .your-rating .ti-star"));
-
-
-      // 평점 등록하기
-      $("#detailRating #btnRatingSubmit").click(function(e){
-
-        let obj = {
-          rating : Common.getRattingStar($("#detailRating .your-rating")),
-          ratingType : $("#detailRating [name=detail-ratting-group]:checked").val(),
-          detailContents : $("#detailRating .rating-form-style input[type=text]").val()
-        };
-        console.log(obj);
-
-        // 내용 출력
-        let strMsg = "";
-        strMsg += "평점 : " + obj.rating + "<br/>";
-        strMsg += "타입 선택 : " + obj.ratingType + "<br/>";
-        strMsg += "작성 내용 : " + obj.detailContents;
-
-          Util.alert(strMsg);
-
-        e.preventDefault();
-        e.stopPropagation();
-      });
-
-      // 관련 데이터 더보기 버튼
-      $("#btnPageMoveList").click(function(e){
-
-        detail.fnPageMove("/list");
-
-        e.preventDefault();
-        e.stopPropagation();
-      });
-      
-      // 목록 돌아가기
-      $("#btnGoList").click(function(e){
-
-        detail.fnPageMove("/list");
-
-        e.preventDefault();
-        e.stopPropagation();
-      });
+        // { 관련 데이터 더보기 }, { 목록 돌아가기 } 버튼
+        $("#btnPageMoveList, #btnGoList").click(function(e){
+            detail.fnPageMove("/list");
+            e.preventDefault();
+            e.stopPropagation();
+        });
 
     });
 

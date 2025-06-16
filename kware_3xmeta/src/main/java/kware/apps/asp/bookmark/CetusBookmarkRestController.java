@@ -18,7 +18,7 @@ public class CetusBookmarkRestController {
 
     private final CetusBookmarkService service;
 
-    @GetMapping("/list.json")
+    @GetMapping("/list")
     public Response page() {
         SessionUserInfo user = UserUtil.getUser();
         if (user == null) {
@@ -30,7 +30,7 @@ public class CetusBookmarkRestController {
         return Response.ok(list);
     }
 
-    @PostMapping("/toggle.json")
+    @PostMapping("/toggle")
     public Response toggleLike(@RequestBody @Valid CetusBookmarkToggle request) {
 
         SessionUserInfo user = UserUtil.getUser();
@@ -42,7 +42,7 @@ public class CetusBookmarkRestController {
         return Response.ok(service.toggleLike(request, user.getUid()));
     }
 
-    @DeleteMapping("/delete.json")
+    @DeleteMapping("/delete")
     public Response delete(@Valid CetusBookmark request) {
         SessionUserInfo user = UserUtil.getUser();
         if (user == null) {

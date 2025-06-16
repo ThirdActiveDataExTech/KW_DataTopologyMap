@@ -1,7 +1,14 @@
 package kware.apps.asp.contents.service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import cetus.user.UserUtil;
+import kware.apps.asp.bookmark.CetusBookmark;
+import kware.apps.asp.bookmark.CetusBookmarkService;
+import kware.apps.asp.contents.dto.request.CommentsSearch;
+import kware.apps.asp.contents.dto.response.CommentsPage;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,7 +22,7 @@ import kware.apps.asp.contents.domain.CetusTags;
 import kware.apps.asp.contents.dto.request.ContentsSearch;
 import kware.apps.asp.contents.dto.response.ContentsPage;
 import kware.apps.asp.contents.dto.response.ContentsView;
-import kware.apps.asp.contents.request.ContentChange;
+import kware.apps.asp.contents.dto.request.ContentChange;
 import kware.apps.manager.cetus.contents.categories.Categories;
 import kware.apps.manager.cetus.contents.categories.Sources;
 import kware.apps.manager.cetus.contents.categories.Types;
@@ -30,6 +37,7 @@ public class CetusContentsService {
 
     private final CetusContentsDao dao;
     private final CommonFileService commonFileService;
+    private final CetusBookmarkService bookmarkService;
 
     public List<CetusCategories> categoriesList() {
         return List.of(
@@ -55,6 +63,12 @@ public class CetusContentsService {
         ContentsView content = dao.contentsView(uid);
         List<CetusTags> tags = dao.findTagsByContentsUid(uid);
         content.setTags(tags);
+
+        Integer ratingAvg = dao.commentRatingAvg(uid);
+        content.setRatings(ratingAvg);
+
+        Boolean exists = bookmarkService.isBookmarkExists(new CetusBookmark(UserUtil.getUser().getUid(), uid));
+        content.setBookmark((exists) ? "Y" : "N");
 
         if(content.getFilePath() != null) {
             content.setFilePath(EncryptionUtil.encrypt(content.getFilePath()));
@@ -82,12 +96,42 @@ public class CetusContentsService {
 
     @Transactional
     public void insertComment(CetusContentsComment comment) {
+        comment.setUser(UserUtil.getUser().getUid());
         dao.insertComment(comment);
     }
 
     @Transactional(readOnly = true)
     public List<CetusContentsComment> listComments(Long contentsUid) {
         return dao.listComments(contentsUid);
+    }
+
+    @Transactional(readOnly = true)
+    public Page<CommentsPage> findAllCommentsPage(CommentsSearch search, Pageable pageable) {
+        search.setWorkplaceUid(UserUtil.getUserWorkplaceUid());
+        return dao.page("commentsPage", "commentsCount", search, pageable);
+    }
+
+    @Transactional(readOnly = true)
+    public Map<String, Integer> findAllCommentCntByType(CommentsSearch search) {
+        search.setWorkplaceUid(UserUtil.getUserWorkplaceUid());
+        search.setType("OPINION");
+        Integer opinion = dao.findCntByType(search);
+
+        search.setType("QUESTION");
+        Integer question = dao.findCntByType(search);
+
+        search.setType("REPORT");
+        Integer report = dao.findCntByType(search);
+
+        Integer ratingAvg = dao.commentRatingAvg(search.getContentsUid());
+
+        Map<String, Integer> map = new HashMap<>();
+        map.put("total", (opinion + question + report));
+        map.put("opinion", opinion);
+        map.put("question", question);
+        map.put("report", report);
+        map.put("ratingAvg", ratingAvg);
+        return map;
     }
 
 }

@@ -37,6 +37,7 @@
                            FROM CETUS_DEPT CD
                           WHERE CD.USE_AT = 'Y'
                             AND CD.UPPER_UID IS NULL
+                            AND CD.WORKPLACE_UID = #{workplaceUid}
                       UNION ALL
                          SELECT CD.UID
                               , CD.WORKPLACE_UID
@@ -57,6 +58,7 @@
                          INNER JOIN DEPT_LIST B ON CD.UPPER_UID = B.UID
                          WHERE CD.USE_AT = 'Y'
                            AND NOT CYCLE
+                           AND CD.WORKPLACE_UID = #{workplaceUid}
                     )
                     SELECT A.UID AS NO
                          , A.UPPER_UID AS UPPER_NO

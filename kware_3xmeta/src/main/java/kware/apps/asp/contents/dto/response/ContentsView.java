@@ -1,12 +1,12 @@
 package kware.apps.asp.contents.dto.response;
 
-import java.util.List;
-
 import kware.apps.asp.contents.domain.CetusTags;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.util.List;
 
 @Getter @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -17,8 +17,9 @@ public class ContentsView {
     private String title;
     private String description;
     private String contents;
-    private String metadata; 
-    private String ratings;
+    private String metadata;
+    private Integer ratings;
+    private String bookmark;
     private String sampleData;
     private Long fileUid;
     private String fileId;

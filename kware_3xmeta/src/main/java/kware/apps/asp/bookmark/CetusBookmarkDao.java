@@ -17,7 +17,7 @@ public class CetusBookmarkDao extends CetusDao<CetusBookmark> {
         return selectList("findListByUserUid", bean);
     }
 
-    public Boolean isWishExists(CetusBookmark bean){
+    public Boolean isBookmarkExists(CetusBookmark bean){
         return selectOne("isBookmarkExists", bean);
     }
 }

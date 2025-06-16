@@ -129,4 +129,63 @@
          ORDER BY reg_dt DESC
     </select>
 
+    <select id="commentRatingAvg" parameterType="Long" resultType="int">
+        /* cetusContents.commentRatingAvg */
+        SELECT ROUND(AVG(ratings)) AS rounded_avg_rating
+          FROM cetus_contents_comments
+         WHERE contents_uid = #{contentsUid};
+    </select>
+
+    <select id="commentsPage" resultType="CommentsPage" parameterType="CommentsSearch">
+        /* cetusContents.commentsPage */
+        SELECT CMM.UID AS COMMENTS_UID
+              ,CC.UID AS CONTENTS_UID
+              ,CMM.TYPE AS TYPE
+              ,CASE WHEN CMM.TYPE = 'OPINION' THEN '의견'
+                    WHEN CMM.TYPE = 'QUESTION' THEN '문의'
+                    WHEN CMM.TYPE = 'REPORT' THEN '오류신고'
+                END AS TYPE_STR
+              ,ROUND(CMM.RATINGS) AS RATINGS
+              ,CMM.COMMENT
+              ,CMM.REG_UID
+              ,TO_CHAR(CMM.REG_DT, 'YYYY-MM-DD') AS REG_DT
+              ,CU.USER_NM AS REG_NM
+              ,CF.FILE_ID AS REG_PROFILE_ID
+          FROM CETUS_CONTENTS_COMMENTS CMM
+         INNER JOIN CETUS_CONTENTS CC ON CC.UID = CMM.CONTENTS_UID AND CC.WORKPLACE_UID = #{workplaceUid}
+          LEFT JOIN  CETUS_USER CU ON CU.UID = CMM.REG_UID
+          LEFT JOIN CETUS_FILE CF ON CF.FILE_UID = CU.PROFILE_UID AND CF.USE_AT = 'Y' AND CF.SAVED = 'Y'
+         WHERE 1 = 1
+           AND CC.UID = #{contentsUid}
+        <if test="@Ognl@isNotEmpty(type)">
+           AND CMM.TYPE = #{type}
+        </if>
+         ORDER BY CMM.REG_DT DESC
+        <if test="@Ognl@isNotEmpty(startNumber) and @Ognl@isNotEmpty(endNumber)">
+        OFFSET ${startNumber} LIMIT ${endNumber}
+        </if>
+    </select>
+
+    <select id="commentsCount" resultType="int" parameterType="CommentsSearch">
+        /* cetusContents.commentsCount */
+        SELECT COUNT(*)
+          FROM CETUS_CONTENTS_COMMENTS CMM
+         INNER JOIN CETUS_CONTENTS CC ON CC.UID = CMM.CONTENTS_UID AND CC.WORKPLACE_UID = #{workplaceUid}
+          LEFT JOIN  CETUS_USER CU ON CU.UID = CMM.REG_UID
+          LEFT JOIN CETUS_FILE CF ON CF.FILE_UID = CU.PROFILE_UID AND CF.USE_AT = 'Y' AND CF.SAVED = 'Y'
+         WHERE 1 = 1
+           AND CC.UID = #{contentsUid}
+        <if test="@Ognl@isNotEmpty(type)">
+           AND CMM.TYPE = #{type}
+        </if>
+    </select>
+
+    <select id="findCntByType" parameterType="CommentsSearch" resultType="int">
+        /* cetusContents.findCntByType */
+        SELECT COUNT(*)
+          FROM CETUS_CONTENTS_COMMENTS CMM
+         INNER JOIN CETUS_CONTENTS CC ON CC.UID = CMM.CONTENTS_UID AND CC.WORKPLACE_UID = #{workplaceUid}
+         WHERE CMM.TYPE = #{type}
+           AND CC.UID = #{contentsUid}
+    </select>
 </mapper>

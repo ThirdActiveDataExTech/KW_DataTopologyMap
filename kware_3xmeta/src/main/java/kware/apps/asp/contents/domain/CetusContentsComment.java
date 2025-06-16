@@ -2,14 +2,12 @@ package kware.apps.asp.contents.domain;
 
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
 
 /**
  * 컨텐츠 댓글 도메인 클래스
  */
 @Getter
 @Setter
-@ToString
 public class CetusContentsComment {
     
     /** 댓글 고유번호 */
@@ -30,12 +28,11 @@ public class CetusContentsComment {
     /** 등록자 고유번호 */
     private Long regUid;
     
-    /** 등록일시 */
-    private String regDt;
-    
     /** 수정자 고유번호 */
     private Long updtUid;
-    
-    /** 수정일시 */
-    private String updtDt;
+
+    public void setUser(Long userUid) {
+        this.regUid = userUid;
+        this.updtUid = userUid;
+    }
 } 

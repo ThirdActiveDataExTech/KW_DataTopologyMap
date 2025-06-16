@@ -17,7 +17,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import cetus.service.CetusService;
 import kware.apps.asp.bookmark.dto.request.CetusBookmarkToggle;
 import kware.apps.asp.bookmark.dto.request.CetusSearchBookmark;
-import kware.apps.asp.contents.dto.response.HomeConfigData;
 import kware.apps.asp.contents.dto.response.HomeData;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -69,7 +68,7 @@ public class CetusBookmarkService extends CetusService<CetusBookmark, CetusBookm
         // vaildationTargetType(wish.getTargetType());
 
         // 기존 좋아요 체크
-        Boolean wishExists = dao.isWishExists(bookmark);
+        Boolean wishExists = dao.isBookmarkExists(bookmark);
 
         if(wishExists) {
              dao.delete(bookmark);
@@ -78,6 +77,11 @@ public class CetusBookmarkService extends CetusService<CetusBookmark, CetusBookm
              dao.insert(bookmark);
              return true;
         }
+    }
+
+    @Transactional(readOnly = true)
+    public Boolean isBookmarkExists(CetusBookmark bookmark) {
+        return dao.isBookmarkExists(bookmark);
     }
 
     // private void vaildationTargetType(String targetType) {

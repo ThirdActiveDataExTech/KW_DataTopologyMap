@@ -1,9 +1,12 @@
 package kware.apps.asp.contents.service;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.validation.Valid;
 
+import kware.apps.asp.contents.dto.request.CommentsSearch;
+import kware.apps.asp.contents.dto.response.CommentsPage;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,7 +22,7 @@ import kware.apps.asp.contents.domain.CetusCategories;
 import kware.apps.asp.contents.domain.CetusContentsComment;
 import kware.apps.asp.contents.dto.request.ContentsSearch;
 import kware.apps.asp.contents.dto.response.ContentsPage;
-import kware.apps.asp.contents.request.ContentChange;
+import kware.apps.asp.contents.dto.request.ContentChange;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -57,5 +60,17 @@ public class CetusContentsRestController {
     public ResponseEntity insertContentComment(@RequestBody @Valid CetusContentsComment comment) {
         service.insertComment(comment);
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/comments/page")
+    public ResponseEntity findAllCommentsPage(CommentsSearch search, Pageable pageable) {
+        Page<CommentsPage> allCommentsPage = service.findAllCommentsPage(search, pageable);
+        return ResponseEntity.ok(allCommentsPage);
+    }
+
+    @GetMapping("/comments/type-cnt")
+    public ResponseEntity findCommentsTypeCnt(CommentsSearch search) {
+        Map<String, Integer> map = service.findAllCommentCntByType(search);
+        return ResponseEntity.ok(map);
     }
 }

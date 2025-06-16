@@ -3,6 +3,7 @@ package kware.apps.asp.contents.domain;
 
 import java.util.List;
 
+import kware.apps.asp.contents.dto.request.CommentsSearch;
 import org.springframework.stereotype.Component;
 
 import cetus.dao.SuperDao;
@@ -31,4 +32,11 @@ public class CetusContentsDao extends SuperDao<CetusContents> {
         return selectList("listComments", contentsUid);
     }
 
+    public Integer commentRatingAvg(Long contentsUid) {
+        return selectOne("commentRatingAvg", contentsUid);
+    }
+
+    public Integer findCntByType(CommentsSearch search) {
+        return selectOne("findCntByType", search);
+    }
 }
