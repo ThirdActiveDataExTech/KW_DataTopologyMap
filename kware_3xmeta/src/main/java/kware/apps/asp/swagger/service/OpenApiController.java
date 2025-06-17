@@ -1,14 +1,17 @@
-// package kware.apps.asp.swagger.service;
+package kware.apps.asp.swagger.service;
 
 
-// import io.swagger.annotations.Api;
-// import io.swagger.annotations.ApiParam;
-// import io.swagger.v3.oas.annotations.Operation;
-// import kware.apps.asp.swagger.dto.request.SwaggerSave;
-// import lombok.RequiredArgsConstructor;
-// import org.springframework.http.ResponseEntity;
-// import org.springframework.web.bind.annotation.*;
-// import javax.validation.Valid;
+import java.nio.charset.StandardCharsets;
+
+
+import org.springframework.core.io.ClassPathResource;
+
+import java.io.IOException;
+import java.io.InputStream;
+import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 // @RestController
 // @RequiredArgsConstructor
@@ -43,3 +46,20 @@
 //         return ResponseEntity.ok("사용자 단건 정보가 삭제되었습니다.");
 //     }
 // }
+
+
+@RestController
+@RequestMapping("/openapi")
+public class OpenApiController {
+
+    // private final OpenApiService openApiService;
+
+    @GetMapping(value = "/spec", produces = MediaType.APPLICATION_JSON_VALUE)
+    public String getOpenApiSpec() throws IOException {
+
+        ClassPathResource resource = new ClassPathResource("static/api-docs/openapi.json");
+        InputStream inputStream = resource.getInputStream();
+        return new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
+
+    }
+}

@@ -32,8 +32,8 @@ public class CetusContentsDao extends SuperDao<CetusContents> {
         return selectList("listComments", contentsUid);
     }
 
-    public Integer commentRatingAvg(Long contentsUid) {
-        return selectOne("commentRatingAvg", contentsUid);
+    public Integer commentRatingAvg(CommentsSearch search) {
+        return selectOne("commentRatingAvg", search);
     }
 
     public Integer findCntByType(CommentsSearch search) {

@@ -129,11 +129,12 @@
          ORDER BY reg_dt DESC
     </select>
 
-    <select id="commentRatingAvg" parameterType="Long" resultType="int">
+    <select id="commentRatingAvg" parameterType="CommentsSearch" resultType="int">
         /* cetusContents.commentRatingAvg */
-        SELECT ROUND(AVG(ratings)) AS rounded_avg_rating
-          FROM cetus_contents_comments
-         WHERE contents_uid = #{contentsUid};
+        SELECT ROUND(AVG(CMM.ratings)) AS ROUNDED_AVG_RATING
+          FROM CETUS_CONTENTS_COMMENTS CMM
+         INNER JOIN CETUS_CONTENTS CC ON CC.UID = CMM.CONTENTS_UID AND CC.WORKPLACE_UID = #{workplaceUid}
+         WHERE CMM.CONTENTS_UID = #{contentsUid}
     </select>
 
     <select id="commentsPage" resultType="CommentsPage" parameterType="CommentsSearch">

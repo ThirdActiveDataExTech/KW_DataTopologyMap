@@ -156,6 +156,17 @@
         const userUid = /*[[${userUid}]]*/ "";
         if(userUid) list.userUid = userUid
 
+        
+        const searchParams = window.location.search.substring(1);
+        const params = new URLSearchParams(searchParams);
+        const keyword = params.get('keyword');
+        if (keyword) {
+            $('#keyword').val(keyword);
+            list.setKeyword(keyword);
+        }
+
+        
+
         const filterList = await Http.get('/cetus/api/contents/categories');
         list.filterList = filterList;
         

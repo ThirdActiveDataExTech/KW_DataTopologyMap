@@ -1,10 +1,11 @@
 package kware.apps.asp.contents.dto.request;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Getter
-@Setter
+@Getter @Setter
+@NoArgsConstructor
 public class CommentsSearch {
 
     private Long contentsUid;
@@ -16,4 +17,8 @@ public class CommentsSearch {
         this.type = type;
     }
 
+    public CommentsSearch(Long workplaceUid, Long contentsUid) {
+        this.workplaceUid = workplaceUid;
+        this.contentsUid = contentsUid;
+    }
 }

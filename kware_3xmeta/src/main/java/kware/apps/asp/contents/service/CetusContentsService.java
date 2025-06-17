@@ -64,7 +64,8 @@ public class CetusContentsService {
         List<CetusTags> tags = dao.findTagsByContentsUid(uid);
         content.setTags(tags);
 
-        Integer ratingAvg = dao.commentRatingAvg(uid);
+        CommentsSearch commentsSearch = new CommentsSearch(UserUtil.getUserWorkplaceUid(), uid);
+        Integer ratingAvg = dao.commentRatingAvg(commentsSearch);
         content.setRatings(ratingAvg);
 
         Boolean exists = bookmarkService.isBookmarkExists(new CetusBookmark(UserUtil.getUser().getUid(), uid));
@@ -123,7 +124,8 @@ public class CetusContentsService {
         search.setType("REPORT");
         Integer report = dao.findCntByType(search);
 
-        Integer ratingAvg = dao.commentRatingAvg(search.getContentsUid());
+        CommentsSearch commentsSearch = new CommentsSearch(UserUtil.getUserWorkplaceUid(), search.getContentsUid());
+        Integer ratingAvg = dao.commentRatingAvg(commentsSearch);
 
         Map<String, Integer> map = new HashMap<>();
         map.put("total", (opinion + question + report));
