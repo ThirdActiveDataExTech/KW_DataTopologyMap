@@ -20,6 +20,10 @@ public class CetusContentsDao extends SuperDao<CetusContents> {
         return selectOne("view", uid);
     }
 
+    public void contentsUpdate(ContentsView bean) {
+        update("contentsUpdate", bean);
+    }
+
     public List<CetusTags> findTagsByContentsUid(Long uid) {
         return selectList("findTagsByContentsUid", uid);
     }

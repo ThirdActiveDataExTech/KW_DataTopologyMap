@@ -68,8 +68,9 @@
         });
 
         // 뷰 버튼 클릭
-        $(document).on('click', '.detail-btn', function() {
-            window.location.href = '/asp/detail/12'
+        $(document).on('click', '.detail-btn', function(e) {
+            const uid = $(this).data('uid');
+            window.location.href = '/asp/detail/' + uid;
         });
     </script>
 </th:block>

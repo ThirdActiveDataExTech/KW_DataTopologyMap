@@ -83,16 +83,16 @@ public class CetusContentsService {
 
     @Transactional
     public void changeContent(Long uid, ContentChange request) {
-        CetusContents view = dao.view(uid);
+        ContentsView view = dao.contentsView(uid);
 
         // img
         Long contentFile = commonFileService.processFileSeparately(request.getContentFile(), request.getContentFileDel(), request.getContentFileUid());
         Long thumbnail = commonFileService.processFileSeparately(request.getThumbnail(), request.getThumbnailDel(), request.getThumbnailUid());
 
-        CetusContents bean = view.changeContent(uid, request);
+        ContentsView bean = view.changeContent(uid, request);
         bean.setFileUids(contentFile, thumbnail);
 
-        dao.update(bean);
+        dao.contentsUpdate(bean);
     }
 
     @Transactional

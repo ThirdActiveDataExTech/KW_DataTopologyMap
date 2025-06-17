@@ -50,6 +50,7 @@
              , cf.file_type
              , cf.org_file_nm AS file_name
              , cc.thumbnail_uid
+             , cf2.file_id AS thumbnail_id
              , cc.reg_uid
              , TO_CHAR(cc.reg_dt, 'YYYY-MM-DD HH24:MM') AS reg_dt
              , cc.updt_uid
@@ -57,11 +58,13 @@
           FROM cetus_contents cc
           LEFT JOIN k_3xmeta.cetus_file cf
             ON cc.file_uid = cf.file_uid    
+          LEFT JOIN k_3xmeta.cetus_file cf2
+            ON cc.thumbnail_uid = cf2.file_uid
          WHERE cc.uid = #{uid}
     </select>
 
-    <update id="update" parameterType="cetusContents">
-		/* cetusContents.update */
+    <update id="contentsUpdate" parameterType="ContentsView">
+		/* cetusContents.contentsUpdate */
 		UPDATE cetus_contents
 		   SET title = #{title}
 			  ,description = #{description}

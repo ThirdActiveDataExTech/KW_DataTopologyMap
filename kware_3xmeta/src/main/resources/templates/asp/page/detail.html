@@ -25,11 +25,16 @@
                   <div class="easyzoom easyzoom--overlay">
                       <a href="#">
                         <img id="dataImgUrl" class="portal-img" th:src="@{'/assets/images/page/thumbnail_default.png'}" alt="" />
+                        <!-- <img id="dataImgUrl" class="portal-img"
+                        th:src="${content.thumbnailId} != null ?
+                                @{/cetus/files/download(fileId=${content.thumbnailId})} :
+                                @{'/assets/images/page/thumbnail_default.png'}"
+                        alt="" /> -->
                       </a>
                   </div>
-                  <a class="easyzoom-pop-up img-popup" href="#">
+                  <!-- <a class="easyzoom-pop-up img-popup" href="#">
                       <i class="pe-7s-search"></i>
-                  </a>
+                  </a> -->
               </div>
           </div>
         </div>
@@ -168,11 +173,16 @@
   <script th:inline="javascript">
 
     const contentUid = /*[[${content.uid}]]*/ 0;
+    const contentThumbnailId = /*[[${content.thumbnailId}]]*/ 0;
     const jsonStr = /*[[${content.metadata}]]*/ '{}';
 
     $(function() {
         detail.fnPageSearch();
         detail.setDataTable(jsonStr);
+
+        // const dataImgUrl = `/cetus/files/download?fileId=${contentThumbnailId}`;
+        const dataImgUrl = `/assets/images/page/thumbnail_default.png`;
+        detail.updateEasyZoom('.easyzoom', dataImgUrl, dataImgUrl);
 
         // 북마크 버튼
         $("#btnPageBookmark").click(function(e){
@@ -180,6 +190,7 @@
             e.preventDefault();
             e.stopPropagation();
         });
+
 
         // 공유 버튼
         $("#btnPageShare").click(function(e){
