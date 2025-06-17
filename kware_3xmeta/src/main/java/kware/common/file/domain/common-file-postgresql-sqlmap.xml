@@ -7,7 +7,7 @@
 
     <select id="key" resultType="long" flushCache="true">
         /* file.key */
-        SELECT NEXTVAL('cetus_file_uid_seq')
+        SELECT NEXTVAL('k_3xmeta.cetus_file_uid_seq')
     </select>
 
     <select id="list" resultType="CommonFile">

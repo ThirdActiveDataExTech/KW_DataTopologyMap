@@ -4,9 +4,8 @@
       layout:decorate="~{layouts/default}">
 
 <th:block layout:fragment="center-image">
-    <th:block th:with="title1='폼 컬럼 등록', title2='시스템 관리 > 폼 컬럼 등록', leftImg='', rightImg=''">
-        <th:block
-                th:replace="fragments/center-image :: main-image-title(${title1}, ${title2}, ${leftImg}, ${rightImg})"></th:block>
+    <th:block th:with="title1=${currentPageName}, title2=${navigation}, leftImg=${centerLeftImage}, rightImg=${centerRightImage}">
+        <th:block th:replace="fragments/center-image :: main-image-title(${title1}, ${title2}, ${leftImg}, ${rightImg})"></th:block>
     </th:block>
 </th:block>
 
