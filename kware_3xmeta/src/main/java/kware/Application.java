@@ -42,7 +42,7 @@ public class Application {
 		ApplicationContext applicationContext = SpringApplication.run(Application.class, args);
     	Environment environment = applicationContext.getEnvironment();
     	String serverPort = environment.getProperty("server.port");
-    	
+		System.setProperty("java.awt.headless", "true");
         log.info("======================= {} Server is running on port: {} ===========================",WAS_NAME, serverPort);
 	}
 
