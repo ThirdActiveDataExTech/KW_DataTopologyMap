@@ -193,20 +193,41 @@
 
 
         // 공유 버튼
-        $("#btnPageShare").click(function(e){
+        $("#btnPageShare").click(function(e) {
             const pathStr = `/asp/detail/${contentUid}`;
             const fullUrl = window.location.origin + pathStr;
-            navigator.clipboard.writeText(fullUrl)
-                .then(() => {
-                    Util.alert('클립보드에 복사되었습니다.');
-                })
-                .catch(err => {
-                    console.error(err)
+
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(fullUrl)
+                    .then(() => {
+                        Util.alert('클립보드에 복사되었습니다.');
+                    })
+                    .catch(err => {
+                        console.error(err);
+                        Util.alert('복사에 실패했습니다.');
+                    });
+            } else {
+                // fallback: execCommand를 이용한 클립보드 복사
+                const $tempInput = $("<input>");
+                $("body").append($tempInput);
+                $tempInput.val(fullUrl).select();
+                try {
+                    const successful = document.execCommand('copy');
+                    if (successful) {
+                        Util.alert('클립보드에 복사되었습니다.');
+                    } else {
+                        Util.alert('복사에 실패했습니다.');
+                    }
+                } catch (err) {
+                    console.error(err);
                     Util.alert('복사에 실패했습니다.');
-                });
+                }
+                $tempInput.remove();
+            }
             e.preventDefault();
             e.stopPropagation();
         });
+
 
         // { 관련 데이터 더보기 }, { 목록 돌아가기 } 버튼
         $("#btnPageMoveList, #btnGoList").click(function(e){
