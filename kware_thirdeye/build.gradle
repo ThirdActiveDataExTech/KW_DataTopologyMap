@@ -1,0 +1,140 @@
+plugins {
+    id 'org.springframework.boot' version '2.7.0'
+    id 'io.spring.dependency-management' version '1.0.10.RELEASE'
+    id 'java'
+    id 'war'
+}
+
+group = 'kware'
+version = '1.0'
+description = 'job'
+sourceCompatibility = '11'
+
+ext.profile = (!project.hasProperty('profile') || !profile)?'local':profile
+sourceSets.main.resources.srcDirs = [ "src/main/resources","src/main/resources-env/$profile", "src/main/java" ]
+sourceSets.main.resources.includes = [ "**/*.*" ]
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+    all {
+        exclude group: 'org.apache.logging.log4j', module: 'log4j-slf4j-impl'
+        exclude group: 'org.springframework.boot', module: 'spring-boot-starter-tomcat'
+    }
+}
+
+repositories {
+    //maven { url 'https://repo.spring.io/release' }
+    mavenCentral()
+    maven { url = uri('https://www.egovframe.go.kr/maven/') }
+    maven {
+        //url "http://172.30.1.4:8088/repository/kware-repo-release/"
+        url "http://172.30.1.4:8088/nexus/repository/kware-repo-snapshot/"
+        allowInsecureProtocol=true
+    }
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-security' //spring-security
+    //{ tomcat=>undertow
+    implementation ('org.springframework.boot:spring-boot-starter-web'){
+        exclude group: 'org.springframework.boot', module: 'spring-boot-starter-tomcat'
+    }
+    implementation 'org.springframework.boot:spring-boot-starter-undertow'
+    //} tomcat=>undertow
+    implementation 'org.springframework.boot:spring-boot-starter-data-rest'
+    implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:2.2.2'
+    implementation 'org.springframework.data:spring-data-commons'
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    implementation 'javax.validation:validation-api'
+    implementation 'net.coobird:thumbnailator:0.4.11'               //썸네일
+	implementation 'com.itextpdf:itextpdf:5.5.9'
+	implementation 'org.apache.commons:commons-compress:1.21' // 최신 버전을 사용하려면 업데이트 필요 압축
+    //{redis 세션 콘트롤
+    /*
+    if (profile.equals('dev') || profile.equals('prod')) {
+    	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+    	implementation 'org.springframework.session:spring-session-data-redis'
+    }
+    */
+    //}redis 세션 콘트롤
+
+    implementation 'org.springframework.boot:spring-boot-starter-mail' //이메일 발송
+
+    annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
+
+    runtimeOnly 'org.postgresql:postgresql'                       //POSTGRESQL
+//    implementation group: 'com.microsoft.sqlserver', name: 'mssql-jdbc', version: '6.1.0.jre7'  //MSSQL
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+    implementation 'org.jodd:jodd-core:5.3.0'
+
+    implementation('egovframework.rte:egovframework.rte.fdl.cmmn:3.8.0') {
+        exclude group: 'egovframework.rte', module: 'egovframework.rte.fdl.logging'
+    }
+    implementation('egovframework.rte:egovframework.rte.psl.dataaccess:3.8.0') {
+        exclude group: 'egovframework.rte', module: 'egovframework.rte.fdl.logging'
+        exclude group: 'org.mybatis', module: 'mybatis'
+        exclude group: 'org.mybatis', module: 'mybatis-spring'
+        exclude group: 'javax', module: 'javaee-api'
+    }
+
+    developmentOnly 'org.springframework.boot:spring-boot-devtools'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.springframework.security:spring-security-test' //spring-security
+
+    implementation("io.springfox:springfox-boot-starter:3.0.0")     //swagger
+    dependencies {
+        implementation 'org.springdoc:springdoc-openapi-ui:1.6.15'
+    }
+
+    implementation 'org.apache.poi:poi:5.2.2'
+    implementation 'org.apache.poi:poi-ooxml:5.2.2'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+
+    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+    implementation 'nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect'
+
+    implementation 'io.jsonwebtoken:jjwt:0.9.1'
+
+    //대용량 파일 upload tus protocol
+    //implementation 'me.desair.tus:tus-java-server:1.0.0-2.0'
+    //{{kware
+    //implementation 'kware.common:bigfile-common:0.0.2'
+    implementation 'kware.common:bigfile-common:0.0.24-SNAPSHOT'
+    //implementation files("libs/kware.common.bigfile-common-0.0.24-SNAPSHOT.jar")
+    implementation 'io.jsonwebtoken:jjwt:0.9.1'
+    //}}
+
+    // https://mvnrepository.com/artifact/org.apache.commons/commons-csv
+    implementation 'org.apache.commons:commons-csv:1.9.0'
+    // https://mvnrepository.com/artifact/org.springframework/spring-core
+    implementation 'org.springframework:spring-core'
+    implementation 'org.springframework.boot:spring-boot-starter-cache'
+    implementation 'org.springframework.boot:spring-boot-starter-batch'
+    implementation 'org.json:json:20230227'
+    implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity5'
+    // https://mvnrepository.com/artifact/mysql/mysql-connector-java
+    implementation 'mysql:mysql-connector-java:8.0.33'
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+    implementation 'org.springframework.session:spring-session-data-redis'
+    // https://mvnrepository.com/artifact/org.jsoup/jsoup
+    implementation 'org.jsoup:jsoup:1.15.3'
+    // https://mvnrepository.com/artifact/org.apache.commons/commons-text
+    implementation 'org.apache.commons:commons-text:1.10.0'
+    // https://mvnrepository.com/artifact/org.owasp.encoder/encoder
+    implementation 'org.owasp.encoder:encoder:1.2.3'
+    // https://mvnrepository.com/artifact/com.github.ulisesbocchio/jasypt-spring-boot-starter
+    implementation 'com.github.ulisesbocchio:jasypt-spring-boot-starter:3.0.4'
+    implementation 'org.apache.httpcomponents:httpclient:4.5'
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}
+
+tasks.named('bootBuildImage') {
+    builder = 'paketobuildpacks/builder:tiny'
+    environment = ['BP_NATIVE_IMAGE': 'true']
+}

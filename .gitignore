@@ -24,5 +24,7 @@ build
 .gradle
 .settings
 kware_3xmeta/src/main/resources/static/assets/*
+kware_thirdeye/src/main/resources/static/assets/*
 application.yml
 application-*.yml
+
