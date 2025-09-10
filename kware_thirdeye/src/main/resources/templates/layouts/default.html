@@ -61,7 +61,7 @@
             }
 
             const checkByBell = () => {
-                fetch("/cetus/api/custom-file/downloading-list")
+                fetch("/api/portal/custom-file/downloading-list")
                     .then(res => res.json())
                     .then(item => {
                         if(item === 0) {

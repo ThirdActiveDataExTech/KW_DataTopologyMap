@@ -3,10 +3,10 @@ package kware.apps.system.user.web;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import kware.apps.manager.cetus.enumstatus.UserAuthorCd;
-import kware.apps.manager.cetus.enumstatus.UserStatus;
-import kware.apps.manager.cetus.form.service.CetusFormColumnsService;
-import kware.apps.manager.cetus.group.service.CetusGroupService;
+import kware.apps.thirdeye.enumstatus.UserAuthorCd;
+import kware.apps.thirdeye.enumstatus.UserStatus;
+import kware.apps.system.form.service.CetusFormColumnsService;
+import kware.apps.system.group.service.CetusGroupService;
 import kware.apps.system.bbs.service.CetusBbsService;
 import kware.apps.system.position.service.CetusPositionService;
 import kware.apps.system.user.dto.response.UserFullInfo;

@@ -51,7 +51,7 @@
                         <button id="updt-btn" type="button" class="custom-button">
                             <span>등록</span>
                         </button>
-                        <button type="button" class="custom-button" onclick="location.href='/manager/code/list'">
+                        <button type="button" class="custom-button" onclick="location.href='/system/code'">
                             <span>목록</span>
                         </button>
                     </div>
@@ -221,8 +221,8 @@
 
                     Util.confirm([[#{confirm.update}]]).then((isOk) => {
                         if (isOk) {
-                            Http.post('/manager/api/code/all-process', obj, true).then((res) => {
-                                Util.alert([[#{alert.update('코드 정보')}]]).then(() => window.location.href = '/manager/code')
+                            Http.post('/api/system/code/all-process', obj, true).then((res) => {
+                                Util.alert([[#{alert.update('코드 정보')}]]).then(() => window.location.href = '/system/code')
                             }).fail((e) => {
                                 if (e.status === 400) {
                                     if (e.hasOwnProperty('responseJSON')) {

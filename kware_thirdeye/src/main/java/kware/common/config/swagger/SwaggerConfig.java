@@ -46,7 +46,7 @@ public class SwaggerConfig {
         return new Docket(DocumentationType.OAS_30)
                 .useDefaultResponseMessages(false)
                 .select()
-                .apis(RequestHandlerSelectors.basePackage("kware.apps.asp.swagger"))
+                .apis(RequestHandlerSelectors.basePackage("kware.apps.thirdeye.swagger"))
                 .paths(PathSelectors.any())
                 .build()
                 .apiInfo(apiInfo());

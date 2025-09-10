@@ -1,6 +1,6 @@
 package kware.common.config.auth.handler;
 
-import kware.apps.manager.cetus.enumstatus.UserStatus;
+import kware.apps.thirdeye.enumstatus.UserStatus;
 import kware.apps.system.user.domain.CetusUser;
 import kware.apps.system.user.dto.response.UserFullInfo;
 import kware.apps.system.user.service.CetusUserService;

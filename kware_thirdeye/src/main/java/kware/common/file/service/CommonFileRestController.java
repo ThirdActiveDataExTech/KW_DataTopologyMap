@@ -20,7 +20,7 @@ import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/cetus/files")
+@RequestMapping("/api/portal/files")
 public class CommonFileRestController {
     
     private final CommonFileService fileService;

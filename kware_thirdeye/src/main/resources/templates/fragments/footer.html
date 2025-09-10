@@ -30,7 +30,7 @@
                                             <img src="/assets/images/logo/logo.png" alt="logo">
                                         </th:block>
                                         <th:block th:unless="${user == null}">
-                                            <img th:src="|/api/cetus/files/view?fileId=${user.brandingInfo.footerLogo}|" onerror="this.src='/assets/images/logo/logo.png'" alt="logo">
+                                            <img th:src="|/api/portal/files/view?fileId=${user.brandingInfo.footerLogo}|" onerror="this.src='/assets/images/logo/logo.png'" alt="logo">
                                         </th:block>
                                     </a>
                                 </div>
@@ -57,7 +57,7 @@
                                                 <img src="/assets/images/icon-img/company.png" alt="logo">
                                             </th:block>
                                             <th:block th:unless="${user == null}">
-                                                <img th:src="|/api/cetus/files/view?fileId=${user.brandingInfo.companyLogo}|" onerror="this.src='/assets/images/icon-img/company.png'" alt="logo">
+                                                <img th:src="|/api/portal/files/view?fileId=${user.brandingInfo.companyLogo}|" onerror="this.src='/assets/images/icon-img/company.png'" alt="logo">
                                             </th:block>
                                         </a>
                                     </div>

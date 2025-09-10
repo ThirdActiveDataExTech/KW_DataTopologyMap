@@ -1,7 +1,7 @@
 package kware.apps.system.menu.web;
 
 
-import kware.apps.manager.cetus.enumstatus.UserAuthorCd;
+import kware.apps.thirdeye.enumstatus.UserAuthorCd;
 import kware.common.config.auth.MenuNavigationManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 @RequiredArgsConstructor
-@RequestMapping("/manager/cetus/menu")
+@RequestMapping("/system/menu")
 public class CetusMenuInfoController {
 
     private final MenuNavigationManager menuNavigationManager;
@@ -19,7 +19,7 @@ public class CetusMenuInfoController {
     @GetMapping
     public String index(Model model) {
         model.addAttribute("userAuthorCd", UserAuthorCd.toList());
-        menuNavigationManager.renderingPage("/manager/cetus/menu", "메뉴 관리", true, model);
+        menuNavigationManager.renderingPage("/system/menu", "메뉴 관리", true, model);
         return "manager/menu/index";
 
     }

@@ -1,0 +1,17 @@
+package kware.apps.thirdeye.downloadshist.dto.request;
+
+import lombok.Getter;
+
+@Getter
+public class DownloadsHistSearch {
+
+    Long userUid;
+
+    public DownloadsHistSearch(Long userUid) {
+        this.userUid = userUid;
+    }
+
+    public void setUserUid(Long userUid) {
+        this.userUid = userUid;
+    }
+}

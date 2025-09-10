@@ -2,7 +2,6 @@ package kware.common.config;
 
 import cetus.config.CetusConfig;
 import cetus.log.LoggingInterceptor;
-import cetus.menu.MenuInterceptor;
 import cetus.user.UserInterceptor;
 import kware.common.validator.ValidMessageInterpolator;
 import lombok.RequiredArgsConstructor;
@@ -27,7 +26,6 @@ public class WebConfig implements WebMvcConfigurer {
     private final LocaleChangeInterceptor localeChangeInterceptor;
     private final LoggingInterceptor loggingInterceptor;
     private final UserInterceptor userInterceptor;
-    private final MenuInterceptor menuInterceptor;
 
     @Bean
     public LocalValidatorFactoryBean localValidatorFactoryBean() {
@@ -53,7 +51,7 @@ public class WebConfig implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) {
         loggingInterceptor.setLogger(LoggerFactory.getLogger(LoggingInterceptor.class));
         loggingInterceptor.setLogging(configs.getLogging());
-        registry.addInterceptor(loggingInterceptor).excludePathPatterns("/assets/**/*", "/swagger-ui/**", "/swagger-resources/**", "/api/cetus/files/view/**");
+        registry.addInterceptor(loggingInterceptor).excludePathPatterns("/assets/**/*", "/swagger-ui/**", "/swagger-resources/**", "/api/portal/files/view/**");
         registry.addInterceptor(userInterceptor).excludePathPatterns("/assets/**/*", "/login", "/loginProc", "/logout", "/error/**/*");
         registry.addInterceptor(localeChangeInterceptor);
     }

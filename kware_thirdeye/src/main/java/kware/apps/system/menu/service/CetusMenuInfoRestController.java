@@ -13,7 +13,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/cetus/api/menu")
+@RequestMapping("/api/system/menu")
 public class CetusMenuInfoRestController {
 
     private final CetusMenuInfoService service;

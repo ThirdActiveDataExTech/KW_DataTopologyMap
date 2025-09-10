@@ -1,7 +1,7 @@
 package kware.common.config.auth;
 
 
-import kware.apps.manager.cetus.enumstatus.UserStatus;
+import kware.apps.thirdeye.enumstatus.UserStatus;
 import kware.common.config.auth.dto.SessionUserInfo;
 import lombok.EqualsAndHashCode;
 import org.springframework.security.core.GrantedAuthority;

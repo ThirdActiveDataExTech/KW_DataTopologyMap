@@ -2,7 +2,7 @@ package kware.apps.system.bbs.web;
 
 
 import kware.apps.system.bbs.service.CetusBbsService;
-import kware.apps.manager.cetus.enumstatus.BbsTpCd;
+import kware.apps.thirdeye.enumstatus.BbsTpCd;
 import kware.common.config.auth.MenuNavigationManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;

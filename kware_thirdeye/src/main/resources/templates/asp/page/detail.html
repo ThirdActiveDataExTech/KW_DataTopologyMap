@@ -27,7 +27,7 @@
                         <img id="dataImgUrl" class="portal-img" th:src="@{'/assets/images/page/thumbnail_default.png'}" alt="" />
                         <!-- <img id="dataImgUrl" class="portal-img"
                         th:src="${content.thumbnailId} != null ?
-                                @{/api/cetus/files/view(fileId=${content.thumbnailId})} :
+                                @{/api/portal/files/view(fileId=${content.thumbnailId})} :
                                 @{'/assets/images/page/thumbnail_default.png'}"
                         alt="" /> -->
                       </a>
@@ -180,7 +180,7 @@
         detail.fnPageSearch();
         detail.setDataTable(jsonStr);
 
-        // const dataImgUrl = `/api/cetus/files/view?fileId=${contentThumbnailId}`;
+        // const dataImgUrl = `/api/portal/files/view?fileId=${contentThumbnailId}`;
         const dataImgUrl = `/assets/images/page/thumbnail_default.png`;
         detail.updateEasyZoom('.easyzoom', dataImgUrl, dataImgUrl);
 

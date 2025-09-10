@@ -114,19 +114,19 @@
                 <div style="width: 100%;">
                     <!-- 비디오 파일인 경우 -->
                     <th:block th:if="${#strings.startsWith(content.fileType, 'video/')}">
-                        <video th:src="|/api/cetus/files/view?fileId=${content.fileId}|" controls
+                        <video th:src="|/api/portal/files/view?fileId=${content.fileId}|" controls
                             style="width: 100%; object-fit: contain;"></video>
                     </th:block>
                     
                     <!-- 이미지 파일인 경우 -->
                     <th:block th:if="${#strings.startsWith(content.fileType, 'image/')}">
-                        <img th:src="|/api/cetus/files/view?fileId=${content.fileId}|"
+                        <img th:src="|/api/portal/files/view?fileId=${content.fileId}|"
                             style="width: 100%; object-fit: contain;" />
                     </th:block>
                     
                     <!-- 기타 파일인 경우 -->
                     <th:block th:unless="${#strings.startsWith(content.fileType, 'video/') || #strings.startsWith(content.fileType, 'image/')}">
-                        <a th:href="|/api/cetus/files/view?fileId=${content.fileId}|" class="btn btn-primary">
+                        <a th:href="|/api/portal/files/view?fileId=${content.fileId}|" class="btn btn-primary">
                             <i class="fas fa-download"></i> 파일 다운로드
                         </a>
                     </th:block>

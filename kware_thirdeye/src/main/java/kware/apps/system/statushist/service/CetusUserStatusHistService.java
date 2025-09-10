@@ -3,7 +3,7 @@ package kware.apps.system.statushist.service;
 
 import cetus.bean.Page;
 import cetus.bean.Pageable;
-import kware.apps.manager.cetus.enumstatus.DownloadTargetCd;
+import kware.apps.thirdeye.enumstatus.DownloadTargetCd;
 import kware.apps.system.statushist.domain.CetusUserStatusHist;
 import kware.apps.system.statushist.domain.CetusUserStatusHistDao;
 import kware.apps.system.statushist.dto.request.UserStatusHistExcelSearch;

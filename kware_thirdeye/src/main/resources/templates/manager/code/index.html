@@ -85,7 +85,7 @@
                         </div>
                         <div class="topbar-right">
                             <div class="btn-wrapper">
-                                <button type="button" class="custom-button m-2" onclick="location.href='/manager/code/save'">새로 등록</button>
+                                <button type="button" class="custom-button m-2" onclick="location.href='/system/code/save'">새로 등록</button>
                             </div>
                         </div>
                     </div>
@@ -125,7 +125,7 @@
         $(function () {
             table = new Table("code-table")
                 .delUnUseParams()
-                .get("/manager/api/code")
+                .get("/api/system/code")
                 .switchDiv()
                 .add(new Column("uid"))
                 .add(new Column("codeNm").center())
@@ -138,7 +138,7 @@
                 .selectable()
                 .select(function (data) {
                     const form = $('<form>', {
-                        action: '/manager/code/form',
+                        action: '/system/code/form',
                         method: 'POST'
                     }).append(
                         $('<input>', {type: 'hidden', name: 'code', value: data.code}),
@@ -179,7 +179,7 @@
         function toggleApprove(uid, checked) {
             event.stopPropagation()
             const useAt = checked ? 'Y' : 'N';
-            Http.put(`/manager/api/code/change-useAt`, {uid, useAt}).then(() => {
+            Http.put(`/api/system/code/change-useAt`, {uid, useAt}).then(() => {
                 Util.alert([[#{alert.update('코드 사용여부')}]]).then(() => table.submit());
             });
         }

@@ -1,7 +1,7 @@
 package kware.common.config.auth;
 
 
-import kware.apps.manager.cetus.enumstatus.MenuRootCd;
+import kware.apps.thirdeye.enumstatus.MenuRootCd;
 import kware.apps.system.menu.domain.CetusMenu;
 import kware.apps.system.menu.dto.request.SessionMenuListSearch;
 import kware.apps.system.menu.dto.response.SessionMenuList;

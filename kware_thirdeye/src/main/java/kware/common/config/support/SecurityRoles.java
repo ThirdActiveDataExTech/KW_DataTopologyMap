@@ -12,10 +12,8 @@ public class SecurityRoles {
             "/api/thirdeye/**",
             "/thirdeye/**",
 
-            "/invite/validate",
-
             "/api/tus/file/**",
-            "/api/cetus/files/**"
+            "/api/portal/files/**"
     };
 
     public static final String[] USER_URLS = {

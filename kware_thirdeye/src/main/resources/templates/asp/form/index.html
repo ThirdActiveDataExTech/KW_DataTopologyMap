@@ -107,8 +107,6 @@
                 codeJS.createTable(item);
             });
 
-
-
             const item = sessionStorage.getItem('formGroup')
             if (item) {
                 const tabSelector = `.description-review-topbar a[data-type="${item}"]`;
@@ -125,7 +123,7 @@
             });
 
             $("#new-btn").on('click', function () {
-                window.location.href = '/asp/cetus/form/save'
+                window.location.href = '/system/form/save'
             });
 
         });

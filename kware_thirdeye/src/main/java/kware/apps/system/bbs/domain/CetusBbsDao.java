@@ -5,7 +5,7 @@ import cetus.bean.Pageable;
 import cetus.dao.SuperDao;
 import kware.apps.system.bbs.dto.request.BbsSearch;
 import kware.apps.system.bbs.dto.response.BbsList;
-import kware.apps.portal.bbsctt.dto.request.BbscttTpSearch;
+import kware.apps.thirdeye.bbsctt.dto.request.BbscttTpSearch;
 import org.springframework.stereotype.Component;
 
 import java.util.List;

@@ -74,7 +74,7 @@
                         </div>
                         <div class="topbar-right">
                             <div class="btn-wrapper">
-                                <button type="button" class="custom-button m-2" onclick="location.href='/manager/cetus/contents/save'">새로 등록</button>
+                                <button type="button" class="custom-button m-2" onclick="location.href='/system/contents/save'">새로 등록</button>
                             </div>
                         </div>
                     </div>
@@ -106,7 +106,7 @@
     $(function() {
         const table = new Table('contents-table')
             .switchDiv()
-            .get(`/cetus/api/contents?workplaceUid=${1}`)
+            .get(`/api/portal/contents?workplaceUid=${1}`)
             .add(new Column("uid").center())
             .add(new Column("title").center())
             .add(new Column("workplaceUid").center())
@@ -114,7 +114,7 @@
             .add(new Column("regDt").center())
             .selectable()
             .select(function (data) {
-                location.href = `/manager/cetus/contents/${data.uid}`
+                location.href = `/system/contents/${data.uid}`
             })
             .init();
 
