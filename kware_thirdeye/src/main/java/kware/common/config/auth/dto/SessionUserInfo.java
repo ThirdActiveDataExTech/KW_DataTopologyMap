@@ -2,7 +2,7 @@ package kware.common.config.auth.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import kware.apps.system.menu.domain.CetusMenu;
-import kware.apps.manager.cetus.user.dto.response.UserFullInfo;
+import kware.apps.system.user.dto.response.UserFullInfo;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 

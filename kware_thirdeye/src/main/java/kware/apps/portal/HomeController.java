@@ -1,8 +1,8 @@
 package kware.apps.portal;
 
 import cetus.Response;
-import kware.apps.manager.cetus.user.dto.response.UserFullInfo;
-import kware.apps.manager.cetus.user.service.CetusUserService;
+import kware.apps.system.user.dto.response.UserFullInfo;
+import kware.apps.system.user.service.CetusUserService;
 import kware.common.config.auth.dto.SessionUserInfo;
 import kware.common.config.session.SessionHelper;
 import kware.common.config.session.SessionStore;
@@ -62,25 +62,6 @@ public class HomeController {
         helper.createSessionAndEditSecurityContext(authentication, request);
         response.sendRedirect("/portal/home");
         return Response.ok();
-    }
-
-    @GetMapping("/signup")
-    public String signup(HttpSession session, Model model) {
-        Boolean isInvited = (Boolean) session.getAttribute("isInvited");
-        String inviteToken = (String) session.getAttribute("inviteToken");
-        String inviteEmail = (String) session.getAttribute("inviteEmail");
-
-        model.addAttribute("isInvited", isInvited != null && isInvited);
-        model.addAttribute("inviteToken", inviteToken);
-        model.addAttribute("inviteEmail", inviteEmail);
-//        model.addAttribute("fields", columnsService.getFormGroupColumns("SIGNUP"));
-
-        return "signup";
-    }
-
-    @GetMapping("/expired")
-    public String expired() {
-        return "asp/page/expired";
     }
 
 }

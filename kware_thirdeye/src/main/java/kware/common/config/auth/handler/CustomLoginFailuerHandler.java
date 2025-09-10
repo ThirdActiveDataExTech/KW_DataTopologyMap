@@ -1,9 +1,9 @@
 package kware.common.config.auth.handler;
 
 import kware.apps.manager.cetus.enumstatus.UserStatus;
-import kware.apps.manager.cetus.user.domain.CetusUser;
-import kware.apps.manager.cetus.user.dto.response.UserFullInfo;
-import kware.apps.manager.cetus.user.service.CetusUserService;
+import kware.apps.system.user.domain.CetusUser;
+import kware.apps.system.user.dto.response.UserFullInfo;
+import kware.apps.system.user.service.CetusUserService;
 import kware.common.config.support.LoginErrorMessage;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -109,6 +109,10 @@
           FROM CETUS_BBS
          WHERE BBS_TP_CD = #{bbsTpCd}
            AND WORKPLACE_UID = #{workplaceUid}
+           AND USE_AT = 'Y'
+           AND DELETE_AT = 'N'
+         ORDER BY BBS_UID DESC
+         LIMIT 1
     </select>
 
     <update id="update" parameterType="CetusBbs">

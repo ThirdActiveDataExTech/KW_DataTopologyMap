@@ -1,9 +1,9 @@
 package kware.common.config.auth;
 
 import cetus.config.CetusConfig;
-import kware.apps.manager.cetus.loginhist.service.CetusUserLoginHistService;
+import kware.apps.system.loginhist.service.CetusUserLoginHistService;
 import kware.apps.system.menu.service.CetusMenuInfoService;
-import kware.apps.manager.cetus.user.service.CetusUserService;
+import kware.apps.system.user.service.CetusUserService;
 import kware.common.config.IpWhoService;
 import kware.common.config.auth.handler.*;
 import kware.common.config.support.SecurityRoles;

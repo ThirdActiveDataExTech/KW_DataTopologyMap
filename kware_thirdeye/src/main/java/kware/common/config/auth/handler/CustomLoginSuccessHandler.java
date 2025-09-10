@@ -1,9 +1,9 @@
 package kware.common.config.auth.handler;
 
 import cetus.user.UserUtil;
-import kware.apps.manager.cetus.loginhist.dto.request.UserLoginHistSave;
-import kware.apps.manager.cetus.loginhist.service.CetusUserLoginHistService;
-import kware.apps.manager.cetus.user.service.CetusUserService;
+import kware.apps.system.loginhist.dto.request.UserLoginHistSave;
+import kware.apps.system.loginhist.service.CetusUserLoginHistService;
+import kware.apps.system.user.service.CetusUserService;
 import kware.common.config.IpWhoService;
 import kware.common.config.auth.PrincipalDetails;
 import lombok.RequiredArgsConstructor;

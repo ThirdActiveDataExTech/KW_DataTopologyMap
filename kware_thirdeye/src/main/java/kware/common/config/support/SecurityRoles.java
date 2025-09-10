@@ -9,15 +9,10 @@ public class SecurityRoles {
             "/sessionExpired",
             "/login/force.json",
 
-            "/asp/signup",
-            "/cetus/api/user/checkEmail.json",
-            "/cetus/api/user/checkId.json",
-            "/cetus/api/user",
+            "/api/thirdeye/**",
+            "/thirdeye/**",
 
             "/invite/validate",
-
-            "/expired",
-            "/signup",
 
             "/api/tus/file/**",
             "/api/cetus/files/**"

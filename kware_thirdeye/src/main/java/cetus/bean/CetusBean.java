@@ -2,7 +2,7 @@ package cetus.bean;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
-import kware.apps.manager.cetus.user.domain.CetusUser;
+import kware.apps.system.user.domain.CetusUser;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

@@ -10,7 +10,7 @@ import kware.apps.system.bbs.dto.request.BbsChange;
 import kware.apps.system.bbs.dto.request.BbsSave;
 import kware.apps.system.bbs.dto.request.BbsSearch;
 import kware.apps.system.bbs.dto.response.BbsList;
-import kware.apps.manager.cetus.bbsctt.dto.request.BbscttTpSearch;
+import kware.apps.portal.bbsctt.dto.request.BbscttTpSearch;
 import kware.apps.manager.cetus.enumstatus.BbsTpCd;
 import kware.apps.system.menu.domain.CetusMenuInfo;
 import kware.apps.system.menu.dto.request.MenuChange;
@@ -68,7 +68,7 @@ public class CetusBbsService {
     }
 
     @Transactional(readOnly = true)
-    public CetusBbs getBbsByTpCd(BbscttTpSearch search) {
+    public CetusBbs findBbsByTpCd(BbscttTpSearch search) {
         return dao.getBbsByTpCd(search);
     }
 

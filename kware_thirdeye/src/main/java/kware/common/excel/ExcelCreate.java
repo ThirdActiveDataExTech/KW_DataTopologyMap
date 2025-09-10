@@ -4,7 +4,7 @@ import cetus.bean.Page;
 import cetus.bean.Pageable;
 import cetus.config.CetusConfig;
 import cetus.util.HtmlUtil;
-import kware.apps.manager.cetus.answer.dto.response.AnswerExcelList;
+import kware.apps.portal.answer.dto.response.AnswerExcelList;
 import kware.apps.manager.cetus.downloadshist.service.CetusDownloadsHistService;
 import kware.apps.manager.cetus.enumstatus.DownloadTargetCd;
 import kware.apps.manager.cetus.file.service.CetusFileService;

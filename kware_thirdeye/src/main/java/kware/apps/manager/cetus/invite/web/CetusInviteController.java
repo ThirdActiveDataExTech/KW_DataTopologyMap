@@ -23,19 +23,19 @@ public class CetusInviteController {
 
         // 만료기간 확인
         if (invite == null || invite.getExpirationDate().isBefore(LocalDateTime.now())) {
-            return "redirect:/expired";
+            return "redirect:/thirdeye/expired";
         }
 
         // 가장 최근 코드인지 확인
         CetusInvite latestInvite = dao.getLatestInviteByEmail(invite.getEmail());
         if (!latestInvite.getUrl().equals(token)) {
-            return "redirect:/expired";
+            return "redirect:/thirdeye/expired";
         }
 
         dao.activateInvite(token);
         session.setAttribute("inviteToken", token);
         session.setAttribute("isInvited", true);
         session.setAttribute("inviteEmail", invite.getEmail());
-        return "redirect:/signup";
+        return "redirect:/thirdeye/signup";
     }
 }
