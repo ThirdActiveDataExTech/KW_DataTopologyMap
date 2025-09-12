@@ -1,4 +1,4 @@
-package kware.apps.manager.cetus.program.dto.request;
+package kware.apps.system.program.dto.request;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

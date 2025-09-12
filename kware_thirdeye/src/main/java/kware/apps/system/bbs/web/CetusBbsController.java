@@ -22,14 +22,14 @@ public class CetusBbsController {
     @GetMapping
     public String index(Model model) {
         menuNavigationManager.renderingPage("/system/bbs", "게시판 관리", true, model);
-        return "manager/bbs/index";
+        return "system/bbs/index";
     }
 
     @GetMapping("/save")
     public String save(Model model) {
         menuNavigationManager.renderingPage("/system/bbs", "게시판 등록", false, model);
         model.addAttribute("bbsTpCds", BbsTpCd.toList());
-        return "manager/bbs/save";
+        return "system/bbs/save";
     }
 
     @GetMapping("/{uid}")
@@ -37,6 +37,6 @@ public class CetusBbsController {
         menuNavigationManager.renderingPage("/system/bbs", "게시판 수정",false, model);
         model.addAttribute("bbsTpCds", BbsTpCd.toList());
         model.addAttribute("form", service.view(uid));
-        return "manager/bbs/form";
+        return "system/bbs/form";
     }
 }

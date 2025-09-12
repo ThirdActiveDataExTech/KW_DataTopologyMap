@@ -79,8 +79,8 @@ public class PortalController {
         SessionUserInfo user = UserUtil.getUser();
         UserFullInfo info = cetusUserService.findUserFullInfoByUserUid(user.getUid());
         model.addAttribute("view", info);
-        model.addAttribute("fields", columnsService.getFormGroupColumns("SIGNUP"));
 
+        /*model.addAttribute("fields", columnsService.getFormGroupColumns("SIGNUP"));
         String metaData = info.getMetaData();
         ObjectMapper objectMapper = new ObjectMapper();
         Map<String, Object> map = new HashMap<>();
@@ -91,7 +91,8 @@ public class PortalController {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        model.addAttribute("metadata", map);
+        model.addAttribute("metadata", map);*/
+
         menuNavigationManager.renderingPage("/portal/myInfo", "내 정보 수정", true, model);
 
         return "asp/myInfo/index";

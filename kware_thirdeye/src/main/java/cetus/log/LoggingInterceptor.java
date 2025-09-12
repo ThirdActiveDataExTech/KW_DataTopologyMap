@@ -77,7 +77,7 @@ public class LoggingInterceptor implements HandlerInterceptor {
 		if (logController(logs, handler, handleException)) printLog = true;
 		if (logParams(logs, request, handleException)) printLog = true;
 		if (logView(logs, request, handleException)) printLog = true;
-		if (logSql(logs, request, handleException)) printLog = true;
+		/*if (logSql(logs, request, handleException)) printLog = true;*/
 		if (logElapsed(logs, request, handleException)) printLog = true;
 
 		/*boolean printLog = false;

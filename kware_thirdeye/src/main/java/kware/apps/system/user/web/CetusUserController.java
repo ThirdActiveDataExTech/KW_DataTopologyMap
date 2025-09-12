@@ -43,7 +43,7 @@ public class CetusUserController {
         model.addAttribute("userPosition", positionService.findPositionList());
         menuNavigationManager.renderingPage("/system/user", "사용자 관리", true, model);
 
-        return "manager/user/index";
+        return "system/user/index";
     }
 
     @GetMapping("/{uid}")
@@ -72,7 +72,7 @@ public class CetusUserController {
 
         menuNavigationManager.renderingPage("/system/user", "사용자 상세 정보", false, model);
 
-        return "manager/user/form";
+        return "system/user/form";
     }
 
     @GetMapping("/save")
@@ -82,7 +82,7 @@ public class CetusUserController {
         model.addAttribute("userPosition", positionService.findPositionList());
         model.addAttribute("fields", columnsService.getFormGroupColumns("SIGNUP"));
         menuNavigationManager.renderingPage("/system/user", "계정 추가", false, model);
-        return "manager/user/save";
+        return "system/user/save";
     }
 
 }

@@ -434,6 +434,12 @@
       </div> <!-- .grid -->
     </div>
   </div>
+
+  <form action="/api/portal/xml/upload" method="post" enctype="multipart/form-data">
+    <input type="file" name="file" accept=".xml"/>
+    <button type="submit">업로드</button>
+  </form>
+
   <!-- END: Content-->
 </th:block>
 

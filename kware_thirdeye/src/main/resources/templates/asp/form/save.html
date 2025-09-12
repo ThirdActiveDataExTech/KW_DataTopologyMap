@@ -42,8 +42,8 @@
             border-color: #ea5455 !important; /* 부트스트랩의 빨간색 */
         }
     </style>
-    <link rel="stylesheet" th:href="@{'/assets/css/page/manager/user-list.css'}"/>
-    <link rel="stylesheet" th:href="@{'/assets/css/page/manager/user-form.css'}"/>
+    <link rel="stylesheet" th:href="@{'/assets/css/page/system/user-list.css'}"/>
+    <link rel="stylesheet" th:href="@{'/assets/css/page/system/user-form.css'}"/>
 </th:block>
 
 <th:block layout:fragment="content">
@@ -212,7 +212,7 @@
 </th:block>
 
 <th:block layout:fragment="script">
-    <script th:src="@{'/assets/js/page/manager/form-builder.js'}"></script>
+    <script th:src="@{'/assets/js/page/system/form-builder.js'}"></script>
     <script th:inline="javascript">
         const updtChild = $("#save-form-child");
         const typeSelect = $("#typeSelect");

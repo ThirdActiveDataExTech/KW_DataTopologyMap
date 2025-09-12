@@ -23,13 +23,13 @@ public class CetusCodeController {
     @GetMapping
     public String list(Model model) {
         menuNavigationManager.renderingPage("/system/code", "코드 관리", true, model);
-        return "manager/code/index";
+        return "system/code/index";
     }
 
     @GetMapping("/save")
     public String save(Model model) {
         menuNavigationManager.renderingPage("/system/code", "코드 등록", false, model);
-        return "manager/code/save";
+        return "system/code/save";
     }
 
     @RequestMapping(value = "/form", method = {RequestMethod.GET, RequestMethod.POST})
@@ -42,6 +42,6 @@ public class CetusCodeController {
         model.addAttribute("uid", uid);
         menuNavigationManager.renderingPage("/system/code", "코드 수정", false, model);
 
-        return "manager/code/form";
+        return "system/code/form";
     }
 }

@@ -168,7 +168,7 @@
 	</select>
 
 	<select id="getUserFullInfoByUserUid" parameterType="Long" resultType="UserFullInfo">
-		/* cetusUser.getUserByUserId */
+		/* cetusUser.getUserFullInfoByUserUid */
 		SELECT CU.UID
 			  ,CU.USER_ID
 			  ,CU.PASSWORD

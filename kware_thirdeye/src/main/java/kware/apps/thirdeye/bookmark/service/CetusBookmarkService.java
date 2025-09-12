@@ -16,7 +16,6 @@ import org.springframework.transaction.annotation.Transactional;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import cetus.service.CetusService;
 import kware.apps.thirdeye.bookmark.dto.request.CetusBookmarkToggle;
 import kware.apps.thirdeye.bookmark.dto.request.CetusSearchBookmark;
 import kware.apps.thirdeye.contents.dto.response.HomeData;
@@ -35,7 +34,7 @@ public class CetusBookmarkService {
 
         List<CetusBookmark> bookmarkList = dao.findListByUserUid(searchBookmark);
         try {
-            ClassPathResource resource = new ClassPathResource("static/assets/data/3xmeta/list_data.json");
+            ClassPathResource resource = new ClassPathResource("static/assets/data/thirdeye/list_data.json");
             byte[] jsonData = Files.readAllBytes(resource.getFile().toPath());
 
             ObjectMapper objectMapper = new ObjectMapper();

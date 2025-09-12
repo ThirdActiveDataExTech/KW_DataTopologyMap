@@ -53,7 +53,7 @@ public class CetusUserService {
     public void saveUser(UserSave request) {
 
         // 0. metaData 묶기
-        String processedMetaData = this.processMetaData(request.getMetaData());
+        String processedMetaData = (request.getMetaData() != null) ? this.processMetaData(request.getMetaData()) : null;
 
         // 1. user
         String encodePassword = passwordEncoder.encode(request.getPassword());
@@ -68,7 +68,7 @@ public class CetusUserService {
     public void saveUserAdmin(UserSaveAdmin request) {
 
         // 0. metaData 묶기
-        String processedMetaData = this.processMetaData(request.getMetaData());
+        String processedMetaData = (request.getMetaData() != null) ? this.processMetaData(request.getMetaData()) : null;
 
         // 1. user
         String encodePassword = passwordEncoder.encode(request.getPassword());
@@ -95,7 +95,7 @@ public class CetusUserService {
         }
 
         // 0. metaData 묶기
-        String processedMetaData = this.processMetaData(request.getMetaData());
+        String processedMetaData = (request.getMetaData() != null) ? this.processMetaData(request.getMetaData()) : null;
 
         // 1. user
         CetusUser userView = dao.view(uid);
@@ -162,8 +162,9 @@ public class CetusUserService {
 
     @Transactional
     public void changeMyInfo(Long uid, UserChangeMyInfo request) {
+
         // 0. metaData 묶기
-        String processedMetaData = this.processMetaData(request.getMetaData());
+        String processedMetaData = (request.getMetaData() != null) ? this.processMetaData(request.getMetaData()) : null;
 
         // 1. password
         String encodePassword = (request.getPassword() != null) ? passwordEncoder.encode(request.getPassword()) : null;

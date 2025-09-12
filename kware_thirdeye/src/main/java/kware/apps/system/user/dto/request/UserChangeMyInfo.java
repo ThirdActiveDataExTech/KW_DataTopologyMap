@@ -12,10 +12,8 @@ import javax.validation.constraints.NotBlank;
 @Getter @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class UserChangeMyInfo {
 
-    @NotBlank @DisplayName("사용자 이름")
     private String userNm;
 
-    @NotBlank @DisplayName("사용자 이메일")
     private String userEmail;
 
     private String metaData;

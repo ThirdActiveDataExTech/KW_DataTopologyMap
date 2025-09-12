@@ -2,8 +2,8 @@ package kware.apps.system.program.domain;
 
 
 import cetus.bean.AuditBean;
-import kware.apps.manager.cetus.program.dto.request.ProgramChange;
-import kware.apps.manager.cetus.program.dto.request.ProgramSave;
+import kware.apps.system.program.dto.request.ProgramChange;
+import kware.apps.system.program.dto.request.ProgramSave;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

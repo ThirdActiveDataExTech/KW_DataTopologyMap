@@ -32,30 +32,14 @@ public class CetusBbscttController {
     private final CetusBbscttAnswerService answerService;
     private final MenuNavigationManager menuNavigationManager;
 
-    /*@GetMapping("/{bbsUid}")
-    public String index(@PathVariable("bbsUid") Long bbsUid, final Model model) {
-        CetusBbs bbs = bbsService.view(bbsUid);
-        model.addAttribute("bbs", bbs);
-        menuNavigationManager.renderingPage("/portal/cetus/bbsctt/"+bbsUid, bbs.getBbsNm(), true, model);
-        return "asp/bbsctt/index";
-    }*/
-
     @GetMapping("/{bbsTpCd}")
     public String index(@PathVariable("bbsTpCd") String bbsTpCd, final Model model) {
         CetusBbs bbs = bbsService.findBbsByTpCd(new BbscttTpSearch(BbsTpCd.fromSubcode(bbsTpCd).name(), UserUtil.getUserWorkplaceUid()));
         model.addAttribute("bbsUid", bbs.getBbsUid());
         model.addAttribute("bbs", bbs);
         menuNavigationManager.renderingPage("/portal/bbs/"+bbsTpCd, bbs.getBbsNm(), true, model);
-        return "asp/bbsctt/index";
+        return "thirdeye/bbsctt/index";
     }
-
-    /*@GetMapping("/save/{bbsUid}")
-    public String save(@PathVariable("bbsUid") Long bbsUid, final Model model) {
-        CetusBbs bbs = bbsService.view(bbsUid);
-        model.addAttribute("bbs", bbs);
-        menuNavigationManager.renderingPage("/portal/bbs/"+bbsTpCd, "게시글 등록", false, model);
-        return "asp/bbsctt/save";
-    }*/
 
     @GetMapping("/{bbsTpCd}/save")
     public String save(@PathVariable("bbsTpCd") String bbsTpCd, final Model model) {
@@ -63,13 +47,13 @@ public class CetusBbscttController {
         model.addAttribute("bbsUid", bbs.getBbsUid());
         model.addAttribute("bbs", bbs);
         menuNavigationManager.renderingPage("/portal/bbs/"+bbsTpCd, "게시글 등록", false, model);
-        return "asp/bbsctt/save";
+        return "thirdeye/bbsctt/save";
     }
 
     @GetMapping("/{bbsTpCd}/{bbscttUid}")
     public String view( @PathVariable("bbsTpCd") String bbsTpCd,
                         @PathVariable("bbscttUid") Long bbscttUid,
-                        final Model model, HttpServletRequest req, HttpServletResponse res) {
+                        final Model model, HttpServletRequest req, HttpServletResponse res ) {
         BbscttView bbsctt = bbscttService.findViewByBbscttUid(bbscttUid);
         model.addAttribute("bbsctt", bbsctt);
 
@@ -82,7 +66,7 @@ public class CetusBbscttController {
 
         menuNavigationManager.renderingPage("/portal/bbs/"+bbsTpCd, "게시글 조회", false, model);
 
-        return "asp/bbsctt/view";
+        return "thirdeye/bbsctt/view";
     }
 
     @GetMapping("/{bbsTpCd}/form/{bbscttUid}")
@@ -96,6 +80,6 @@ public class CetusBbscttController {
         model.addAttribute("bbs", bbs);
 
         menuNavigationManager.renderingPage("/portal/bbs/"+bbsTpCd, "게시글 수정", false, model);
-        return "asp/bbsctt/form";
+        return "thirdeye/bbsctt/form";
     }
 }

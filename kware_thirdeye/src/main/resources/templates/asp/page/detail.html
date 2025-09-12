@@ -106,16 +106,16 @@
         </div>
         <div class="tab-content">
             <div id="des-details1" class="tab-pane active">
-              <div th:replace="asp/page/detail-template01::divTabDetailData"></div>
+              <div th:replace="thirdeye/page/detail-template01::divTabDetailData"></div>
             </div>
             <div id="des-details2" class="tab-pane">
-                <div th:replace="asp/page/detail-template05::divTabSwaggerTest"></div>
+                <div th:replace="thirdeye/page/detail-template05::divTabSwaggerTest"></div>
             </div>
             <div id="des-details3" class="tab-pane">
-              <div th:replace="asp/page/detail-template03::divTabDetailRelactionData"></div>
+              <div th:replace="thirdeye/page/detail-template03::divTabDetailRelactionData"></div>
             </div>
             <div id="des-details4" class="tab-pane">
-              <div th:replace="asp/page/detail-template04::divTabDetailReport"></div>
+              <div th:replace="thirdeye/page/detail-template04::divTabDetailReport"></div>
             </div>
         </div>
     </div>
@@ -168,8 +168,8 @@
 <th:block layout:fragment="script">
   <script th:src="@{'https://cdn.jsdelivr.net/npm/echarts@latest/dist/echarts.min.js'}"></script>
   <script th:src="@{'/assets/js/page/detail/detail.js'}"></script>
-  <th:block th:replace="asp/page/detail-template03-script::script"></th:block>
-  <th:block th:replace="asp/page/detail-template04-script::script"></th:block>
+  <th:block th:replace="thirdeye/page/detail-template03-script::script"></th:block>
+  <th:block th:replace="thirdeye/page/detail-template04-script::script"></th:block>
   <script th:inline="javascript">
 
     const contentUid = /*[[${content.uid}]]*/ 0;

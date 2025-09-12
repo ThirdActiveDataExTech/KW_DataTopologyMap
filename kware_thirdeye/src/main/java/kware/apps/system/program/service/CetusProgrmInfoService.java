@@ -4,11 +4,12 @@ package kware.apps.system.program.service;
 import cetus.bean.Page;
 import cetus.bean.Pageable;
 import cetus.user.UserUtil;
-import kware.apps.manager.cetus.program.dto.response.MenuProgrmInfoList;
-import kware.apps.manager.cetus.program.dto.response.ProgrmFullInfo;
-import kware.apps.manager.cetus.program.dto.response.ProgrmInfoList;
 import kware.apps.system.program.domain.CetusProgrmInfo;
 import kware.apps.system.program.domain.CetusProgrmInfoDao;
+import kware.apps.system.program.dto.request.*;
+import kware.apps.system.program.dto.response.MenuProgrmInfoList;
+import kware.apps.system.program.dto.response.ProgrmFullInfo;
+import kware.apps.system.program.dto.response.ProgrmInfoList;
 import kware.common.file.service.CommonFileService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -22,13 +23,13 @@ public class CetusProgrmInfoService {
     private final CommonFileService commonFileService;
 
     @Transactional(readOnly = true)
-    public Page<MenuProgrmInfoList> findAllMenuProgramPage(kware.apps.manager.cetus.program.dto.request.MenuProgrmInfoSearch search, Pageable pageable) {
+    public Page<MenuProgrmInfoList> findAllMenuProgramPage(MenuProgrmInfoSearch search, Pageable pageable) {
         search.setWorkplaceUid(UserUtil.getUserWorkplaceUid());
         return dao.page("menuProgramPageList", "menuProgramPageCount", search, pageable);
     }
 
     @Transactional(readOnly = true)
-    public Page<ProgrmInfoList> findAllProgramPage(kware.apps.manager.cetus.program.dto.request.ProgrmInfoSearch search, Pageable pageable) {
+    public Page<ProgrmInfoList> findAllProgramPage(ProgrmInfoSearch search, Pageable pageable) {
         search.setWorkplaceUid(UserUtil.getUserWorkplaceUid());
         return dao.page("programPageList", "programPageCount", search, pageable);
     }
@@ -40,18 +41,18 @@ public class CetusProgrmInfoService {
 
     @Transactional(readOnly = true)
     public CetusProgrmInfo findProgramByUrl(String url) {
-        kware.apps.manager.cetus.program.dto.request.ProgrmFullInfoSearch fullInfoSearch = new kware.apps.manager.cetus.program.dto.request.ProgrmFullInfoSearch(url, UserUtil.getUserWorkplaceUid());
+        ProgrmFullInfoSearch fullInfoSearch = new ProgrmFullInfoSearch(url, UserUtil.getUserWorkplaceUid());
         return dao.getProgramByUrl(fullInfoSearch);
     }
 
     @Transactional(readOnly = true)
     public ProgrmFullInfo findProgramFullInfoByUrl(String url) {
-        kware.apps.manager.cetus.program.dto.request.ProgrmFullInfoSearch fullInfoSearch = new kware.apps.manager.cetus.program.dto.request.ProgrmFullInfoSearch(url, UserUtil.getUserWorkplaceUid());
+        ProgrmFullInfoSearch fullInfoSearch = new ProgrmFullInfoSearch(url, UserUtil.getUserWorkplaceUid());
         return dao.getProgramFullInfoByUrl(fullInfoSearch);
     }
 
     @Transactional
-    public void saveProgram(kware.apps.manager.cetus.program.dto.request.ProgramSave request) {
+    public void saveProgram(ProgramSave request) {
 
         // img
         Long leftSlideImg = commonFileService.processFileSeparately(request.getLeftImg(), null, null);
@@ -66,7 +67,7 @@ public class CetusProgrmInfoService {
     }
 
     @Transactional
-    public void changeProgram(Long uid, kware.apps.manager.cetus.program.dto.request.ProgramChange request) {
+    public void changeProgram(Long uid, ProgramChange request) {
         CetusProgrmInfo view = dao.view(uid);
 
         // img

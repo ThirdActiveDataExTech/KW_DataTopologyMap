@@ -2,7 +2,7 @@ package kware.common.config.auth;
 
 import cetus.user.UserUtil;
 import kware.apps.system.menu.domain.CetusMenu;
-import kware.apps.manager.cetus.program.dto.response.ProgrmFullInfo;
+import kware.apps.system.program.dto.response.ProgrmFullInfo;
 import kware.apps.system.program.service.CetusProgrmInfoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;

@@ -20,19 +20,19 @@ public class CetusProgramController {
     @GetMapping
     public String index(Model model) {
         menuNavigationManager.renderingPage("/system/program", "프로그램 관리", true, model);
-        return "manager/program/index";
+        return "system/program/index";
     }
 
     @GetMapping("/{uid}")
     public String form(@PathVariable("uid") Long uid, Model model) {
         menuNavigationManager.renderingPage("/system/program", "프로그램 수정", false, model);
         model.addAttribute("form", service.view(uid));
-        return "manager/program/form";
+        return "system/program/form";
     }
 
     @GetMapping("/save")
     public String save(Model model) {
         menuNavigationManager.renderingPage("/system/program", "프로그램 등록", false, model);
-        return "manager/program/save";
+        return "system/program/save";
     }
 }

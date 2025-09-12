@@ -2,12 +2,12 @@ package kware.apps.system.program.service;
 
 import cetus.bean.Page;
 import cetus.bean.Pageable;
-import kware.apps.manager.cetus.program.dto.request.MenuProgrmInfoSearch;
-import kware.apps.manager.cetus.program.dto.request.ProgramChange;
-import kware.apps.manager.cetus.program.dto.request.ProgramSave;
-import kware.apps.manager.cetus.program.dto.request.ProgrmInfoSearch;
-import kware.apps.manager.cetus.program.dto.response.MenuProgrmInfoList;
-import kware.apps.manager.cetus.program.dto.response.ProgrmInfoList;
+import kware.apps.system.program.dto.response.MenuProgrmInfoList;
+import kware.apps.system.program.dto.response.ProgrmInfoList;
+import kware.apps.system.program.dto.request.MenuProgrmInfoSearch;
+import kware.apps.system.program.dto.request.ProgramChange;
+import kware.apps.system.program.dto.request.ProgramSave;
+import kware.apps.system.program.dto.request.ProgrmInfoSearch;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

@@ -46,19 +46,19 @@
     <script th:inline="javascript">
         $(async function(e) {
             
-            const configData = await Http.getJson('/assets/data/3xmeta/type_config_data.json');
+            const configData = await Http.getJson('/assets/data/thirdeye/type_config_data.json');
             homeJS.setTypeConfig(configData);
 
-            const homeData1 = await Http.getJson('/assets/data/3xmeta/A_list_data.json');
+            const homeData1 = await Http.getJson('/assets/data/thirdeye/A_list_data.json');
             homeJS.drawMainContent(homeData1);
 
-            const homeData2 = await Http.getJson('/assets/data/3xmeta/B_list_data.json');
+            const homeData2 = await Http.getJson('/assets/data/thirdeye/B_list_data.json');
             homeJS.drawMainContent(homeData2);
 
-            const homeData3 = await Http.getJson('/assets/data/3xmeta/C_list_data.json');
+            const homeData3 = await Http.getJson('/assets/data/thirdeye/C_list_data.json');
             homeJS.drawMainContent(homeData3);
 
-            const homeData4 = await Http.getJson('/assets/data/3xmeta/D_list_data.json');
+            const homeData4 = await Http.getJson('/assets/data/thirdeye/D_list_data.json');
             homeJS.drawMainContent(homeData4);
 
             $(document).on('click', '.category-list a', function(e) {

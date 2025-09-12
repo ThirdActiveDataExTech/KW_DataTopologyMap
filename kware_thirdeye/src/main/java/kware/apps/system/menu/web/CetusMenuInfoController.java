@@ -20,7 +20,7 @@ public class CetusMenuInfoController {
     public String index(Model model) {
         model.addAttribute("userAuthorCd", UserAuthorCd.toList());
         menuNavigationManager.renderingPage("/system/menu", "메뉴 관리", true, model);
-        return "manager/menu/index";
+        return "system/menu/index";
 
     }
 }

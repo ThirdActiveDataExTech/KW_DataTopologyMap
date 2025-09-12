@@ -87,8 +87,8 @@
         }
 
     </style>
-    <link rel="stylesheet" th:href="@{'/assets/css/page/manager/user-list.css'}"/>
-    <link rel="stylesheet" th:href="@{'/assets/css/page/manager/user-form.css'}"/>
+    <link rel="stylesheet" th:href="@{'/assets/css/page/system/user-list.css'}"/>
+    <link rel="stylesheet" th:href="@{'/assets/css/page/system/user-form.css'}"/>
 </th:block>
 
 <th:block layout:fragment="content">
@@ -340,11 +340,11 @@
         </div>
     </div>
 
-    <th:block th:replace="asp/form/preview-modal"></th:block>
+    <th:block th:replace="thirdeye/form/preview-modal"></th:block>
 </th:block>
 
 <th:block layout:fragment="script">
-    <script th:src="@{'/assets/js/page/manager/form-builder-dual.js'}"></script>
+    <script th:src="@{'/assets/js/page/system/form-builder-dual.js'}"></script>
     <script th:src="@{'/assets/js/sortablejs-1.15.6.js'}"></script>
     <script th:inline="javascript">
         let selectedUid;

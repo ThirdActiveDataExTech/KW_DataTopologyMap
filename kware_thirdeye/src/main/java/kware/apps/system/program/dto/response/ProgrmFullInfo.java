@@ -1,4 +1,4 @@
-package kware.apps.manager.cetus.program.dto.response;
+package kware.apps.system.program.dto.response;
 
 
 import lombok.AccessLevel;

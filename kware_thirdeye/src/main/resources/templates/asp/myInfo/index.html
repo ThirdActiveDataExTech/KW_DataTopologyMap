@@ -89,7 +89,8 @@
                                 <label for="userEmail" class="custom-label">이메일<span class="req">*</span></label>
                                 <input type="hidden" id="userEmail-origin" th:value="${view?.userEmail}" />
                                 <div class="input-group">
-                                  <input type="email" id="userEmail" name="userEmail" class="form-control custom-input" required="" th:value="${view?.userEmail}" readonly disabled>
+                                  <input type="email" id="userEmail" name="userEmail" class="form-control custom-input" required=""
+                                         th:value="${view?.userEmail}" readonly disabled>
                                   <button class="custom-button" id="userEmail-change" type="button">이메일 변경</button>
                                 </div>
                                 <span class="validation-error-message" id="userEmail-error"></span>
@@ -97,7 +98,7 @@
                             </div>
 
                             <hr style="border: 1px dashed #ccc; margin-top: 30px; margin-bottom: 30px;">
-                            <th:block th:with="rowSize=2, colClass=${'col-lg-' + (12 / rowSize)}">
+                           <!-- <th:block th:with="rowSize=2, colClass=${'col-lg-' + (12 / rowSize)}">
                               <th:block th:each="i : ${#numbers.sequence(0, fields.size() - 1, rowSize)}">
                                 <div class="row custom-row">
                                   <th:block th:each="j : ${#numbers.sequence(i, i + rowSize - 1)}"
@@ -109,7 +110,7 @@
                                 </div>
                               </th:block>
                             </th:block>
-                            <hr style="border: 1px dashed #ccc; margin-top: 30px; margin-bottom: 30px;">
+                            <hr style="border: 1px dashed #ccc; margin-top: 30px; margin-bottom: 30px;">-->
 
                             <div class="d-flex justify-content-end pe-4">
                               <div class="btn-container" style="margin-top: 0px !important;">
@@ -146,8 +147,8 @@
 
     const uid = $("#userUid").val()
     const fields = [[${fields}]]
-    const metadata = [[${metadata}]]
-    const builder = new Formbuilder(fields, metadata);
+    /*const metadata = [[${metadata}]]
+    const builder = new Formbuilder(fields, metadata);*/
 
     $(function(e) {
 

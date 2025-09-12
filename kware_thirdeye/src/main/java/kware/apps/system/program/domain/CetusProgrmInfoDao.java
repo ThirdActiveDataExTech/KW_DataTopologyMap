@@ -1,8 +1,8 @@
 package kware.apps.system.program.domain;
 
 import cetus.dao.SuperDao;
-import kware.apps.manager.cetus.program.dto.request.ProgrmFullInfoSearch;
-import kware.apps.manager.cetus.program.dto.response.ProgrmFullInfo;
+import kware.apps.system.program.dto.request.ProgrmFullInfoSearch;
+import kware.apps.system.program.dto.response.ProgrmFullInfo;
 import org.springframework.stereotype.Component;
 
 @Component
