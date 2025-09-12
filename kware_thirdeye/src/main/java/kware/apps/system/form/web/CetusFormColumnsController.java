@@ -24,7 +24,7 @@ public class CetusFormColumnsController {
     public String list(Model model) {
         menuNavigationManager.renderingPage("/system/form", "폼 관리", true, model);
         model.addAttribute("formGroups", FormGroup.values());
-        return "asp/form/index";
+        return "system/form/index";
     }
 
     @GetMapping("/dual")
@@ -32,14 +32,14 @@ public class CetusFormColumnsController {
         menuNavigationManager.renderingPage("/system/form/dual", "폼 관리", true, model);
         model.addAttribute("types", ElementType.values());
         model.addAttribute("formGroups", FormGroup.values());
-        return "asp/form/dual";
+        return "system/form/dual";
     }
     @GetMapping("/save")
     public String save(Model model) {
         model.addAttribute("types", ElementType.values());
         model.addAttribute("formGroups", FormGroup.values());
         menuNavigationManager.renderingPage("/system/form", "폼 컬럼 등록", false, model);
-        return "asp/form/save";
+        return "system/form/save";
     }
 
     @GetMapping("/{uid}")
@@ -48,7 +48,7 @@ public class CetusFormColumnsController {
         model.addAttribute("obj", service.column(uid));
         model.addAttribute("uid", uid);
         menuNavigationManager.renderingPage("/system/form", "폼 컬럼 수정", false, model);
-        return "asp/form/form";
+        return "system/form/form";
     }
 
 

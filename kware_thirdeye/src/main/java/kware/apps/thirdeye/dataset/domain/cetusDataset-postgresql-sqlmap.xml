@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cetusDataset">
+
+    <select id="getDatasetPage" parameterType="DatasetSearch" resultType="DatasetList">
+        /* cetusDataset.getDatasetPage */
+        SELECT CAD.UID
+              ,CAD.DATASET_ID
+              ,TO_CHAR(CAD.APPROVED_DT, 'YYYY-MM-DD HH:MM') AS APPROVED_DT
+              ,COALESCE(CU_CREATE.USER_NM, '자동 등록') AS CREATED_NM
+              ,CU_APP.USER_NM AS APPROVED_NM
+              ,ROUND(SUM(CDM.RATINGS) OVER (PARTITION BY CAD.DATASET_ID)) AS RATINGS
+          FROM CETUS_APPROVED_DATASET CAD
+          LEFT JOIN CETUS_USER CU_CREATE ON CU_CREATE.UID = CAD.CREATED_UID
+          LEFT JOIN CETUS_USER CU_APP ON CU_APP.UID = CAD.APPROVED_UID
+          LEFT JOIN CETUS_DATASET_COMMENT CDM ON CDM.APPROVED_DATASET_UID = CAD.DATASET_ID
+         WHERE CAD.WORKPLACE_UID = #{workplaceUid}
+           AND SHOW_AT = 'Y'
+        <if test="@Ognl@isNotEmpty(startDate) and @Ognl@isNotEmpty(endDate)">
+           AND CAD.APPROVED_DT BETWEEN #{startDate}::TIMESTAMP
+           AND (#{endDate}::DATE + INTERVAL '1 day' - INTERVAL '1 second')
+        </if>
+         ORDER BY CAD.APPROVED_DT DESC
+        <if test="@Ognl@isNotEmpty(startNumber) and  @Ognl@isNotEmpty(endNumber)">
+        OFFSET ${startNumber} LIMIT ${endNumber}
+        </if>
+    </select>
+
+    <select id="getDatasetPageCount" parameterType="DatasetSearch" resultType="int">
+        /* cetusDataset.getDatasetPageCount */
+        SELECT COUNT(*)
+          FROM CETUS_APPROVED_DATASET CAD
+          LEFT JOIN CETUS_USER CU_CREATE ON CU_CREATE.UID = CAD.CREATED_UID
+          LEFT JOIN CETUS_USER CU_APP ON CU_APP.UID = CAD.APPROVED_UID
+          LEFT JOIN CETUS_DATASET_COMMENT CDM ON CDM.APPROVED_DATASET_UID = CAD.DATASET_ID
+         WHERE CAD.WORKPLACE_UID = #{workplaceUid}
+           AND SHOW_AT = 'Y'
+        <if test="@Ognl@isNotEmpty(startDate) and @Ognl@isNotEmpty(endDate)">
+           AND CAD.APPROVED_DT BETWEEN #{startDate}::TIMESTAMP
+           AND (#{endDate}::DATE + INTERVAL '1 day' - INTERVAL '1 second')
+        </if>
+    </select>
+</mapper>

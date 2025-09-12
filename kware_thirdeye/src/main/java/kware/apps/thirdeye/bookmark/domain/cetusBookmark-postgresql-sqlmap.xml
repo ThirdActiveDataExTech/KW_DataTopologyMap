@@ -3,43 +3,42 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="cetusBookmark">
+<mapper namespace="cetusBookMark">
 
-    <select id="findListByUserUid" resultType="CetusBookmark">
-        /* cetusBookmark.list */
-        SELECT
-            user_uid,
-            contents_uid,
-            reg_uid,
-            reg_dt,
-            updt_uid,
-            updt_dt
-        FROM
-            cetus_bookmark
-        WHERE USER_UID = #{userUid}
-        ORDER BY reg_dt DESC
+    <select id="getUserBookMarkList" parameterType="SearchUserBookMark" resultType="UserBookMarkList">
+        /* cetusBookMark.getUserBookMarkList */
+        SELECT CDB.UID
+              ,CDB.USER_UID
+              ,CDB.APPROVED_DATASET_UID
+              ,CAD.DATASET_ID AS DATASET_ID
+          FROM CETUS_DATASET_BOOKMARK CDB
+          LEFT JOIN CETUS_APPROVED_DATASET CAD ON CAD.UID = CDB.APPROVED_DATASET_UID
+         WHERE CDB.USER_UID = #{userUid}
+         ORDER BY CDB.REG_DT DESC
     </select>
 
-    <select id="isBookmarkExists" parameterType="CetusBookmark" resultType="boolean">
+    <select id="isBookMarkExists" parameterType="SearchUserBookMarkToggle" resultType="boolean">
+        /* cetusBookMark.isBookMarkExists */
         SELECT EXISTS (
             SELECT 1
-            FROM cetus_bookmark
-            WHERE user_uid = #{userUid}
-              AND contents_uid = #{contentsUid}
-        ) AS is_wish_exists
+              FROM CETUS_DATASET_BOOKMARK
+             WHERE USER_UID = #{userUid}
+               AND APPROVED_DATASET_UID = #{datasetId}
+        ) AS IS_WISH_EXISTS
     </select>
 
-    <insert id="insert" parameterType="CetusBookmark">
-        INSERT INTO cetus_bookmark (
+    <insert id="insert" parameterType="CetusBookMark">
+        /* cetusBookMark.insert */
+        INSERT INTO CETUS_DATASET_BOOKMARK (
               USER_UID
-            , contents_uid
+            , APPROVED_DATASET_UID
             , REG_UID
             , REG_DT
             , UPDT_UID
             , UPDT_DT
         ) VALUES (
               #{userUid}
-            , #{contentsUid}
+            , #{datasetId}
             , #{regUid}
             , NOW()
             , #{updtUid}
@@ -47,11 +46,11 @@
         )
     </insert>
 
-    <delete id="deleteBookMark" parameterType="CetusBookmark">
-        /* cetusBookmark.deleteBookMark */
-        DELETE FROM cetus_bookmark
+    <delete id="deleteBookMark" parameterType="CetusBookMark">
+        /* cetusBookMark.deleteBookMark */
+        DELETE FROM CETUS_DATASET_BOOKMARK
          WHERE USER_UID = #{userUid}
-           AND contents_uid = #{contentsUid}
+           AND APPROVED_DATASET_UID = #{datasetId}
     </delete>
 
 </mapper>

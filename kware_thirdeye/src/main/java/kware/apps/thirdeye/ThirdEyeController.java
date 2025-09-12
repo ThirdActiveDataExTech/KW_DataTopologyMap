@@ -32,6 +32,6 @@ public class ThirdEyeController {
 
     @GetMapping("/expired")
     public String expired() {
-        return "asp/page/expired";
+        return "thirdeye/expired";
     }
 }

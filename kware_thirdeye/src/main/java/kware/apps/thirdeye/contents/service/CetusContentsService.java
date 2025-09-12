@@ -5,8 +5,9 @@ import java.util.List;
 import java.util.Map;
 
 import cetus.user.UserUtil;
-import kware.apps.thirdeye.bookmark.domain.CetusBookmark;
-import kware.apps.thirdeye.bookmark.service.CetusBookmarkService;
+import kware.apps.thirdeye.bookmark.domain.CetusBookMark;
+import kware.apps.thirdeye.bookmark.dto.request.SearchUserBookMarkToggle;
+import kware.apps.thirdeye.bookmark.service.CetusBookMarkService;
 import kware.apps.thirdeye.contents.dto.request.CommentsSearch;
 import kware.apps.thirdeye.contents.dto.response.CommentsPage;
 import org.springframework.stereotype.Service;
@@ -36,7 +37,7 @@ public class CetusContentsService {
 
     private final CetusContentsDao dao;
     private final CommonFileService commonFileService;
-    private final CetusBookmarkService bookmarkService;
+    private final CetusBookMarkService bookmarkService;
 
     public List<CetusCategories> categoriesList() {
         return List.of(
@@ -67,7 +68,8 @@ public class CetusContentsService {
         Integer ratingAvg = dao.commentRatingAvg(commentsSearch);
         content.setRatings(ratingAvg);
 
-        Boolean exists = bookmarkService.isBookmarkExists(new CetusBookmark(UserUtil.getUser().getUid(), uid));
+        // todo 수정
+        Boolean exists = bookmarkService.isBookmarkExists(new SearchUserBookMarkToggle(UserUtil.getUser().getUid(), uid));
         content.setBookmark((exists) ? "Y" : "N");
 
         if(content.getFilePath() != null) {

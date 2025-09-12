@@ -1,20 +1,18 @@
-package kware.apps.thirdeye.bookmark.domain;
+package kware.apps.thirdeye.bookmark.dto.request;
 
-import cetus.bean.AuditBean;
+
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class CetusBookMark extends AuditBean {
+public class SearchUserBookMarkToggle {
 
-    private Long uid;
     private Long userUid;
     private Long datasetId;
 
-    public CetusBookMark(Long userUid, Long datasetId) {
+    public SearchUserBookMarkToggle( Long userUid, Long datasetId ) {
         this.userUid = userUid;
         this.datasetId = datasetId;
     }
-
 }

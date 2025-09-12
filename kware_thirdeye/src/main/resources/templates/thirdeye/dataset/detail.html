@@ -25,16 +25,8 @@
                   <div class="easyzoom easyzoom--overlay">
                       <a href="#">
                         <img id="dataImgUrl" class="portal-img" th:src="@{'/assets/images/page/thumbnail_default.png'}" alt="" />
-                        <!-- <img id="dataImgUrl" class="portal-img"
-                        th:src="${content.thumbnailId} != null ?
-                                @{/api/portal/files/view(fileId=${content.thumbnailId})} :
-                                @{'/assets/images/page/thumbnail_default.png'}"
-                        alt="" /> -->
                       </a>
                   </div>
-                  <!-- <a class="easyzoom-pop-up img-popup" href="#">
-                      <i class="pe-7s-search"></i>
-                  </a> -->
               </div>
           </div>
         </div>
@@ -106,41 +98,20 @@
         </div>
         <div class="tab-content">
             <div id="des-details1" class="tab-pane active">
-              <div th:replace="thirdeye/page/detail-template01::divTabDetailData"></div>
+              <div th:replace="thirdeye/dataset/fragment/detail-template01::divTabDetailData"></div>
             </div>
             <div id="des-details2" class="tab-pane">
-                <div th:replace="thirdeye/page/detail-template05::divTabSwaggerTest"></div>
+                <div th:replace="thirdeye/dataset/fragment/detail-template05::divTabSwaggerTest"></div>
             </div>
             <div id="des-details3" class="tab-pane">
-              <div th:replace="thirdeye/page/detail-template03::divTabDetailRelactionData"></div>
+              <div th:replace="thirdeye/dataset/fragment/detail-template03::divTabDetailRelactionData"></div>
             </div>
             <div id="des-details4" class="tab-pane">
-              <div th:replace="thirdeye/page/detail-template04::divTabDetailReport"></div>
+              <div th:replace="thirdeye/dataset/fragment/detail-template04::divTabDetailReport"></div>
             </div>
         </div>
     </div>
   </div>
-
-    <!-- <div class="related-page-area pb-95">
-        <div class="container">
-            <div class="section-title-2 st-border-center text-center mb-75" data-aos="fade-up" data-aos-delay="200">
-                <h2>관련 데이터</h2>
-            </div>
-            <div class="related-product-active swiper-container">
-              <div class="swiper-wrapper"></div>
-              <div class="swiper-button-next"></div>
-              <div class="swiper-button-prev"></div>
-            </div>
-            <div class="page-more-update-wrapper relation-wrap-pnl" data-aos="fade-up" data-aos-delay="200">
-              <div class="page-more-update btn-hover">
-                <a href="javascript:void(0);" id="btnPageMoveList">
-                  <i class="ti-angle-right"></i>
-                  <span>더보기</span>
-                </a>
-              </div>
-            </div>
-        </div>
-    </div> -->
 
   <div class="bottom-navigation-area pb-95" data-aos="fade-up" data-aos-delay="200">
     <div class="container">
@@ -180,7 +151,6 @@
         detail.fnPageSearch();
         detail.setDataTable(jsonStr);
 
-        // const dataImgUrl = `/api/portal/files/view?fileId=${contentThumbnailId}`;
         const dataImgUrl = `/assets/images/page/thumbnail_default.png`;
         detail.updateEasyZoom('.easyzoom', dataImgUrl, dataImgUrl);
 

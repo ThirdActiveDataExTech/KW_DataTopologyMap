@@ -7,8 +7,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import kware.apps.thirdeye.bookmark.domain.CetusBookmark;
-import kware.apps.thirdeye.bookmark.domain.CetusBookmarkDao;
+import cetus.user.UserUtil;
+import kware.apps.thirdeye.bookmark.domain.CetusBookMark;
+import kware.apps.thirdeye.bookmark.domain.CetusBookMarkDao;
+import kware.apps.thirdeye.bookmark.dto.request.SearchUserBookMarkToggle;
+import kware.apps.thirdeye.bookmark.dto.response.UserBookMarkList;
+import kware.apps.thirdeye.dataset.dto.response.DataSetView;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,38 +20,41 @@ import org.springframework.transaction.annotation.Transactional;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import kware.apps.thirdeye.bookmark.dto.request.CetusBookmarkToggle;
-import kware.apps.thirdeye.bookmark.dto.request.CetusSearchBookmark;
-import kware.apps.thirdeye.contents.dto.response.HomeData;
+import kware.apps.thirdeye.bookmark.dto.request.UserBookMarkToggle;
+import kware.apps.thirdeye.bookmark.dto.request.SearchUserBookMark;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class CetusBookmarkService {
+public class CetusBookMarkService {
 
-    private final CetusBookmarkDao dao;
+    private final CetusBookMarkDao dao;
 
     @Transactional(readOnly = true)
-    public List<CetusBookmark> getList(CetusSearchBookmark searchBookmark) {
+    public List<UserBookMarkList> findUserBookMarkList(SearchUserBookMark search ) {
 
-        List<CetusBookmark> bookmarkList = dao.findListByUserUid(searchBookmark);
+        List<UserBookMarkList> userBookMarkList = dao.getUserBookMarkList(search);
+
         try {
-            ClassPathResource resource = new ClassPathResource("static/assets/data/thirdeye/list_data.json");
+            
+            // todo 추후에 API => DATASET_ID 값으로 정보 호출
+            
+            ClassPathResource resource = new ClassPathResource("static/assets/data/testdata/dataset_list.json");
             byte[] jsonData = Files.readAllBytes(resource.getFile().toPath());
 
             ObjectMapper objectMapper = new ObjectMapper();
-            List<HomeData> dataList = objectMapper.readValue(jsonData, new TypeReference<List<HomeData>>() {});
+            List<DataSetView> dataList = objectMapper.readValue(jsonData, new TypeReference<List<DataSetView>>() {});
 
-            Map<Long, HomeData> dataMap = dataList.stream()
-                                        .collect(Collectors.toMap(HomeData::getUid, data -> data));
+            Map<Long, DataSetView> dataMap = dataList.stream()
+                                        .collect(Collectors.toMap(DataSetView::getDatasetId, data -> data));
 
-            for (CetusBookmark bookmark : bookmarkList) {
-                HomeData data = dataMap.get(bookmark.getContentsUid());
-                if (data != null) {
-                    bookmark.setTitle(data.getTitle());
-                    bookmark.setDescription(data.getDescription());
+            for ( UserBookMarkList userBookMark : userBookMarkList ) {
+                Long datasetId = userBookMark.getDatasetId();
+                DataSetView data = dataMap.get(datasetId);
+                if ( data != null ) {
+                    userBookMark.setDatasetInfo( data.getTitle(), data.getDescription() );
                 }
             }
             
@@ -55,39 +62,42 @@ public class CetusBookmarkService {
             e.printStackTrace();
         }
 
-        return bookmarkList;
+        return userBookMarkList;
     }
 
     @Transactional
-    public Boolean toggleLike(CetusBookmarkToggle bean, Long userUid) {
+    public Boolean toggleLike( UserBookMarkToggle request ) {
 
-        CetusBookmark bookmark = new CetusBookmark( userUid, bean.getContentsUid() );
-
-        bookmark.setRegUid(userUid);
-        bookmark.setUpdtUid(userUid);
-
-        // 코드 체크
-        // vaildationTargetType(wish.getTargetType());
+        Long userUid = UserUtil.getUser().getUid();
+        SearchUserBookMarkToggle search = new SearchUserBookMarkToggle( userUid, request.getDatasetId() );
 
         // 기존 좋아요 체크
-        Boolean wishExists = dao.isBookmarkExists(bookmark);
+        Boolean wishExists = dao.isBookMarkExists(search);
 
-        if(wishExists) {
-             dao.deleteBookMark(bookmark);
+        CetusBookMark bean = new CetusBookMark(userUid, request.getDatasetId());
+
+        if( wishExists ) {
+
+            dao.deleteBookMark(bean);
              return false;
+
         } else {
-             dao.insert(bookmark);
+
+             dao.insert(bean);
              return true;
+
         }
     }
 
-    public void delete(CetusBookmark request) {
-        dao.deleteBookMark(request);
+    @Transactional
+    public void deleteBookMark( Long datasetId ) {
+        CetusBookMark bean = new CetusBookMark( UserUtil.getUser().getUid(), datasetId );
+        dao.deleteBookMark(bean);
     }
 
     @Transactional(readOnly = true)
-    public Boolean isBookmarkExists(CetusBookmark bookmark) {
-        return dao.isBookmarkExists(bookmark);
+    public Boolean isBookmarkExists( SearchUserBookMarkToggle search ) {
+        return dao.isBookMarkExists(search);
     }
 
 }

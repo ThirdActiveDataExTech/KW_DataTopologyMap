@@ -55,14 +55,13 @@ public class PortalController {
     @GetMapping("/home")
     public String home(Model model) {
         menuNavigationManager.renderingPage("/portal/home", "HOME", true, model);
-        return "home";
+        return "thirdeye/dataset/home";
     }
 
     @GetMapping("/list")
     public String list(Model model) {
         menuNavigationManager.renderingPage("/portal/list", "LIST", true, model);
-        model.addAttribute("userUid", UserUtil.getUser().getUid());
-        return "asp/page/list";
+        return "thirdeye/dataset/list";
     }
 
     @GetMapping("/detail/{uid}")
@@ -71,7 +70,7 @@ public class PortalController {
         model.addAttribute("userUid", UserUtil.getUser().getUid());
         ContentsView content = contentsService.view(uid);
         model.addAttribute("content", content);
-        return "asp/page/detail";
+        return "thirdeye/dataset/detail";
     }
 
     @GetMapping("/myInfo")
@@ -95,12 +94,12 @@ public class PortalController {
 
         menuNavigationManager.renderingPage("/portal/myInfo", "내 정보 수정", true, model);
 
-        return "asp/myInfo/index";
+        return "thirdeye/myInfo/index";
     }
 
     @GetMapping("/chart")
     public String chart(Model model) {
         menuNavigationManager.renderingPage("/portal/chart", "관계데이터 다차원 탐색", true, model);
-        return "asp/page/chart";
+        return "thirdeye/dataset/chart";
     }
 }

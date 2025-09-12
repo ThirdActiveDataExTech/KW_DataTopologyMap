@@ -1,28 +1,29 @@
 package kware.apps.thirdeye.bookmark.domain;
 
-import cetus.dao.CetusDao;
 import cetus.dao.SuperDao;
-import kware.apps.thirdeye.bookmark.dto.request.CetusSearchBookmark;
+import kware.apps.thirdeye.bookmark.dto.request.SearchUserBookMark;
+import kware.apps.thirdeye.bookmark.dto.request.SearchUserBookMarkToggle;
+import kware.apps.thirdeye.bookmark.dto.response.UserBookMarkList;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 
 @Component
-public class CetusBookmarkDao extends SuperDao<CetusBookmark> {
+public class CetusBookMarkDao extends SuperDao<CetusBookMark> {
 
-    public CetusBookmarkDao(){
-        super("cetusBookmark");
+    public CetusBookMarkDao(){
+        super("cetusBookMark");
     }
 
-    public List<CetusBookmark> findListByUserUid(CetusSearchBookmark bean){
-        return selectList("findListByUserUid", bean);
+    public List<UserBookMarkList> getUserBookMarkList(SearchUserBookMark search ){
+        return selectList("getUserBookMarkList", search);
     }
 
-    public Boolean isBookmarkExists(CetusBookmark bean){
-        return selectOne("isBookmarkExists", bean);
+    public Boolean isBookMarkExists( SearchUserBookMarkToggle search ){
+        return selectOne("isBookMarkExists", search);
     }
 
-    public void deleteBookMark(CetusBookmark bean) {
+    public void deleteBookMark( CetusBookMark bean ) {
         delete("deleteBookMark", bean);
     }
 }
