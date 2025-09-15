@@ -12,7 +12,8 @@ import kware.apps.thirdeye.bookmark.domain.CetusBookMark;
 import kware.apps.thirdeye.bookmark.domain.CetusBookMarkDao;
 import kware.apps.thirdeye.bookmark.dto.request.SearchUserBookMarkToggle;
 import kware.apps.thirdeye.bookmark.dto.response.UserBookMarkList;
-import kware.apps.thirdeye.dataset.dto.response.DataSetView;
+import kware.apps.thirdeye.dataset.dto.response.DatasetView;
+import kware.apps.thirdeye.dataset.service.CetusDatasetService;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,37 +32,21 @@ import lombok.extern.slf4j.Slf4j;
 public class CetusBookMarkService {
 
     private final CetusBookMarkDao dao;
+    private final CetusDatasetService datasetService;
 
     @Transactional(readOnly = true)
     public List<UserBookMarkList> findUserBookMarkList(SearchUserBookMark search ) {
 
         List<UserBookMarkList> userBookMarkList = dao.getUserBookMarkList(search);
+        Map<Long, DatasetView> dataMap = datasetService.findDatasetDetailByAPI();
 
-        try {
-            
-            // todo 추후에 API => DATASET_ID 값으로 정보 호출
-            
-            ClassPathResource resource = new ClassPathResource("static/assets/data/testdata/dataset_list.json");
-            byte[] jsonData = Files.readAllBytes(resource.getFile().toPath());
-
-            ObjectMapper objectMapper = new ObjectMapper();
-            List<DataSetView> dataList = objectMapper.readValue(jsonData, new TypeReference<List<DataSetView>>() {});
-
-            Map<Long, DataSetView> dataMap = dataList.stream()
-                                        .collect(Collectors.toMap(DataSetView::getDatasetId, data -> data));
-
-            for ( UserBookMarkList userBookMark : userBookMarkList ) {
-                Long datasetId = userBookMark.getDatasetId();
-                DataSetView data = dataMap.get(datasetId);
-                if ( data != null ) {
-                    userBookMark.setDatasetInfo( data.getTitle(), data.getDescription() );
-                }
+        for ( UserBookMarkList userBookMark : userBookMarkList ) {
+            Long datasetId = userBookMark.getDatasetId();
+            DatasetView data = dataMap.get(datasetId);
+            if ( data != null ) {
+                userBookMark.setDatasetInfo( data.getTitle(), data.getDescription() );
             }
-            
-        } catch (IOException e) {
-            e.printStackTrace();
         }
-
         return userBookMarkList;
     }
 
@@ -69,12 +54,12 @@ public class CetusBookMarkService {
     public Boolean toggleLike( UserBookMarkToggle request ) {
 
         Long userUid = UserUtil.getUser().getUid();
-        SearchUserBookMarkToggle search = new SearchUserBookMarkToggle( userUid, request.getDatasetId() );
+        SearchUserBookMarkToggle search = new SearchUserBookMarkToggle( userUid, request.getApprovedUid() );
 
         // 기존 좋아요 체크
         Boolean wishExists = dao.isBookMarkExists(search);
 
-        CetusBookMark bean = new CetusBookMark(userUid, request.getDatasetId());
+        CetusBookMark bean = new CetusBookMark(userUid, request.getApprovedUid());
 
         if( wishExists ) {
 
@@ -90,8 +75,8 @@ public class CetusBookMarkService {
     }
 
     @Transactional
-    public void deleteBookMark( Long datasetId ) {
-        CetusBookMark bean = new CetusBookMark( UserUtil.getUser().getUid(), datasetId );
+    public void deleteBookMark( Long approvedUid ) {
+        CetusBookMark bean = new CetusBookMark( UserUtil.getUser().getUid(), approvedUid );
         dao.deleteBookMark(bean);
     }
 

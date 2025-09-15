@@ -1,0 +1,143 @@
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<script th:inline="javascript">
+
+    var template02JS = {
+
+        onloadIframe: function() {
+
+            const iframe = document.getElementById('swagger-frame');
+            const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+            // 상단 헤더 제거
+            const style = document.createElement('style');
+            style.innerHTML = `
+                  .topbar, .information-container, .swagger-ui .scheme-container {
+                    display: none !important;
+                  }
+                  .models {
+                    display: none !important;
+                  }
+                  .swagger-ui .opblock-tag:hover {
+                    background: transparent !important;
+                    cursor: default !important;
+                  }
+                  button.expand-operation {
+                    display: none !important;
+                  }
+
+                  body {
+                    background: transparent !important;
+                  }
+
+                  .swagger-ui .opblock .opblock-summary-method,
+                  .opblock-summary-path,
+                  .nostyle,
+                  .opblock-summary-description {
+                    font-family: "Pretendard", "Noto Sans KR", sans-serif !important;
+                  }
+
+                  .renderedMarkdown {
+                    font-size: 14px !important;
+                    font-family: "Pretendard", "Noto Sans KR", sans-serif !important;
+                  }
+
+                  .swagger-ui .parameters-col_description input[type=text] {
+                    font-size: 14px !important;
+                    font-family: "Pretendard", "Noto Sans KR", sans-serif !important;
+                  }
+
+                  button.arrow-btn {
+                      background-color: transparent;
+                      border: none;
+                  }
+
+                  .opblock-summary-path {
+                    padding: 0 20px 0px 10px !important;
+                    color: black !important;
+                    font-weight: 500 !important;
+                  }
+
+                  .opblock-post:hover .opblock-summary-method,
+                  .opblock-post:hover .opblock-summary-path,
+                  .opblock-post:hover .opblock-summary-description {
+                    font-weight: bold !important;
+                  }
+
+                  .opblock-put:hover .opblock-summary-method,
+                  .opblock-put:hover .opblock-summary-path,
+                  .opblock-put:hover .opblock-summary-description {
+                    font-weight: bold !important;
+                  }
+
+                  .opblock-get:hover .opblock-summary-method,
+                  .opblock-get:hover .opblock-summary-path,
+                  .opblock-get:hover .opblock-summary-description {
+                    font-weight: bold !important;
+                  }
+
+                  .opblock-delete:hover .opblock-summary-method,
+                  .opblock-delete:hover .opblock-summary-path,
+                  .opblock-delete:hover .opblock-summary-description {
+                    font-weight: bold !important;
+                  }
+
+                  .opblock-post,
+                  .opblock-put,
+                  .opblock-get,
+                  .opblock-delete {
+                    border-radius: 8px !important;
+                  }
+
+                  .opblock-summary-description {
+                    color: gray !important;
+                  }
+
+                  .swagger-ui .opblock-tag {
+                    margin: 0 0 15px !important;
+                  }
+                  .swagger-ui .opblock-tag {
+                    border-bottom: none !important;
+                  }
+                  .opblock-summary {
+                    padding: 10px 10px 10px !important;
+                  }
+                  .opblock-summary-method {
+                    border-radius: 20px !important;
+                  }
+
+                  .swagger-ui table tbody tr td:first-of-type {
+                    min-width: 10em !important;
+                  }
+
+                  .parameters-container .table-container {
+                    overflow-x: auto !important;
+                    max-width: 100% !important;
+                  }
+                  .parameters-container .table-container table {
+                    min-width: 600px !important;
+                  }
+                  @media (max-width: 768px) {
+                    .table-container {
+                      overflow-x: auto !important;
+                    }
+                  }
+
+                  .responses-inner {
+                    overflow-x: auto !important;
+                    max-width: 100% !important;
+                  }
+                  .responses-inner table {
+                    min-width: 600px !important;
+                  }
+                  @media (max-width: 768px) {
+                    .responses-inner {
+                      overflow-x: auto !important;
+                    }
+                  }
+                `;
+            iframeDoc.head.appendChild(style);
+        }
+
+    }
+
+</script>
+</html>

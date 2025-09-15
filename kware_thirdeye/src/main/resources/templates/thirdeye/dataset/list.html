@@ -50,7 +50,7 @@
                             <div class="page-sorting-area">
                                 <select class="nice-select nice-select-style-1">
                                     <option value="title">이름순</option>
-                                    <option value="update">업데이트순</option>
+                                    <option value="approve">승인순</option>
                                     <option value="rating">별점순</option>
                                 </select>
                             </div>
@@ -176,14 +176,11 @@
                 $('#keyword').val(keyword);
                 listJS.keyword = keyword;
             }
-            
-            // 1. set filter list
-            listJS.setFilterList();
 
-            // 2. refresh page list
+            // 1. refresh page list
             listJS.refreshPageList();
 
-            // 3. 등록일 slider init
+            // 2. 등록일 slider init
             $('#slider-range').slider({
                 range: true,
                 min: 0,

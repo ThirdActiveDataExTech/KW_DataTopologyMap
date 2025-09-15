@@ -30,9 +30,9 @@ public class CetusBookMarkRestController {
         return ResponseEntity.ok(toggleLike);
     }
 
-    @DeleteMapping("/{datasetId}")
-    public ResponseEntity delete( @PathVariable Long datasetId ) {
-        service.deleteBookMark(datasetId);
+    @DeleteMapping("/{approvedUid}")
+    public ResponseEntity delete( @PathVariable Long approvedUid ) {
+        service.deleteBookMark(approvedUid);
         return ResponseEntity.ok().build();
     }
 }

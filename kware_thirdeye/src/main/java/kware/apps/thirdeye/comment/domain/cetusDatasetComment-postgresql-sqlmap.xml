@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cetusDatasetComment">
+
+    <select id="getDatasetCommentPage" resultType="DatasetCommentList" parameterType="DatasetCommentSearch">
+        /* cetusDatasetComment.getDatasetCommentPage */
+        SELECT CDM.UID AS COMMENT_UID
+              ,CDM.APPROVED_DATASET_UID AS APPROVED_UID
+              ,CDM.TYPE_CD
+              ,CDM.RATINGS
+              ,CDM.COMMENT
+              ,CDM.REG_UID
+              ,CU.USER_NM AS REG_NM
+              ,TO_CHAR(CDM.REG_DT, 'YYYY-MM-DD') AS REG_DT
+              ,CF.FILE_ID AS REG_PROFILE_ID
+          FROM CETUS_DATASET_COMMENT CDM
+          LEFT JOIN CETUS_USER CU ON CU.UID = CDM.REG_UID
+          LEFT JOIN CETUS_FILE CF ON CF.FILE_UID = CU.PROFILE_UID AND CF.USE_AT = 'Y' AND CF.SAVED = 'Y'
+         WHERE CDM.APPROVED_DATASET_UID = #{approvedUid}
+        <if test="@Ognl@isNotEmpty(typeCd)">
+           AND CDM.TYPE_CD = #{typeCd}
+        </if>
+        ORDER BY CDM.REG_DT DESC
+        <if test="@Ognl@isNotEmpty(startNumber) and  @Ognl@isNotEmpty(endNumber)">
+       OFFSET ${startNumber} LIMIT ${endNumber}
+        </if>
+    </select>
+
+    <select id="getDatasetCommentPageCount" resultType="int" parameterType="DatasetCommentSearch">
+        /* cetusDatasetComment.getDatasetCommentPageCount */
+        SELECT COUNT(*)
+          FROM CETUS_DATASET_COMMENT CDM
+          LEFT JOIN CETUS_USER CU ON CU.UID = CDM.REG_UID
+          LEFT JOIN CETUS_FILE CF ON CF.FILE_UID = CU.PROFILE_UID AND CF.USE_AT = 'Y' AND CF.SAVED = 'Y'
+         WHERE CDM.APPROVED_DATASET_UID = #{approvedUid}
+        <if test="@Ognl@isNotEmpty(typeCd)">
+           AND CDM.TYPE_CD = #{typeCd}
+        </if>
+    </select>
+
+    <select id="getDatasetCommentCntByType" parameterType="DatasetCommentSearch" resultType="int">
+        /* cetusDatasetComment.getDatasetCommentCntByType */
+        SELECT COUNT(*)
+          FROM CETUS_DATASET_COMMENT CDM
+         WHERE CDM.TYPE_CD = #{typeCd}
+           AND CDM.APPROVED_DATASET_UID = #{approvedUid}
+    </select>
+
+    <insert id="insert" parameterType="CetusDatasetComment">
+        /* cetusDatasetComment.insert */
+        INSERT INTO CETUS_DATASET_COMMENT (
+             APPROVED_DATASET_UID
+            ,TYPE_CD
+            ,RATINGS
+            ,COMMENT
+            ,REG_UID
+            ,REG_DT
+            ,UPDT_UID
+            ,UPDT_DT
+        ) VALUES (
+             #{approvedDatasetUid}
+            ,#{typeCd}
+            ,#{ratings}
+            ,#{comment}
+            ,#{regUid}
+            ,NOW()
+            ,#{updtUid}
+            ,NOW()
+        )
+    </insert>
+</mapper>

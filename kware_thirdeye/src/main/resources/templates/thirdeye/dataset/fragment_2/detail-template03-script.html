@@ -176,7 +176,7 @@
 
         // 데이터 정렬
         if(sort === "title") { data.sort((a, b) => a.dataTitle.localeCompare(b.dataTitle)); }
-        if(sort === "update") { data.sort((a, b) => new Date(b.updateDate) - new Date(a.updateDate)); }
+        if(sort === "approve") { data.sort((a, b) => new Date(b.updateDate) - new Date(a.updateDate)); }
         if(sort === "rating") { data.sort((a, b) => b.rating - a.rating); }
 
         data = data.slice(startIndex, endIndex);
@@ -322,7 +322,7 @@
 
         // 데이터 정렬
         if(sort === "title") { data.sort((a, b) => a.dataTitle.localeCompare(b.dataTitle)); }
-        if(sort === "update") { data.sort((a, b) => new Date(b.updateDate) - new Date(a.updateDate)); }
+        if(sort === "approve") { data.sort((a, b) => new Date(b.updateDate) - new Date(a.updateDate)); }
         if(sort === "rating") { data.sort((a, b) => b.rating - a.rating); }
 
 

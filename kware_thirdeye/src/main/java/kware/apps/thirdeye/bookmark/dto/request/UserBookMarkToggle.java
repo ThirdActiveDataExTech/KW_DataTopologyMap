@@ -7,9 +7,9 @@ import lombok.NoArgsConstructor;
 @Getter @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class UserBookMarkToggle {
 
-    private Long datasetId;
+    private Long approvedUid;
 
-    public UserBookMarkToggle(Long datasetId) {
-        this.datasetId = datasetId;
+    public UserBookMarkToggle(Long approvedUid) {
+        this.approvedUid = approvedUid;
     }
 }

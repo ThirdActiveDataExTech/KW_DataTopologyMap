@@ -10,11 +10,11 @@ public class CetusBookMark extends AuditBean {
 
     private Long uid;
     private Long userUid;
-    private Long datasetId;
+    private Long approvedUid;
 
-    public CetusBookMark(Long userUid, Long datasetId) {
+    public CetusBookMark(Long userUid, Long approvedUid) {
         this.userUid = userUid;
-        this.datasetId = datasetId;
+        this.approvedUid = approvedUid;
     }
 
 }

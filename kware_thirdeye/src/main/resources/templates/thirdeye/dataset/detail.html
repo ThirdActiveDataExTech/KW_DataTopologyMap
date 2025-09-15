@@ -16,9 +16,11 @@
 </th:block>
 
 <th:block layout:fragment="content">
+
   <div class="page-details-area pb-100 pt-80" style="padding: 30px 0px 50px 0px;">
     <div class="container">
       <div class="row">
+
         <div class="col-lg-3">
           <div class="page-details-img-wrap" data-aos="fade-up" data-aos-delay="200">
               <div class="easyzoom-style">
@@ -30,18 +32,21 @@
               </div>
           </div>
         </div>
+
         <div class="col-lg-9">
             <div class="page-details-content" data-aos="fade-up" data-aos-delay="400">
+
                 <div class="row">
                   <div class="col-lg-8">
-                    <h2 id="contentTitle" th:text="${content.title}"></h2>
+                    <h2 id="contentTitle" th:text="${dataset?.title}"></h2>
                   </div>
                   <div class="col-lg-4 justify-content-end" style="flex-direction: row; display: flex;">
                     <div class="page-details-action-wrap">
                       <div class="single-page-wishlist">
-                          <button class="justify-content-center btn-custom-control" id="btnPageBookmark" th:data-like="${content?.bookmark}" th:data-uid="${content?.uid}">
+                          <button class="justify-content-center btn-custom-control" id="btnPageBookmark"
+                                  th:data-like="${dataset?.bookmark}" th:data-id="${dataset?.approvedUid}">
                               <a class="justify-content-center" title="Wishlist" href="javascript:void(0);">
-                                  <i th:class="${content.bookmark == 'Y'} ? 'fa fa-heart' : 'pe-7s-like'"></i>
+                                  <i th:class="${dataset?.bookmark} ? 'fa fa-heart' : 'pe-7s-like'"></i>
                               </a>
                               <span class="txt-label justify-content-center">북마크</span>
                           </button>
@@ -57,37 +62,43 @@
                     </div>
                   </div>
                 </div>
+
                 <div class="page-color page-color-active page-details-color">
-                  <span id="descriptTitle" th:text="${content.description}"></span>
+                  <span id="descriptTitle" th:text="${dataset?.description}"></span>
                 </div>
-                <div class="page-details-meta data-description-area">
+
+                <!--<div class="page-details-meta data-description-area">
                   <ul>
-                    <li id="description" th:text="${content.contents}"></li>
+                    <li id="description" th:text="${dataset?.description}"></li>
                   </ul>
-                </div>
-                <div class="page-details-meta data-description-area list-tag-pnl">
+                </div>-->
+
+                <!--<div class="page-details-meta data-description-area list-tag-pnl">
                   <ul>
                       <li>
                           <ul class="tag">
-                            <li th:each="tag : ${content.tags}" class="tag-content">
+                            <li th:each="tag : ${dataset?.tags}" class="tag-content">
                                 <a href="#" th:text="${tag.tagName}"></a>
                             </li>
                           </ul>
                       </li>
                   </ul>
-                </div>
+                </div>-->
+
                 <div class="page-details-review">
                     <div class="page-rating" id="page-content-avg-rating">
                         <th:block th:each="i : ${#numbers.sequence(1, 5)}">
-                            <i class="ti-star" th:classappend="${i <= content.ratings} ? ' filled' : ''"></i>
+                            <i class="ti-star" th:classappend="${i <= dataset?.ratings} ? ' filled' : ''"></i>
                         </th:block>
                     </div>
                 </div>
+
             </div>
         </div>
       </div>
     </div>
   </div>
+
   <div class="description-review-area pb-85">
     <div class="container">
         <div class="description-review-topbar nav" data-aos="fade-up" data-aos-delay="200">
@@ -98,16 +109,16 @@
         </div>
         <div class="tab-content">
             <div id="des-details1" class="tab-pane active">
-              <div th:replace="thirdeye/dataset/fragment/detail-template01::divTabDetailData"></div>
+              <div th:replace="thirdeye/dataset/fragment/detail-template01::template01"></div>
             </div>
             <div id="des-details2" class="tab-pane">
-                <div th:replace="thirdeye/dataset/fragment/detail-template05::divTabSwaggerTest"></div>
+                <div th:replace="thirdeye/dataset/fragment/detail-template02::template02"></div>
             </div>
             <div id="des-details3" class="tab-pane">
-              <div th:replace="thirdeye/dataset/fragment/detail-template03::divTabDetailRelactionData"></div>
+                <div th:replace="thirdeye/dataset/fragment_2/detail-template03::divTabDetailRelactionData"></div>
             </div>
             <div id="des-details4" class="tab-pane">
-              <div th:replace="thirdeye/dataset/fragment/detail-template04::divTabDetailReport"></div>
+              <div th:replace="thirdeye/dataset/fragment/detail-template04::template04"></div>
             </div>
         </div>
     </div>
@@ -137,73 +148,51 @@
 </th:block>
 
 <th:block layout:fragment="script">
-  <script th:src="@{'https://cdn.jsdelivr.net/npm/echarts@latest/dist/echarts.min.js'}"></script>
-  <script th:src="@{'/assets/js/page/detail/detail.js'}"></script>
-  <th:block th:replace="thirdeye/page/detail-template03-script::script"></th:block>
-  <th:block th:replace="thirdeye/page/detail-template04-script::script"></th:block>
-  <script th:inline="javascript">
+    <script th:src="@{'https://cdn.jsdelivr.net/npm/echarts@latest/dist/echarts.min.js'}"></script>
+    <script th:src="@{'/assets/js/page/thirdeye/dataset/detail.js'}"></script>
+    <th:block th:replace="thirdeye/dataset/fragment/detail-template01-script::script"></th:block>
+    <th:block th:replace="thirdeye/dataset/fragment/detail-template04-script::script"></th:block>
 
-    const contentUid = /*[[${content.uid}]]*/ 0;
-    const contentThumbnailId = /*[[${content.thumbnailId}]]*/ 0;
-    const jsonStr = /*[[${content.metadata}]]*/ '{}';
+    <th:block th:replace="thirdeye/dataset/fragment_2/detail-template03-script::script"></th:block>
+    <script th:inline="javascript">
+
+    const approvedUid = /*[[${approvedUid}]]*/ 0;
+    const dataset = /*[[${dataset}]]*/ {};
 
     $(function() {
-        detail.fnPageSearch();
-        detail.setDataTable(jsonStr);
 
+        // 페이지 화면 초기화
+        detailJS.fnPageSearch();
+
+        // 1. tab01 > table 초기화
+        template01JS.drawTab01(dataset);
+
+        // 4. tab04
+        template04JS.drawTemplate04(approvedUid);
+
+
+        // 썸네일 이미지 확대 기능
         const dataImgUrl = `/assets/images/page/thumbnail_default.png`;
-        detail.updateEasyZoom('.easyzoom', dataImgUrl, dataImgUrl);
+        detailJS.updateEasyZoom('.easyzoom', dataImgUrl, dataImgUrl);
 
         // 북마크 버튼
         $("#btnPageBookmark").click(function(e){
-            detail.likeClickEvent(this);
+            detailJS.likeClickEvent(this);
             e.preventDefault();
             e.stopPropagation();
         });
-
 
         // 공유 버튼
         $("#btnPageShare").click(function(e) {
-            const pathStr = `/portal/detail/${contentUid}`;
-            const fullUrl = window.location.origin + pathStr;
-
-            if (navigator.clipboard && navigator.clipboard.writeText) {
-                navigator.clipboard.writeText(fullUrl)
-                    .then(() => {
-                        Util.alert('클립보드에 복사되었습니다.');
-                    })
-                    .catch(err => {
-                        console.error(err);
-                        Util.alert('복사에 실패했습니다.');
-                    });
-            } else {
-                // fallback: execCommand를 이용한 클립보드 복사
-                const $tempInput = $("<input>");
-                $("body").append($tempInput);
-                $tempInput.val(fullUrl).select();
-                try {
-                    const successful = document.execCommand('copy');
-                    if (successful) {
-                        Util.alert('클립보드에 복사되었습니다.');
-                    } else {
-                        Util.alert('복사에 실패했습니다.');
-                    }
-                } catch (err) {
-                    console.error(err);
-                    Util.alert('복사에 실패했습니다.');
-                }
-                $tempInput.remove();
-            }
             e.preventDefault();
             e.stopPropagation();
+            const fullUrl = window.location.origin + `/portal/detail/${approvedUid}`;
+            Util.copyToClipBoard(fullUrl)
         });
-
 
         // { 관련 데이터 더보기 }, { 목록 돌아가기 } 버튼
         $("#btnPageMoveList, #btnGoList").click(function(e){
-            detail.fnPageMove("/list");
-            e.preventDefault();
-            e.stopPropagation();
+            window.location.href = '/portal/list'
         });
 
     });

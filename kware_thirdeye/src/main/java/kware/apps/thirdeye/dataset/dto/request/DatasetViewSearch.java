@@ -1,4 +1,4 @@
-package kware.apps.thirdeye.bookmark.dto.request;
+package kware.apps.thirdeye.dataset.dto.request;
 
 
 import lombok.AccessLevel;
@@ -6,13 +6,13 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class SearchUserBookMarkToggle {
+public class DatasetViewSearch {
 
-    private Long userUid;
     private Long approvedUid;
+    private Long userUid;
 
-    public SearchUserBookMarkToggle( Long userUid, Long approvedUid ) {
-        this.userUid = userUid;
+    public DatasetViewSearch(Long approvedUid, Long userUid) {
         this.approvedUid = approvedUid;
+        this.userUid = userUid;
     }
 }

@@ -7,9 +7,8 @@
 
     <select id="getUserBookMarkList" parameterType="SearchUserBookMark" resultType="UserBookMarkList">
         /* cetusBookMark.getUserBookMarkList */
-        SELECT CDB.UID
-              ,CDB.USER_UID
-              ,CDB.APPROVED_DATASET_UID
+        SELECT CDB.USER_UID
+              ,CDB.APPROVED_DATASET_UID AS APPROVED_UID
               ,CAD.DATASET_ID AS DATASET_ID
           FROM CETUS_DATASET_BOOKMARK CDB
           LEFT JOIN CETUS_APPROVED_DATASET CAD ON CAD.UID = CDB.APPROVED_DATASET_UID
@@ -23,7 +22,7 @@
             SELECT 1
               FROM CETUS_DATASET_BOOKMARK
              WHERE USER_UID = #{userUid}
-               AND APPROVED_DATASET_UID = #{datasetId}
+               AND APPROVED_DATASET_UID = #{approvedUid}
         ) AS IS_WISH_EXISTS
     </select>
 
@@ -38,7 +37,7 @@
             , UPDT_DT
         ) VALUES (
               #{userUid}
-            , #{datasetId}
+            , #{approvedUid}
             , #{regUid}
             , NOW()
             , #{updtUid}
@@ -50,7 +49,7 @@
         /* cetusBookMark.deleteBookMark */
         DELETE FROM CETUS_DATASET_BOOKMARK
          WHERE USER_UID = #{userUid}
-           AND APPROVED_DATASET_UID = #{datasetId}
+           AND APPROVED_DATASET_UID = #{approvedUid}
     </delete>
 
 </mapper>

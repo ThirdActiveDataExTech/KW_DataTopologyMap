@@ -9,6 +9,8 @@ import kware.apps.thirdeye.contents.service.CetusContentsService;
 import kware.apps.system.form.service.CetusFormColumnsService;
 import kware.apps.system.user.dto.response.UserFullInfo;
 import kware.apps.system.user.service.CetusUserService;
+import kware.apps.thirdeye.dataset.dto.response.DatasetDetailView;
+import kware.apps.thirdeye.dataset.service.CetusDatasetService;
 import kware.common.config.auth.MenuNavigationManager;
 import kware.common.config.auth.dto.SessionUserInfo;
 import lombok.RequiredArgsConstructor;
@@ -32,6 +34,7 @@ public class PortalController {
     private final CetusFormColumnsService columnsService;
     private final MenuNavigationManager menuNavigationManager;
     private final CetusContentsService contentsService;
+    private final CetusDatasetService datasetService;
 
     /*@GetMapping("/home")
     public String home(Model model) {
@@ -64,12 +67,11 @@ public class PortalController {
         return "thirdeye/dataset/list";
     }
 
-    @GetMapping("/detail/{uid}")
-    public String openDetail(@PathVariable("uid") Long uid, Model model) {
+    @GetMapping("/detail/{approvedUid}")
+    public String openDetail(@PathVariable("approvedUid") Long approvedUid, Model model) {
         menuNavigationManager.renderingPage("/portal/list", "Detail", false, model);
-        model.addAttribute("userUid", UserUtil.getUser().getUid());
-        ContentsView content = contentsService.view(uid);
-        model.addAttribute("content", content);
+        DatasetDetailView dataset = datasetService.findDatasetByUid(approvedUid);
+        model.addAttribute("dataset", dataset);
         return "thirdeye/dataset/detail";
     }
 
