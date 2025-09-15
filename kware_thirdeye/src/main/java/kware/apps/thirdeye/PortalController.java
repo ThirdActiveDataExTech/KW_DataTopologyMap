@@ -2,10 +2,6 @@ package kware.apps.thirdeye;
 
 
 import cetus.user.UserUtil;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import kware.apps.thirdeye.contents.dto.response.ContentsView;
-import kware.apps.thirdeye.contents.service.CetusContentsService;
 import kware.apps.system.form.service.CetusFormColumnsService;
 import kware.apps.system.user.dto.response.UserFullInfo;
 import kware.apps.system.user.service.CetusUserService;
@@ -20,9 +16,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import java.util.HashMap;
-import java.util.Map;
-
 
 
 @Controller
@@ -33,7 +26,6 @@ public class PortalController {
     private final CetusUserService cetusUserService;
     private final CetusFormColumnsService columnsService;
     private final MenuNavigationManager menuNavigationManager;
-    private final CetusContentsService contentsService;
     private final CetusDatasetService datasetService;
 
     /*@GetMapping("/home")
