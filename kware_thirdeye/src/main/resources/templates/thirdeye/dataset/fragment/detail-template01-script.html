@@ -11,12 +11,11 @@
         setDataTable: function (dataset) {
 
             const jsonObj = JSON.parse(dataset['metadata']);
-
             const $tableBody = $('#tab1-table tbody');
             $tableBody.empty(); // 기존 내용 제거
             const itemsPerRow = 2;
 
-            // jsonObj => key-value 배열로 변환
+            /* jsonObj => key-value 배열로 변환 */
             function flattenObj(obj) {
                 const result = [];
                 for (const key in obj) {
@@ -56,17 +55,18 @@
                 "dataList1" : [170.07, 164.74, 120.1, 105.83, 23.14, 24.84, 198.2, 85.34, 62.52, 114.19, 116.91, 75.84],
                 "dataList2" : [1.44, 97.92, 79.27, 105.65, 168.2, 108.48, 126.39, 130.05, 205.69, 179.64, 119.06, 155.43]
             }
-            template01JS.setEchartBar({
-                rendarID : $("#searchTrendTimeZoneBoard").get(0),
+            const obj = {
+                renderID : $("#searchTrendTimeZoneBoard").get(0),
                 color1 : "#596fc0",
                 color2 : "#9eca7f",
                 dataList1 : sampleData.dataList1,
                 dataList2 : sampleData.dataList2
-            });
+            }
+            template01JS.setEchartBar(obj);
         },
 
         setEchartBar : function (argObj){
-            var option = {
+            const option = {
                 tooltip: {},
                 xAxis: {
                     data: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
@@ -133,8 +133,7 @@
                     }
                 ]
             };
-
-            template01JS.setDataToEchart(argObj.rendarID, option);
+            template01JS.setDataToEchart(argObj.renderID, option);
         },
 
         setDataToEchart : function(renderId, option){
