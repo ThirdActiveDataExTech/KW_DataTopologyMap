@@ -10,9 +10,7 @@
 
         setDataTable: function (dataset) {
 
-            console.log(">> dataset ", dataset);
             const jsonObj = JSON.parse(dataset['metadata']);
-            console.log("jsonObj: ", jsonObj)
 
             const $tableBody = $('#tab1-table tbody');
             $tableBody.empty(); // 기존 내용 제거
@@ -151,6 +149,14 @@
         },
 
     }
+
+    $(function () {
+
+        $("#file-download").on("click", function (e) {
+            console.log("file download")
+        });
+
+    });
 
 </script>
 </html>

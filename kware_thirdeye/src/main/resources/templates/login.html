@@ -101,7 +101,6 @@
                 const errorMessage = decodeURIComponent(params.get("before"));
                 $("#beforeMessage").html(errorMessage.replace("\n", "<br>"));
                 history.replaceState({}, null, '/login');
-                console.log("errorMessage : ", errorMessage)
 
             }
 

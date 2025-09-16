@@ -10,9 +10,11 @@ public class BbscttRecentSearch {
 
     private Long workplaceUid;
     private int count;
+    private String bbsTpCd;
 
-    public BbscttRecentSearch(Long workplaceUid, int count) {
+    public BbscttRecentSearch(Long workplaceUid, int count, String bbsTpCd) {
         this.workplaceUid = workplaceUid;
         this.count = count;
+        this.bbsTpCd = bbsTpCd;
     }
 }

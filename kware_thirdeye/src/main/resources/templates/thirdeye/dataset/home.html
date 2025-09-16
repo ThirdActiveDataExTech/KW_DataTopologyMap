@@ -71,6 +71,7 @@
       align-items:center;
       text-align:center;
       gap:8px;
+      cursor: pointer;
     }
     .icon{
       width:48px;
@@ -298,13 +299,13 @@
       <!-- 검색 영역 -->
       <div class="search-bar">
         <div class="search-box">
-          <select class="search-select">
-            <option>데이터 셋</option>
-            <option>API</option>
-            <option>문서</option>
+          <select class="search-select" id="search-select">
+            <option value="dataset">데이터 셋</option>
+            <option value="api">API</option>
+            <option value="document">문서</option>
           </select>
-          <input type="text" class="search-input" placeholder="검색어를 입력하세요">
-          <button class="search-button">검색</button>
+          <input type="text" class="search-input" id="search-input" placeholder="검색어를 입력하세요">
+          <button class="search-button" id="search-button">검색</button>
         </div>
       </div>
 
@@ -319,33 +320,29 @@
 
       <!-- 아이콘 그리드 (기관 아이콘들) -->
       <div class="icon-grid">
-        <div class="icon-item">
+        <div class="icon-item" data-val="national">
           <div class="icon">국</div>
           <div class="icon-label">국가행정기관</div>
         </div>
-        <div class="icon-item">
+        <div class="icon-item" data-val="local">
           <div class="icon">지</div>
           <div class="icon-label">지방자치단체</div>
         </div>
-        <div class="icon-item">
+        <div class="icon-item" data-val="educational">
           <div class="icon">교</div>
           <div class="icon-label">교육행정기관</div>
         </div>
-        <div class="icon-item">
+        <div class="icon-item" data-val="public">
           <div class="icon">공</div>
           <div class="icon-label">공공기관</div>
         </div>
-        <div class="icon-item">
+        <div class="icon-item" data-val="autonomous">
           <div class="icon">자</div>
           <div class="icon-label">자치법정기관</div>
         </div>
-        <div class="icon-item">
+        <div class="icon-item" data-val="research">
           <div class="icon">문</div>
           <div class="icon-label">문체/연구기관</div>
-        </div>
-        <div class="icon-item">
-          <div class="icon">학</div>
-          <div class="icon-label">교육기관</div>
         </div>
       </div>
 
@@ -365,20 +362,40 @@
         <div class="card popular-data" aria-labelledby="popular-data-title">
           <h3 id="popular-data-title">인기 데이터</h3>
           <ul>
-            <li><span class="idx">1</span><span class="title">2022년 인구 통계 (시군구별)</span></li>
-            <li><span class="idx">2</span><span class="title">대중교통 실시간 이용현황</span></li>
-            <li><span class="idx">3</span><span class="title">환경 대기질 관측치</span></li>
+            <li>
+              <span class="idx">1</span>
+              <span class="title">2022년 인구 통계 (시군구별)</span>
+            </li>
+            <li>
+              <span class="idx">2</span>
+              <span class="title">대중교통 실시간 이용현황</span>
+            </li>
+            <li>
+              <span class="idx">3</span>
+              <span class="title">환경 대기질 관측치</span>
+            </li>
           </ul>
-          <div class="more">더보기 ›</div>
+          <div class="more" id="popular-data-more">더보기 ›</div>
         </div>
 
         <!-- 공지사항 -->
         <div class="card notice" aria-labelledby="notice-title">
           <h3 id="notice-title">공지사항</h3>
           <ul>
-            <li><strong>[점검]</strong> 서비스 점검 안내 <div class="meta">2025-08-12</div></li>
-            <li><strong>[업데이트]</strong> API 개선 공지 <div class="meta">2025-08-05</div></li>
-            <li><strong>[공지]</strong> 데이터셋 추가 안내 <div class="meta">2025-07-28</div></li>
+            <th:block th:if="${notice.isEmpty()}">
+              <li data-val="N">
+                <span>공지사항이 없습니다.</span>
+              </li>
+            </th:block>
+            <th:block th:unless="${notice.isEmpty()}">
+              <th:block th:each="bbsctt, bbscttStat : ${notice}">
+                <li data-val="Y" th:data-uid="${bbsctt?.bbscttUid}">
+                  <!--<strong>[점검]</strong>-->
+                  <span th:text="${bbsctt?.bbscttNm}"></span>
+                  <div class="meta" th:text="${bbsctt?.regDt}"></div>
+                </li>
+              </th:block>
+            </th:block>
           </ul>
         </div>
 
@@ -425,26 +442,78 @@
         <div class="card faq" aria-labelledby="faq-title">
           <h3 id="faq-title">이용문의</h3>
           <ul>
-            <li><strong>Q:</strong> 데이터 활용 방법은? <div class="meta">A: API 문서를 확인하세요.</div></li>
-            <li><strong>Q:</strong> 데이터 요청은 어떻게 하나요? <div class="meta">A: 문의 게시판 이용.</div></li>
-            <li><strong>Q:</strong> 오류 신고는 어디로? <div class="meta">A: 시스템관리자에게 접수.</div></li>
+            <th:block th:if="${manual.isEmpty()}">
+              <li data-val="N">
+                <span>이용문의가 없습니다.</span>
+              </li>
+            </th:block>
+            <th:block th:unless="${manual.isEmpty()}">
+              <th:block th:each="bbsctt, bbscttStat : ${notice}">
+                <li data-val="Y" th:data-uid="${bbsctt?.bbscttUid}">
+                  <strong>Q:</strong>
+                  <span th:text="${bbsctt?.bbscttNm}"></span>
+                  <div class="meta">
+                    <span>A:</span>
+                    <spqn th:text="${bbsctt?.regDt}"></spqn>
+                  </div>
+                </li>
+              </th:block>
+            </th:block>
           </ul>
         </div>
 
       </div> <!-- .grid -->
     </div>
   </div>
-
-  <form action="/api/portal/xml/upload" method="post" enctype="multipart/form-data">
-    <input type="file" name="file" accept=".xml"/>
-    <button type="submit">업로드</button>
-  </form>
-
   <!-- END: Content-->
 </th:block>
 
 <th:block layout:fragment="script">
+  <script th:src="@{'/assets/js/page/thirdeye/main/home.js'}"></script>
   <script th:inline="javascript">
+
+    $(document).ready(function() {
+
+      /* 검색 이벤트1 */
+      $("#search-button").on('click', function () {
+        homeJS.searchData();
+      });
+
+      /* 검색 이벤트2 */
+      $("#search-input").on('keydown', function (e) {
+        if(e.key === "Enter") {
+          $("#search-button").click();
+        }
+      });
+
+      /* 상단 아이콘 버튼 클릭 이벤트 */
+      $(".icon-item").click(function() {
+        const val = $(this).data("val");
+        homeJS.iconItemClickEvent(val);
+      });
+
+      /* 인기 데이터 더보기 */
+      $("#popular-data-more").on('click', function () {
+        window.location.href = '/portal/list'
+      });
+
+      /* 공지사항 li 클릭 */
+      $(".card.notice ul li").click(function() {
+        if ($(this).data("val") === "Y") {
+          const uid = $(this).data("uid");
+          window.location.href = "/portal/bbs/notice/" + uid;
+        }
+      });
+
+      /* 이용문의 li 클릭 */
+      $(".card.faq ul li").click(function() {
+        if ($(this).data("val") === "Y") {
+          const uid = $(this).data("uid");
+          window.location.href = "/portal/bbs/manual/" + uid;
+        }
+      });
+
+    });
 
   </script>
 </th:block>

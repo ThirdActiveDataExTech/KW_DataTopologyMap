@@ -10,9 +10,7 @@
 </th:block>
 
 <th:block layout:fragment="head">
-    <link rel="stylesheet" th:href="@{'/assets/css/page/detail.css'}" />
-    <link rel="stylesheet" th:href="@{'/assets/css/page/detail-template03.css'}" />
-    <link rel="stylesheet" th:href="@{'/assets/css/page/detail-template04.css'}" />
+    <link rel="stylesheet" th:href="@{'/assets/css/page/thirdeye/dataset-detail.css'}" />
 </th:block>
 
 <th:block layout:fragment="content">
@@ -115,7 +113,7 @@
                 <div th:replace="thirdeye/dataset/fragment/detail-template02::template02"></div>
             </div>
             <div id="des-details3" class="tab-pane">
-                <div th:replace="thirdeye/dataset/fragment_2/detail-template03::divTabDetailRelactionData"></div>
+                <div th:replace="thirdeye/dataset/fragment/detail-template03::template03"></div>
             </div>
             <div id="des-details4" class="tab-pane">
               <div th:replace="thirdeye/dataset/fragment/detail-template04::template04"></div>
@@ -151,9 +149,8 @@
     <script th:src="@{'https://cdn.jsdelivr.net/npm/echarts@latest/dist/echarts.min.js'}"></script>
     <script th:src="@{'/assets/js/page/thirdeye/dataset/detail.js'}"></script>
     <th:block th:replace="thirdeye/dataset/fragment/detail-template01-script::script"></th:block>
+    <th:block th:replace="thirdeye/dataset/fragment/detail-template03-script::script"></th:block>
     <th:block th:replace="thirdeye/dataset/fragment/detail-template04-script::script"></th:block>
-
-    <th:block th:replace="thirdeye/dataset/fragment_2/detail-template03-script::script"></th:block>
     <script th:inline="javascript">
 
     const approvedUid = /*[[${approvedUid}]]*/ 0;
@@ -166,6 +163,9 @@
 
         // 1. tab01 > table 초기화
         template01JS.drawTab01(dataset);
+
+        // tab03
+        template03JS.drawTemplate03();
 
         // 4. tab04
         template04JS.drawTemplate04(approvedUid);

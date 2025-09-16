@@ -39,9 +39,9 @@ public class CetusBbscttService {
     private String baseUrl;
 
     @Transactional(readOnly = true)
-    public List<BbscttRecentList> findRecentBbsctt(int recent) {
+    public List<BbscttRecentList> findRecentBbsctt(int recent, String bbsTpCd) {
         Long workplaceUid = UserUtil.getUserWorkplaceUid();
-        return dao.getRecentBbsctt(new BbscttRecentSearch(workplaceUid, recent));
+        return dao.getRecentBbsctt(new BbscttRecentSearch(workplaceUid, recent, bbsTpCd));
     }
 
     @Transactional(readOnly = true)

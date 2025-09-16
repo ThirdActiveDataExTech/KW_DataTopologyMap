@@ -5,6 +5,8 @@ import cetus.user.UserUtil;
 import kware.apps.system.form.service.CetusFormColumnsService;
 import kware.apps.system.user.dto.response.UserFullInfo;
 import kware.apps.system.user.service.CetusUserService;
+import kware.apps.thirdeye.bbsctt.dto.response.BbscttRecentList;
+import kware.apps.thirdeye.bbsctt.service.CetusBbscttService;
 import kware.apps.thirdeye.dataset.dto.response.DatasetDetailView;
 import kware.apps.thirdeye.dataset.service.CetusDatasetService;
 import kware.common.config.auth.MenuNavigationManager;
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.util.List;
 
 
 @Controller
@@ -27,6 +30,7 @@ public class PortalController {
     private final CetusFormColumnsService columnsService;
     private final MenuNavigationManager menuNavigationManager;
     private final CetusDatasetService datasetService;
+    private final CetusBbscttService bbscttService;
 
     /*@GetMapping("/home")
     public String home(Model model) {
@@ -50,6 +54,15 @@ public class PortalController {
     @GetMapping("/home")
     public String home(Model model) {
         menuNavigationManager.renderingPage("/portal/home", "HOME", true, model);
+
+        // 1. 공지사항
+        List<BbscttRecentList> notice = bbscttService.findRecentBbsctt(3, "NOTICE");
+        model.addAttribute("notice", notice);
+
+        // 2. 이용문의
+        List<BbscttRecentList> manual = bbscttService.findRecentBbsctt(3, "MANUAL");
+        model.addAttribute("manual", manual);
+
         return "thirdeye/dataset/home";
     }
 

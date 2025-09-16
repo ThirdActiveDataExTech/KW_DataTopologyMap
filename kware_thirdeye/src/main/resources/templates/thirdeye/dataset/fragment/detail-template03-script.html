@@ -1,0 +1,349 @@
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<script th:inline="javascript">
+
+    var template03JS = {
+
+        page: 1,
+        sort: 'title',
+        keyword: '',
+        param: {category: [], provider: [], dataType: [], date: [], tags: []},
+
+        sliderRange: $('#slider-range'),
+        amountPrice: $('#amount'),
+
+        drawTemplate03: function() {
+            $('#showing-list').hide();
+            template03JS.pageList();
+        },
+
+        fnPage: function(selectPage) {
+            template03JS.page = selectPage;
+            template03JS.pageList();
+        },
+
+        pageList() {
+            template03JS.pageInit();
+            Http.getJson('/assets/data/testdata/dataset_related_data.json').then((data) => {
+                template03JS.createSidebar();
+                if (template03JS.keyword) {
+                    data = data.filter(item => item['dataTitle'].includes(template03JS.keyword));
+                }
+                template03JS.createList(data);
+                template03JS.createCard(data);
+            });
+        },
+
+        pageInit: function () {
+            // showing text 초기화
+            $('#showing-card').text("");
+            $('#showing-list').text("");
+
+            // sidebar 초기화
+            // $('#categories').empty();
+            // $('#provider').empty();
+            // $('#dataType').empty();
+            // $('#tags').empty();
+
+            // list/card 초기화
+            $('#shop-2').empty();
+            $('#shop-1 .row').empty();
+        },
+
+        createSidebar: function () {
+
+            const $container = $("#categories");
+            $container.empty();
+            let param = template03JS.param;
+
+            Http.getJson('/assets/data/testdata/dataset_category.json').then(res => {
+
+                const categories = res
+                categories.forEach( widget => {
+                    const $widget = $(`
+                    <div class="sidebar-widget sidebar-widget-border mb-40 pb-35" data-aos="fade-up" data-aos-delay="${200}">
+                        <div class="sidebar-widget-title mb-25">
+                        <h3>${widget['field']}</h3>
+                        </div>
+                        <div class="sidebar-widget-color sidebar-list-style">
+                            <ul></ul>
+                        </div>
+                    </div>
+                `);
+
+                const $ul = $widget.find("ul");
+                const itemList = widget.items
+                itemList.forEach( (item, i)=> {
+                        const id = `${widget['field'].toLowerCase()}_${i}`;
+                        const $li = $("<li></li>");
+                        const $a = $('<a href="#"></a>');
+                        const $input = $('<input>', { id, type: "checkbox", value: item.code });
+                        const $label = $('<label>', { for: id }).text(item.name);
+                        const $span = $("<span></span>").text(item.code);
+
+                        const keysToCheck = ['categories', 'sources', 'types'];
+                        const isIncluded = keysToCheck.some(key => param[key]?.includes(item.code));
+                        if (isIncluded) { $input.prop('checked', true); }
+
+                        $a.append($input, $label, $span);
+                        $li.append($a);
+                        $ul.append($li);
+                    });
+                    $container.append($widget);
+                });
+            });
+        },
+
+        createList: function (data) {
+
+            const dataLength = data.length;
+            /*const number = 5; // 한 페이지에 5개의 요소
+            const pageCount = 5; // 페이지네이션에 5개의 페이지 표시
+            const totalPages = Math.ceil(dataLength / number); // 전체 페이지 수
+            const startIndex = (template03JS.page - 1) * number; // 시작 인덱스
+            const endIndex = startIndex + number; // 끝 인덱스 (slice는 endIndex는 포함하지 않음)
+            const startPage = (Math.ceil(template03JS.page / pageCount) - 1) * pageCount + 1;
+            const endPage = Math.min(totalPages, Math.ceil(template03JS.page / pageCount) * pageCount);*/
+
+            const obj = template03JS.createPagination(dataLength, 5, 5);
+
+            // 데이터 정렬
+            if(template03JS.sort === "title") { data.sort((a, b) => a.title.localeCompare(b.title)); }
+            /*if(template03JS.sort === "approve") { data.sort((a, b) => new Date(b.updateDate) - new Date(a.updateDate)); }
+            if(template03JS.sort === "rating") { data.sort((a, b) => b.rating - a.rating); }*/
+
+            data = data.slice(obj.startIndex, obj.endIndex);
+            data.forEach( content => {
+
+                const $shopListWrap = $('<div>', {
+                    class: 'page-list-wrap mb-30 aos-init aos-animate',
+                    'data-aos': 'fade-up',
+                    'data-aos-delay': '200'
+                });
+
+                const $row = $('<div>', { class: 'row' });
+                const $col1 = $('<div>', { class: 'col-lg-4 col-sm-5' });
+                const $productListImg = $('<div>', { class: 'page-list-img' });
+                const $productLink = $('<a>', { href: 'detail' });
+
+                const randomNumber = Math.floor(Math.random() * 3) + 1;  // 1, 2, 3 중 랜덤 선택
+                const $productImage = $('<img>', {
+                    src: `/assets/images/page/list/data_0${randomNumber}.jpg`,
+                    alt: 'Product Style',
+                    class: 'portal-img',
+                });
+                $productLink.append($productImage);
+                $productListImg.append($productLink);
+                $col1.append($productListImg);
+
+                const $col2 = $('<div>', { class: 'col-lg-8 col-sm-7' });
+                const $shopListContent = $('<div>', { class: 'page-list-content' });
+                $shopListContent.append(
+                    $('<h3>').append(
+                        $('<a>', { href: 'detail' }).text(content['title'])
+                    )
+                );
+                $shopListContent.append(
+                    $('<div>', { class: 'page-price' }).append(
+                        $('<span>').text(content['description'])
+                    )
+                );
+
+                const metadata = JSON.parse(dataset['metadata']); // JSON string → 객체
+                Object.entries(metadata).forEach(([key, value]) => {
+                    $shopListContent.append(
+                        $('<p>').text(`${key} : ${typeof value === 'object' ? JSON.stringify(value) : value}`)
+                    );
+                });
+
+                $col2.append($shopListContent);
+                $row.append($col1, $col2);
+                $shopListWrap.append($row);
+                $('#shop-2').append($shopListWrap);
+            });
+
+            $('#shop-2').append(obj.pageDom);
+        },
+
+        createCard: function (data) {
+
+            const dataLength = data.length;
+            const obj = template03JS.createPagination(dataLength, 9, 5);
+
+            // 데이터 정렬
+            if(template03JS.sort === "title") { data.sort((a, b) => a.title.localeCompare(b.title)); }
+            /*if(template03JS.sort === "approve") { data.sort((a, b) => new Date(b.updateDate) - new Date(a.updateDate)); }
+            if(template03JS.sort === "rating") { data.sort((a, b) => b.rating - a.rating); }*/
+
+            data = data.slice(obj.startIndex, obj.endIndex);
+            data.forEach( content => {
+
+                const $colDiv = $('<div>', { class: 'col-lg-4 col-md-4 col-sm-6 col-12' });
+                const $productWrap = $('<div>', { class: 'page-wrap mb-35' });
+                const $productImg = $('<div>', { class: 'page-img img-zoom mb-25' });
+                const $productLink = $('<a>', { href: 'detail' });
+
+                const randomNumber = Math.floor(Math.random() * 3) + 1;  // 1, 2, 3 중 랜덤 선택
+                const $productImage = $('<img>', {
+                    class: 'portal-img', src: `/assets/images/page/list/data_0${randomNumber}.jpg`, alt: ''
+                });
+                $productLink.append($productImage);
+                $productImg.append($productLink);
+
+                // Create the page-action-wrap div
+/*                if(!content['interest']) content['interest'] = 'N'
+                const like = (content['interest'] === "Y") ? 'fa fa-heart' : 'pe-7s-like'
+
+                const $actionWrap = $('<div>', { class: 'page-action-wrap' });
+                const $wishlistBtn = $('<button>', { class: 'page-action-btn-1 like-content-btn', title: 'Wishlist', 'data-like': content['interest'] }).append($('<i>', { class: `${like}` }));
+                const $quickViewBtn = $('<button>', { class: 'page-action-btn-1 detail-btn', title: 'Quick View', 'data-bs-toggle': 'modal', 'data-bs-target': '#exampleModal' }).append($('<i>', { class: 'pe-7s-look' }));
+                $actionWrap.append($wishlistBtn, $quickViewBtn);*/
+
+                // Create the page-action-2-wrap div
+                const $action2Wrap = $('<div>', { class: 'page-action-2-wrap' });
+                $productImg.append($action2Wrap);
+
+                const $productContent = $('<div>', { class: 'page-content' });
+                const $productTitle = $('<h3>').append($('<a>', { href: 'detail' }).text(content['title']));
+                const $productPrice = $('<div>', { class: 'page-price' }).append($('<span>').text(content['description']));
+
+                $productContent.append($productTitle, $productPrice);
+                $productWrap.append($productImg, $productContent);
+                $colDiv.append($productWrap);
+                $('#shop-1 .row').append($colDiv);
+            });
+            $('#shop-1 #card-pagination').html(obj.pageDom);
+        },
+
+        createPagination: function (length, number, pageCount) {
+
+            const obj = {
+                pageDom: null,
+                number, pageCount,
+                totalPages: 0, startIndex: 0, endIndex: 0,
+                startPage: 0, endPage: 0
+            }
+            obj.totalPages = Math.ceil(length / number);
+            obj.startIndex = (template03JS.page - 1) * number;
+            obj.endIndex = obj.startIndex + number;
+            obj.startPage = (Math.ceil(template03JS.page / pageCount) - 1) * pageCount + 1;
+            obj.endPage = Math.min(obj.totalPages, Math.ceil(template03JS.page / pageCount) * pageCount);
+
+            // 페이징 컨테이너 그리기
+            const $pagination = $('<div>', {
+                class: 'pagination-style-1 aos-init',
+                'data-aos': 'fade-up',
+                'data-aos-delay': '200'
+            });
+
+            // Create the list element
+            const $ul = $('<ul>');
+            for( let j = obj.startPage; j <= obj.endPage; j++ ) {
+                const $li = $('<li>').append($('<a>', {
+                    class: j == template03JS.page ? 'active' : '',
+                    href: `javascript: template03JS.fnPage(${j});`,
+                    text: j
+                }));
+                $ul.append($li);
+            }
+
+            // 이전페이지
+            if ( obj.startPage > 1 ) {
+                $ul.prepend($('<li>').append($('<a>', {
+                    class: 'next',
+                    href: `javascript: template03JS.fnPage(${obj.startPage - 1});`,
+                }).html('<i class="ti-angle-double-left "></i>')));
+            }
+
+            // 다음페이지
+            if ( obj.endPage < obj.totalPages ) {
+                $ul.append($('<li>').append($('<a>', {
+                    href: `javascript: template03JS.fnPage(${obj.endPage + 1});`,
+                    text: '»'
+                }).html('<i class="ti-angle-double-right "></i>')));
+            }
+
+            $pagination.append($ul);
+            obj.pageDom = $pagination;
+
+            $('#showing-list').text(
+                `전체 ${length}건 중 ${obj.startIndex + 1}-${obj.endIndex > length ? length : obj.endIndex}`
+            );
+
+            return obj;
+        },
+
+        fnTab: function (selectTab) {
+            template03JS.fnPage(1);
+            if(selectTab === "card") { $('#showing-card').show(); $('#showing-list').hide(); }
+            else if(selectTab === "list") { $('#showing-list').show(); $('#showing-card').hide(); }
+        },
+
+        dateFormat: function (amount) {
+            let dateString = "2024-01-01";
+            let date = new Date(dateString);
+
+            // n일 추가
+            date.setDate(date.getDate() + amount);
+
+            // yyyy-mm-dd 형식으로 변환
+            const yyyy = date.getFullYear();
+            const mm = String(date.getMonth() + 1).padStart(2, '0'); // 월은 0부터 시작하므로 +1 필요
+            const dd = String(date.getDate()).padStart(2, '0');
+
+            return `${yyyy}-${mm}-${dd}` // ex. 2024-02-01
+        }
+    }
+
+    $(function () {
+
+        // slider range 초기화
+        template03JS.sliderRange.slider({
+            range: true,
+            min: 0,
+            max: 365,
+            values: [0, 365],
+            slide: function(event, ui) {
+                template03JS.amountPrice.val(template03JS.dateFormat(ui.values[0]) + " - " + template03JS.dateFormat(ui.values[1]));
+            }
+        });
+        template03JS.amountPrice.val(
+            template03JS.dateFormat(template03JS.sliderRange.slider("values", 0)) + " - " + template03JS.dateFormat(template03JS.sliderRange.slider("values", 1))
+        );
+
+        // 정렬순서 변경
+        $('.nice-select').change(function() {
+            template03JS.sort = $(this).val();
+            template03JS.fnPage(1);
+        });
+
+        // 검색어 검색
+        $('#searchForm').on('keypress', function(event) {
+            if (event.key === 'Enter') {
+                event.preventDefault(); // 기본 동작(폼 제출) 막기
+                template03JS.keyword = $('#keyword').val();
+                template03JS.fnPage(1);
+            }
+        });
+
+        // 검색조건 검색
+        $(document).on('change', 'input[type="checkbox"]', function() {
+            const type = $(this).attr('id').split('_')[0];
+            const value = $(this).attr('value');
+            if ($(this).is(':checked')) template03JS.param[type].push(value);
+            else {
+                template03JS.param[type] = template03JS.param[type].filter(item => item !== value);
+            }
+            template03JS.fnPage(1);
+        });
+
+        // 등록일 검색
+        $("#date-btn").click(function() {
+            template03JS.param['date'][0] = template03JS.dateFormat(template03JS.sliderRange.slider("values", 0));
+            template03JS.param['date'][1] = template03JS.dateFormat(template03JS.sliderRange.slider("values", 1));
+            template03JS.fnPage(1);
+        });
+
+    });
+
+</script>
+</html>
