@@ -10,6 +10,8 @@ public class BbscttList {
 
     private Long bbscttUid;
     private Long bbsUid;
+    private String bbsTpCd;
+    private String bbsTpSubCd;
     private Long clUid;
     private String bbscttNm;
     private int rdCnt;
@@ -27,4 +29,8 @@ public class BbscttList {
     private String regEmail;
     private String regProfileId;
     private String thumbnailSrc;
+
+    public void setBbs(String bbsTpSubCd) {
+        this.bbsTpSubCd = bbsTpSubCd;
+    }
 }

@@ -7,6 +7,7 @@ import kware.apps.thirdeye.answer.domain.CetusBbscttAnswer;
 import kware.apps.thirdeye.answer.domain.CetusBbscttAnswerDao;
 import kware.apps.thirdeye.answer.dto.response.AnswerExcelList;
 import kware.apps.thirdeye.answer.dto.response.AnswerList;
+import kware.apps.thirdeye.enumstatus.BbsTpCd;
 import kware.apps.thirdeye.enumstatus.DownloadTargetCd;
 import kware.apps.thirdeye.answer.dto.request.*;
 import kware.common.excel.ExcelCreate;
@@ -45,7 +46,11 @@ public class CetusBbscttAnswerService {
 
     @Transactional
     public Page<AnswerList> findAllAnswerPage(AnswerSearch search, Pageable pageable) {
-        return dao.page("answerBbsRegPageList", "answerBbsRegPageListCount", search, pageable);
+        Page<AnswerList> page = dao.page("answerBbsRegPageList", "answerBbsRegPageListCount", search, pageable);
+        page.getList().forEach(dto -> {
+            dto.setBbsTpSubCd(BbsTpCd.getSubCodeByCode(dto.getBbsTpCd()));
+        });
+        return page;
     }
 
     @Transactional

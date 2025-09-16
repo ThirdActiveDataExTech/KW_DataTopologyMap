@@ -6,6 +6,7 @@
         /* cetusBbsctt.bbscttPageList */
         SELECT CBBSCTT.BBSCTT_UID
               ,CBBSCTT.BBS_UID
+              ,CBBS.BBS_TP_CD
               ,CBBSCTT.CL_UID
               ,CBBSCTT.BBSCTT_NM
               ,CBBSCTT.RD_CNT

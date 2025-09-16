@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/default}">
+
+<th:block layout:fragment="center-image">
+    <th:block th:with="title1=${currentPageName}, title2=${navigation}, leftImg=${centerLeftImage}, rightImg=${centerRightImage}">
+        <th:block th:replace="fragments/center-image :: main-image-title(${title1}, ${title2}, ${leftImg}, ${rightImg})"></th:block>
+    </th:block>
+</th:block>
+
+<th:block layout:fragment="head">
+    <style>
+        /* 탭 */
+        .tabs{
+            display:flex;
+            gap:8px;
+            margin-bottom:20px;
+        }
+        .tab-link{
+            background:#eee;
+            border:1px solid #ccc;
+            padding:8px 14px;
+            border-radius:4px;
+            cursor:pointer;
+            font-size:14px;
+        }
+        .tab-link.active{
+            background:#bfc9d6;
+            font-weight:600;
+        }
+
+        /* 파일 업로드 */
+        .file-row{
+            display:flex;
+            align-items:center;
+            gap:8px;
+            margin:14px 0;
+            flex-wrap: wrap;
+        }
+        .file-row label{ min-width:120px; }
+        .file-row .file-display{ flex:1; }
+        .file-text{
+            width:100%;
+            padding:8px 10px;
+            border:1px solid #ccc;
+            border-radius:4px;
+            background:#fff;
+        }
+        .file-btn {
+            padding:8px 12px;
+            border-radius:4px;
+            border:1px solid #ccc;
+            background:#fff;
+            cursor:pointer;
+        }
+        .file-btn:hover {
+            background-color: #d7e4f5;
+            color: #1a3e6e;
+            font-width: bold;
+        }
+
+        /* 기본정보 */
+        .basic-info {
+            border: 2px solid #eee;
+            border-radius: 6px;
+            padding: 18px;
+            margin: 14px 0;
+        }
+
+        .basic-info .header {
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+
+        /* 1행 2열 그리드 */
+        .basic-info .fields-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr); /* 2열 */
+            gap: 14px; /* 필드 사이 간격 */
+        }
+
+        .field {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .field label {
+            font-size: 13px;
+            margin-bottom: 6px;
+        }
+
+        .field input,
+        .field textarea {
+            width: 100%;
+            padding: 8px 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 14px;
+            background: #fff;
+            box-sizing: border-box;
+        }
+        .field input[readonly] {
+            background-color: #f5f5f5; /* 연한 회색 */
+            color: #666; /* 글자색도 조금 연하게 */
+        }
+        .field textarea {
+            resize: vertical;
+            min-height: 70px;
+        }
+        .field textarea[readonly] {
+            background-color: #f5f5f5; /* 연한 회색 */
+            color: #666; /* 글자색도 조금 연하게 */
+        }
+
+        /* 화면이 좁으면 1열로 */
+        @media (max-width: 768px) {
+            .basic-info .fields-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        /* 버튼 */
+        .submit-wrap{ text-align:center; margin-top:20px; }
+    </style>
+    <style>
+        .card-custom {
+            padding: 20px;
+        }
+    </style>
+    <style>
+        /* 테이블 스타일 */
+        #metadata-list table {
+            width: 100%;
+            border-collapse: separate; /* border-radius 적용하려면 separate */
+            border-spacing: 0;
+            margin: 20px 0;
+            font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+            font-size: 14px;
+            color: #333;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px; /* 모서리 둥글게 */
+            overflow: hidden;   /* 둥근 모서리 안쪽에도 적용 */
+            box-shadow: 0 2px 6px rgba(0,0,0,0.05); /* 은은한 그림자 */
+        }
+        #metadata-list th,
+        #metadata-list td {
+            padding: 10px 12px;
+            text-align: left;
+        }
+        #metadata-list th {
+            background: linear-gradient(to bottom, #f9f9f9, #f1f1f1);
+            font-weight: 600;
+            font-size: 13px;
+            color: #444;
+            border-bottom: 1px solid #ddd;
+        }
+        #metadata-list td {
+            font-size: 14px;
+            line-height: 1.4;
+            border-bottom: 1px solid #eee;
+        }
+        /* 마지막 row border 제거 */
+        #metadata-list tbody tr:last-child td {
+            border-bottom: none;
+        }
+        /* 행 hover 효과 */
+        #metadata-list tr:hover {
+            background-color: #f5faff;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+    </style>
+</th:block>
+
+<th:block layout:fragment="content">
+    <div class="related-product-area pb-100 pt-80" data-aos="fade-up" data-aos-delay="200">
+        <div class="container">
+
+            <div class="section-title-2 st-border-center text-center mb-35">
+                <h2>데이터셋 등록</h2>
+            </div>
+            <hr>
+
+            <!-- s:buttons -->
+            <div>
+                <div class="d-flex justify-content-end pe-4">
+                    <div class="btn-container" style="margin-top: 0px !important;">
+                        <!-- 왼쪽 버튼 -->
+                        <!-- 오른쪽 버튼들 -->
+                        <div class="right-buttons">
+                            <button type="button" class="custom-button" id="list-btn">목록</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- e:buttons -->
+
+            <!-- s:탭 -->
+            <div class="tabs">
+                <button class="tab-link active" data-tab="tab1">주기성 데이터 등록</button>
+                <button class="tab-link" data-tab="tab2">신규 데이터 등록</button>
+            </div>
+            <!-- e:탭 -->
+
+            <!-- s:탭 콘텐츠 -->
+            <div class="tab-content">
+                <!-- 주기성 데이터 등록 -->
+                <div id="tab1" class="tab-pane active">
+                    <div class="card card-custom" style="margin-top: 10px">
+                        <h4>주기성 데이터 등록 화면</h4>
+
+                        <!-- 메타데이터 찾기 -->
+                        <div style="width: 40%">
+                            <button type="button" class="file-btn" id="search-metadata">기존 메타 데이터 찾아보기</button>
+                        </div>
+
+                        <!-- 기본정보 -->
+                        <div class="basic-info">
+                            <div class="header">기본 정보</div>
+                            <div class="fields-grid">
+                                <div class="field">
+                                    <label for="period-title">컨텐츠 제목</label>
+                                    <input type="text" id="period-title" placeholder="" readonly>
+                                </div>
+
+                                <div class="field">
+                                    <label for="period-owner">담당자</label>
+                                    <input type="text" id="period-owner" th:value="|${user.userNm}|" readonly>
+                                </div>
+
+                                <div class="field">
+                                    <label for="period-description">컨텐츠 설명</label>
+                                    <textarea id="period-description" readonly></textarea>
+                                </div>
+
+                                <div class="field">
+                                    <label for="period-content">컨텐츠 내용</label>
+                                    <textarea id="period-content" readonly></textarea>
+                                </div>
+
+                                <div class="field">
+                                    <label for="period-metadata">메타데이터(JSON)</label>
+                                    <textarea id="period-metadata" readonly></textarea>
+                                </div>
+
+                                <div class="field">
+                                    <label for="period-sampledata">샘플 데이터(JSON)</label>
+                                    <textarea id="period-sampledata" readonly></textarea>
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <!-- 실데이터 업로드 -->
+                        <div class="file-row">
+                            <label>실 데이터</label>
+                            <div class="file-display">
+                                <input type="text" id="period-data-filename" class="file-text" placeholder="선택된 파일 없음" readonly>
+                            </div>
+                            <button type="button" class="file-btn" id="period-data-upload-btn">실데이터 업로드</button>
+                            <input type="file" id="period-data-file" style="display:none;">
+                        </div>
+
+                        <!-- 등록 버튼 -->
+                        <div class="submit-wrap">
+                            <button id="period-submit-btn" class="custom-button">등록하기</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 신규 데이터 등록 -->
+                <div id="tab2" class="tab-pane">
+                    <div class="card card-custom" style="margin-top: 10px">
+                        <h4>신규 데이터 등록 화면</h4>
+                        <!-- 메타데이터 업로드 -->
+                        <div class="file-row">
+                            <label>메타데이터 파일</label>
+                            <div class="file-display">
+                                <input type="text" id="new-meta-filename" class="file-text" placeholder="선택된 파일 없음" readonly>
+                            </div>
+                            <button type="button" class="file-btn" id="new-meta-upload-btn">메타데이터 업로드</button>
+                            <input type="file" id="new-meta-file" accept=".xml,.json" style="display:none;">
+                        </div>
+
+                        <!-- 기본정보 -->
+                        <div class="basic-info">
+                            <div class="header">기본 정보</div>
+                            <div class="fields-grid">
+                                <div class="field">
+                                    <label for="new-title">컨텐츠 제목</label>
+                                    <input type="text" id="new-title" placeholder="제목 입력">
+                                </div>
+
+                                <div class="field">
+                                    <label for="new-owner">담당자</label>
+                                    <input type="text" id="new-owner" th:value="|${user.userNm}|" readonly>
+                                </div>
+
+                                <div class="field">
+                                    <label for="new-description">컨텐츠 설명</label>
+                                    <textarea id="new-description"></textarea>
+                                </div>
+
+                                <div class="field">
+                                    <label for="new-content">컨텐츠 내용</label>
+                                    <textarea id="new-content"></textarea>
+                                </div>
+
+                                <div class="field">
+                                    <label for="new-metadata">메타데이터(JSON)</label>
+                                    <textarea id="new-metadata"></textarea>
+                                </div>
+
+                                <div class="field">
+                                    <label for="new-sampledata">샘플 데이터(JSON)</label>
+                                    <textarea id="new-sampledata"></textarea>
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <!-- 실데이터 업로드 -->
+                        <div class="file-row">
+                            <label>실 데이터</label>
+                            <div class="file-display">
+                                <input type="text" id="new-data-filename" class="file-text" placeholder="선택된 파일 없음" readonly>
+                            </div>
+                            <button type="button" class="file-btn" id="new-data-upload-btn">실데이터 업로드</button>
+                            <input type="file" id="new-data-file" style="display:none;">
+                        </div>
+
+                        <!-- 등록 버튼 -->
+                        <div class="submit-wrap">
+                            <button id="new-submit-btn" class="custom-button">등록하기</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- e:탭 콘텐츠 -->
+
+        </div>
+    </div>
+
+    <th:block th:replace="admin/dataset/modal/search-metadata"></th:block>
+
+</th:block>
+
+<th:block layout:fragment="script">
+    <script th:src="@{'/assets/js/page/admin/dataset-control.js'}"></script>
+    <script th:inline="javascript">
+        $(function () {
+
+            $("#list-btn").on('click', function () {
+               window.location.href = '/admin/dataset'
+            });
+
+            // ===============================
+            // 탭 전환 이벤트
+            // ===============================
+            $(".tab-link").on("click", function(){
+                // 탭 버튼 처리
+                $(".tab-link").removeClass("active");
+                $(this).addClass("active");
+                // 탭 콘텐츠 처리
+                $(".tab-pane").removeClass("active");
+                $("#" + $(this).data("tab")).addClass("active");
+            });
+
+            // ===============================
+            // 기존 메타 데이터 찾기
+            // ===============================
+            $('#search-metadata').click(function(){
+                datasetJS.drawMetaDataSearchModal();
+                $("#searchMetaDataModal").modal('show');
+            });
+
+            // ===============================
+            // 파일 업로드 버튼 클릭 -> 숨겨진 input 클릭
+            // ===============================
+            $('#period-data-upload-btn').click(function(){
+                $('#period-data-file').click();
+            });
+            $('#new-meta-upload-btn').click(function(){
+                $('#new-meta-file').click();
+            });
+            $('#new-data-upload-btn').click(function(){
+                $('#new-data-file').click();
+            });
+
+            // ===============================
+            // 선택된 파일 이름 표시
+            // ===============================
+            $('#period-meta-file').change(function(){
+                const fileName = $(this).val().split('\\').pop();
+                $('#period-meta-filename').val(fileName);
+            });
+            $('#period-data-file').change(function(){
+                const fileName = $(this).val().split('\\').pop();
+                $('#period-data-filename').val(fileName);
+            });
+            $('#new-meta-file').change(function(){
+                const fileName = $(this).val().split('\\').pop();
+                $('#new-meta-filename').val(fileName);
+            });
+            $('#new-data-file').change(function(){
+                const fileName = $(this).val().split('\\').pop();
+                $('#new-data-filename').val(fileName);
+            });
+
+            // ===============================
+            // 등록 버튼 클릭 이벤트
+            // ===============================
+            $('#period-submit-btn').click(function(){
+                datasetJS.periodSaveClickEvent();
+            });
+            $('#new-submit-btn').click(function(){
+                datasetJS.newSaveClickEvent();
+            });
+
+            // ===============================
+            // 기존 메타 데이터 찾기 모달 이벤트
+            // ===============================
+            $('#metadata-list').on('click', '.row-checkbox, tr', function(e){
+                const $checkbox = e.target.type === 'checkbox' ? $(e.target) : $(this).find('.row-checkbox');
+                if ($checkbox.length) {
+                    $('#metadata-list .row-checkbox').not($checkbox).prop('checked', false);
+                    $checkbox.prop('checked', true);
+                }
+            });
+            $("#cancel-btn").on('click', function () {
+                $("#searchMetaDataModal").modal('hide');
+            });
+            $("#select-btn").on('click', function () {
+                datasetJS.selectMetaDataEvent();
+            });
+
+        });
+    </script>
+</th:block>
+</html>

@@ -46,7 +46,11 @@ public class CetusBbscttService {
 
     @Transactional(readOnly = true)
     public Page<BbscttList> findAllBbscttPage(BbscttSearch search, Pageable pageable) {
-        return dao.page("bbscttPageList", "bbscttPageListCount", search, pageable);
+        Page<BbscttList> page = dao.page("bbscttPageList", "bbscttPageListCount", search, pageable);
+        page.getList().forEach(dto -> {
+            dto.setBbs(BbsTpCd.getSubCodeByCode(dto.getBbsTpCd()));
+        });
+        return page;
     }
 
     @Transactional

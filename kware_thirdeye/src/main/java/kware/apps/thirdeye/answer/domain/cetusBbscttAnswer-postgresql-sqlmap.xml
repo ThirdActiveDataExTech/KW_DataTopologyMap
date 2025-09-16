@@ -49,6 +49,7 @@
         /* cetusBbscttAnswer.answerBbsRegPageList */
         SELECT CBA.ANSWER_UID
               ,CBA.BBSCTT_UID
+              ,CBBS.BBS_TP_CD AS BBS_TP_CD
               ,CBBSCTT.BBSCTT_NM AS BBSCTT_NM
               ,CBA.ANSWER_CNT
               ,CBA.REG_UID
