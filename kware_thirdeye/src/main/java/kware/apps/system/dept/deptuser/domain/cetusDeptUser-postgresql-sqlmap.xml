@@ -23,4 +23,11 @@
          WHERE USER_UID = #{userUid}
     </delete>
 
+    <select id="getDeptUserCount" parameterType="Long" resultType="int">
+        /* cetusDeptUser.getDeptUserCount */
+        SELECT COUNT(*)
+          FROM CETUS_DEPT_USER CDU
+         WHERE CDU.DEPT_UID = #{deptUid}
+    </select>
+
 </mapper>

@@ -84,6 +84,7 @@
   <th:block th:replace="system/workplace/modal/workplace-save"></th:block>
   <th:block th:replace="system/workplace/modal/position-modal"></th:block>
   <th:block th:replace="system/workplace/modal/group-modal"></th:block>
+  <th:block th:replace="system/workplace/modal/dept-modal"></th:block>
 
 </th:block>
 
@@ -120,8 +121,8 @@
       });
 
       $(document).on("click", "#dept-mng", function () {
-        const uid = $(this).data("uid");
-        console.log(">> dept-mng : ", uid)
+        workplaceJS.dept.workplaceUid = $(this).data("uid");
+        workplaceJS.dept.openDeptModal();
       });
 
       // 직급 수정
@@ -248,6 +249,29 @@
       // 취소
       $("#group-cancel-btn").on('click', function () {
         $("#groupSaveModal").modal('hide');
+      });
+
+    });
+
+    $(document).ready(function() {
+
+      // 모달 닫기
+      $('#deptSaveModal').on('hidden.bs.modal', function () {
+        workplaceJS.dept.deptModalHide();
+      });
+
+      // 닫기
+      $("#dept-close-btn").on('click', function () {
+        workplaceJS.dept.deptModalHide();
+      });
+
+      // 삭제
+      $("#dept-delete-btn").on('click', function () {
+        workplaceJS.dept.deleteDept();
+      });
+
+      $("#dept-save-btn").on('click', function () {
+        workplaceJS.dept.saveDept();
       });
 
     });

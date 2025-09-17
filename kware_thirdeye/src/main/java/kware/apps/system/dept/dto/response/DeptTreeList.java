@@ -12,6 +12,7 @@ public class DeptTreeList {
     private Long upperNo;
     private String text;
     private String treeDeptNm;
+    private Long sortNo;
     private String regDt;
     private String regNm;
     private String updtDt;

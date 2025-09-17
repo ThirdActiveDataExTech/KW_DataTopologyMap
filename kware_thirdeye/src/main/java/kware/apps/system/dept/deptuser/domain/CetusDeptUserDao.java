@@ -17,4 +17,8 @@ public class CetusDeptUserDao extends SuperDao<CetusDeptUser> {
     public int deleteDeptUser(Long userUid) {
         return delete("deleteDeptUser", userUid);
     }
+
+    public int getDeptUserCount(Long deptUid) {
+        return selectOne("getDeptUserCount", deptUid);
+    }
 }

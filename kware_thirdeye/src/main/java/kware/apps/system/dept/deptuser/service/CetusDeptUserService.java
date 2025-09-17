@@ -23,4 +23,8 @@ public class CetusDeptUserService {
         dao.deleteDeptUser(userUid);
     }
 
+    public int findDeptUserCount(Long deptUid) {
+        return dao.getDeptUserCount(deptUid);
+    }
+
 }

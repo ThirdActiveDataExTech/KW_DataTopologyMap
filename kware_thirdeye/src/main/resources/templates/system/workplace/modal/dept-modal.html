@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<div class="modal modal-primary fade text-start" id="deptSaveModal" tabindex="-1"
+     aria-labelledby="deptSaveModalTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="deptSaveModalTitle">부서 관리</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-6 border-end">
+                        <div id="dept-tree"></div>
+                    </div>
+                    <div class="col-6">
+                        <form id="dept-form" class="needs-validation" novalidate>
+                            <input type="hidden" class="form-control" id="dept-uid" name="uid">
+                            <div class="mb-3">
+                                <label for="dept-path" class="form-label">부서경로</label>
+                                <input type="text" class="form-control" id="dept-path" required readonly disabled>
+                            </div>
+                            <div class="mb-3">
+                                <label for="dept-name" class="form-label">부서명</label>
+                                <input type="text" class="form-control" id="dept-name" name="deptNm" placeholder="부서명을 입력하세요" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="dept-sort" class="form-label">정렬 순서</label>
+                                <input type="number" class="form-control" id="dept-sort" name="sortNo" placeholder="숫자를 입력하세요" min="1">
+                            </div>
+                            <div class="d-flex justify-content-end">
+                                <button type="button" class="custom-button-danger me-2" id="dept-delete-btn" style="display: none">삭제</button>
+                                <button type="button" class="custom-button" id="dept-save-btn">수정</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer" style="justify-content: center">
+                <button type="button" class="custom-button" id="dept-close-btn">닫기</button>
+            </div>
+        </div>
+    </div>
+</div>
+<style>
+    .jstree-contextmenu {
+        z-index: 99999 !important;
+    }
+    #dept-tree {
+        max-height: 400px;
+        overflow-y: auto;
+        padding: 5px;
+    }
+    #dept-form {
+        padding-left: 10px;
+    }
+    button.custom-button-danger {
+        background-color: #dc3545;
+        border-radius: 5px !important;
+        border: none;
+        padding: 6px;
+        font-size: 13px;
+        cursor: pointer;
+        text-align: center;
+        color: #ffff;
+        width: 100px;
+    }
+    .custom-button-danger:hover {
+        font-weight: bold;
+    }
+    .custom-button-danger:disabled {
+        background-color: #9b3c45;
+        cursor: none;
+    }
+</style>
+</html>

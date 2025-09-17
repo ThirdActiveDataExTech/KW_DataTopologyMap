@@ -64,6 +64,7 @@
                          , A.UPPER_UID AS UPPER_NO
                          , A.NAME AS TEXT
                          , LPAD('', DEPTH * 8) || A.SORT_ORDER AS TREE_DEPT_NM
+                         , A.SORT_ORDER AS SORT_NO
                          , TO_CHAR(A.REG_DT, 'YYYY-MM-DD HH24:MI:SS') AS REG_DT
                          , CU_REG.USER_NM AS REG_NM
                          , TO_CHAR(A.UPDT_DT, 'YYYY-MM-DD HH24:MI:SS') AS UPDT_DT
@@ -79,4 +80,51 @@
                      LEFT JOIN CETUS_USER CU_UPDT ON CU_UPDT.UID = A.UPDT_UID
                     ORDER BY PATH
     </select>
+
+    <insert id="insert" parameterType="CetusDept">
+        /* cetusDept.insert */
+        INSERT INTO CETUS_DEPT (
+             WORKPLACE_UID
+            ,NAME
+            ,DESCRIPTION
+            ,SORT_ORDER
+            ,USE_AT
+            ,UPPER_UID
+            ,REG_UID
+            ,REG_DT
+            ,UPDT_UID
+            ,UPDT_DT
+        ) VALUES (
+             #{workplaceUid}
+            ,#{name}
+            ,#{description}
+            ,#{sortOrder}
+            ,'Y'
+            ,#{upperUid}::bigint
+            ,#{regUid}
+            ,NOW()
+            ,#{updtUid}
+            ,NOW()
+        )
+    </insert>
+
+    <update id="update" parameterType="CetusDept">
+        /* cetusDept.update */
+        UPDATE CETUS_DEPT
+           SET NAME = #{name}
+              ,SORT_ORDER = #{sortOrder}
+              ,UPDT_UID = #{updtUid}
+              ,UPDT_DT = NOW()
+         WHERE UID = #{uid}
+    </update>
+
+    <update id="updateUseAtToN" parameterType="CetusDept">
+        /* cetusDept.updateUseAtToN */
+        UPDATE CETUS_DEPT
+           SET USE_AT = 'N'
+              ,UPDT_UID = #{updtUid}
+              ,UPDT_DT = NOW()
+         WHERE UID = #{uid}
+    </update>
+
 </mapper>

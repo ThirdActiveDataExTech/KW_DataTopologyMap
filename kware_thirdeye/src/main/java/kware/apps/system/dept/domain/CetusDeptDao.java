@@ -17,4 +17,8 @@ public class CetusDeptDao extends SuperDao<CetusDept> {
     public List<DeptTreeList> findDeptTreeList(Long workplaceUid) {
         return selectList("findDeptTreeList", workplaceUid);
     }
+
+    public void updateUseAtToN(CetusDept bean) {
+        update("updateUseAtToN", bean);
+    }
 }
