@@ -9,8 +9,10 @@ import lombok.NoArgsConstructor;
 public class SearchWorkplace {
 
     private String browseText;
+    private Long workplace;
 
-    public SearchWorkplace(String browseText) {
+    public SearchWorkplace(String browseText, Long workplace) {
         this.browseText = browseText;
+        this.workplace = workplace;
     }
 }

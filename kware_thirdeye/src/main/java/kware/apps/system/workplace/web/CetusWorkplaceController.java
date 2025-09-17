@@ -2,6 +2,7 @@ package kware.apps.system.workplace.web;
 
 
 import cetus.bean.AuditBean;
+import cetus.user.UserUtil;
 import kware.apps.system.workplace.service.CetusWorkplaceService;
 import kware.common.config.auth.MenuNavigationManager;
 import lombok.AccessLevel;
@@ -24,6 +25,7 @@ public class CetusWorkplaceController {
     @GetMapping
     public String index(Model model) {
         menuNavigationManager.renderingPage("/system/workplace", "워크플레이스 관리", true, model);
+        model.addAttribute("workplace", UserUtil.getUserWorkplaceUid());
         return "system/workplace/index";
     }
 }

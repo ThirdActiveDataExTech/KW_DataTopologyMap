@@ -16,6 +16,9 @@
           FROM CETUS_WORKPLACE CW
           LEFT JOIN CETUS_USER CU ON CU.UID = CW.REG_UID
          WHERE 1 = 1
+        <if test="@Ognl@isNotEmpty(workplace)">
+           AND CW.UID = #{workplace}
+        </if>
         <if test="@Ognl@isNotEmpty(browseText)">
            AND (CW.NAME LIKE '%' || #{browseText} || '%' OR CU.USER_NM LIKE '%' || #{browseText} || '%' )
         </if>
@@ -31,6 +34,9 @@
           FROM CETUS_WORKPLACE CW
           LEFT JOIN CETUS_USER CU ON CU.UID = CW.REG_UID
          WHERE 1 = 1
+        <if test="@Ognl@isNotEmpty(workplace)">
+           AND CW.UID = #{workplace}
+        </if>
         <if test="@Ognl@isNotEmpty(browseText)">
            AND (CW.NAME LIKE '%' || #{browseText} || '%' OR CU.USER_NM LIKE '%' || #{browseText} || '%' )
         </if>

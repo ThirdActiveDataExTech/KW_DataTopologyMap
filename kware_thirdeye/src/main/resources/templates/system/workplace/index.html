@@ -92,6 +92,8 @@
   <script th:src="@{'/assets/js/page/system/workplace/workplace-list-form.js'}"></script>
   <script th:inline="javascript">
 
+    const workplace = /*[[${workplace}]]*/ null;
+
     /** 모달 닫을때 생기는 warning 해결 **/
     $(document).on('hide.bs.modal', function () {
       if (document.activeElement) {
