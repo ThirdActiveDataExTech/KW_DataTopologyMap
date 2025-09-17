@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/default}">
+
+<th:block layout:fragment="center-image">
+  <th:block th:with="title1=${currentPageName}, title2=${navigation}, leftImg=${centerLeftImage}, rightImg=${centerRightImage}">
+    <th:block th:replace="fragments/center-image :: main-image-title(${title1}, ${title2}, ${leftImg}, ${rightImg})"></th:block>
+  </th:block>
+</th:block>
+
+<th:block layout:fragment="head">
+  <style>
+    .dataTable tr.odd:hover,
+    .dataTable tr.even:hover {
+      cursor: pointer; /* 선택적으로 커서도 포인터로 */
+    }
+  </style>
+  <link rel="stylesheet" th:href="@{'/assets/css/page/system/user-list.css'}"/>
+</th:block>
+
+<th:block layout:fragment="content">
+  <div class="related-product-area pb-100 pt-80"  data-aos="fade-up" data-aos-delay="200">
+    <div class="container">
+      <div class="section-title-2 st-border-center text-center mb-35">
+        <h2>워크플레이스 관리</h2>
+      </div>
+      <hr>
+
+      <div>
+        <!-- s:search -->
+        <form id="search-form-id">
+          <div class="topbar-container">
+            <div class="topbar-left">
+              <span id="total-num"></span>
+              <div class="btn-wrapper">
+                <div class="col-12 col-xl-12 mb-1 mb-lg-0">
+                  <div class="search_wrap">
+                    <input
+                        type="text"
+                        id="search_txt1"
+                        class="form-control round border_line custom-input"
+                        name="browseText"
+                        placeholder="워크플레이스명, 등록자 검색"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="topbar-right">
+              <div class="btn-wrapper">
+                <button type="button" class="custom-button m-2" id="new-btn">워크플레이스<br>추가</button>
+              </div>
+            </div>
+          </div>
+        </form>
+        <!-- e:search -->
+        <!-- s:list -->
+        <div class="">
+          <div class="table-responsive text-nowrap">
+            <table class="table table-bordered" id="workplace-table">
+              <thead>
+                <tr>
+                  <th>번호</th>
+                  <th>워크플레이스명</th>
+                  <th>사용자수</th>
+                  <th>등록일</th>
+                  <th>등록자</th>
+                  <th>워크플레이스 수정</th>
+                  <th>부서 관리</th>
+                  <th>직급 관리</th>
+                  <th>소속 관리</th>
+                </tr>
+              </thead>
+            </table>
+          </div>
+        </div>
+        <!-- e:list -->
+      </div>
+
+    </div>
+  </div>
+
+  <th:block th:replace="system/workplace/modal/workplace-save"></th:block>
+  <th:block th:replace="system/workplace/modal/position-modal"></th:block>
+
+</th:block>
+
+<th:block layout:fragment="script">
+  <script th:src="@{'/assets/js/page/system/workplace/workplace-list-form.js'}"></script>
+  <script th:inline="javascript">
+
+    /** 모달 닫을때 생기는 warning 해결 **/
+    $(document).on('hide.bs.modal', function () {
+      if (document.activeElement) {
+        $(document.activeElement).blur();
+      }
+    });
+
+    $(document).ready(function() {
+
+      workplaceJS.initTable();
+
+      $("#new-btn").on('click', function () {
+        workplaceJS.workplaceModalOpen(null);
+      });
+
+      /* 검색 이벤트 */
+      $('#search_txt1').keypress(function (e) {
+        if (e.keyCode === 13 || e.keyCode === 10 || e.key === 'Enter') {
+          e.preventDefault();
+          workplaceJS.searchTable();
+        }
+      });
+
+      $(document).on("click", "#workplace-mng", function () {
+        const uid = $(this).data("uid");
+        workplaceJS.workplaceModalOpen(uid);
+      });
+
+      $(document).on("click", "#dept-mng", function () {
+        const uid = $(this).data("uid");
+        console.log(">> dept-mng : ", uid)
+      });
+
+      // 직급 수정
+      $(document).on("click", "#position-mng", function () {
+        workplaceJS.position.workplaceUid = $(this).data("uid");
+        workplaceJS.position.positionModalOpen();
+      });
+
+      $(document).on("click", "#group-mng", function () {
+        const uid = $(this).data("uid");
+        console.log(">> group-mng : ", uid)
+      });
+
+      // 모달 닫기
+      $('#workplaceSaveModal').on('hidden.bs.modal', function () {
+        workplaceJS.workplaceModalHide();
+      });
+
+      // 취소
+      $("#workplace-cancel-btn").on('click', function () {
+        $("#workplaceSaveModal").modal('hide');
+      });
+
+      // 저장
+      $("#workplace-save-btn").on('click', function () {
+        workplaceJS.workplaceFormSave();
+      });
+
+    });
+
+    $(document).ready(function() {
+
+      // 직급 추가
+      $('#add-position').on('click', function(e) {
+        e.preventDefault();
+        workplaceJS.position.addPositionEvent();
+      });
+
+      // 삭제
+      $(document).on('click', '#position-list .delete-position', function(e) {
+        e.preventDefault();
+        workplaceJS.position.deletePositionEvent($(this));
+      });
+
+      // 드래그
+      $(document).on('dragstart', '#position-list li', function () {
+        workplaceJS.position.draggedItem = this;
+        $(this).addClass('dragging');
+      });
+
+      // 드롭
+      $(document).on('dragend', '#position-list li', function () {
+        $(this).removeClass('dragging');
+        workplaceJS.position.draggedItem = null;
+        workplaceJS.position.positionModalUpdateIndex();
+      });
+
+      // 드래깅
+      workplaceJS.position.listDom.on('dragover', function(e) {
+        e.preventDefault();
+        workplaceJS.position.positionDragOverEvent(e);
+      });
+
+      // 저장
+      $("#position-save-btn").on('click', function () {
+        workplaceJS.position.positionModalSave();
+      });
+
+      // 모달 닫기
+      $('#positionSaveModal').on('hidden.bs.modal', function () {
+        workplaceJS.position.positionModalHide();
+      });
+
+      // 취소
+      $("#position-cancel-btn").on('click', function () {
+        $("#positionSaveModal").modal('hide');
+      });
+
+    });
+
+  </script>
+</th:block>
+</html>

@@ -1,4 +1,77 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="cetusWorkplace">
+
+    <select id="getWorkplacePage" parameterType="SearchWorkplace" resultType="WorkplaceList">
+        /* cetusWorkplace.getWorkplacePage */
+        SELECT CW.UID
+              ,CW.NAME
+              ,( SELECT COUNT(*)
+                   FROM CETUS_WORKPLACE_USER CWU
+                  WHERE CWU.WORKPLACE_UID = CW.UID
+              ) AS USER_CNT
+              ,CW.REG_UID
+              ,CU.USER_NM AS REG_NM
+              ,TO_CHAR(CW.REG_DT, 'YYYY-MM-DD') AS REG_DT
+          FROM CETUS_WORKPLACE CW
+          LEFT JOIN CETUS_USER CU ON CU.UID = CW.REG_UID
+         WHERE 1 = 1
+        <if test="@Ognl@isNotEmpty(browseText)">
+           AND (CW.NAME LIKE '%' || #{browseText} || '%' OR CU.USER_NM LIKE '%' || #{browseText} || '%' )
+        </if>
+         ORDER BY CW.REG_DT DESC
+        <if test="@Ognl@isNotEmpty(startNumber) and  @Ognl@isNotEmpty(endNumber)">
+        OFFSET ${startNumber} LIMIT ${endNumber}
+        </if>
+    </select>
+
+    <select id="getWorkplacePageCount" parameterType="SearchWorkplace" resultType="int">
+        /* cetusWorkplace.getWorkplacePageCount */
+        SELECT COUNT(*)
+          FROM CETUS_WORKPLACE CW
+          LEFT JOIN CETUS_USER CU ON CU.UID = CW.REG_UID
+         WHERE 1 = 1
+        <if test="@Ognl@isNotEmpty(browseText)">
+           AND (CW.NAME LIKE '%' || #{browseText} || '%' OR CU.USER_NM LIKE '%' || #{browseText} || '%' )
+        </if>
+    </select>
+
+    <select id="view" resultType="CetusWorkplace" parameterType="Long">
+        /* cetusWorkplace.view  */
+        SELECT UID
+              ,NAME
+              ,REG_UID
+              ,REG_DT
+              ,UPDT_UID
+              ,UPDT_DT
+          FROM CETUS_WORKPLACE
+         WHERE UID = #{uid}
+    </select>
+
+    <insert id="insert" parameterType="CetusWorkplace">
+        /* cetusWorkplace.insert */
+        INSERT INTO CETUS_WORKPLACE (
+             NAME
+            ,REG_UID
+            ,REG_DT
+            ,UPDT_UID
+            ,UPDT_DT
+        ) VALUES (
+             #{name}
+            ,#{regUid}
+            ,NOW()
+            ,#{updtUid}
+            ,NOW()
+        )
+    </insert>
+
+    <update id="update" parameterType="CetusWorkplace">
+        /* cetusWorkplace.update */
+        UPDATE CETUS_WORKPLACE
+           SET NAME = #{name}
+              ,UPDT_UID = #{updtUid}
+              ,UPDT_DT = NOW()
+         WHERE UID = #{uid}
+    </update>
+
 </mapper>

@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="cetusPosition">
 
-    <select id="getPositionList" parameterType="Long" resultType="GroupList">
+    <select id="getPositionList" parameterType="Long" resultType="PositionList">
         /* cetusPosition.getPositionList */
         SELECT UID
               ,NAME
@@ -11,4 +11,64 @@
            AND USE_AT = 'Y'
          ORDER BY SORT_ORDER
     </select>
+
+    <select id="getPositionListWithUser" parameterType="Long" resultType="PositionListWithUser">
+        /* cetusPosition.getPositionListWithUser */
+        SELECT CP.UID
+              ,CP.NAME
+              ,CASE
+                   WHEN EXISTS (
+                      SELECT 1
+                        FROM CETUS_POSITION_USER CPU
+                       WHERE CPU.POSITION_UID = CP.UID
+                   ) THEN 'Y'
+               ELSE 'N'
+            END AS HAS_USER
+          FROM CETUS_POSITION CP
+         WHERE CP.WORKPLACE_UID = #{workplaceUid}
+           AND CP.USE_AT = 'Y'
+         ORDER BY CP.SORT_ORDER
+    </select>
+
+    <insert id="insert" parameterType="CetusPosition">
+        /* cetusPosition.insert */
+        INSERT INTO CETUS_POSITION (
+             WORKPLACE_UID
+            ,NAME
+            ,SORT_ORDER
+            ,USE_AT
+            ,REG_DT
+            ,REG_UID
+            ,UPDT_DT
+            ,UPDT_UID
+        ) VALUES (
+             #{workplaceUid}
+            ,#{name}
+            ,#{sortOrder}
+            ,'Y'
+            ,NOW()
+            ,#{regUid}
+            ,NOW()
+            ,#{updtUid}
+        )
+    </insert>
+
+    <update id="update" parameterType="CetusPosition">
+        /* cetusPosition.update */
+        UPDATE CETUS_POSITION
+           SET NAME = #{name}
+              ,SORT_ORDER = #{sortOrder}
+              ,UPDT_UID = #{updtUid}
+              ,UPDT_DT = NOW()
+         WHERE UID = #{uid}
+    </update>
+
+    <update id="updateUseAtToN" parameterType="CetusPosition">
+        /* cetusPosition.updateUseAtToN */
+        UPDATE CETUS_POSITION
+           SET USE_AT = 'N'
+              ,UPDT_UID = #{updtUid}
+              ,UPDT_DT = NOW()
+         WHERE UID = #{uid}
+    </update>
 </mapper>

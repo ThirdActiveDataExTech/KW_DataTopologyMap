@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<div class="modal modal-primary fade text-start" id="workplaceSaveModal" tabindex="-1" aria-labelledby="workplaceSaveModalTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="workplaceSaveModalTitle">워크플레이스 추가</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="workplace-form" class="needs-validation" novalidate="">
+                    <div>
+                        <label for="workplaceNm">워크플레이스명</label>
+                        <input type="text" id="workplaceNm" name="workplaceNm" class="form-control" required/>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer" style="justify-content: center">
+                <button type="button" class="custom-button" id="workplace-cancel-btn">취소</button>
+                <button type="button" class="custom-button" id="workplace-save-btn" >적용</button>
+            </div>
+        </div>
+    </div>
+</div>
+</html>

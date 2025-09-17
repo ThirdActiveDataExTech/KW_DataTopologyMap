@@ -115,7 +115,7 @@
                 "height": "120px",
                 "min-width": "120px"
             });
-            const src = (dataObj['regProfileId']) ? `/api/portal/files/view?dataObj=${dataObj['regProfileId']}` : '/assets/images/page/detail/profile_noimage.png'
+            const src = (dataObj['regProfileId']) ? `/api/portal/files/view?dataObj=${dataObj['regProfileId']}` : '/assets/images/profile/profile_noimage.png'
             const commentUserImgEle = $("<img/>", {"src" : src})
                 .css({
                     "background" : "#f4f4f4",
@@ -123,7 +123,7 @@
                     "width" : "120px",
                     "height": "120px"
                 })
-                .attr("onerror", "this.src='/assets/images/page/detail/profile_noimage.png'");
+                .attr("onerror", "this.src='/assets/images/profile/profile_noimage.png'");
             commentUserImgWrapEle.append(commentUserImgEle);
 
             // 2. 컨텐츠 영역

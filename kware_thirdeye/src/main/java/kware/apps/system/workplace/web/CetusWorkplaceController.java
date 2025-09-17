@@ -1,0 +1,29 @@
+package kware.apps.system.workplace.web;
+
+
+import cetus.bean.AuditBean;
+import kware.apps.system.workplace.service.CetusWorkplaceService;
+import kware.common.config.auth.MenuNavigationManager;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+@Controller
+@RequiredArgsConstructor
+@RequestMapping("/system/workplace")
+public class CetusWorkplaceController {
+
+    private final CetusWorkplaceService service;
+    private final MenuNavigationManager menuNavigationManager;
+
+    @GetMapping
+    public String index(Model model) {
+        menuNavigationManager.renderingPage("/system/workplace", "워크플레이스 관리", true, model);
+        return "system/workplace/index";
+    }
+}
