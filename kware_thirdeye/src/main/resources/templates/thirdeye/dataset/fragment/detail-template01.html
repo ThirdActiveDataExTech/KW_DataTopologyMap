@@ -21,6 +21,7 @@
             <div class="description-review-topbar sub-tab-bar nav" data-aos="fade-up" data-aos-delay="200">
                 <a class="active" data-bs-toggle="tab" href="#des-details1-1"> 데이터 미리보기 </a>
                 <a data-bs-toggle="tab" href="#des-details1-2" class=""> 샘플 시각화 </a>
+                <a data-bs-toggle="tab" href="#des-details1-3" class=""> 메타데이터 </a>
             </div>
 
             <div class="tab-content">
@@ -59,8 +60,232 @@
                     </div>
                 </div>
 
+                <div id="des-details1-3" class="tab-pane">
+                    <div class="row">
+                        <div class="col-lg-12" style="padding-bottom: 25px;">
+                            <div>
+                                <div class="metadata-download-box" id="metadata-download-box">
+                                    <div class="metadata-info">
+                                        <span class="metadata-badge" id="metadata-badge">CSV</span>
+                                        <span class="metadata-desc" id="metadata-desc">소설/웹소설/잡지 등 공문, 성가/찬송가 정보</span>
+                                    </div>
+                                    <button class="justify-content-center metadata-btn" id="metadata-download-btn">
+                                        <a class="justify-content-center" title="download" href="javascript:void(0);">
+                                            <i class="ti-cloud-down"></i>
+                                        </a>
+                                        <span class="justify-content-center">데이터 다운로드</span>
+                                    </button>
+                                </div>
+                                <!-- 과거 데이터 영역 -->
+                                <div class="history-box">
+                                    <h3 class="history-title" id="metadata-file-history-title">주기성 과거 데이터 (44건)</h3>
+                                    <!-- 스크롤 래퍼 -->
+                                    <div class="history-table-wrapper">
+                                        <table class="history-table" id="metadata-history-table">
+                                            <thead>
+                                                <tr>
+                                                    <th>파일명</th>
+                                                    <th>등록일</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="metadata-history-table-body">
+                                                <tr data-id="1">
+                                                    <td>소설웹소설_데이터_20240923.csv</td>
+                                                    <td>2024-09-23</td>
+                                                </tr>
+                                                <tr data-id="2">
+                                                    <td>소설웹소설_데이터_20240910.csv</td>
+                                                    <td>2024-09-10</td>
+                                                </tr>
+                                                <tr data-id="3">
+                                                    <td>소설웹소설_데이터_20240830.csv</td>
+                                                    <td>2024-08-30</td>
+                                                </tr>
+                                                <tr data-id="4">
+                                                    <td>소설웹소설_데이터_20240830.csv</td>
+                                                    <td>2024-08-30</td>
+                                                </tr>
+                                                <tr data-id="5">
+                                                    <td>소설웹소설_데이터_20240830.csv</td>
+                                                    <td>2024-08-30</td>
+                                                </tr>
+                                                <tr data-id="6">
+                                                    <td>소설웹소설_데이터_20240830.csv</td>
+                                                    <td>2024-08-30</td>
+                                                </tr>
+                                                <tr data-id="7">
+                                                    <td>소설웹소설_데이터_20240830.csv</td>
+                                                    <td>2024-08-30</td>
+                                                </tr>
+                                                <tr data-id="8">
+                                                    <td>소설웹소설_데이터_20240830.csv</td>
+                                                    <td>2024-08-30</td>
+                                                </tr>
+                                                <tr data-id="9">
+                                                    <td>소설웹소설_데이터_20240830.csv</td>
+                                                    <td>2024-08-30</td>
+                                                </tr>
+                                                <tr data-id="10">
+                                                    <td>소설웹소설_데이터_20240830.csv</td>
+                                                    <td>2024-08-30</td>
+                                                </tr>
+                                                <tr data-id="11">
+                                                    <td>소설웹소설_데이터_20240830.csv</td>
+                                                    <td>2024-08-30</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
             </div>
         </div>
     </div>
+
+    <th:block th:replace="thirdeye/dataset/modal/metadata-file-info"></th:block>
+
+    <style>
+        /* CSV 다운로드 전체 박스 */
+        .metadata-download-box {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 16px;
+            padding: 12px 16px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            background-color: #fff;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.05); /* 살짝 그림자 */
+        }
+        .metadata-badge {
+            display: inline-block;
+            background-color: #1a73e8;
+            color: #fff;
+            font-size: 13px;
+            font-weight: bold;
+            padding: 2px 8px;
+            border-radius: 4px;
+            margin-right: 8px;
+        }
+        .metadata-desc {
+            font-size: 14px;
+            color: #333;
+        }
+        .metadata-btn {
+            background-color: #d7e4f5;
+            color: #1a3e6e;
+            font-size: 14px;
+            border: none;
+            border-radius: 4px;
+            padding: 8px 14px;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+        .metadata-btn i {
+            color: #1a3e6e;
+            padding: 5px;
+        }
+        .metadata-btn:hover {
+            color: #333;
+            font-weight: bold;
+        }
+
+        /* 과거 데이터 영역 */
+        .history-box {
+            margin-top: 20px;
+            border: 1px solid #ddd;
+            border-radius: 10px; /* 더 둥글게 */
+            padding: 16px;
+            background-color: #fff;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.05); /* 살짝 그림자 */
+        }
+        /* 타이틀 */
+        .history-title {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 12px;
+            color: #222;
+        }
+        /* 스크롤 영역 래퍼 */
+        .history-table-wrapper {
+            max-height: 250px; /* 고정 높이 */
+            overflow-y: auto;
+            border-radius: 6px;
+            border: 1px solid #ddd;
+        }
+        /* 테이블 */
+        .history-table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 400px;
+        }
+        /* 헤더 */
+        .history-table th {
+            background-color: #f8f9fb;
+            font-weight: 600;
+            border-bottom: 1px solid #ddd;
+            border-right: 1px solid #ddd; /* 세로 구분선 */
+            padding: 10px;
+            font-size: 14px;
+            text-align: left;
+            position: sticky; /* 스크롤 시 헤더 고정 */
+            top: 0;
+            z-index: 1;
+        }
+        /* 셀 */
+        .history-table td {
+            border-bottom: 1px solid #eee;
+            border-right: 1px solid #eee; /* 세로 구분선 */
+            padding: 10px;
+            font-size: 14px;
+            color: #444;
+        }
+        .history-table td:last-child {
+            border-right: none; /* 마지막 열은 구분선 제거 */
+        }
+        /* 행 hover 효과 */
+        .history-table tbody tr {
+            cursor: pointer;
+            transition: background-color 0.2s ease, color 0.2s ease;
+        }
+        .history-table tbody tr:hover {
+            background-color: #eef4fc;
+            color: #000;
+        }
+
+    </style>
+    <style>
+        #metadata-file-info table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+        }
+        #metadata-file-info th {
+            background-color: #f0f0f0;
+            color: #333;
+            text-align: left;
+            padding: 8px 12px;
+            border-bottom: 2px solid #ccc;
+        }
+        #metadata-file-info td {
+            padding: 8px 12px;
+            border-bottom: 1px solid #eee;
+            vertical-align: top;
+        }
+        #metadata-file-info tr:nth-child(odd) td {
+            background-color: #fafafa;
+        }
+        #metadata-file-info tr:last-child td {
+            border-bottom: none;
+        }
+        #metadata-file-info td:nth-child(even) { /* 값 컬럼 강조 */
+            font-weight: 500;
+            color: #555;
+        }
+    </style>
 </th:block>
 </html>

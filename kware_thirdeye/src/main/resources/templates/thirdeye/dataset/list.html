@@ -48,7 +48,7 @@
                         </div>
                         <div class="page-topbar-right">
                             <div class="page-sorting-area">
-                                <select class="nice-select nice-select-style-1">
+                                <select class="nice-select nice-select-style-1" id="order-select">
                                     <option value="title">이름순</option>
                                     <option value="approve">승인순</option>
                                     <option value="rating">별점순</option>
@@ -106,7 +106,6 @@
                                 </div>
                                 <div id="categories" class="sidebar-widget-color sidebar-list-style"></div>
                             </div>
-
                             <div class="sidebar-widget sidebar-widget-border mb-40 pb-35" data-aos="fade-up"
                                  data-aos-delay="200">
                                 <div class="sidebar-widget-title mb-25">
@@ -114,7 +113,6 @@
                                 </div>
                                 <div id="provider" class="sidebar-widget-color sidebar-list-style"></div>
                             </div>
-
                             <div class="sidebar-widget sidebar-widget-border mb-40 pb-35" data-aos="fade-up"
                                  data-aos-delay="200">
                                 <div class="sidebar-widget-title mb-25">
@@ -209,7 +207,7 @@
             });
 
             // 5. 정렬순서 변경
-            $('.nice-select').change(function () {
+            $('#order-select').change(function () {
                 listJS.sort = $(this).val();
                 listJS.fnPage(1);
             });
