@@ -11,4 +11,64 @@
            AND USE_AT = 'Y'
          ORDER BY SORT_ORDER
     </select>
+
+    <select id="getGroupListByWorkplaceUid" resultType="GroupListWithUser" parameterType="Long">
+        /* cetusGroup.getGroupListByWorkplaceUid */
+        SELECT CG.UID
+              ,CG.NAME
+              ,CASE
+                  WHEN EXISTS (
+                      SELECT 1
+                        FROM CETUS_GROUP_USER CGU
+                       WHERE CGU.GROUP_UID = CG.UID
+                  ) THEN 'Y'
+               ELSE 'N'
+            END AS HAS_USER
+        FROM CETUS_GROUP CG
+        WHERE CG.WORKPLACE_UID = #{workplaceUid}
+          AND CG.USE_AT = 'Y'
+        ORDER BY CG.SORT_ORDER
+    </select>
+
+    <insert id="insert" parameterType="CetusGroup">
+        /* cetusGroup.insert */
+        INSERT INTO CETUS_GROUP (
+             WORKPLACE_UID
+            ,NAME
+            ,SORT_ORDER
+            ,USE_AT
+            ,REG_DT
+            ,REG_UID
+            ,UPDT_DT
+            ,UPDT_UID
+        ) VALUES (
+             #{workplaceUid}
+            ,#{name}
+            ,#{sortOrder}
+            ,'Y'
+            ,NOW()
+            ,#{regUid}
+            ,NOW()
+            ,#{updtUid}
+        )
+    </insert>
+
+    <update id="update" parameterType="CetusGroup">
+        /* cetusGroup.update */
+        UPDATE CETUS_GROUP
+           SET NAME = #{name}
+              ,SORT_ORDER = #{sortOrder}
+              ,UPDT_UID = #{updtUid}
+              ,UPDT_DT = NOW()
+         WHERE UID =#{uid}
+    </update>
+
+    <update id="updateUseAtToN" parameterType="CetusGroup">
+        /* cetusGroup.updateUseAtToN */
+        UPDATE CETUS_GROUP
+           SET USE_AT = 'N'
+              ,UPDT_UID = #{updtUid}
+              ,UPDT_DT = NOW()
+         WHERE UID = #{uid}
+    </update>
 </mapper>

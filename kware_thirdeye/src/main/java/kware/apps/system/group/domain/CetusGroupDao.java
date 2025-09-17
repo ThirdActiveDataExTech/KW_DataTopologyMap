@@ -3,6 +3,7 @@ package kware.apps.system.group.domain;
 
 import cetus.dao.SuperDao;
 import kware.apps.system.group.dto.response.GroupList;
+import kware.apps.system.group.dto.response.GroupListWithUser;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -14,8 +15,15 @@ public class CetusGroupDao extends SuperDao<CetusGroup> {
         super("cetusGroup");
     }
 
-
     public List<GroupList> getGroupList(Long workplaceUid) {
         return selectList("getGroupList", workplaceUid);
+    }
+
+    public List<GroupListWithUser> getGroupListByWorkplaceUid(Long workplaceUid) {
+        return selectList("getGroupListByWorkplaceUid", workplaceUid);
+    }
+
+    public void updateUseAtToN(CetusGroup bean) {
+        update("updateUseAtToN", bean);
     }
 }

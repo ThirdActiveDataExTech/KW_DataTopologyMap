@@ -83,6 +83,7 @@
 
   <th:block th:replace="system/workplace/modal/workplace-save"></th:block>
   <th:block th:replace="system/workplace/modal/position-modal"></th:block>
+  <th:block th:replace="system/workplace/modal/group-modal"></th:block>
 
 </th:block>
 
@@ -130,8 +131,8 @@
       });
 
       $(document).on("click", "#group-mng", function () {
-        const uid = $(this).data("uid");
-        console.log(">> group-mng : ", uid)
+        workplaceJS.group.workplaceUid = $(this).data("uid");
+        workplaceJS.group.groupModalOpen();
       });
 
       // 모달 닫기
@@ -197,6 +198,56 @@
       // 취소
       $("#position-cancel-btn").on('click', function () {
         $("#positionSaveModal").modal('hide');
+      });
+
+    });
+
+    $(document).ready(function() {
+
+      // 소속 추가
+      $('#add-group').on('click', function(e) {
+        e.preventDefault();
+        workplaceJS.group.addGroupEvent();
+      });
+
+      // 삭제
+      $(document).on('click', '#group-list .delete-group', function(e) {
+        e.preventDefault();
+        workplaceJS.group.deleteGroupEvent($(this));
+      });
+
+      // 드래그
+      $(document).on('dragstart', '#group-list li', function () {
+        workplaceJS.group.draggedItem = this;
+        $(this).addClass('dragging');
+      });
+
+      // 드롭
+      $(document).on('dragend', '#group-list li', function () {
+        $(this).removeClass('dragging');
+        workplaceJS.group.draggedItem = null;
+        workplaceJS.group.groupModalUpdateIndex();
+      });
+
+      // 드래깅
+      workplaceJS.group.listDom.on('dragover', function(e) {
+        e.preventDefault();
+        workplaceJS.group.groupDragOverEvent(e);
+      });
+
+      // 저장
+      $("#group-save-btn").on('click', function () {
+        workplaceJS.group.groupModalSave();
+      });
+
+      // 모달 닫기
+      $('#groupSaveModal').on('hidden.bs.modal', function () {
+        workplaceJS.group.groupModalHide();
+      });
+
+      // 취소
+      $("#group-cancel-btn").on('click', function () {
+        $("#groupSaveModal").modal('hide');
       });
 
     });
