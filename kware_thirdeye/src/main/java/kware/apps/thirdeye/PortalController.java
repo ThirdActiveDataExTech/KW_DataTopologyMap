@@ -2,15 +2,14 @@ package kware.apps.thirdeye;
 
 
 import cetus.user.UserUtil;
-import kware.apps.system.form.service.CetusFormColumnsService;
 import kware.apps.system.user.dto.response.UserFullInfo;
 import kware.apps.system.user.service.CetusUserService;
 import kware.apps.thirdeye.bbsctt.dto.response.BbscttRecentList;
 import kware.apps.thirdeye.bbsctt.service.CetusBbscttService;
 import kware.apps.thirdeye.dataset.dto.response.DatasetDetailView;
 import kware.apps.thirdeye.dataset.service.CetusDatasetService;
-import kware.common.config.auth.MenuNavigationManager;
 import kware.common.config.auth.dto.SessionUserInfo;
+import kware.common.config.auth.menu.MenuNavigationManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -27,29 +26,9 @@ import java.util.List;
 public class PortalController {
 
     private final CetusUserService cetusUserService;
-    private final CetusFormColumnsService columnsService;
     private final MenuNavigationManager menuNavigationManager;
     private final CetusDatasetService datasetService;
     private final CetusBbscttService bbscttService;
-
-    /*@GetMapping("/home")
-    public String home(Model model) {
-        menuNavigationManager.renderingPage("/portal/home", "HOME", true, model);
-        List<BbscttRecentList> recentBbsctt = bbscttService.findRecentBbsctt(5);
-        recentBbsctt.forEach(recent -> {
-            // 1. 게시글 내용
-            String str = HtmlUtil.stripHtmlPreserveLines(recent.getBbscttCnt());
-            String customCnt = (str.length() <= 70) ? str : str.substring(0, 70) + "...";
-            recent.setBbscttCnt(customCnt);
-
-            // 2. 날짜
-            Map<String, String> map = DateTimeUtil.dateToEng(recent.getRegDt());
-            recent.setMonthDay(map.get("month"), map.get("day"));
-        });
-        model.addAttribute("recentBbsctt", recentBbsctt);
-
-        return "asp/page/home";
-    }*/
 
     @GetMapping("/home")
     public String home(Model model) {

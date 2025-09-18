@@ -11,7 +11,7 @@ import kware.apps.system.bbs.service.CetusBbsService;
 import kware.apps.system.position.service.CetusPositionService;
 import kware.apps.system.user.dto.response.UserFullInfo;
 import kware.apps.system.user.service.CetusUserService;
-import kware.common.config.auth.MenuNavigationManager;
+import kware.common.config.auth.menu.MenuNavigationManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

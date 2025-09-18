@@ -4,7 +4,7 @@ package kware.apps.system.form.web;
 import kware.apps.system.form.dto.request.FormGroup;
 import kware.apps.system.form.dto.response.ElementType;
 import kware.apps.system.form.service.CetusFormColumnsService;
-import kware.common.config.auth.MenuNavigationManager;
+import kware.common.config.auth.menu.MenuNavigationManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

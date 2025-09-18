@@ -1,4 +1,4 @@
-package kware.common.config.auth;
+package kware.common.config.auth.menu;
 
 import kware.apps.system.menu.domain.CetusMenu;
 import kware.apps.system.menu.dto.response.SessionMenuList;

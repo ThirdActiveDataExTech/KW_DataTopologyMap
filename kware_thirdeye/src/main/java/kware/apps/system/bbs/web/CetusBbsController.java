@@ -3,7 +3,7 @@ package kware.apps.system.bbs.web;
 
 import kware.apps.system.bbs.service.CetusBbsService;
 import kware.apps.thirdeye.enumstatus.BbsTpCd;
-import kware.common.config.auth.MenuNavigationManager;
+import kware.common.config.auth.menu.MenuNavigationManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

@@ -8,7 +8,7 @@ import kware.apps.system.menu.domain.CetusMenuInfoDao;
 import kware.apps.system.menu.dto.request.*;
 import kware.apps.system.menu.dto.response.MenuTreeList;
 import kware.apps.system.menu.dto.response.SessionMenuList;
-import kware.common.config.auth.MenuManager;
+import kware.common.config.auth.menu.MenuManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

@@ -119,8 +119,9 @@ public class CommonFileService {
             // 3. file log
             SessionUserInfo user = UserUtil.getUser(req);
             CommonFileLog commonFileLog = new CommonFileLog(commonFile.getFileUid(), commonFile.getFileId());
-            commonFileLog.setWorkerUid(user != null ? user.getUid().toString() : WebUtil.getIpAddress(req));
-            commonFileLog.setWorkerNm(user != null ? user.getUserNm() : WebUtil.getIpAddress(req));
+            String workerUid = user != null ? user.getUid().toString() : WebUtil.getIpAddress(req);
+            String workerNm = user != null ? user.getUserNm() : WebUtil.getIpAddress(req);
+            commonFileLog.setWorkerInfo(workerUid, workerNm);
 
             // 4. insert and update download count
             dao.increaseDownCnt(commonFile);
@@ -336,45 +337,5 @@ public class CommonFileService {
         cFile.setFilePath(absolutePath);
         //cFile.setFileUrl(makeUr(absolutePath));
         return cFile;
-    }
-
-    /**
-     * 논리적 파일 삭제: CommonFile의 FileId 필수
-     */
-    public int deleteFile(CommonFile cFile) {
-        if (cFile.getFileId() != null)
-            return dao.delete(cFile);
-        else {
-            log.error("Error 원인: FileId is null");
-            return -1;
-        }
-    }
-
-
-    /**
-     * default storage로 데이터를 저장
-     */
-    public int insert(CommonFile bean) {
-        try {
-            bean = moveToDetaultStorage(bean);
-            bean.setSaved(CommonFileState.Y.name());
-        } catch (IOException e) {
-            log.error("insert moveToDefaultStroage Error", e);
-        }
-        return dao.insert(bean);
-    }
-
-    /**
-     * request storage로 데이터를 저장
-     */
-    public int insert(CommonFile bean, String absolutePath) {
-        try {
-            bean = moveToRequestStorage(bean, absolutePath);
-            bean.setSaved(CommonFileState.Y.name());
-        } catch (IOException e) {
-            log.error("insert moveToRequestStorage Error", e);
-        }
-
-        return dao.insert(bean);
     }
 }

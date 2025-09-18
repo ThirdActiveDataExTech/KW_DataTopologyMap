@@ -60,7 +60,7 @@ public class ExcelCreate {
             file = excel.writeWorkBookToFile(cetusConfig.getDownloadPath(), fileName);
             cetusFileService.updateDownloadFile(fileUid, file);
 
-        } catch (Exception e) { // {IOException}보다 넓게
+        } catch (Exception e) {
             log.error("엑셀 생성 중 예외 발생 - fileUid: {}, msg: {}", fileUid, e.getMessage(), e);
             try {
                 cetusFileService.deleteNotDownloadFile(fileUid);

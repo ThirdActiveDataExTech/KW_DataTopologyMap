@@ -33,15 +33,10 @@ public class CetusInviteService {
 
         String token = StringUtil.random(10);
         LocalDateTime expirationDate = LocalDateTime.now().plus(5, ChronoUnit.MINUTES);
-
-
-        request.setUrl(token);
-        request.setExpirationDate(expirationDate);
-        request.setUseAt("N");
+        request.setInviteInfo(token, expirationDate);
         dao.insertInvite(request);
 
         String signupUrl = baseUrl + "/thirdeye/invite/validate?token=" + URLEncoder.encode(token, StandardCharsets.UTF_8);
-
         String subject = "[써드파티] 회원 가입 초대";
         StringBuilder messageCn = new StringBuilder();
         messageCn.append("<!DOCTYPE html>\r\n")

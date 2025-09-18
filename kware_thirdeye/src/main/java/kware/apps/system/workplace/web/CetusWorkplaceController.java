@@ -1,13 +1,9 @@
 package kware.apps.system.workplace.web;
 
 
-import cetus.bean.AuditBean;
 import cetus.user.UserUtil;
 import kware.apps.system.workplace.service.CetusWorkplaceService;
-import kware.common.config.auth.MenuNavigationManager;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import kware.common.config.auth.menu.MenuNavigationManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

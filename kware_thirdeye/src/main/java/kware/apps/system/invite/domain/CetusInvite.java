@@ -4,13 +4,10 @@ import cetus.bean.AuditBean;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 import java.time.LocalDateTime;
 
-@Getter
-@Setter
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
+@Getter @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class CetusInvite extends AuditBean {
 
     private Long uid;
@@ -19,4 +16,8 @@ public class CetusInvite extends AuditBean {
     private LocalDateTime expirationDate;
     private String useAt;
 
+    public void setInviteInfo(String url, LocalDateTime expirationDate) {
+        this.url = url;
+        this.expirationDate = expirationDate;
+    }
 }

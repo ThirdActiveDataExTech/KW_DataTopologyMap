@@ -1,4 +1,4 @@
-package kware.common.config.auth;
+package kware.common.config.auth.menu;
 
 import cetus.user.UserUtil;
 import kware.apps.system.menu.domain.CetusMenu;

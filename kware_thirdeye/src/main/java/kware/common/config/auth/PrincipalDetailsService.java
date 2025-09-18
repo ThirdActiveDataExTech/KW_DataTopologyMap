@@ -10,6 +10,7 @@ import kware.apps.system.user.dto.response.UserFullInfo;
 import kware.apps.system.user.service.CetusUserService;
 import kware.common.config.auth.dto.CetusBrandingInfo;
 import kware.common.config.auth.dto.SessionUserInfo;
+import kware.common.config.auth.menu.MenuManager;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UserDetails;

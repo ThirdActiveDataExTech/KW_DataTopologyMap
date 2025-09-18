@@ -6,6 +6,7 @@ import kware.apps.system.menu.service.CetusMenuInfoService;
 import kware.apps.system.user.service.CetusUserService;
 import kware.common.config.IpWhoService;
 import kware.common.config.auth.handler.*;
+import kware.common.config.auth.menu.MenuManager;
 import kware.common.config.support.SecurityRoles;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.web.servlet.ServletListenerRegistrationBean;
@@ -150,8 +151,8 @@ public class WebSecurityConfig {
     private void logout(LogoutConfigurer<HttpSecurity> logout) {
         logout
             .logoutUrl("/logout")
-            .logoutSuccessUrl(LOGIN) // 로그아웃 성공시 연결되는 주소
-            .invalidateHttpSession(true) // 로그아웃시 저장해 둔 세션 제거
+            .logoutSuccessUrl(LOGIN)        // 로그아웃 성공시 연결되는 주소
+            .invalidateHttpSession(true)    // 로그아웃시 저장해 둔 세션 제거
             .clearAuthentication(true);
     }
 
@@ -172,7 +173,6 @@ public class WebSecurityConfig {
         config.addAllowedHeader("*");
         config.addAllowedMethod("*");
         config.setAllowCredentials(true);
-
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", config);
         return source;

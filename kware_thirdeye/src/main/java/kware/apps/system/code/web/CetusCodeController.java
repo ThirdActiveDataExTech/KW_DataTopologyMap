@@ -2,7 +2,7 @@ package kware.apps.system.code.web;
 
 
 import kware.apps.system.code.service.CetusCodeService;
-import kware.common.config.auth.MenuNavigationManager;
+import kware.common.config.auth.menu.MenuNavigationManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

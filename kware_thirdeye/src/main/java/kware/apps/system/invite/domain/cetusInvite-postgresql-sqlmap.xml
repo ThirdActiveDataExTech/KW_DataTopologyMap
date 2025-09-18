@@ -5,26 +5,26 @@
 
 <mapper namespace="cetusInvite">
     <insert id="insertInvite" parameterType="CetusInvite" useGeneratedKeys="true" keyProperty="uid">
-        /* CetusInvite.insert */
+        /* CetusInvite.insertInvite */
         INSERT INTO CETUS_INVITE_CODE (
-                                 URL
-                                ,EMAIL
-                               ,EXPIRATION_DATE
-                               ,USE_AT
-                               ,REG_DT
-                               ,UPDT_DT
-                               ,REG_UID
-                               ,UPDT_UID
+                URL
+               ,EMAIL
+               ,EXPIRATION_DATE
+               ,USE_AT
+               ,REG_DT
+               ,UPDT_DT
+               ,REG_UID
+               ,UPDT_UID
         ) VALUES (
-                   #{url}
-                 ,#{email}
-                 ,#{expirationDate}
-                 ,#{useAt}
-                 ,NOW()
-                 ,NOW()
-                 ,#{regUid}
-                 ,#{updtUid}
-                 )
+                #{url}
+               ,#{email}
+               ,#{expirationDate}
+               ,'N'
+               ,NOW()
+               ,NOW()
+               ,#{regUid}
+               ,#{updtUid}
+        )
     </insert>
 
     <select id="getInviteByToken" parameterType="String" resultType="CetusInvite">

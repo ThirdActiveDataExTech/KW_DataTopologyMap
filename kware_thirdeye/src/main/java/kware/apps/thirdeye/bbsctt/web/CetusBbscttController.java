@@ -10,7 +10,7 @@ import kware.apps.thirdeye.bbsctt.dto.request.BbscttTpSearch;
 import kware.apps.thirdeye.bbsctt.dto.response.BbscttView;
 import kware.apps.thirdeye.bbsctt.service.CetusBbscttService;
 import kware.apps.thirdeye.enumstatus.BbsTpCd;
-import kware.common.config.auth.MenuNavigationManager;
+import kware.common.config.auth.menu.MenuNavigationManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
