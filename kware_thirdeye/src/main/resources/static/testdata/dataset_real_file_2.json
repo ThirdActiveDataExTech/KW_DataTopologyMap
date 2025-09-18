@@ -1,0 +1,62 @@
+{
+  "datasetId": 2,
+  "title": "소설/웹소설/잡지 XML 데이터",
+  "extension": "XML",
+  "files": [
+    {
+      "datafileId": 1,
+      "fileNm": "소설웹소설_데이터_20240923.xml",
+      "regDt": "2024-09-23"
+    },
+    {
+      "datafileId": 2,
+      "fileNm": "소설웹소설_데이터_20240910.xml",
+      "regDt": "2024-09-10"
+    },
+    {
+      "datafileId": 3,
+      "fileNm": "소설웹소설_데이터_20240830.xml",
+      "regDt": "2024-08-30"
+    },
+    {
+      "datafileId": 4,
+      "fileNm": "소설웹소설_데이터_20240830.xml",
+      "regDt": "2024-08-30"
+    },
+    {
+      "datafileId": 5,
+      "fileNm": "소설웹소설_데이터_20240830.xml",
+      "regDt": "2024-08-30"
+    },
+    {
+      "datafileId": 6,
+      "fileNm": "소설웹소설_데이터_20240830.xml",
+      "regDt": "2024-08-30"
+    },
+    {
+      "datafileId": 7,
+      "fileNm": "소설웹소설_데이터_20240830.xml",
+      "regDt": "2024-08-30"
+    },
+    {
+      "datafileId": 8,
+      "fileNm": "소설웹소설_데이터_20240830.xml",
+      "regDt": "2024-08-30"
+    },
+    {
+      "datafileId": 9,
+      "fileNm": "소설웹소설_데이터_20240830.xml",
+      "regDt": "2024-08-30"
+    },
+    {
+      "datafileId": 10,
+      "fileNm": "소설웹소설_데이터_20240830.xml",
+      "regDt": "2024-08-30"
+    },
+    {
+      "datafileId": 11,
+      "fileNm": "소설웹소설_데이터_20240830.xml",
+      "regDt": "2024-08-30"
+    }
+  ]
+}

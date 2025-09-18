@@ -1,0 +1,12 @@
+{
+  "datasetId": 1,
+  "title": "소설/웹소설/잡지 등 공문, 성가/찬송가 정보",
+  "extension": "CSV",
+  "files": [
+    {
+      "datafileId": 12,
+      "fileNm": "소설웹소설_데이터_20240923.csv",
+      "regDt": "2024-09-23"
+    }
+  ]
+}

@@ -27,12 +27,16 @@ public class SessionUserInfo implements Serializable {
     private String metaData;
     private String useAt;
     private String approveAt;
+
     private Long workplaceUid;
     private String workplaceNm;
+
     private Long groupUid;
     private String groupNm;
+
     private Long deptUid;
     private String deptNm;
+
     private Long positionUid;
     private String positionNm;
 

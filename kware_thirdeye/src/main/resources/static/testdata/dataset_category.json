@@ -1,0 +1,34 @@
+[
+  {
+    "field": "Categories",
+    "fieldName": "카테고리",
+    "items": [
+      { "code": "news", "name": "뉴스" },
+      { "code": "drama", "name": "드라마" },
+      { "code": "entertainment", "name": "예능" },
+      { "code": "documentary", "name": "다큐멘터리" },
+      { "code": "sports", "name": "스포츠" }
+    ]
+  },
+  {
+    "field": "Sources",
+    "fieldName": "출처",
+    "items": [
+      { "code": "sbsNews", "name": "SBS 뉴스팀" },
+      { "code": "sbsDrama", "name": "SBS 드라마팀" },
+      { "code": "sbsEnter", "name": "SBS 예능팀" },
+      { "code": "sbsSports", "name": "SBS 스포츠국" },
+      { "code": "external", "name": "외부 제작 콘텐츠" }
+    ]
+  },
+  {
+    "field": "Types",
+    "fieldName": "타입",
+    "items": [
+      { "code": "video", "name": "동영상 (MP4, AVI…)" },
+      { "code": "subtitle", "name": "자막파일 (SRT, TXT…)" },
+      { "code": "jsonXml", "name": "JSON, XML" },
+      { "code": "image", "name": "JPG, PNG" }
+    ]
+  }
+]

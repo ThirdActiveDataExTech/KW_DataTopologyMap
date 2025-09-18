@@ -23,7 +23,7 @@
 
         pageList() {
             template03JS.pageInit();
-            Http.getJson('/assets/data/testdata/dataset_related_data.json').then((data) => {
+            Http.getJson('/testdata/dataset_related_data.json').then((data) => {
                 template03JS.createSidebar();
                 if (template03JS.keyword) {
                     data = data.filter(item => item['dataTitle'].includes(template03JS.keyword));
@@ -55,7 +55,7 @@
             $container.empty();
             let param = template03JS.param;
 
-            Http.getJson('/assets/data/testdata/dataset_category.json').then(res => {
+            Http.getJson('/testdata/dataset_category.json').then(res => {
 
                 const categories = res
                 categories.forEach( widget => {

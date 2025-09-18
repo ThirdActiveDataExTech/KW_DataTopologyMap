@@ -1,0 +1,62 @@
+[
+  {
+    "datasetId": 1,
+    "title": "사용자 클릭 수, 조회수 기반 인기 콘텐츠",
+    "description": "사용자 클릭 수와 조회수를 기반으로 한 콘텐츠 인기 추이를 보여주는 트렌드 라인 차트입니다.",
+    "metadata": "{\"author\":\"system\",\"createdAt\":\"2025-09-12T09:00:00Z\",\"tags\":[\"trend\",\"clicks\",\"views\"]}"
+  },
+  {
+    "datasetId": 2,
+    "title": "월별 업로드 콘텐츠 수 추이",
+    "description": "월별로 업로드된 콘텐츠 수의 변화를 나타낸 시간 시계열 차트입니다.",
+    "metadata": "{\"owner\":\"analytics-team\",\"version\":2,\"note\":\"월간 기준으로 집계\"}"
+  },
+  {
+    "datasetId": 3,
+    "title": "콘텐츠당 평균 사용 언어 수, 태그 수",
+    "description": "콘텐츠별 평균 사용 언어 수 및 태그 수를 산점도 및 박스플롯으로 시각화한 데이터입니다.",
+    "metadata": "{\"category\":\"statistics\",\"rating\":4.8,\"extra\":{\"method\":\"boxplot+scatter\",\"unit\":\"count\"}}"
+  },
+  {
+    "datasetId": 4,
+    "title": "카테고리별 콘텐츠 수",
+    "description": "카테고리 기준으로 분류된 전체 콘텐츠 수를 보여주는 데이터입니다.",
+    "metadata": "{\"labels\":[\"드라마\",\"예능\",\"뉴스\"],\"generatedBy\":\"system-job-43\"}"
+  },
+  {
+    "datasetId": 5,
+    "title": "연령 등급 분포",
+    "description": "전체 콘텐츠의 연령 등급 분포를 시각화한 자료입니다.",
+    "metadata": "{\"distribution\":{\"ALL\":320,\"12+\":150,\"15+\":80,\"19+\":30}}"
+  },
+  {
+    "datasetId": 6,
+    "title": "연도별 콘텐츠 수",
+    "description": "연도별로 생성된 콘텐츠 수를 보여주는 트렌드 자료입니다.",
+    "metadata": "{\"years\":[2020,2021,2022,2023],\"counts\":[120,140,160,200]}"
+  },
+  {
+    "datasetId": 7,
+    "title": "언어 사용 현황",
+    "description": "콘텐츠 내 사용된 언어의 빈도를 분석한 시각 자료입니다.",
+    "metadata": "{\"languages\":{\"ko\":120,\"en\":90,\"jp\":30},\"highlight\":\"Korean dominates\"}"
+  },
+  {
+    "datasetId": 8,
+    "title": "SBS 뉴스 8 (2024년 5월 10일 방송)",
+    "description": "SBS 뉴스 8",
+    "metadata": "{\"source\":\"SBS\",\"broadcastTime\":\"20:00\",\"anchors\":[\"김철수\",\"이영희\"]}"
+  },
+  {
+    "datasetId": 9,
+    "title": "SBS 연예대상 2023",
+    "description": "SBS 연예대상 2023",
+    "metadata": "{\"event\":\"연예대상\",\"year\":2023,\"winner\":\"유재석\"}"
+  },
+  {
+    "datasetId": 10,
+    "title": "세계 문화유산 소개 다큐",
+    "description": "세계 문화유산 소개 다큐",
+    "metadata": "{\"topic\":\"heritage\",\"duration\":\"90min\",\"countries\":[\"France\",\"China\",\"Korea\"]}"
+  }
+]

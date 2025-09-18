@@ -9,15 +9,15 @@ import kware.apps.thirdeye.dataset.domain.CetusDatasetDao;
 import kware.apps.thirdeye.dataset.dto.request.DatasetSearch;
 import kware.apps.thirdeye.dataset.dto.request.DatasetViewSearch;
 import kware.apps.thirdeye.dataset.dto.response.DatasetDetailView;
-import kware.apps.thirdeye.dataset.dto.response.DatasetView;
 import kware.apps.thirdeye.dataset.dto.response.DatasetList;
+import kware.apps.thirdeye.dataset.dto.response.DatasetView;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
-import java.nio.file.Files;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -67,17 +67,16 @@ public class CetusDatasetService {
     
     // todo 추후 API 호출로 변경
     public Map<Long, DatasetView> findDatasetDetailByAPI() {
-        ClassPathResource resource = new ClassPathResource("static/assets/data/testdata/dataset_list.json");
+        ClassPathResource resource = new ClassPathResource("static/testdata/dataset_list.json");
         List<DatasetView> dataList = new ArrayList<>();
-        try {
-            byte[] jsonData = Files.readAllBytes(resource.getFile().toPath());
+        try (InputStream in = resource.getInputStream()) {  // 여기 수정
             ObjectMapper objectMapper = new ObjectMapper();
-            dataList = objectMapper.readValue(jsonData, new TypeReference<List<DatasetView>>() {});
+            dataList = objectMapper.readValue(in, new TypeReference<List<DatasetView>>() {});
         } catch (IOException e) {
             throw new RuntimeException("데이터셋 JSON 파일 읽기 실패", e);
         }
 
-        // datasetId -> DatasetView 매핑 빠르게 찾기 위해 Map 변환
+        // datasetId -> DatasetView 매핑
         return dataList.stream().collect(Collectors.toMap(DatasetView::getDatasetId, d -> d));
     }
 }
