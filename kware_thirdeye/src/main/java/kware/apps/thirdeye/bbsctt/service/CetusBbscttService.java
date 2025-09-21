@@ -5,6 +5,8 @@ import cetus.bean.Page;
 import cetus.bean.Pageable;
 import cetus.user.UserUtil;
 import cetus.util.CookieUtil;
+import kware.apps.system.bbs.domain.CetusBbs;
+import kware.apps.system.bbs.service.CetusBbsService;
 import kware.apps.thirdeye.bbsctt.domain.CetusBbsctt;
 import kware.apps.thirdeye.bbsctt.domain.CetusBbscttDao;
 import kware.apps.thirdeye.bbsctt.dto.response.BbscttExcelList;
@@ -34,6 +36,7 @@ public class CetusBbscttService {
     private final CetusBbscttDao dao;
     private final CommonFileService commonFileService;
     private final ExcelCreate excelCreate;
+    private final CetusBbsService bbsService;
 
     @Value("${cetus.base-url}")
     private String baseUrl;
@@ -79,7 +82,6 @@ public class CetusBbscttService {
 
     @Transactional
     public void increaseViewCount(Long bbscttUid, HttpServletRequest req, HttpServletResponse res) {
-
         String userId = UserUtil.getUser().getUserId();
         String cookie = CookieUtil.getCookie(req, "bbsctt" + userId);
         if (cookie == null) {
@@ -109,7 +111,9 @@ public class CetusBbscttService {
 
     @Async
     public void renderEXCEL(BbscttExcelSearch search) {
-        search.setBaseUrl(baseUrl);
+        CetusBbs bbs = bbsService.view(search.getBbsUid());
+        String subCode = BbsTpCd.getSubCodeByCode(bbs.getBbsTpCd());
+        search.setBaseUrl(baseUrl, subCode);
         excelCreate.createExcelFile(
                 BbscttExcelList.class,
                 p -> {

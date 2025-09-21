@@ -171,7 +171,11 @@
         document.getElementById("nodeSearchInput").addEventListener("keypress", function (e) {
             if (e.key === "Enter") {
                 const keyword = this.value.trim();
-                if (!keyword) return;
+                if (!keyword) {
+                    chartTreeData.generateFilter("컨텐츠");
+                    chartTreeData.render("컨텐츠");
+                    return;
+                }
 
                 $("#sidebar-widgets-container input[type='checkbox']").prop("checked", false);
 

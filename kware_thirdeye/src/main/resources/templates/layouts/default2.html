@@ -61,9 +61,8 @@
             }
 
             const checkByBell = () => {
-                fetch("/api/portal/custom-file/downloading-list")
-                    .then(res => res.json())
-                    .then(item => {
+                Http.get(`/api/portal/custom-file/downloading-list`)
+                    .done(item => {
                         if(item === 0) {
                             const headerDiv = document.getElementById("__HEADER__")
                             const bellAlarm = headerDiv.querySelector("#_BELL_ALARM_")
@@ -71,21 +70,18 @@
                             sessionStorage.setItem("_CHECK_MYDOWNLOAD_", 0)
                             // download 완료 전, myDownload 방문 시 sessionStorage.getItem("_CSV_DOWNLOADING_") 값이 0으로 바뀌는 것을 방지
                         }
-                    })
+                    });
             }
 
             async function CREATE_USER_CSV(url, obj) {
                 sessionStorage.setItem("_CSV_DOWNLOADING_", "1")
-                const params = new URLSearchParams()
-                for (const key of Object.keys(obj)) {
-                    params.append(key, obj[key])
-                }
-                const urlWithParams = `${url}?${params.toString()}`
-                const options = { method: "get" }
-                const res = await fetch(urlWithParams, options)
-                Util.alert("다운로드 파일을 생성하고있습니다.").then(() => {
-                    window.location.reload();
-                })
+                await Http.get(url, obj).done(() => {
+                    Util.alert("다운로드 파일을 생성하고있습니다.").then(() => {
+                        window.location.reload();
+                    })
+                }).fail((e) => {
+                    console.error("CSV 다운로드 실패 : ", e)
+                });
             }
         </script>
     </div>

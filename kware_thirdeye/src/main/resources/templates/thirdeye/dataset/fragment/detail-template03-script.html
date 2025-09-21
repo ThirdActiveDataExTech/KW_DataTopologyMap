@@ -26,7 +26,7 @@
             Http.getJson('/testdata/dataset_related_data.json').then((data) => {
                 template03JS.createSidebar();
                 if (template03JS.keyword) {
-                    data = data.filter(item => item['dataTitle'].includes(template03JS.keyword));
+                    data = data.filter(item => item['title'].includes(template03JS.keyword));
                 }
                 template03JS.createList(data);
                 template03JS.createCard(data);
@@ -96,20 +96,10 @@
         createList: function (data) {
 
             const dataLength = data.length;
-            /*const number = 5; // 한 페이지에 5개의 요소
-            const pageCount = 5; // 페이지네이션에 5개의 페이지 표시
-            const totalPages = Math.ceil(dataLength / number); // 전체 페이지 수
-            const startIndex = (template03JS.page - 1) * number; // 시작 인덱스
-            const endIndex = startIndex + number; // 끝 인덱스 (slice는 endIndex는 포함하지 않음)
-            const startPage = (Math.ceil(template03JS.page / pageCount) - 1) * pageCount + 1;
-            const endPage = Math.min(totalPages, Math.ceil(template03JS.page / pageCount) * pageCount);*/
-
             const obj = template03JS.createPagination(dataLength, 5, 5);
 
             // 데이터 정렬
             if(template03JS.sort === "title") { data.sort((a, b) => a.title.localeCompare(b.title)); }
-            /*if(template03JS.sort === "approve") { data.sort((a, b) => new Date(b.updateDate) - new Date(a.updateDate)); }
-            if(template03JS.sort === "rating") { data.sort((a, b) => b.rating - a.rating); }*/
 
             data = data.slice(obj.startIndex, obj.endIndex);
             data.forEach( content => {
@@ -123,7 +113,7 @@
                 const $row = $('<div>', { class: 'row' });
                 const $col1 = $('<div>', { class: 'col-lg-4 col-sm-5' });
                 const $productListImg = $('<div>', { class: 'page-list-img' });
-                const $productLink = $('<a>', { href: 'detail' });
+                const $productLink = $('<a>', { href: 'javascript:void(0);' });
 
                 const randomNumber = Math.floor(Math.random() * 3) + 1;  // 1, 2, 3 중 랜덤 선택
                 const $productImage = $('<img>', {
@@ -139,7 +129,7 @@
                 const $shopListContent = $('<div>', { class: 'page-list-content' });
                 $shopListContent.append(
                     $('<h3>').append(
-                        $('<a>', { href: 'detail' }).text(content['title'])
+                        $('<a>', { href: 'javascript:void(0);' }).text(content['title'])
                     )
                 );
                 $shopListContent.append(
@@ -171,8 +161,6 @@
 
             // 데이터 정렬
             if(template03JS.sort === "title") { data.sort((a, b) => a.title.localeCompare(b.title)); }
-            /*if(template03JS.sort === "approve") { data.sort((a, b) => new Date(b.updateDate) - new Date(a.updateDate)); }
-            if(template03JS.sort === "rating") { data.sort((a, b) => b.rating - a.rating); }*/
 
             data = data.slice(obj.startIndex, obj.endIndex);
             data.forEach( content => {
@@ -180,7 +168,7 @@
                 const $colDiv = $('<div>', { class: 'col-lg-4 col-md-4 col-sm-6 col-12' });
                 const $productWrap = $('<div>', { class: 'page-wrap mb-35' });
                 const $productImg = $('<div>', { class: 'page-img img-zoom mb-25' });
-                const $productLink = $('<a>', { href: 'detail' });
+                const $productLink = $('<a>', { href: 'javascript:void(0);' });
 
                 const randomNumber = Math.floor(Math.random() * 3) + 1;  // 1, 2, 3 중 랜덤 선택
                 const $productImage = $('<img>', {
@@ -189,21 +177,12 @@
                 $productLink.append($productImage);
                 $productImg.append($productLink);
 
-                // Create the page-action-wrap div
-/*                if(!content['interest']) content['interest'] = 'N'
-                const like = (content['interest'] === "Y") ? 'fa fa-heart' : 'pe-7s-like'
-
-                const $actionWrap = $('<div>', { class: 'page-action-wrap' });
-                const $wishlistBtn = $('<button>', { class: 'page-action-btn-1 like-content-btn', title: 'Wishlist', 'data-like': content['interest'] }).append($('<i>', { class: `${like}` }));
-                const $quickViewBtn = $('<button>', { class: 'page-action-btn-1 detail-btn', title: 'Quick View', 'data-bs-toggle': 'modal', 'data-bs-target': '#exampleModal' }).append($('<i>', { class: 'pe-7s-look' }));
-                $actionWrap.append($wishlistBtn, $quickViewBtn);*/
-
                 // Create the page-action-2-wrap div
                 const $action2Wrap = $('<div>', { class: 'page-action-2-wrap' });
                 $productImg.append($action2Wrap);
 
                 const $productContent = $('<div>', { class: 'page-content' });
-                const $productTitle = $('<h3>').append($('<a>', { href: 'detail' }).text(content['title']));
+                const $productTitle = $('<h3>').append($('<a>', { href: 'javascript:void(0);' }).text(content['title']));
                 const $productPrice = $('<div>', { class: 'page-price' }).append($('<span>').text(content['description']));
 
                 $productContent.append($productTitle, $productPrice);
@@ -311,10 +290,10 @@
         );
 
         // 정렬순서 변경
-        $('.nice-select').change(function() {
+        /*$('.nice-select').change(function() {
             template03JS.sort = $(this).val();
             template03JS.fnPage(1);
-        });
+        });*/
 
         // 검색어 검색
         $('#searchForm').on('keypress', function(event) {

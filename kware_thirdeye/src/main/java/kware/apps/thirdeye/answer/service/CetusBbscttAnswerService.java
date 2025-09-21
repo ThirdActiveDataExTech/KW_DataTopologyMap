@@ -56,7 +56,7 @@ public class CetusBbscttAnswerService {
     @Transactional
     public void deleteAnswers(AnswerDelete request) {
         for(Long uid : request.getUids()) {
-            dao.delete(uid);;
+            dao.delete(uid);
         }
     }
 

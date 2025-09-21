@@ -3,6 +3,8 @@
 
     var template01JS = {
 
+        chartDom: null,
+        chart: null,
         metDataFiles: [],
 
         drawTab01: function (dataset) {
@@ -54,106 +56,25 @@
         },
 
         setSubTabSampleVisualization : function(){
-            const sampleData = {
-                "dataList1" : [170.07, 164.74, 120.1, 105.83, 23.14, 24.84, 198.2, 85.34, 62.52, 114.19, 116.91, 75.84],
-                "dataList2" : [1.44, 97.92, 79.27, 105.65, 168.2, 108.48, 126.39, 130.05, 205.69, 179.64, 119.06, 155.43]
-            }
-            const obj = {
-                renderID : $("#searchTrendTimeZoneBoard").get(0),
-                color1 : "#596fc0",
-                color2 : "#9eca7f",
-                dataList1 : sampleData.dataList1,
-                dataList2 : sampleData.dataList2
-            }
-            template01JS.setEchartBar(obj);
-        },
-
-        setEchartBar : function (argObj){
-            const option = {
-                tooltip: {},
-                xAxis: {
-                    data: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
-                    //name: 'Month',
-                    axisLabel: {
-                        interval: 0,
-                        fontSize: 8
-                    },
-                    axisLine: { onZero: true },
-                    splitLine: { show: false },
-                    splitArea: { show: false }
-                },
-                yAxis: {
-                    name: 'Data',
-                    axisLabel: {
-                        fontSize: 8
-                    },
-                    axisLine: { onZero: true },
-                    splitLine: { show: true },
-                    splitArea: { show: false }
-                },
-                grid: {
-                    left: 30,
-                    right: 30,
-                    top: 40,
-                    bottom: 70
-                },
-                dataZoom: [
-                    {
-                        type: 'inside',
-                        start: 0,
-                        end: '100%'
-                    },
-                    {
-                        start: 0,
-                        end: 20,
-                        bottom: '5px'
-                    }
-                ],
-                series: [
-                    {
-                        name: 'bar',
-                        type: 'bar',
-                        stack: 'one',
-                        emphasis: {
-                            itemStyle: {
-                                shadowBlur: 10,
-                                shadowColor: argObj.color1
-                            }
-                        },
-                        data: argObj.dataList1
-                    },
-                    {
-                        name: 'bar2',
-                        type: 'bar',
-                        stack: 'two',
-                        emphasis: {
-                            itemStyle: {
-                                shadowBlur: 10,
-                                shadowColor: argObj.color2
-                            }
-                        },
-                        data: argObj.dataList2
-                    }
-                ]
-            };
-            template01JS.setDataToEchart(argObj.renderID, option);
-        },
-
-        setDataToEchart : function(renderId, option){
-            let myChart = echarts.init(renderId);
-            myChart.hideLoading();
-            option && myChart.setOption(option);
-
-            $(window).resize(function() {
-                myChart.resize();
-            });
+            const generateSampleData = (rows = 2, cols = 12, min = 1, max = 210) =>
+                Array.from({ length: rows }, () =>
+                    Array.from({ length: cols }, () =>
+                        +(Math.random() * (max - min) + min).toFixed(2)
+                    )
+                );
+            const sampleData = generateSampleData();
+            template01JS.chartDom = new Chart("searchTrendTimeZoneBoard")
+                                            .setData(sampleData)
+                                            .setBarChart()
+                                            .init();
+            template01JS.chart = template01JS.chartDom._myChart;
+            $(window).resize(function() { template01JS.chart.resize() });
         },
 
         setMetaDataDownloadTab: function () {
 
-            // 1 혹은 2 랜덤 선택
-            const randomFileNum = Math.random() < 0.5 ? 1 : 2;
-            const filePath = `/testdata/dataset_real_file_${randomFileNum}.json`;
+            const randomFileNum = Math.random() < 0.5 ? 1 : 2;                      // 1 혹은 2 랜덤 선택
+            const filePath = `/testdata/dataset_real_file_${randomFileNum}.json`;   // 썸네일 이미지 랜덤 선택
 
             // JSON 데이터 읽기
             Http.getJson(filePath).then(data => {
@@ -194,7 +115,6 @@
                     Util.alert("데이터를 찾을 수 없습니다.");
                     return;
                 }
-
                 const infoList = [
                     { key: '데이터셋명', value: fileData['datasetNm'] },
                     { key: '데이터셋 유형', value: fileData['datasetType'] },
@@ -215,7 +135,6 @@
                                 <th>컬럼</th><th>값</th>
                                 <th>컬럼</th><th>값</th>
                               </tr>`;
-
                 for ( let i = 0; i < infoList.length; i+=2 ) {
                     const first = infoList[i]
                     const second = infoList[i+1]
