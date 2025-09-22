@@ -56,7 +56,7 @@ public class CetusFormColumnsController {
     public String getModalContent(String formGroup, Integer rowSize, Model model) {
         model.addAttribute("fields",  service.getFormGroupColumns(formGroup)); // Thymeleaf에 넘길 모델 변수
         model.addAttribute("rowSize", rowSize);
-        return "fragments/formbuilder :: #formFields"; // modal.html 안의 #previewModal fragment만 렌더링
+        return "fragments/formbuilder/formbuilder :: #formFields"; // modal.html 안의 #previewModal fragment만 렌더링
     }
 
 }

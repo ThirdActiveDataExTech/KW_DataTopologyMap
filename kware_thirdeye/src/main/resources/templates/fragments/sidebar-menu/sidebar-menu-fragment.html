@@ -8,7 +8,7 @@
                         <span th:text="${menu.menuNm}">메뉴명</span>
                     </a>
                     <!-- 자식 메뉴 재귀 호출 -->
-                    <th:block th:replace="fragments/sidebar-menu-fragment :: render(menus=${menu.children})"/>
+                    <th:block th:replace="fragments/sidebar-menu/sidebar-menu-fragment :: render(menus=${menu.children})"/>
                 </th:block>
                 <!-- 자식이 없는 경우 -->
                 <th:block th:if="${menu.children == null or #lists.isEmpty(menu.children)}">

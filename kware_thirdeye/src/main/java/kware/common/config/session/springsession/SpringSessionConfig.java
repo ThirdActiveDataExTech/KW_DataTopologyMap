@@ -24,7 +24,9 @@ public class SpringSessionConfig {
 
     @Bean
     public SessionRepository<MapSession> sessionRepository() {
-        return new MapSessionRepository(new ConcurrentHashMap<>());
+        MapSessionRepository sessionRepository = new MapSessionRepository(new ConcurrentHashMap<>());
+        sessionRepository.setDefaultMaxInactiveInterval(86400);     // 마지막 요청 시점부터 카운트 -> 1일
+        return sessionRepository;
     }
 
 }

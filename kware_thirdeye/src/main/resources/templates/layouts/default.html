@@ -15,13 +15,13 @@
 </head>
 
 <div id="__HEADER__">
-    <th:block th:replace="fragments/header :: header(show = 'Y')"></th:block>
+    <th:block th:replace="~{fragments/header :: header(show = 'Y')}"></th:block>
 </div>
 <body data-aos-easing="ease" data-aos-duration="1000" data-aos-delay="0">
     <div class="main-wrapper main-wrapper-2">
         <!-- S: sidebar cart -->
-        <th:block th:replace="~{fragments/sidebar-cart :: sidebar-cart}"></th:block>
-        <th:block th:replace="~{fragments/sidebar-download :: sidebar-download}"></th:block>
+        <th:block th:replace="~{fragments/sidebar/sidebar-cart :: sidebar-cart}"></th:block>
+        <th:block th:replace="~{fragments/sidebar/sidebar-download :: sidebar-download}"></th:block>
         <!-- E: sidebar cart -->
 
         <!-- S: main image -->
@@ -30,7 +30,7 @@
 
         <th:block layout:fragment="content"></th:block>
         <th:block th:replace="~{fragments/footer :: footer(show = 'Y')}"></th:block>
-        <th:block th:replace="~{fragments/sidebar-menu :: sidebar-menu(show = 'Y')}"></th:block>
+        <th:block th:replace="~{fragments/sidebar-menu/sidebar-menu :: sidebar-menu(show = 'Y')}"></th:block>
         <th:block th:replace="~{fragments/script :: script}"></th:block>
         <script type="module">
             import 'ckeditor-config';  /* 이미지 업로더 포함 */

@@ -9,20 +9,20 @@
     <meta name="robots" content="noindex, follow" />
     <meta name="description" content="Urdan Minimal eCommerce Bootstrap 5 Template is a stunning eCommerce website template that is the best choice for any online store.">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <th:block th:replace="fragments/head"></th:block>
+    <th:block th:replace="~{fragments/head}"></th:block>
     <link rel="stylesheet" th:href="@{'/assets/css/style_v2.css'}" />
     <link rel="stylesheet" th:href="@{'/assets/css/page/page-common.css'}" />
     <th:block layout:fragment="head"></th:block>
 </head>
 
 <div id="__HEADER__">
-    <th:block th:replace="fragments/header :: header(show = 'Y')"></th:block>
+    <th:block th:replace="~{fragments/header :: header(show = 'Y')}"></th:block>
 </div>
 <body data-aos-easing="ease" data-aos-duration="1000" data-aos-delay="0">
     <div class="main-wrapper main-wrapper-2">
         <!-- S: sidebar cart -->
-        <th:block th:replace="fragments/sidebar-cart :: sidebar-cart"></th:block>
-        <th:block th:replace="~{fragments/sidebar-download :: sidebar-download}"></th:block>
+        <th:block th:replace="~{fragments/sidebar/sidebar-cart :: sidebar-cart}"></th:block>
+        <th:block th:replace="~{fragments/sidebar/sidebar-download :: sidebar-download}"></th:block>
         <!-- E: sidebar cart -->
 
         <!-- S: main image -->
@@ -30,9 +30,9 @@
         <!-- E: main image -->
 
         <th:block layout:fragment="content"></th:block>
-        <th:block th:replace="fragments/footer :: footer(show = 'Y')"></th:block>
-        <th:block th:replace="fragments/sidebar-menu :: sidebar-menu(show = 'Y')"></th:block>
-        <th:block th:replace="fragments/script :: script"></th:block>
+        <th:block th:replace="~{fragments/footer :: footer(show = 'Y')}"></th:block>
+        <th:block th:replace="~{fragments/sidebar-menu/sidebar-menu :: sidebar-menu(show = 'Y')}"></th:block>
+        <th:block th:replace="~{fragments/script :: script}"></th:block>
         <script type="module">
             import 'ckeditor-config';  /* 이미지 업로더 포함 */
             import 'ckeditor-config2';  /* 이미지 업로더 미포함 */
