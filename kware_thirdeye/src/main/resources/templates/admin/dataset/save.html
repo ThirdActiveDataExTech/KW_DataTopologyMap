@@ -225,7 +225,7 @@
 
                                 <div class="field">
                                     <label for="period-owner">담당자</label>
-                                    <input type="text" id="period-owner" th:value="|${user.userNm}|" readonly>
+                                    <input type="text" id="period-owner" th:value="|${user?.userNm}|" readonly>
                                 </div>
 
                                 <div class="field">
