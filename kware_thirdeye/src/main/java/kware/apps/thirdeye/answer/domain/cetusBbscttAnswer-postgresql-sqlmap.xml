@@ -38,6 +38,34 @@
            AND CBA.DELETE_AT = 'N'
     </select>
 
+    <select id="getAllAnswerPage" parameterType="AnswerPageSearch" resultType="AnswerList">
+        /* cetusBbscttAnswer.getAllAnswerPage */
+        SELECT CBA.ANSWER_UID
+              ,CBA.BBSCTT_UID
+              ,CBA.ANSWER_CNT
+              ,CBA.REG_UID
+              ,CU.USER_NM AS REG_NM
+              ,CU.USER_ID AS REG_ID
+              ,TO_CHAR(CBA.REG_DT, 'YYYY-MM-DD HH:MM') AS REG_DT
+          FROM CETUS_BBSCTT_ANSWER CBA
+          LEFT JOIN CETUS_USER CU ON CU.UID = CBA.REG_UID
+         WHERE CBA.BBSCTT_UID = #{bbscttUid}
+           AND CBA.DELETE_AT = 'N'
+         ORDER BY CBA.REG_DT DESC
+        <if test="@Ognl@isNotEmpty(startNumber) and  @Ognl@isNotEmpty(endNumber)">
+        OFFSET ${startNumber} LIMIT ${endNumber}
+        </if>
+    </select>
+
+    <select id="getAllAnswerPageCount" parameterType="AnswerPageSearch" resultType="int">
+        /* cetusBbscttAnswer.getAllAnswerPageCount */
+        SELECT COUNT(*)
+          FROM CETUS_BBSCTT_ANSWER CBA
+          LEFT JOIN CETUS_USER CU ON CU.UID = CBA.REG_UID
+         WHERE CBA.BBSCTT_UID = #{bbscttUid}
+           AND CBA.DELETE_AT = 'N'
+    </select>
+
     <delete id="delete" parameterType="Long">
         /* cetusBbscttAnswer.delete */
         UPDATE CETUS_BBSCTT_ANSWER

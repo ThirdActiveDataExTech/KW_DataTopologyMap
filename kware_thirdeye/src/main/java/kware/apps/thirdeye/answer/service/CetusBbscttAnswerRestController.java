@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -17,6 +18,18 @@ import javax.validation.Valid;
 public class CetusBbscttAnswerRestController {
 
     private final CetusBbscttAnswerService service;
+
+    @GetMapping("/list/{bbscttUid}")
+    public ResponseEntity findAllAnswerList(@PathVariable("bbscttUid") Long bbscttUid) {
+        List<AnswerList> allAnswerList = service.findAllAnswerList(bbscttUid);
+        return ResponseEntity.ok(allAnswerList);
+    }
+
+    @GetMapping("/page/{bbscttUid}")
+    public ResponseEntity findAllAnswerPage(@PathVariable("bbscttUid") Long bbscttUid, Pageable pageable) {
+        Page<AnswerList> allAnswerPage = service.findAllAnswerPage(bbscttUid, pageable);
+        return ResponseEntity.ok(allAnswerPage);
+    }
 
     @PostMapping
     public ResponseEntity saveAnswer(@RequestBody @Valid AnswerSave request) {

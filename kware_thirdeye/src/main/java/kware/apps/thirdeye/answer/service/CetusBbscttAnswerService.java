@@ -39,6 +39,11 @@ public class CetusBbscttAnswerService {
         return dao.getAllAnswerList(bbscttUid);
     }
 
+    @Transactional(readOnly = true)
+    public Page<AnswerList> findAllAnswerPage(Long bbscttUid, Pageable pageable) {
+        return dao.page("getAllAnswerPage", "getAllAnswerPageCount", new AnswerPageSearch(bbscttUid), pageable);
+    }
+
     @Transactional
     public void deleteAnswer(Long uid) {
         dao.delete(uid);
