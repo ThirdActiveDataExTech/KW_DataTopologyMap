@@ -102,20 +102,6 @@
                                 </div>
                                 <div id="categories" class="sidebar-widget-color sidebar-list-style"></div>
                             </div>
-                            <div class="sidebar-widget sidebar-widget-border mb-40 pb-35" data-aos="fade-up"
-                                 data-aos-delay="200">
-                                <div class="sidebar-widget-title mb-25">
-                                    <h3>제공기관</h3>
-                                </div>
-                                <div id="provider" class="sidebar-widget-color sidebar-list-style"></div>
-                            </div>
-                            <div class="sidebar-widget sidebar-widget-border mb-40 pb-35" data-aos="fade-up"
-                                 data-aos-delay="200">
-                                <div class="sidebar-widget-title mb-25">
-                                    <h3>데이터 타입</h3>
-                                </div>
-                                <div id="dataType" class="sidebar-widget-color sidebar-list-style"></div>
-                            </div>
                         </div>
 
                         <div id="sidebar-widgets-container2">
@@ -163,42 +149,44 @@
         
         $(async function () {
 
+            // 전체 검색을 통한 리스트 화면 접근시
             const searchParams = window.location.search.substring(1);
             const params = new URLSearchParams(searchParams);
             const keyword = params.get('keyword');
             if (keyword) {
                 $('#keyword').val(keyword);
                 listJS.keyword = keyword;
+                window.history.replaceState({}, document.title, '/portal/list');
             }
 
             // 1. refresh page list
             listJS.refreshPageList();
 
             // 2. 등록일 slider init
-            $('#slider-range').slider({
+            listJS.dom.sliderRange.slider({
                 range: true,
                 min: 0,
-                max: listJS.parseDate(),
-                values: [0, listJS.parseDate()],
+                max: 365,
+                values: [0, 365],
                 slide: function (event, ui) {
-                    $('#amount1').val(listJS.dateFormat(ui.values[0]))
-                    $('#amount2').val(listJS.dateFormat(ui.values[1]))
+                    $('#amount1').val(Common.dateFormat(ui.values[0]))
+                    $('#amount2').val(Common.dateFormat(ui.values[1]))
                 }
             });
-            $('#amount1').val(listJS.dateFormat($('#slider-range').slider("values", 0)))
-            $('#amount2').val(listJS.dateFormat($('#slider-range').slider("values", 1)))
+            $('#amount1').val(Common.dateFormat(listJS.dom.sliderRange.slider("values", 0)))
+            $('#amount2').val(Common.dateFormat(listJS.dom.sliderRange.slider("values", 1)))
             $('#amount1, #amount2').on('blur', function () {
                 const val1 = new Date($('#amount1').val())
                 const val2 = new Date($('#amount2').val())
                 if (!isNaN(val1) && !isNaN(val2) && val1 <= val2) {
-                    $('#slider-range').slider('values', [listJS.parseDate(val1), listJS.parseDate(val2)]);
+                    listJS.dom.sliderRange.slider('values', [listJS.parseDate(val1), listJS.parseDate(val2)]);
                 }
             });
 
             // 4. 등록일 버튼 -> 검색
             $("#date-btn").click(function () {
-                listJS.param['date'][0] = listJS.dateFormat($('#slider-range').slider("values", 0));
-                listJS.param['date'][1] = listJS.dateFormat($('#slider-range').slider("values", 1));
+                listJS.param['date'][0] = Common.dateFormat(listJS.dom.sliderRange.slider("values", 0));
+                listJS.param['date'][1] = Common.dateFormat(listJS.dom.sliderRange.slider("values", 1));
                 listJS.fnPage(1);
             });
 

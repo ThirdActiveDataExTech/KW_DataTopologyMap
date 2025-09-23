@@ -8,11 +8,13 @@
         keyword: '',
         param: {category: [], provider: [], dataType: [], date: [], tags: []},
 
-        sliderRange: $('#slider-range'),
-        amountPrice: $('#amount'),
+        dom: {
+            showList: $("#showing-list"),
+            showCard: $("#showing-card")
+        },
 
         drawTemplate03: function() {
-            $('#showing-list').hide();
+            template03JS.dom.showList.hide();
             template03JS.pageList();
         },
 
@@ -35,18 +37,15 @@
 
         pageInit: function () {
             // showing text 초기화
-            $('#showing-card').text("");
-            $('#showing-list').text("");
-
-            // sidebar 초기화
-            // $('#categories').empty();
-            // $('#provider').empty();
-            // $('#dataType').empty();
-            // $('#tags').empty();
+            template03JS.dom.showCard.text("");
+            template03JS.dom.showList.text("");
 
             // list/card 초기화
             $('#shop-2').empty();
             $('#shop-1 .row').empty();
+
+            // pagination 초기화
+            $(".pagination-style-1").empty();
         },
 
         createSidebar: function () {
@@ -95,102 +94,116 @@
 
         createList: function (data) {
 
-            const dataLength = data.length;
-            const obj = template03JS.createPagination(dataLength, 5, 5);
+            const $container = $("#shop-2")
+            if( data.length !== 0 ) {
 
-            // 데이터 정렬
-            if(template03JS.sort === "title") { data.sort((a, b) => a.title.localeCompare(b.title)); }
+                const dataLength = data.length;
+                const obj = template03JS.createPagination(dataLength, 5, 5);
 
-            data = data.slice(obj.startIndex, obj.endIndex);
-            data.forEach( content => {
+                // 데이터 정렬
+                if(template03JS.sort === "title") { data.sort((a, b) => a.title.localeCompare(b.title)); }
 
-                const $shopListWrap = $('<div>', {
-                    class: 'page-list-wrap mb-30 aos-init aos-animate',
-                    'data-aos': 'fade-up',
-                    'data-aos-delay': '200'
-                });
+                data = data.slice(obj.startIndex, obj.endIndex);
+                data.forEach( content => {
 
-                const $row = $('<div>', { class: 'row' });
-                const $col1 = $('<div>', { class: 'col-lg-4 col-sm-5' });
-                const $productListImg = $('<div>', { class: 'page-list-img' });
-                const $productLink = $('<a>', { href: 'javascript:void(0);' });
+                    const $shopListWrap = $('<div>', {
+                        class: 'page-list-wrap mb-30 aos-init aos-animate',
+                        'data-aos': 'fade-up',
+                        'data-aos-delay': '200'
+                    });
 
-                const randomNumber = Math.floor(Math.random() * 3) + 1;  // 1, 2, 3 중 랜덤 선택
-                const $productImage = $('<img>', {
-                    src: `/assets/images/page/list/data_0${randomNumber}.jpg`,
-                    alt: 'Product Style',
-                    class: 'portal-img',
-                });
-                $productLink.append($productImage);
-                $productListImg.append($productLink);
-                $col1.append($productListImg);
+                    const $row = $('<div>', { class: 'row' });
+                    const $col1 = $('<div>', { class: 'col-lg-4 col-sm-5' });
+                    const $productListImg = $('<div>', { class: 'page-list-img' });
+                    const $productLink = $('<a>', { href: 'javascript:void(0);' });
 
-                const $col2 = $('<div>', { class: 'col-lg-8 col-sm-7' });
-                const $shopListContent = $('<div>', { class: 'page-list-content' });
-                $shopListContent.append(
-                    $('<h3>').append(
-                        $('<a>', { href: 'javascript:void(0);' }).text(content['title'])
-                    )
-                );
-                $shopListContent.append(
-                    $('<div>', { class: 'page-price' }).append(
-                        $('<span>').text(content['description'])
-                    )
-                );
+                    const randomNumber = Math.floor(Math.random() * 3) + 1;  // 1, 2, 3 중 랜덤 선택
+                    const $productImage = $('<img>', {
+                        src: `/assets/images/page/list/data_0${randomNumber}.jpg`,
+                        alt: 'Product Style',
+                        class: 'portal-img',
+                    });
+                    $productLink.append($productImage);
+                    $productListImg.append($productLink);
+                    $col1.append($productListImg);
 
-                const metadata = JSON.parse(dataset['metadata']); // JSON string → 객체
-                Object.entries(metadata).forEach(([key, value]) => {
+                    const $col2 = $('<div>', { class: 'col-lg-8 col-sm-7' });
+                    const $shopListContent = $('<div>', { class: 'page-list-content' });
                     $shopListContent.append(
-                        $('<p>').text(`${key} : ${typeof value === 'object' ? JSON.stringify(value) : value}`)
+                        $('<h3>').append(
+                            $('<a>', { href: 'javascript:void(0);' }).text(content['title'])
+                        )
                     );
+                    $shopListContent.append(
+                        $('<div>', { class: 'page-price' }).append(
+                            $('<span>').text(content['description'])
+                        )
+                    );
+
+                    const metadata = JSON.parse(dataset['metadata']); // JSON string → 객체
+                    Object.entries(metadata).forEach(([key, value]) => {
+                        $shopListContent.append(
+                            $('<p>').text(`${key} : ${typeof value === 'object' ? JSON.stringify(value) : value}`)
+                        );
+                    });
+
+                    $col2.append($shopListContent);
+                    $row.append($col1, $col2);
+                    $shopListWrap.append($row);
+                    $container.append($shopListWrap);
                 });
 
-                $col2.append($shopListContent);
-                $row.append($col1, $col2);
-                $shopListWrap.append($row);
-                $('#shop-2').append($shopListWrap);
-            });
+                $container.append(obj.pageDom);
 
-            $('#shop-2').append(obj.pageDom);
+            } else {
+                $container.append('<div><p class="text-center">검색 결과가 없습니다.</p></div>');
+            }
         },
 
         createCard: function (data) {
 
-            const dataLength = data.length;
-            const obj = template03JS.createPagination(dataLength, 9, 5);
+            if( data.length !== 0 ) {
 
-            // 데이터 정렬
-            if(template03JS.sort === "title") { data.sort((a, b) => a.title.localeCompare(b.title)); }
+                const dataLength = data.length;
+                const obj = template03JS.createPagination(dataLength, 9, 5);
 
-            data = data.slice(obj.startIndex, obj.endIndex);
-            data.forEach( content => {
+                // 데이터 정렬
+                if(template03JS.sort === "title") { data.sort((a, b) => a.title.localeCompare(b.title)); }
 
-                const $colDiv = $('<div>', { class: 'col-lg-4 col-md-4 col-sm-6 col-12' });
-                const $productWrap = $('<div>', { class: 'page-wrap mb-35' });
-                const $productImg = $('<div>', { class: 'page-img img-zoom mb-25' });
-                const $productLink = $('<a>', { href: 'javascript:void(0);' });
+                data = data.slice(obj.startIndex, obj.endIndex);
+                data.forEach( content => {
 
-                const randomNumber = Math.floor(Math.random() * 3) + 1;  // 1, 2, 3 중 랜덤 선택
-                const $productImage = $('<img>', {
-                    class: 'portal-img', src: `/assets/images/page/list/data_0${randomNumber}.jpg`, alt: ''
+                    const $colDiv = $('<div>', { class: 'col-lg-4 col-md-4 col-sm-6 col-12' });
+                    const $productWrap = $('<div>', { class: 'page-wrap mb-35' });
+                    const $productImg = $('<div>', { class: 'page-img img-zoom mb-25' });
+                    const $productLink = $('<a>', { href: 'javascript:void(0);' });
+
+                    const randomNumber = Math.floor(Math.random() * 3) + 1;  // 1, 2, 3 중 랜덤 선택
+                    const $productImage = $('<img>', {
+                        class: 'portal-img', src: `/assets/images/page/list/data_0${randomNumber}.jpg`, alt: ''
+                    });
+                    $productLink.append($productImage);
+                    $productImg.append($productLink);
+
+                    // Create the page-action-2-wrap div
+                    const $action2Wrap = $('<div>', { class: 'page-action-2-wrap' });
+                    $productImg.append($action2Wrap);
+
+                    const $productContent = $('<div>', { class: 'page-content' });
+                    const $productTitle = $('<h3>').append($('<a>', { href: 'javascript:void(0);' }).text(content['title']));
+                    const $productPrice = $('<div>', { class: 'page-price' }).append($('<span>').text(content['description']));
+
+                    $productContent.append($productTitle, $productPrice);
+                    $productWrap.append($productImg, $productContent);
+                    $colDiv.append($productWrap);
+                    $('#shop-1 .row').append($colDiv);
                 });
-                $productLink.append($productImage);
-                $productImg.append($productLink);
 
-                // Create the page-action-2-wrap div
-                const $action2Wrap = $('<div>', { class: 'page-action-2-wrap' });
-                $productImg.append($action2Wrap);
+                $('#shop-1 #card-pagination').html(obj.pageDom);
 
-                const $productContent = $('<div>', { class: 'page-content' });
-                const $productTitle = $('<h3>').append($('<a>', { href: 'javascript:void(0);' }).text(content['title']));
-                const $productPrice = $('<div>', { class: 'page-price' }).append($('<span>').text(content['description']));
-
-                $productContent.append($productTitle, $productPrice);
-                $productWrap.append($productImg, $productContent);
-                $colDiv.append($productWrap);
-                $('#shop-1 .row').append($colDiv);
-            });
-            $('#shop-1 #card-pagination').html(obj.pageDom);
+            } else {
+                $('#shop-1 .row').append('<div><p class="text-center">검색 결과가 없습니다.</p></div>');
+            }
         },
 
         createPagination: function (length, number, pageCount) {
@@ -244,50 +257,20 @@
             $pagination.append($ul);
             obj.pageDom = $pagination;
 
-            $('#showing-list').text(
-                `전체 ${length}건 중 ${obj.startIndex + 1}-${obj.endIndex > length ? length : obj.endIndex}`
-            );
+            template03JS.dom.showList.text(`전체 ${length}건 중 ${obj.startIndex + 1}-${obj.endIndex > length ? length : obj.endIndex}`);
+            template03JS.dom.showCard.text(`전체 ${length}건 중 ${obj.startIndex + 1}-${obj.endIndex > length ? length : obj.endIndex}`);
 
             return obj;
         },
 
         fnTab: function (selectTab) {
             template03JS.fnPage(1);
-            if(selectTab === "card") { $('#showing-card').show(); $('#showing-list').hide(); }
-            else if(selectTab === "list") { $('#showing-list').show(); $('#showing-card').hide(); }
+            if(selectTab === "card") { template03JS.dom.showCard.show(); template03JS.dom.showList.hide(); }
+            else if(selectTab === "list") { template03JS.dom.showList.show(); template03JS.dom.showCard.hide(); }
         },
-
-        dateFormat: function (amount) {
-            let dateString = "2024-01-01";
-            let date = new Date(dateString);
-
-            // n일 추가
-            date.setDate(date.getDate() + amount);
-
-            // yyyy-mm-dd 형식으로 변환
-            const yyyy = date.getFullYear();
-            const mm = String(date.getMonth() + 1).padStart(2, '0'); // 월은 0부터 시작하므로 +1 필요
-            const dd = String(date.getDate()).padStart(2, '0');
-
-            return `${yyyy}-${mm}-${dd}` // ex. 2024-02-01
-        }
     }
 
     $(function () {
-
-        // slider range 초기화
-        template03JS.sliderRange.slider({
-            range: true,
-            min: 0,
-            max: 365,
-            values: [0, 365],
-            slide: function(event, ui) {
-                template03JS.amountPrice.val(template03JS.dateFormat(ui.values[0]) + " - " + template03JS.dateFormat(ui.values[1]));
-            }
-        });
-        template03JS.amountPrice.val(
-            template03JS.dateFormat(template03JS.sliderRange.slider("values", 0)) + " - " + template03JS.dateFormat(template03JS.sliderRange.slider("values", 1))
-        );
 
         // 정렬순서 변경
         /*$('.nice-select').change(function() {
@@ -312,13 +295,6 @@
             else {
                 template03JS.param[type] = template03JS.param[type].filter(item => item !== value);
             }
-            template03JS.fnPage(1);
-        });
-
-        // 등록일 검색
-        $("#date-btn").click(function() {
-            template03JS.param['date'][0] = template03JS.dateFormat(template03JS.sliderRange.slider("values", 0));
-            template03JS.param['date'][1] = template03JS.dateFormat(template03JS.sliderRange.slider("values", 1));
             template03JS.fnPage(1);
         });
 
