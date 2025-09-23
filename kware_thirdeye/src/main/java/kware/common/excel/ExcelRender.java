@@ -187,7 +187,11 @@ public class ExcelRender {
         // 날짜 디렉토리 생성 (예: 20250512)
         String todayDir = DateTimeUtil.getTodayShort();
         Path fullDirPath = Paths.get(downloadPath, todayDir);
-        Files.createDirectories(fullDirPath); // 디렉토리 없으면 생성
+        log.info("====>> fullDirPath : {} ", fullDirPath.toAbsolutePath());
+        if(!Files.exists(fullDirPath)) {
+            Files.createDirectories(fullDirPath); // 디렉토리 없으면 생성
+            log.info("디렉토리 생성 완료: {}", fullDirPath.toAbsolutePath());
+        }
 
         // 최종 파일 경로
         Path filePath = fullDirPath.resolve(fileName);
