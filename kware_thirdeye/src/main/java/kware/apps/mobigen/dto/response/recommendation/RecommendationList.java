@@ -6,6 +6,14 @@ import lombok.Setter;
 
 import java.util.List;
 
+/**
+* @fileName     RecommendationList
+* @author       dahyeon
+* @version      1.0.0
+* @date         2025-09-23
+* @summary      메타데이터의 추천 데이터 조회
+**/
+
 @Getter @Setter
 public class RecommendationList {
 

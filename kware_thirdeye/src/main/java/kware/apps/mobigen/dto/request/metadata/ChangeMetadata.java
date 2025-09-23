@@ -6,6 +6,14 @@ import lombok.Setter;
 
 import java.util.Map;
 
+/**
+* @fileName     ChangeMetadata
+* @author       dahyeon
+* @version      1.0.0
+* @date         2025-09-23
+* @summary      메타데이터의 업데이트 진행
+**/
+
 @Getter @Setter
 public class ChangeMetadata {
 

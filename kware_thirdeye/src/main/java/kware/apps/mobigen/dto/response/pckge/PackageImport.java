@@ -3,6 +3,14 @@ package kware.apps.mobigen.dto.response.pckge;
 import lombok.Getter;
 import lombok.Setter;
 
+/**
+* @fileName     PackageImport
+* @author       dahyeon
+* @version      1.0.0
+* @date         2025-09-23
+* @summary      패키지된 파일을 업로드
+**/
+
 @Getter @Setter
 public class PackageImport {
 

@@ -7,6 +7,14 @@ import lombok.Setter;
 import java.util.List;
 import java.util.Map;
 
+/**
+* @fileName     CreateMetadata
+* @author       dahyeon
+* @version      1.0.0
+* @date         2025-09-23
+* @summary      하나의 메타데이터 생성 요청
+**/
+
 @Getter @Setter
 public class CreateMetadata {
 

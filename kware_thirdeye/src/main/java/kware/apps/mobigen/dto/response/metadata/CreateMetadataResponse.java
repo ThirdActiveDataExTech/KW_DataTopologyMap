@@ -4,6 +4,14 @@ package kware.apps.mobigen.dto.response.metadata;
 import lombok.Getter;
 import lombok.Setter;
 
+/**
+* @fileName     CreateMetadataResponse
+* @author       dahyeon
+* @version      1.0.0
+* @date         2025-09-23
+* @summary      하나의 메타데이터 생성 요청
+**/
+
 @Getter @Setter
 public class CreateMetadataResponse {
 

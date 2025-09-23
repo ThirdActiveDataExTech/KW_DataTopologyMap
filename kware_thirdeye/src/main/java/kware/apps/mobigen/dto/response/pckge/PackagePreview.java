@@ -6,6 +6,14 @@ import lombok.Setter;
 
 import java.util.List;
 
+/**
+* @fileName     PackagePreview
+* @author       dahyeon
+* @version      1.0.0
+* @date         2025-09-23
+* @summary      패키지 파일의 내용을 json형태로 변경
+**/
+
 @Getter @Setter
 public class PackagePreview {
 

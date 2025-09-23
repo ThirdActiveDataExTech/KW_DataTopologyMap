@@ -6,6 +6,14 @@ import lombok.Setter;
 
 import java.util.List;
 
+/**
+* @fileName     MetadataList
+* @author       dahyeon
+* @version      1.0.0
+* @date         2025-09-23
+* @summary      필터링된 메타데이터 목록 전달
+**/
+
 @Getter @Setter
 public class MetadataList {
 
