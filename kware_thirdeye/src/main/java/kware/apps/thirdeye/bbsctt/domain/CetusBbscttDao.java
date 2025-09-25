@@ -38,4 +38,12 @@ public class CetusBbscttDao extends SuperDao<CetusBbsctt> {
     public List<BbscttRecentList> getRecentBbsctt(BbscttRecentSearch search) {
         return selectList("getRecentBbsctt", search);
     }
+
+    public void updateBbscttLikeCount(Long uid) {
+        update("updateBbscttLikeCount", uid);
+    }
+
+    public Integer getBbscttLikeCount(Long uid) {
+        return selectOne("getBbscttLikeCount", uid);
+    }
 }

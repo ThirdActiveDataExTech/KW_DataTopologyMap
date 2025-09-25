@@ -27,4 +27,5 @@ public class BbscttView {
     private String regEmail;
     private String regProfileId;
     private String thumbnailSrc;
+    private Integer likeCnt;
 }

@@ -59,4 +59,10 @@ public class CetusBbscttRestController {
         service.renderEXCEL(search);
         return ResponseEntity.ok().build();
     }
+
+    @GetMapping("/like/{uid}")
+    public ResponseEntity changeBbscttLikeCount(@PathVariable("uid") Long uid) {
+        Integer count = service.changeBbscttLikeCount(uid);
+        return ResponseEntity.ok(count);
+    }
 }

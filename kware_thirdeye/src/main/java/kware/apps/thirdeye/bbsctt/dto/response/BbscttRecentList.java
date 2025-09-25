@@ -28,6 +28,7 @@ public class BbscttRecentList {
     private String regEmail;
     private String regProfileId;
     private String thumbnailSrc;
+    private Integer likeCnt;
 
     public void setBbscttCnt(String bbscttCnt) {
         this.bbscttCnt = bbscttCnt;

@@ -18,6 +18,8 @@ public class BbscttExcelList {
     private String bbscttNm;
     @ExcelColumn(headerName = "조회수")
     private int rdCnt;
+    @ExcelColumn(headerName = "좋아요수")
+    private Integer likeCnt;
     @ExcelColumn(headerName = "공지 여부")
     private String noticeAt;
     @ExcelColumn(headerName = "첨부파일 개수")

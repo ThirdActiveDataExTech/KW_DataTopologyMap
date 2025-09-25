@@ -25,7 +25,6 @@
             background: white;
             transition: all 0.3s ease;
         }
-
         #bbsctt-comment-wrap textarea:focus,
         .comment-content-save textarea:focus {
             border-color: #7fb3f7;
@@ -48,19 +47,16 @@
             transition: all 0.3s ease;
             position: relative;
         }
-
         .comment-item:hover {
             box-shadow: 0 4px 12px rgba(0,0,0,0.1);
             transform: translateY(-1px);
         }
-
         .comment-item .user-profile {
             display: flex;
             align-items: center;
             gap: 12px;
             margin-bottom: 12px;
         }
-
         .comment-item .profile-image {
             width: 40px;
             height: 40px;
@@ -69,18 +65,15 @@
             padding: 2px;
             overflow: hidden;
         }
-
         .comment-item .profile-image img {
             width: 100%;
             height: 100%;
             object-fit: cover;
             border-radius: 50%;
         }
-
         .comment-item .user-info {
             flex-grow: 1;
         }
-
         .comment-item .comment-author {
             font-weight: 600;
             color: #333;
@@ -89,13 +82,11 @@
             align-items: center;
             gap: 8px;
         }
-
         .comment-item .comment-date {
             color: #888;
             font-size: 12px;
             margin-top: 2px;
         }
-
         .comment-item .comment-content {
             color: #444;
             line-height: 1.6;
@@ -104,14 +95,12 @@
             white-space: pre-wrap;
             word-break: break-word;
         }
-
         .comment-actions {
             margin-top: 12px;
             display: flex;
             gap: 8px;
             justify-content: flex-end;
         }
-
         .comment-actions button {
             background: none;
             border: 1px solid #e0e0e0;
@@ -125,22 +114,18 @@
             align-items: center;
             gap: 4px;
         }
-
         .comment-actions button i {
             font-size: 11px;
         }
-
         .comment-actions button:hover {
             background: #7fb3f7;
             border-color: #7fb3f7;
             color: white;
         }
-
         .comment-actions button.delete-btn:hover {
             background: #dc3545;
             border-color: #dc3545;
         }
-
         /* 비어있는 상태 스타일 */
         .no-comments {
             text-align: center;
@@ -151,12 +136,33 @@
             border-radius: 12px;
             margin-top: 10px;
         }
-
         .no-comments i {
             font-size: 24px;
             color: #e0e0e0;
             margin-bottom: 10px;
             display: block;
+        }
+
+        /* 좋아요 버튼 */
+        .like-button-divider {
+            width: 100%;
+            height: 1px;
+            background-color: rgba(0, 0, 0, 0.1);
+            margin: 15px 0;
+
+        }
+        #likeButton {
+            margin-right: 0.5rem;
+            border: 1px solid #ddd;
+            background-color: transparent;
+            border-radius: 2rem !important;
+            padding: 13px 19px 13px 19px;
+            font-size: 13px;
+            color: black;
+        }
+        #likeButton:hover {
+            font-weight: bold;
+            color: black;
         }
     </style>
 </th:block>
@@ -193,6 +199,14 @@
                                             </div>
                                         </div>
                                     </div>
+                                </div>
+
+                                <div id="likeSection"><div class="like-button-divider"></div>
+                                    <button id="likeButton" type="button" class="btn btn-outline-secondary like-btn rounded-5">
+                                        <i class="fa fa-heart"></i>
+                                        <span class="text-black fw-bold">좋아요</span>
+                                    </button>
+                                    <span id="likeCount" th:text="${bbsctt?.likeCnt}">0</span>
                                 </div>
 
                                 <div id="fileUploadSection">
@@ -333,39 +347,51 @@
             bbscttJS.initForm(fileUid, [[${bbsctt?.bbscttCnt}]], true);
             bbscttJS.initAnswerListForm();
 
+            /* [수정] 버튼 클릭 이벤트 */
             $("#update-btn").on('click', function () {
                 window.location.href = `/portal/bbs/${bbsTpCd}/form/${bbscttUid}`;
             });
 
+            /* [목록] 버튼 클릭 이벤트 */
             $("#list-btn").on('click', function () {
                 window.location.href = `/portal/bbs/${bbsTpCd}`;
             });
 
+            /* [댓글 등록] 버튼 클릭 이벤트 */
             $("#add-answer").on('click', function () {
                 bbscttJS.saveAnswer();
             });
 
+            /* [좋아요] 버튼 클릭 이벤트 */
+            $("#likeButton").on('click', function () {
+                bbscttJS.likeButtonClickEvent();
+            });
+
+            /* [댓글 > 수정하기] 버튼 클릭 이벤트 */
             $(document).on('click', '.edit-answer', function () {
                 bbscttJS.toggleAnswerToEdit($(this));
             });
 
+            /* [댓글 > 수정 취소하기] 버튼 클릭 이벤트 */
             $(document).on('click', '.cancel-answer', function () {
                 bbscttJS.toggleAnswerEditCancel($(this));
             });
 
+            /* [댓글 > 수정] 버튼 클릭 이벤트 */
             $(document).on('click', '.update-answer', function () {
                 bbscttJS.updateAnswer($(this));
             });
 
+            /* [댓글 > 삭제] 버튼 클릭 이벤트 */
             $(document).on('click', '.delete-answer', function () {
                 bbscttJS.deleteAnswer($(this));
             });
 
+            /* [댓글 > 페이징] 버튼 클릭 이벤트 */
             $(document).on('click', '.page-link', function (e) {
                 e.preventDefault();
                 bbscttJS.answerPageNumber = $(this).data('page');
                 bbscttJS.initAnswerListForm();
-
                 const $target = $('#comment-section');
                 if ($target.length) {
                     $('html, body').animate({

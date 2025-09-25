@@ -22,6 +22,7 @@ public class CetusBbsctt extends AuditBean {
     private String openAt;
     private String deleteAt;
     private String thumbnailSrc;
+    private Integer likeCnt;
 
     public CetusBbsctt(BbscttSave request, Long fileUid) {
         this.bbsUid = request.getBbsUid();

@@ -29,6 +29,7 @@ public class BbscttList {
     private String regEmail;
     private String regProfileId;
     private String thumbnailSrc;
+    private Integer likeCnt;
 
     public void setBbs(String bbsTpSubCd) {
         this.bbsTpSubCd = bbsTpSubCd;

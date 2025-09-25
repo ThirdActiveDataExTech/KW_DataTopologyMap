@@ -61,9 +61,6 @@ public class CetusBbscttController {
         model.addAttribute("bbs", bbs);
         bbscttService.increaseViewCount(bbscttUid, req, res);
 
-        /*List<AnswerList> answers = answerService.findAllAnswerList(bbscttUid);
-        model.addAttribute("answers", answers);*/
-
         menuNavigationManager.renderingPage("/portal/bbs/"+bbsTpCd, "게시글 조회", false, model);
 
         return "thirdeye/bbsctt/view";

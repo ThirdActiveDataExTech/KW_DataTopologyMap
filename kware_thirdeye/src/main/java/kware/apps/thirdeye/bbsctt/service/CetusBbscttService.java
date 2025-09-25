@@ -128,4 +128,10 @@ public class CetusBbscttService {
                 DownloadTargetCd.USER_BBSCTT
         );
     }
+
+
+    public Integer changeBbscttLikeCount(Long uid) {
+        dao.updateBbscttLikeCount(uid);
+        return dao.getBbscttLikeCount(uid);
+    }
 }

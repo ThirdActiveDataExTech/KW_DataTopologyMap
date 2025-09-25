@@ -13,6 +13,7 @@
               ,CBBSCTT.BBSCTT_CNT
               ,CBBSCTT.NOTICE_AT
               ,CBBSCTT.FILE_UID
+              ,CBBSCTT.LIKE_CNT
               ,( SELECT COUNT(*)
                    FROM CETUS_FILE CF2
                   WHERE CF2.FILE_UID = CBBSCTT.FILE_UID::BIGINT
@@ -86,6 +87,7 @@
                          END
                     ELSE '-'
                 END AS NOTICE_AT
+              ,CBBSCTT.LIKE_CNT
               ,( SELECT COUNT(*)
                    FROM CETUS_FILE CF2
                   WHERE CF2.FILE_UID = CBBSCTT.FILE_UID::BIGINT
@@ -142,6 +144,7 @@
             ,FILE_UID
             ,USE_AT
             ,THUMBNAIL_SRC
+            ,LIKE_CNT
             ,OPEN_AT
             ,DELETE_AT
             ,REG_UID
@@ -157,6 +160,7 @@
             ,#{fileUid}::BIGINT
             ,'Y'
             ,#{thumbnailSrc}
+            ,0
             ,#{openAt}
             ,'N'
             ,#{regUid}
@@ -180,6 +184,7 @@
               ,OPEN_AT
               ,DELETE_AT
               ,THUMBNAIL_SRC
+              ,LIKE_CNT
           FROM CETUS_BBSCTT
          WHERE BBSCTT_UID = #{bbscttUid}
     </select>
@@ -237,6 +242,7 @@
               ,CU.USER_EMAIL AS REG_EMAIL
               ,CF_CU.FILE_ID AS REG_PROFILE_ID
               ,CBBSCTT.THUMBNAIL_SRC
+              ,CBBSCTT.LIKE_CNT
           FROM CETUS_BBSCTT CBBSCTT
          INNER JOIN CETUS_BBS CBBS ON CBBS.BBS_UID = CBBSCTT.BBS_UID
           LEFT JOIN CETUS_USER CU ON CU.UID = CBBSCTT.REG_UID
@@ -277,6 +283,7 @@
               ,CU.USER_EMAIL AS REG_EMAIL
               ,CF_CU.FILE_ID AS REG_PROFILE_ID
               ,CBBSCTT.THUMBNAIL_SRC
+              ,CBBSCTT.LIKE_CNT
           FROM CETUS_BBSCTT CBBSCTT
          INNER JOIN CETUS_BBS CBBS ON CBBS.BBS_UID = CBBSCTT.BBS_UID
           LEFT JOIN CETUS_USER CU ON CU.UID = CBBSCTT.REG_UID
@@ -288,4 +295,19 @@
          ORDER BY CBBSCTT.REG_DT DESC
          LIMIT #{count}
     </select>
+
+    <update id="updateBbscttLikeCount" parameterType="Long">
+        /* cetusBbsctt.updateBbscttLikeCount */
+        UPDATE CETUS_BBSCTT
+           SET LIKE_CNT = LIKE_CNT + 1
+         WHERE BBSCTT_UID = #{uid}
+    </update>
+
+    <select id="getBbscttLikeCount" parameterType="Long" resultType="int">
+        /* cetusBbsctt.getBbscttLikeCount */
+        SELECT LIKE_CNT
+          FROM CETUS_BBSCTT
+         WHERE BBSCTT_UID = #{uid}
+    </select>
+
 </mapper>
