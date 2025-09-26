@@ -42,7 +42,7 @@ public class PortalController {
         List<BbscttRecentList> manual = bbscttService.findRecentBbsctt(3, "MANUAL");
         model.addAttribute("manual", manual);
 
-        return "thirdeye/dataset/home";
+        return "thirdeye/dataset/home2";
     }
 
     @GetMapping("/list")
