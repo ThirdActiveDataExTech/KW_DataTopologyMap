@@ -166,6 +166,12 @@
       window.location.href = `/portal/detail/${uid}`;
     });
 
+    // 좋아요 버튼 클릭
+    $(document).on('click', '.like-btn', function(e) {
+      const uid = $(this).data('uid');
+      console.log(">> like btn clicked ... : ", uid);
+    });
+
   </script>
 </th:block>
 </html>
