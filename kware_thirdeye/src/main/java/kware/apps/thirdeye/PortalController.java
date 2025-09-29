@@ -56,6 +56,11 @@ public class PortalController {
         menuNavigationManager.renderingPage("/portal/list", "Detail", false, model);
         DatasetDetailView dataset = datasetService.findDatasetByUid(approvedUid);
         model.addAttribute("dataset", dataset);
+
+        if(dataset == null) {
+            return "error/404";
+        }
+
         return "thirdeye/dataset/detail";
     }
 

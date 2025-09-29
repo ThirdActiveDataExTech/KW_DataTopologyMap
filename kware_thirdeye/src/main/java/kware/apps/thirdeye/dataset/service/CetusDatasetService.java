@@ -53,6 +53,7 @@ public class CetusDatasetService {
         // 1. 데이터셋 ID 정보 조회
         DatasetViewSearch search = new DatasetViewSearch(approvedUid, UserUtil.getUser().getUid());
         DatasetDetailView dataset = dao.getDatasetByUid(search);
+        if(dataset == null) return null;
 
         // 2. 데이터셋 ID 값을 통해 상세 정보 API 조회
         Map<Long, DatasetView> dataMap = this.findDatasetDetailByAPI();
