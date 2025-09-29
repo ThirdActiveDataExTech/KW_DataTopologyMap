@@ -51,8 +51,10 @@ public class WebConfig implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) {
         loggingInterceptor.setLogger(LoggerFactory.getLogger(LoggingInterceptor.class));
         loggingInterceptor.setLogging(configs.getLogging());
-        registry.addInterceptor(loggingInterceptor).excludePathPatterns("/assets/**/*", "/error", "/swagger-ui/**", "/swagger-resources/**", "/api/portal/files/view/**");
-        registry.addInterceptor(userInterceptor).excludePathPatterns("/assets/**/*", "/login", "/loginProc", "/logout", "/error/**/*");
+        registry.addInterceptor(loggingInterceptor)
+                .excludePathPatterns("/assets/**/*", "/error", "/.well-known/**", "/swagger-ui/**", "/swagger-resources/**", "/api/portal/files/view/**");
+        registry.addInterceptor(userInterceptor)
+                .excludePathPatterns("/assets/**/*", "/login", "/loginProc", "/logout", "/error/**/*");
         registry.addInterceptor(localeChangeInterceptor);
     }
 
