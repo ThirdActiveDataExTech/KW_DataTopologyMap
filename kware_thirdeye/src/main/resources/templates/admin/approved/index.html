@@ -23,7 +23,7 @@
   <div class="related-product-area pb-100 pt-80"  data-aos="fade-up" data-aos-delay="200">
     <div class="container">
       <div class="section-title-2 st-border-center text-center mb-35">
-        <h2>모비젠 데이터 관리</h2>
+        <h2>데이터 승인 관리</h2>
       </div>
       <hr>
 
@@ -34,14 +34,21 @@
             <div class="topbar-left">
               <span id="total-num"></span>
               <div class="btn-wrapper">
+                <div class="col-12 col-xl-4 mb-1 mb-lg-0">
+                  <select class="form-select round select_line custom-input" id="useAt" name="useAt">
+                    <option value="">노출여부 전체</option>
+                    <option value="Y">노출</option>
+                    <option value="N">미노출</option>
+                  </select>
+                </div>
                 <div class="col-12 col-xl-7 mb-1 mb-lg-0">
                   <div class="search_wrap">
                     <input
                         type="text"
                         id="search_txt1"
                         class="form-control round border_line custom-input"
-                        name="registrantId"
-                        placeholder="등록자 아이디"
+                        name="browseText"
+                        placeholder="승인자 검색"
                     />
                   </div>
                 </div>
@@ -49,7 +56,7 @@
             </div>
             <div class="topbar-right">
               <div class="btn-wrapper">
-                <button type="button" class="custom-button m-2" id="new-btn">데이터셋 등록</button>
+                <button type="button" class="custom-button m-2" id="new-btn">데이터셋 승인</button>
                 <button type="button" class="custom-button m-2" id="delete-btn">데이터셋 삭제</button>
               </div>
             </div>
@@ -59,14 +66,15 @@
         <!-- s:list -->
         <div class="">
           <div class="table-responsive text-nowrap">
-            <table class="table table-bordered" id="mobigen-dataset-table">
+            <table class="table table-bordered" id="approved-dataset-table">
               <thead>
                 <tr>
                   <th></th>
                   <th>번호</th>
-                  <th>제목</th>
-                  <th>등록자</th>
-                  <th>등록일</th>
+                  <th>데이터셋Id</th>
+                  <th>노출여부</th>
+                  <th>승인자</th>
+                  <th>승인일</th>
                 </tr>
               </thead>
             </table>
@@ -80,31 +88,10 @@
 </th:block>
 
 <th:block layout:fragment="script">
-  <script th:src="@{'/assets/js/page/admin/mobigen-dataset-control.js'}"></script>
+  <script th:src="@{'/assets/js/page/admin/approved-dataset-control.js'}"></script>
   <script th:inline="javascript">
 
     $(function () {
-
-      mobigenDatasetJS.initTable();
-
-      $("#new-btn").on('click', function () {
-        window.location.href = '/admin/mobigen/dataset/save';
-      });
-
-      $("#delete-btn").on('click', function () {
-        mobigenDatasetJS.deleteDatasetClickEvent();
-      });
-
-      $('#search_txt1').keypress(function (e) {
-        if (e.keyCode === 13 || e.keyCode === 10 || e.key === 'Enter') {
-          e.preventDefault();
-          mobigenDatasetJS.searchTable();
-        }
-      });
-
-      $('#useAt').on('change', function () {
-        mobigenDatasetJS.searchTable();
-      });
 
     });
 
