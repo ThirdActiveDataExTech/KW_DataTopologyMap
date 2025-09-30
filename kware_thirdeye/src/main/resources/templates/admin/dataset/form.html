@@ -18,7 +18,7 @@
         <div class="container">
 
             <div class="section-title-2 st-border-center text-center mb-35">
-                <h2>데이터셋 등록</h2>
+                <h2>데이터셋 수정</h2>
             </div>
             <hr>
 
@@ -30,7 +30,7 @@
                         <!-- 오른쪽 버튼들 -->
                         <div class="right-buttons">
                             <button type="button" class="custom-button" id="list-btn">목록</button>
-                            <button id="new-submit-btn" class="custom-button">등록하기</button>
+                            <button id="period-submit-btn" class="custom-button">수정하기</button>
                         </div>
                     </div>
                 </div>
@@ -39,60 +39,62 @@
 
             <!-- s: 신규 데이터셋 등록 -->
             <div class="card card-custom" style="margin-top: 10px">
-                <h4>신규 데이터 등록 화면</h4>
+                <h4>주기성 데이터 수정 화면</h4>
                 <!-- 메타데이터 업로드 -->
                 <div class="file-row">
                     <label>메타데이터 파일</label>
                     <div class="file-display">
                         <div class="file-row" style="position: relative;">
-                            <input type="text" id="new-meta-filename" class="file-text" placeholder="선택된 파일 없음" readonly>
-                            <button type="button" id="new-meta-clear" class="clear-file">×</button>
+                            <input type="text" id="period-meta-filename"
+                                   th:value="${view?.metadataFiles.get(0).orgFileNm}"
+                                   class="file-text" placeholder="선택된 파일 없음" readonly>
                         </div>
                     </div>
-                    <button type="button" class="file-btn" id="new-meta-upload-btn">메타데이터 업로드</button>
-                    <div id="new-meta-uploader" style="display: none;"></div>
                 </div>
 
                 <!-- 기본정보 -->
                 <div class="basic-info">
 
-                        <div class="header">기본 정보</div>
+                    <div class="header">기본 정보</div>
 
-                        <!-- 1행 -->
-                        <div class="row">
-                            <div class="col-lg-12 items">
-                                <label for="new-title">컨텐츠 제목</label>
-                                <input type="text" id="new-title" name="title" class="form-control" placeholder="제목을 입력하세요." required>
+                    <!-- 1행 -->
+                    <div class="row">
+                        <div class="col-lg-12 items">
+                            <label for="period-title">컨텐츠 제목</label>
+                            <input type="text" id="period-title" name="title"
+                                   th:value="${view?.title}"
+                                   class="form-control" placeholder="제목을 입력하세요." required>
+                        </div>
+                    </div>
+
+                    <!-- 2행 -->
+                    <div class="row select2-row">
+                        <div class="col-lg-6">
+                            <label for="period-tags">태그</label>
+                            <div class="mt-2">
+                                <select class="select2 round border_line" id="period-tags" multiple></select>
                             </div>
                         </div>
-
-                        <!-- 2행 -->
-                        <div class="row select2-row">
-                            <div class="col-lg-6">
-                                <label for="new-tags">태그</label>
-                                <div class="mt-2">
-                                    <select class="select2 round border_line" id="new-tags" multiple></select>
-                                </div>
-                            </div>
-                            <div class="col-lg-6">
-                                <label for="new-category">카테고리</label>
-                                <div class="mt-2">
-                                    <select class="select2 round border_line" id="new-category" multiple></select>
-                                </div>
+                        <div class="col-lg-6">
+                            <label for="period-category">카테고리</label>
+                            <div class="mt-2">
+                                <select class="select2 round border_line" id="period-category" multiple></select>
                             </div>
                         </div>
+                    </div>
 
-                        <!-- 3행 -->
-                        <div class="row">
-                            <div class="col-lg-6 items metadata-description">
-                                <label for="new-description">컨텐츠 설명</label>
-                                <div id="new-description"></div> <!-- CKEditor -->
-                            </div>
-                            <div class="col-lg-6 items">
-                                <label for="new-metadata">메타데이터(JSON)</label>
-                                <textarea id="new-metadata" name="metadata" class="form-control" style="height:200px;" required></textarea>
-                            </div>
+                    <!-- 3행 -->
+                    <div class="row">
+                        <div class="col-lg-6 items metadata-description">
+                            <label for="period-description">컨텐츠 설명</label>
+                            <div id="period-description"></div>
                         </div>
+                        <div class="col-lg-6 items">
+                            <label for="period-metadata">메타데이터(JSON)</label>
+                            <textarea id="period-metadata" name="metadata"
+                                      class="form-control" style="height:200px;" required></textarea>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- 실데이터 업로드 -->
@@ -101,13 +103,13 @@
 
                     <div class="file-display">
                         <div class="file-row" style="position: relative;">
-                            <input type="text" id="new-data-filename" class="file-text" placeholder="선택된 파일 없음" readonly>
-                            <button type="button" id="new-data-clear" class="clear-file">×</button>
+                            <input type="text" id="period-data-filename" class="file-text" placeholder="선택된 파일 없음" readonly>
+                            <button type="button" id="period-data-clear" class="clear-file">×</button>
                         </div>
 
                     </div>
-                    <button type="button" class="file-btn" id="new-data-upload-btn">실데이터 업로드</button>
-                    <div id="new-data-uploader" style="display: none;"></div>
+                    <button type="button" class="file-btn" id="period-data-upload-btn">실데이터 업로드</button>
+                    <div id="period-data-uploader" style="display: none;"></div>
                 </div>
 
             </div>
@@ -122,12 +124,15 @@
     <script th:src="@{'/assets/js/page/admin/mobigen/mobigen-dataset-control-form.js'}"></script>
     <script th:inline="javascript">
 
+        const view = [[${view}]]
+        console.log(">>> view : ", view)
+
         $(document).ready(function() {
 
             // ===============================
-            // 신규 데이터 등록 > 카테고리
+            // 주기성 데이터 등록 > 카테고리
             // ===============================
-            $("#new-category").select2({
+            $("#period-category").select2({
                 placeholder: "카테고리 선택",
                 language: {
                     searching: function() {
@@ -142,15 +147,15 @@
                 },
                 tags: true,
                 maximumInputLength: 30,
+                data:  view['categories'].map(item => ({
+                    id: item['categoryUid'],
+                    text: item['categoryNm'],
+                    selected: true
+                })),
                 ajax: {
                     url: '/api/admin/dataset-category/list',
                     dataType: 'json',
                     delay: 250,
-                    data: function (params) {
-                        return {
-                            categoryNm: params.term, // search term
-                        };
-                    },
                     processResults: function (data, params) {
                         return {
                             results: data.map(item => ({
@@ -172,7 +177,7 @@
             });
 
 
-            $("#new-tags").select2({
+            $("#period-tags").select2({
                 placeholder: "태그 선택",
                 language: {
                     searching: function() {
@@ -187,6 +192,11 @@
                 },
                 tags: true,
                 maximumInputLength: 30,
+                data:  view['tags'].map(item => ({
+                    id: item['tagUid'],
+                    text: item['tagNm'],
+                    selected: true
+                })),
                 ajax: {
                     url: '/api/admin/dataset-tag/list',
                     dataType: 'json',
@@ -219,39 +229,35 @@
 
         $(function () {
 
-            mobigenDatasetFormJS.initMetadataUploader("new-meta-filename", "new-meta-uploader", null);
-            mobigenDatasetFormJS.initRealdataUploader("new-data-filename", "new-data-uploader", null);
-            mobigenDatasetFormJS.initCkEditor("new-description");
+            mobigenDatasetFormJS.initRealdataUploader("period-data-filename", "period-data-uploader", null);
+            mobigenDatasetFormJS.initCkEditor("period-description", view['description']);
 
             $("#list-btn").on('click', function () {
                 window.location.href = '/admin/mobigen/dataset'
             });
 
             // ===============================
-            // 신규 데이터 등록 > 메타데이터 파일 > 업로드, 삭제
+            // 주기성 데이터 등록 > metadata textarea
             // ===============================
-            $('#new-meta-upload-btn').on('click', function () {
-                mobigenDatasetFormJS.metadataFileUpload();
-            });
-            $("#new-meta-clear").on('click', function () {
-                mobigenDatasetFormJS.metadataFileDelete();
-            });
+            const parsed = JSON.parse(view['metadata']);
+            const pretty = JSON.stringify(parsed, null, 2);
+            $("#period-metadata").val(pretty);
 
             // ===============================
-            // 신규 데이터 등록 > 실데이터 파일 > 업로드, 삭제
+            // 주기성 데이터 등록 > 실데이터 파일 > 업로드, 삭제
             // ===============================
-            $("#new-data-upload-btn").on('click', function () {
+            $("#period-data-upload-btn").on('click', function () {
                 mobigenDatasetFormJS.realdataFileUpload();
             });
-            $("#new-data-clear").on('click', function () {
+            $("#period-data-clear").on('click', function () {
                 mobigenDatasetFormJS.realdataFileDelete();
             });
 
             // ===============================
-            // 등록 버튼 클릭 이벤트
+            // 주기성 버튼 클릭 이벤트
             // ===============================
-            $('#new-submit-btn').click(function(){
-                mobigenDatasetFormJS.newSaveClickEvent();
+            $('#period-submit-btn').click(function(){
+                mobigenDatasetFormJS.periodSaveClickEvent(view['uid'], view['realdataFileUid']);
             });
         });
     </script>

@@ -24,6 +24,10 @@ public class CommonFileDao extends CetusDaoSupport {
         return selectList("list", bean);
     }
 
+    public List<CommonFile> getCommonFileListByFileUid(Long fileUid) {
+        return selectList("getCommonFileListByFileUid", fileUid);
+    }
+
     public int delete(CommonFile bean) {
         return delete("delete", bean);
     }

@@ -8,9 +8,10 @@
               ,CMD.TITLE
               ,CMD.DESCRIPTION
               ,COALESCE(CMD.REGISTRANT_ID, '자동 저장') AS REGISTRANT_ID
-              ,CMD.REG_DT
+              ,TO_CHAR(CMD.REG_DT, 'YYYY-MM-DD HH:MM') AS REG_DT
           FROM CETUS_MOBIGEN_DATASET CMD
          WHERE 1 = 1
+           AND CMD.DELETE_AT = 'N'
         <if test="@Ognl@isNotEmpty(registrantId)">
            AND CMD.REGISTRANT_ID LIKE '%' || #{registrantId} || '%'
         </if>
@@ -25,8 +26,62 @@
         SELECT COUNT(*)
           FROM CETUS_MOBIGEN_DATASET CMD
          WHERE 1 = 1
+           AND CMD.DELETE_AT = 'N'
         <if test="@Ognl@isNotEmpty(registrantId)">
            AND CMD.REGISTRANT_ID LIKE '%' || #{registrantId} || '%'
         </if>
     </select>
+
+    <insert id="insert" parameterType="CetusMobigenDataset" useGeneratedKeys="true" keyProperty="uid">
+        /* cetusMobigenDataset.insert */
+        INSERT INTO CETUS_MOBIGEN_DATASET (
+             TITLE
+            ,DESCRIPTION
+            ,METADATA_FILE_UID
+            ,REALDATA_FILE_UID
+            ,REGISTRANT_ID
+            ,REG_DT
+            ,DELETE_AT
+            ,METADATA
+        ) VALUES (
+             #{title}
+            ,#{description}
+            ,#{metadataFileUid}
+            ,#{realdataFileUid}
+            ,#{registrantId}
+            ,NOW()
+            ,'N'
+            ,#{metadata}::jsonb
+        )
+    </insert>
+
+    <update id="deleteMobigenDataset" parameterType="CetusMobigenDataset">
+        /* cetusMobigenDataset.deleteMobigenDataset */
+        UPDATE CETUS_MOBIGEN_DATASET
+           SET DELETE_AT = 'Y'
+         WHERE UID = #{uid}
+    </update>
+
+    <select id="getMobigenDatasetByDatasetId" parameterType="Long" resultType="MobigenDatasetView">
+        /* cetusMobigenDataset.getMobigenDatasetByDatasetId */
+        SELECT CMD.UID
+              ,CMD.TITLE
+              ,CMD.DESCRIPTION
+              ,CMD.REGISTRANT_ID
+              ,TO_CHAR(CMD.REG_DT, 'YYYY-MM-DD HH:MM') AS REG_DT
+              ,CMD.METADATA_FILE_UID
+              ,CMD.REALDATA_FILE_UID
+              ,CMD.METADATA
+          FROM CETUS_MOBIGEN_DATASET CMD
+         WHERE CMD.UID = #{uid}
+    </select>
+
+    <update id="update" parameterType="CetusMobigenDataset">
+        /* cetusMobigenDataset.update */
+        UPDATE CETUS_MOBIGEN_DATASET
+           SET TITLE = #{title}
+              ,DESCRIPTION = #{description}
+              ,METADATA = #{metadata}::jsonb
+         WHERE UID = #{uid}
+    </update>
 </mapper>

@@ -32,6 +32,26 @@
            </if>
          ORDER BY REG_DT DESC
     </select>
+
+    <select id="getCommonFileListByFileUid" resultType="CommonFile" parameterType="Long">
+        /* file.getCommonFileListByFileUid */
+        SELECT FILE_UID
+             , FILE_ID
+             , SAVED
+             , FILE_NM
+             , ORG_FILE_NM
+             , FILE_PATH
+             , FILE_URL
+             , FILE_TYPE
+             , EXTENSION
+             , FILE_SIZE
+             , REG_DT
+          FROM CETUS_FILE
+         WHERE USE_AT = 'Y'
+           AND FILE_UID = #{fileUid}
+           AND SAVED != 'P'
+         ORDER BY REG_DT DESC
+    </select>
     
     <select id="view" resultType="CommonFile">
         /* file.view */

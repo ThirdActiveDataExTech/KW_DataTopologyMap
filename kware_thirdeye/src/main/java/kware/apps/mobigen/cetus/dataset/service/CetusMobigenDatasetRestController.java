@@ -3,13 +3,14 @@ package kware.apps.mobigen.cetus.dataset.service;
 
 import cetus.bean.Page;
 import cetus.bean.Pageable;
+import kware.apps.mobigen.cetus.dataset.dto.request.ChangeMobigenDataset;
+import kware.apps.mobigen.cetus.dataset.dto.request.DeleteDatasets;
+import kware.apps.mobigen.cetus.dataset.dto.request.SaveMobigenDataset;
 import kware.apps.mobigen.cetus.dataset.dto.request.SearchMobigenDataset;
 import kware.apps.mobigen.cetus.dataset.dto.response.MobigenDatasetList;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -22,5 +23,23 @@ public class CetusMobigenDatasetRestController {
     public ResponseEntity findAllMobigenDatasetPage(SearchMobigenDataset search, Pageable pageable) {
         Page<MobigenDatasetList> page = service.findAllMobigenDatasetPage(search, pageable);
         return ResponseEntity.ok(page);
+    }
+
+    @PostMapping
+    public ResponseEntity saveMobigenDataset(@RequestBody SaveMobigenDataset request) {
+        service.saveMobigenDataset(request);
+        return ResponseEntity.ok().build();
+    }
+
+    @PutMapping("/delete-several")
+    public ResponseEntity deleteSeveralMobigenDataset(@RequestBody DeleteDatasets request) {
+        service.deleteSeveralMobigenDataset(request);
+        return ResponseEntity.ok().build();
+    }
+
+    @PutMapping("/{uid}")
+    public ResponseEntity changeMobigenDataset(@PathVariable("uid") Long uid, @RequestBody ChangeMobigenDataset request) {
+        service.changeMobigenDataset(uid, request);
+        return ResponseEntity.ok().build();
     }
 }

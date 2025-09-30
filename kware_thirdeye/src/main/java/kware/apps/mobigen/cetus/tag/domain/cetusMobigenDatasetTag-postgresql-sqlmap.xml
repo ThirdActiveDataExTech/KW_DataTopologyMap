@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cetusMobigenDatasetTag">
+
+    <delete id="deleteAll" parameterType="Long">
+        /* cetusMobigenDatasetTag.deleteAll */
+        DELETE FROM CETUS_MOBIGEN_DATASET_TAG
+              WHERE DATASET_UID = #{datasetUid}
+    </delete>
+
+    <insert id="insert" parameterType="CetusMobigenDatasetTag">
+        /* cetusMobigenDatasetTag.insert */
+        INSERT INTO CETUS_MOBIGEN_DATASET_TAG (
+             DATASET_UID
+            ,TAG_UID
+        ) VALUES (
+             #{datasetUid}
+            ,#{tagUid}
+        )
+    </insert>
+
+    <select id="getMobigenDatasetTagList" resultType="TagList" parameterType="SearchTag">
+        /* cetusMobigenDatasetTag.getMobigenDatasetTagList */
+        SELECT CMT.UID AS TAG_UID
+              ,CMT.TAG_NM AS TAG_NM
+          FROM CETUS_MOBIGEN_TAG CMT
+         WHERE 1 = 1
+        <if test="@Ognl@isNotEmpty(tagNm)">
+           AND CMT.TAG_NM LIKE '%' || #{tagNm} || '%'
+        </if>
+    </select>
+
+    <select id="getMobigenDatasetTagListByDatasetId" resultType="TagList" parameterType="Long">
+        /* cetusMobigenDatasetTag.getMobigenDatasetTagListByDatasetId */
+        SELECT CMDT.UID
+              ,CMDT.TAG_UID
+              ,CMT.TAG_NM AS TAG_NM
+          FROM CETUS_MOBIGEN_DATASET_TAG CMDT
+         INNER JOIN CETUS_MOBIGEN_TAG CMT ON CMT.UID = CMDT.TAG_UID
+         WHERE CMDT.DATASET_UID = #{datasetUid}
+    </select>
+
+</mapper>
