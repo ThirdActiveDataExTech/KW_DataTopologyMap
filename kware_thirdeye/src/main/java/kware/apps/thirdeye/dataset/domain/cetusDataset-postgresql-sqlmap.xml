@@ -14,10 +14,12 @@
                   WHERE CDM.APPROVED_DATASET_UID = CAD.UID
               ) AS RATINGS
           FROM CETUS_APPROVED_DATASET CAD
+          LEFT JOIN CETUS_DATASET_UI CDU ON CDU.APPROVED_DATASET_UID = CAD.UID
           LEFT JOIN CETUS_USER CU_CREATE ON CU_CREATE.UID = CAD.CREATED_UID
           LEFT JOIN CETUS_USER CU_APP ON CU_APP.UID = CAD.APPROVED_UID
          WHERE CAD.WORKPLACE_UID = #{workplaceUid}
-           AND SHOW_AT = 'Y'
+           AND CAD.DELETE_AT = 'N'
+           AND CDU.SHOW_AT = 'Y'
         <if test="@Ognl@isNotEmpty(startDate) and @Ognl@isNotEmpty(endDate)">
            AND CAD.APPROVED_DT BETWEEN #{startDate}::TIMESTAMP
            AND (#{endDate}::DATE + INTERVAL '1 day' - INTERVAL '1 second')
@@ -32,10 +34,12 @@
         /* cetusDataset.getDatasetPageCount */
         SELECT COUNT(*)
           FROM CETUS_APPROVED_DATASET CAD
+          LEFT JOIN CETUS_DATASET_UI CDU ON CDU.APPROVED_DATASET_UID = CAD.UID
           LEFT JOIN CETUS_USER CU_CREATE ON CU_CREATE.UID = CAD.CREATED_UID
           LEFT JOIN CETUS_USER CU_APP ON CU_APP.UID = CAD.APPROVED_UID
          WHERE CAD.WORKPLACE_UID = #{workplaceUid}
-           AND SHOW_AT = 'Y'
+           AND CAD.DELETE_AT = 'N'
+           AND CDU.SHOW_AT = 'Y'
         <if test="@Ognl@isNotEmpty(startDate) and @Ognl@isNotEmpty(endDate)">
            AND CAD.APPROVED_DT BETWEEN #{startDate}::TIMESTAMP
            AND (#{endDate}::DATE + INTERVAL '1 day' - INTERVAL '1 second')

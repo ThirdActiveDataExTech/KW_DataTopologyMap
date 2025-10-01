@@ -29,6 +29,12 @@ public class CetusDatasetService {
 
     private final CetusDatasetDao dao;
 
+    /**
+     * @method      findDatasetPage
+     * @author      dahyeon
+     * @date        2025-10-01
+     * @deacription 승인된 데이터셋 목록 조회 + 페이징
+    **/
     @Transactional(readOnly = true)
     public Page<DatasetList> findDatasetPage( DatasetSearch search, Pageable pageable ) {
         search.setWorkplaceUid(UserUtil.getUserWorkplaceUid());
@@ -47,6 +53,12 @@ public class CetusDatasetService {
         return page;
     }
 
+    /**
+     * @method      findDatasetByUid
+     * @author      dahyeon
+     * @date        2025-10-01
+     * @deacription 승인된 데이터셋 단건 조회
+    **/
     @Transactional(readOnly = true)
     public DatasetDetailView findDatasetByUid(Long approvedUid) {
 

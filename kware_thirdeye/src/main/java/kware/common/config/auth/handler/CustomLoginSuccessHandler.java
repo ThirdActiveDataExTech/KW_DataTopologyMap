@@ -37,7 +37,7 @@ public class CustomLoginSuccessHandler implements AuthenticationSuccessHandler {
 		if (UserUtil.isAuthenticated(auth)) {
 			Long uid = details.getUser().getUid();
 			this.saveLoginHist(uid, req);
-			log.info("user {} successfully logged in from IP {} Role: {}", details.getUser().getUserId(), req.getRemoteAddr(), details.getUser().getRole());
+			log.info("user {} successfully logged in from IP {} Role: {} Workplace: {}", details.getUser().getUserId(), req.getRemoteAddr(), details.getUser().getRole(), details.getUser().getWorkplaceNm());
 			res.sendRedirect("/portal/home");
 		}
 	}
