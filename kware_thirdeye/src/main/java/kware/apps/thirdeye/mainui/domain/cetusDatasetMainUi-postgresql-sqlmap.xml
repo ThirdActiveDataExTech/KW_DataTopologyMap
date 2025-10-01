@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cetusDatasetMainUi">
+
+    <select id="getDatasetMainUiPage" parameterType="SearchMainUi" resultType="MainUiList">
+        /* cetusDatasetMainUi.getDatasetMainUiPage */
+        SELECT CDMU.UID
+              ,CDMU.CODE
+              ,CDMU.NAME
+              ,CDMU.MAX_COUNT
+              ,CDMU.DESC_LINE_CLAMP
+              ,CDMU.TITLE_LINE_CLAMP
+              ,CDMU.THUMB_USE_AT
+              ,CDMU.WORKPLACE_UID
+              ,CDMU.USE_AT
+              ,CDMU.REG_UID
+              ,CU.USER_NM AS REG_NM
+              ,TO_CHAR(CDMU.REG_DT, 'YYYY-MM-DD') AS REG_DT
+          FROM CETUS_DATASET_MAIN_UI CDMU
+          LEFT JOIN CETUS_USER CU ON CU.UID = CDMU.REG_UID
+         WHERE 1 = 1
+           AND CDMU.DELETE_AT = 'N'
+           AND CDMU.WORKPLACE_UID = #{workplaceUid}
+        <if test="@Ognl@isNotEmpty(browseText)">
+           AND (CDMU.NAME LIKE '%' || #{browseText} || '%' OR CDMU.CODE LIKE '%' || #{browseText} || '%' OR CU.USER_NM LIKE '%' || #{browseText} || '%' )
+        </if>
+         ORDER BY CDMU.REG_DT DESC
+        <if test="@Ognl@isNotEmpty(startNumber) and  @Ognl@isNotEmpty(endNumber)">
+        OFFSET ${startNumber} LIMIT ${endNumber}
+        </if>
+    </select>
+
+    <select id="getDatasetMainUiPageCount" parameterType="SearchMainUi" resultType="int">
+        /* cetusDatasetMainUi.getDatasetMainUiPageCount */
+        SELECT COUNT(*)
+          FROM CETUS_DATASET_MAIN_UI CDMU
+          LEFT JOIN CETUS_USER CU ON CU.UID = CDMU.REG_UID
+         WHERE 1 = 1
+           AND CDMU.DELETE_AT = 'N'
+           AND CDMU.WORKPLACE_UID = #{workplaceUid}
+        <if test="@Ognl@isNotEmpty(browseText)">
+           AND (CDMU.NAME LIKE '%' || #{browseText} || '%' OR CDMU.CODE LIKE '%' || #{browseText} || '%' OR CU.USER_NM LIKE '%' || #{browseText} || '%' )
+        </if>
+    </select>
+
+    <select id="getCountByCode" resultType="int" parameterType="SearchDuplicateCode">
+        /* cetusDatasetMainUi.getCountByCode */
+        SELECT COUNT(*)
+          FROM CETUS_DATASET_MAIN_UI CDMU
+         WHERE DELETE_AT = 'N'
+           AND CODE = #{code}
+           AND WORKPLACE_UID = #{workplaceUid}
+    </select>
+
+    <insert id="insert" parameterType="CetusDatasetMainUi">
+        /* cetusDatasetMainUi.insert */
+        INSERT INTO CETUS_DATASET_MAIN_UI (
+             CODE
+            ,NAME
+            <if test="@Ognl@isNotEmpty(maxCount)">
+            ,MAX_COUNT
+            </if>
+            <if test="@Ognl@isNotEmpty(descLineClamp)">
+            ,DESC_LINE_CLAMP
+            </if>
+            <if test="@Ognl@isNotEmpty(titleLineClamp)">
+            ,TITLE_LINE_CLAMP
+            </if>
+            ,THUMB_USE_AT
+            ,WORKPLACE_UID
+            ,USE_AT
+            ,DELETE_AT
+            ,REG_UID
+            ,REG_DT
+            ,UPDT_UID
+            ,UPDT_DT
+        ) VALUES (
+             #{code}
+            ,#{name}
+            <if test="@Ognl@isNotEmpty(maxCount)">
+            ,#{maxCount}
+            </if>
+            <if test="@Ognl@isNotEmpty(descLineClamp)">
+            ,#{descLineClamp}
+            </if>
+            <if test="@Ognl@isNotEmpty(titleLineClamp)">
+            ,#{titleLineClamp}
+            </if>
+            ,#{thumbUseAt}
+            ,#{workplaceUid}
+            ,#{useAt}
+            ,'N'
+            ,#{regUid}
+            ,NOW()
+            ,#{updtUid}
+            ,NOW()
+        )
+    </insert>
+
+    <select id="getCountDatasetMainUiUse" parameterType="Long" resultType="int">
+        /* cetusDatasetMainUi.getCountDatasetMainUiUse */
+        SELECT COUNT(*)
+          FROM CETUS_DATASET_UI CDU
+         WHERE CDU.MAIN_UI_UID = #{uid}
+    </select>
+
+    <select id="getDatasetMainUiByUid" parameterType="Long" resultType="MainUiView">
+        /* cetusDatasetMainUi.getDatasetMainUiByUid */
+        SELECT CDMU.UID
+              ,CDMU.CODE
+              ,CDMU.NAME
+              ,CDMU.MAX_COUNT
+              ,CDMU.DESC_LINE_CLAMP
+              ,CDMU.TITLE_LINE_CLAMP
+              ,CDMU.THUMB_USE_AT
+              ,CDMU.WORKPLACE_UID
+              ,CDMU.USE_AT
+              ,CDMU.REG_UID
+              ,CU.USER_NM AS REG_NM
+              ,TO_CHAR(CDMU.REG_DT, 'YYYY-MM-DD') AS REG_DT
+          FROM CETUS_DATASET_MAIN_UI CDMU
+          LEFT JOIN CETUS_USER CU ON CU.UID = CDMU.REG_UID
+         WHERE CDMU.UID = #{uid}
+    </select>
+
+    <update id="updateDatasetMainUidDeleteAt" parameterType="CetusDatasetMainUi">
+        /* cetusDatasetMainUi.updateDatasetMainUidDeleteAt */
+        UPDATE CETUS_DATASET_MAIN_UI
+           SET DELETE_AT = 'Y'
+              ,UPDT_UID = #{updtUid}
+              ,UPDT_DT = NOW()
+         WHERE UID = #{uid}
+    </update>
+
+
+    <update id="update" parameterType="CetusDatasetMainUi">
+        /* cetusDatasetMainUi.update */
+        UPDATE CETUS_DATASET_MAIN_UI
+           SET NAME = #{name}
+         <if test="@Ognl@isNotEmpty(maxCount)">
+              ,MAX_COUNT = #{maxCount}
+         </if>
+         <if test="@Ognl@isNotEmpty(descLineClamp)">
+              ,DESC_LINE_CLAMP #{descLineClamp}
+         </if>
+         <if test="@Ognl@isNotEmpty(titleLineClamp)">
+              ,TITLE_LINE_CLAMP = #{titleLineClamp}
+         </if>
+              ,UPDT_UID = #{updtUid}
+              ,UPDT_DT = NOW()
+              ,THUMB_USE_AT = #{thumbUseAt}
+              ,USE_AT = #{useAt}
+         WHERE UID = #{uid}
+    </update>
+</mapper>

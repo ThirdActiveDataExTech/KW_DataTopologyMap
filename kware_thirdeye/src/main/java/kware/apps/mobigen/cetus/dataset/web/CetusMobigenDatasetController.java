@@ -22,13 +22,13 @@ public class CetusMobigenDatasetController {
     @GetMapping
     public String index(Model model) {
         menuNavigationManager.renderingPage("/admin/mobigen/dataset", "데이터 관리", true, model);
-        return "admin/dataset/index";
+        return "admin/mobigen/index";
     }
 
     @GetMapping("/save")
     public String save(Model model) {
         menuNavigationManager.renderingPage("/admin/mobigen/dataset", "데이터 등록", false, model);
-        return "admin/dataset/save";
+        return "admin/mobigen/save";
     }
 
     @GetMapping("/{uid}")
@@ -38,6 +38,6 @@ public class CetusMobigenDatasetController {
         MobigenDatasetView view = service.findMobigenDatasetByDatasetId(uid);
         model.addAttribute("view", view);
 
-        return "admin/dataset/form";
+        return "admin/mobigen/form";
     }
 }

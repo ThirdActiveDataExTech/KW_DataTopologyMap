@@ -1,25 +1,18 @@
 
 package kware.apps.thirdeye.bookmark.service;
 
-import java.io.IOException;
-import java.nio.file.Files;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import cetus.user.UserUtil;
 import kware.apps.thirdeye.bookmark.domain.CetusBookMark;
 import kware.apps.thirdeye.bookmark.domain.CetusBookMarkDao;
 import kware.apps.thirdeye.bookmark.dto.request.SearchUserBookMarkToggle;
 import kware.apps.thirdeye.bookmark.dto.response.UserBookMarkList;
-import kware.apps.thirdeye.dataset.dto.response.DatasetView;
-import kware.apps.thirdeye.dataset.service.CetusDatasetService;
-import org.springframework.core.io.ClassPathResource;
+import kware.apps.thirdeye.approveddataset.dto.response.DatasetView;
+import kware.apps.thirdeye.approveddataset.service.CetusDatasetService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import kware.apps.thirdeye.bookmark.dto.request.UserBookMarkToggle;
 import kware.apps.thirdeye.bookmark.dto.request.SearchUserBookMark;

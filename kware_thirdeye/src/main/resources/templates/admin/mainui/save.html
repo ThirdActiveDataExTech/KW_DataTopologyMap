@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/default}">
+
+<th:block layout:fragment="center-image">
+    <th:block th:with="title1=${currentPageName}, title2=${navigation}, leftImg=${centerLeftImage}, rightImg=${centerRightImage}">
+        <th:block th:replace="fragments/center-image :: main-image-title(${title1}, ${title2}, ${leftImg}, ${rightImg})"></th:block>
+    </th:block>
+</th:block>
+
+<th:block layout:fragment="head">
+</th:block>
+
+<th:block layout:fragment="content">
+    <div class="related-product-area pb-100 pt-80" data-aos="fade-up" data-aos-delay="200">
+        <div class="container">
+
+            <div class="section-title-2 st-border-center text-center mb-35">
+                <h2>메인UI 등록</h2>
+            </div>
+            <hr>
+
+            <!-- s:buttons -->
+            <div>
+                <div class="d-flex justify-content-end pe-4">
+                    <div class="btn-container" style="margin-top: 0px !important;">
+                        <!-- 왼쪽 버튼 -->
+                        <!-- 오른쪽 버튼들 -->
+                        <div class="right-buttons">
+                            <button type="button" class="custom-button" id="list-btn">목록</button>
+                            <button id="submit-btn" class="custom-button">등록하기</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- e:buttons -->
+
+            <!-- s: 메인 UI 등록 -->
+            <div class="card" style="margin-top: 10px">
+                <form class="needs-validation" id="save-mainui" novalidate="">
+
+                    <div class="card-body">
+
+
+                        <div class="row custom-row">
+                            <div class="col-lg-6">
+                                <div class="single-input-item">
+                                    <label for="name" class="custom-label">메인UI 이름<span style="color: firebrick">*</span></label>
+                                    <input class="form-control custom-input" type="text" id="name" name="name" placeholder="메인UI 이름을 입력하세요." required>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <label class="custom-label required" for="code">메인UI 코드<span class="req">*</span></label>
+                                <div class="input-group">
+                                    <input type="text" id="code" name="code" class="form-control custom-input" required />
+                                    <button class="custom-button" id="code-chk" type="button">중복 확인</button>
+                                    <span class="validation-error-message" id="code-error"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row custom-row">
+                            <div class="col-lg-4">
+                                <div class="single-input-item">
+                                    <label for="maxCount" class="custom-label">최대 노출 개수</label>
+                                    <input class="form-control custom-input" type="number" id="maxCount" name="maxCount" placeholder="최대 노출 개수를 입력하세요.">
+                                </div>
+                            </div>
+
+                            <div class="col-lg-4">
+                                <div class="single-input-item">
+                                    <label for="titleLineClamp" class="custom-label">제목 최대 라인 수</label>
+                                    <input class="form-control custom-input" type="number" id="titleLineClamp" name="titleLineClamp" placeholder="제목 최대 라인 수를 입력하세요.">
+                                </div>
+                            </div>
+
+                            <div class="col-lg-4">
+                                <div class="single-input-item">
+                                    <label for="descLineClamp" class="custom-label">설명 최대 라인 수</label>
+                                    <input class="form-control custom-input" type="number" id="descLineClamp" name="descLineClamp" placeholder="설명 최대 라인 수를 입력하세요.">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row custom-row">
+                            <div class="col-lg-6">
+                                <label for="thumbUseAt-form" class="custom-label">썸네일 사용 여부<span style="color: firebrick">*</span></label>
+                                <div id="thumbUseAt-form" class="custom-check-form-flex">
+                                    <div class="form-check">
+                                        <input type="radio" id="thumbUseAt_Y" name="thumbUseAt" class="form-check-input" value="Y" checked="">
+                                        <label class="form-check-label" for="thumbUseAt_Y">사용</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input type="radio" id="thumbUseAt_N" name="thumbUseAt" class="form-check-input" value="N">
+                                        <label class="form-check-label" for="thumbUseAt_N">미사용</label>
+                                    </div>
+                                </div>
+                                <span class="validation-error-message" id="thumbUseAt-error"></span>
+                            </div>
+                            <div class="col-lg-6">
+                                <label for="useAt-form" class="custom-label">사용 여부<span style="color: firebrick">*</span></label>
+                                <div id="useAt-form" class="custom-check-form-flex">
+                                    <div class="form-check">
+                                        <input type="radio" id="useAt_Y" name="useAt" class="form-check-input" value="Y" checked="">
+                                        <label class="form-check-label" for="useAt_Y">사용</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input type="radio" id="useAt_N" name="useAt" class="form-check-input" value="N">
+                                        <label class="form-check-label" for="useAt_N">미사용</label>
+                                    </div>
+                                </div>
+                                <span class="validation-error-message" id="useAt-error"></span>
+                            </div>
+                        </div>
+
+                    </div>
+                </form>
+            </div>
+            <!-- e: 메인 UI 등록 -->
+
+        </div>
+    </div>
+
+</th:block>
+
+<th:block layout:fragment="script">
+    <script th:src="@{'/assets/js/page/admin/mainui/mainui-list-form.js'}"></script>
+    <script th:inline="javascript">
+
+        $(document).ready(function() {
+
+            $("#code-chk").on('click', function () {
+                mainuiJS.checkCode();
+            });
+
+            $("#submit-btn").on('click', function () {
+               mainuiJS.saveMainUiForm();
+            });
+
+            $("#list-btn").on('click', function () {
+               window.location.href = '/admin/main-ui'
+            });
+        });
+
+    </script>
+</th:block>
+</html>
