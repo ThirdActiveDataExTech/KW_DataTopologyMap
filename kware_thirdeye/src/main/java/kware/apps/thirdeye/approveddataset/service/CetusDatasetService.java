@@ -5,12 +5,16 @@ import cetus.bean.Pageable;
 import cetus.user.UserUtil;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import kware.apps.mobigen.cetus.dataset.dto.response.MobigenDatasetView;
+import kware.apps.mobigen.cetus.dataset.service.CetusMobigenDatasetService;
+import kware.apps.thirdeye.approveddataset.domain.CetusDataset;
 import kware.apps.thirdeye.approveddataset.domain.CetusDatasetDao;
 import kware.apps.thirdeye.approveddataset.dto.request.DatasetSearch;
 import kware.apps.thirdeye.approveddataset.dto.request.DatasetViewSearch;
-import kware.apps.thirdeye.approveddataset.dto.response.DatasetDetailView;
-import kware.apps.thirdeye.approveddataset.dto.response.DatasetList;
-import kware.apps.thirdeye.approveddataset.dto.response.DatasetView;
+import kware.apps.thirdeye.approveddataset.dto.request.SaveDataset;
+import kware.apps.thirdeye.approveddataset.dto.response.*;
+import kware.apps.thirdeye.datasetui.dto.response.DatasetUiView;
+import kware.apps.thirdeye.datasetui.service.CetusDatasetUiService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
@@ -28,6 +32,8 @@ import java.util.stream.Collectors;
 public class CetusDatasetService {
 
     private final CetusDatasetDao dao;
+    private final CetusDatasetUiService datasetUiService;
+    private final CetusMobigenDatasetService mobigenDatasetService;
 
     /**
      * @method      findDatasetPage
@@ -54,10 +60,40 @@ public class CetusDatasetService {
     }
 
     /**
+     * @method      approveDataset
+     * @author      dahyeon
+     * @date        2025-10-01
+     * @deacription 모비젠 저장소에 저장된 데이터셋 진열등록
+    **/
+    @Transactional
+    public void approveDataset(SaveDataset request) {
+
+        // 1. 모비젠 데이터셋에서 가져온 데이터 정보 진열/승인
+        CetusDataset bean = new CetusDataset(request, UserUtil.getUserWorkplaceUid(), UserUtil.getUser().getUid());
+        dao.insert(bean);
+        Long approvedDatasetUid = bean.getUid();
+
+        // 2. 진열/승인된 데이터에 대한 UI 정보 저장
+        datasetUiService.saveDatasetUi(approvedDatasetUid, request);
+    }
+
+    /**
+     * @method      findApprovedDatasetIdList
+     * @author      dahyeon
+     * @date        2025-10-01
+     * @deacription 모비젠 저장소에서 kware 포탈 시스템으로 진열등록된 데이터셋 ID 목록
+    **/
+    @Transactional(readOnly = true)
+    public List<DatasetIdList> findApprovedDatasetIdList() {
+        return dao.getApprovedDatasetIdList(UserUtil.getUserWorkplaceUid());
+    }
+
+    /**
      * @method      findDatasetByUid
      * @author      dahyeon
      * @date        2025-10-01
-     * @deacription 승인된 데이터셋 단건 조회
+     * @deacription 진열등록된 데이터셋 단건 조회
+     *              TODO 추후 삭제
     **/
     @Transactional(readOnly = true)
     public DatasetDetailView findDatasetByUid(Long approvedUid) {
@@ -76,6 +112,27 @@ public class CetusDatasetService {
         }
 
         return dataset;
+    }
+    
+    /**
+     * @method      findApprovedDatasetView
+     * @author      dahyeon
+     * @date        2025-10-01
+     * @deacription 모비젠 저장소에서 kware 포탈 시스템으로 진열 등록된 데이터셋에 대한 상세 정보 조회
+     *              => 해당 데이터셋의 UI 정보도 함께 조회한다.
+     *              => 해당 데이터셋에 대해서 모비젠 저장소에 저장된 메타데잍터 정보도 조회한다.
+    **/
+    @Transactional(readOnly = true)
+    public ApprovedDatasetView findApprovedDatasetView(Long uid) {
+        ApprovedDatasetView approvedDatasetView = dao.getApprovedDatasetView(uid);
+
+        DatasetUiView uiView = datasetUiService.findDatasetUiView(uid);
+        approvedDatasetView.setUiView(uiView);
+
+        MobigenDatasetView mobigenDatasetView = mobigenDatasetService.findMobigenDatasetByDatasetId(approvedDatasetView.getDatasetId());
+        approvedDatasetView.setMobigenDatasetView(mobigenDatasetView);
+        
+        return approvedDatasetView;
     }
     
     // todo 추후 API 호출로 변경

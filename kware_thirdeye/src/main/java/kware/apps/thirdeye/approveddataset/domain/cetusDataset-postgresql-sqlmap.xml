@@ -15,7 +15,7 @@
               ) AS RATINGS
           FROM CETUS_APPROVED_DATASET CAD
           LEFT JOIN CETUS_DATASET_UI CDU ON CDU.APPROVED_DATASET_UID = CAD.UID
-          LEFT JOIN CETUS_USER CU_CREATE ON CU_CREATE.UID = CAD.CREATED_UID
+          LEFT JOIN CETUS_USER CU_CREATE ON CU_CREATE.USER_ID = CAD.CREATED_ID
           LEFT JOIN CETUS_USER CU_APP ON CU_APP.UID = CAD.APPROVED_UID
          WHERE CAD.WORKPLACE_UID = #{workplaceUid}
            AND CAD.DELETE_AT = 'N'
@@ -35,7 +35,7 @@
         SELECT COUNT(*)
           FROM CETUS_APPROVED_DATASET CAD
           LEFT JOIN CETUS_DATASET_UI CDU ON CDU.APPROVED_DATASET_UID = CAD.UID
-          LEFT JOIN CETUS_USER CU_CREATE ON CU_CREATE.UID = CAD.CREATED_UID
+          LEFT JOIN CETUS_USER CU_CREATE ON CU_CREATE.USER_ID = CAD.CREATED_ID
           LEFT JOIN CETUS_USER CU_APP ON CU_APP.UID = CAD.APPROVED_UID
          WHERE CAD.WORKPLACE_UID = #{workplaceUid}
            AND CAD.DELETE_AT = 'N'
@@ -64,9 +64,47 @@
                    AND B.APPROVED_DATASET_UID = CAD.UID
               ) AS BOOKMARK
           FROM CETUS_APPROVED_DATASET CAD
-          LEFT JOIN CETUS_USER CU_CREATE ON CU_CREATE.UID = CAD.CREATED_UID
+          LEFT JOIN CETUS_USER CU_CREATE ON CU_CREATE.USER_ID = CAD.CREATED_ID
           LEFT JOIN CETUS_USER CU_APP ON CU_APP.UID = CAD.APPROVED_UID
          WHERE CAD.UID = #{approvedUid}
     </select>
 
+    <select id="getApprovedDatasetIdList" resultType="DatasetIdList" parameterType="Long">
+        /* cetusDataset.getApprovedDatasetIdList */
+        SELECT CAD.DATASET_ID
+          FROM CETUS_APPROVED_DATASET CAD
+         WHERE WORKPLACE_UID = #{workplaceUid}
+           AND DELETE_AT = 'N'
+    </select>
+
+    <insert id="insert" parameterType="CetusDataset" keyProperty="uid" useGeneratedKeys="true">
+        /* cetusDataset.insert */
+        INSERT INTO CETUS_APPROVED_DATASET (
+             DATASET_ID
+            ,WORKPLACE_UID
+            ,APPROVED_DT
+            ,APPROVED_UID
+            ,CREATED_ID
+            ,DELETE_AT
+        ) VALUES (
+             #{datasetId}
+            ,#{workplaceUid}
+            ,NOW()
+            ,#{approvedUid}
+            ,#{createdId}
+            ,'N'
+        )
+    </insert>
+
+    <select id="getApprovedDatasetView" parameterType="Long" resultType="ApprovedDatasetView">
+        /* cetusDataset.getApprovedDatasetView */
+        SELECT CAD.UID
+              ,CAD.DATASET_ID
+              ,CAD.WORKPLACE_UID
+              ,CAD.APPROVED_DT
+              ,CAD.APPROVED_UID
+              ,CAD.CREATED_ID
+          FROM CETUS_APPROVED_DATASET CAD
+         WHERE CAD.UID = #{uid}
+    </select>
 </mapper>

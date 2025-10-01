@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cetusDatasetUi">
+
+    <select id="getCountDatasetMainUiUse" parameterType="Long" resultType="int">
+        /* cetusDatasetUi.getCountDatasetMainUiUse */
+        SELECT COUNT(*)
+          FROM CETUS_DATASET_UI CDU
+         WHERE CDU.MAIN_UI_UID = #{uid}
+    </select>
+
+    <insert id="insert" parameterType="CetusDatasetUi">
+        /* cetusDatasetUi.insert */
+        INSERT INTO CETUS_DATASET_UI (
+             APPROVED_DATASET_UID
+            ,SORT_NO
+            ,MAIN_UI_UID
+            ,SHOW_AT
+            ,THUMB_UID
+            ,REG_UID
+            ,REG_DT
+            ,UPDT_UID
+            ,UPDT_DT
+        ) VALUES (
+             #{approvedDatasetUid}
+            ,#{sortNo}
+            ,#{mainUiUid}
+            ,#{showAt}
+            ,#{thumbUid}::int8
+            ,#{regUid}
+            ,NOW()
+            ,#{updtUid}
+            ,NOW()
+        )
+    </insert>
+
+    <select id="getDatasetUiView" resultType="DatasetUiView" parameterType="Long">
+        /* cetusDatasetUi.getDatasetUiView */
+        SELECT CDU.APPROVED_DATASET_UID
+              ,CDU.SORT_NO
+              ,CDU.MAIN_UI_UID
+              ,CDU.SHOW_AT
+              ,CDU.THUMB_UID
+              ,CF.FILE_ID AS THUMB_ID
+          FROM CETUS_DATASET_UI CDU
+          LEFT JOIN CETUS_FILE CF ON CF.FILE_UID = CDU.THUMB_UID AND CF.USE_AT = 'Y' AND CF.SAVED = 'Y'
+         WHERE CDU.APPROVED_DATASET_UID = #{approvedDatasetUid}
+    </select>
+
+    <update id="update" parameterType="CetusDatasetUi">
+        /* cetusDatasetUi.update */
+        UPDATE CETUS_DATASET_UI
+           SET SORT_NO = #{sortNo}
+              ,MAIN_UI_UID = #{mainUiUid}
+              ,SHOW_AT = #{showAt}
+              ,THUMB_UID = #{thumbUid}::int8
+              ,UPDT_UID = #{updtUid}
+              ,UPDT_DT = NOW()
+         WHERE UID = #{uid}
+    </update>
+</mapper>

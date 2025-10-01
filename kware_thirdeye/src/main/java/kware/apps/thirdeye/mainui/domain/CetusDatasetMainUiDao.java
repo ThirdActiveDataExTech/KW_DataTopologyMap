@@ -3,8 +3,11 @@ package kware.apps.thirdeye.mainui.domain;
 
 import cetus.dao.SuperDao;
 import kware.apps.thirdeye.mainui.dto.request.SearchDuplicateCode;
+import kware.apps.thirdeye.mainui.dto.response.MainUiList;
 import kware.apps.thirdeye.mainui.dto.response.MainUiView;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
 
 @Component
 public class CetusDatasetMainUiDao extends SuperDao<CetusDatasetMainUi> {
@@ -17,15 +20,15 @@ public class CetusDatasetMainUiDao extends SuperDao<CetusDatasetMainUi> {
         return selectOne("getCountByCode", search);
     }
 
-    public Integer getCountDatasetMainUiUse(Long uid) {
-        return selectOne("getCountDatasetMainUiUse", uid);
-    }
-
     public MainUiView getDatasetMainUiByUid(Long uid) {
         return selectOne("getDatasetMainUiByUid", uid);
     }
 
     public void updateDatasetMainUidDeleteAt(CetusDatasetMainUi bean) {
         update("updateDatasetMainUidDeleteAt", bean);
+    }
+
+    public List<MainUiList> getDatasetMainUiList(Long workplaceUid) {
+        return selectList("getDatasetMainUiList", workplaceUid);
     }
 }

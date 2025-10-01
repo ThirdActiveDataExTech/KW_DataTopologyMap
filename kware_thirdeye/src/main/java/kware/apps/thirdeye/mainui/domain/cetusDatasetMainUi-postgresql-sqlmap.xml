@@ -97,13 +97,6 @@
         )
     </insert>
 
-    <select id="getCountDatasetMainUiUse" parameterType="Long" resultType="int">
-        /* cetusDatasetMainUi.getCountDatasetMainUiUse */
-        SELECT COUNT(*)
-          FROM CETUS_DATASET_UI CDU
-         WHERE CDU.MAIN_UI_UID = #{uid}
-    </select>
-
     <select id="getDatasetMainUiByUid" parameterType="Long" resultType="MainUiView">
         /* cetusDatasetMainUi.getDatasetMainUiByUid */
         SELECT CDMU.UID
@@ -152,4 +145,25 @@
               ,USE_AT = #{useAt}
          WHERE UID = #{uid}
     </update>
+
+    <select id="getDatasetMainUiList" parameterType="Long" resultType="MainUiList">
+        /* cetusDatasetMainUi.getDatasetMainUiList */
+        SELECT CDMU.UID
+              ,CDMU.CODE
+              ,CDMU.NAME
+              ,CDMU.MAX_COUNT
+              ,CDMU.DESC_LINE_CLAMP
+              ,CDMU.TITLE_LINE_CLAMP
+              ,CDMU.THUMB_USE_AT
+              ,CDMU.WORKPLACE_UID
+              ,CDMU.USE_AT
+              ,CDMU.REG_UID
+              ,CU.USER_NM AS REG_NM
+              ,TO_CHAR(CDMU.REG_DT, 'YYYY-MM-DD') AS REG_DT
+          FROM CETUS_DATASET_MAIN_UI CDMU
+          LEFT JOIN CETUS_USER CU ON CU.UID = CDMU.REG_UID
+         WHERE CDMU.DELETE_AT = 'N'
+           AND CDMU.USE_AT = 'Y'
+           AND CDMU.WORKPLACE_UID = #{workplaceUid}
+    </select>
 </mapper>

@@ -23,7 +23,7 @@
   <div class="related-product-area pb-100 pt-80"  data-aos="fade-up" data-aos-delay="200">
     <div class="container">
       <div class="section-title-2 st-border-center text-center mb-35">
-        <h2>데이터 승인 관리</h2>
+        <h2>데이터 진열 관리</h2>
       </div>
       <hr>
 
@@ -56,7 +56,7 @@
             </div>
             <div class="topbar-right">
               <div class="btn-wrapper">
-                <button type="button" class="custom-button m-2" id="new-btn">데이터셋 승인</button>
+                <button type="button" class="custom-button m-2" id="new-btn">데이터셋<br>진열하기</button>
                 <button type="button" class="custom-button m-2" id="delete-btn">데이터셋 삭제</button>
               </div>
             </div>
@@ -72,7 +72,7 @@
                   <th></th>
                   <th>번호</th>
                   <th>데이터셋Id</th>
-                  <!--<th>노출여부</th>-->
+                  <th>UI유형</th>
                   <th>승인자</th>
                   <th>승인일</th>
                 </tr>
@@ -95,6 +95,9 @@
 
       approvedDatasetJS.initTable();
 
+      $("#new-btn").on('click', function () {
+        window.location.href = '/admin/approved/dataset/save'
+      });
 
     });
 

@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.PushBuilder;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -43,17 +44,6 @@ public class CetusDatasetMainUiService {
         dao.insert(bean);
     }
 
-    /**
-     * @method      countDatasetMainUiUse
-     * @author      dahyeon
-     * @date        2025-10-01
-     * @deacription 진열/승인된 데이터셋에 대해서 해당 main_ui 정보를 활용하는 데이터셋 개수를 가져온다.
-    **/
-    @Transactional(readOnly = true)
-    public Integer countDatasetMainUiUse(Long uid) {
-        return dao.getCountDatasetMainUiUse(uid);
-    }
-
     @Transactional(readOnly = true)
     public MainUiView findDatasetMainUiByUid(Long uid) {
         return dao.getDatasetMainUiByUid(uid);
@@ -69,5 +59,10 @@ public class CetusDatasetMainUiService {
     public void changeDatasetMainUi(Long uid, ChangeMainUi request) {
         CetusDatasetMainUi bean = new CetusDatasetMainUi(uid, request);
         dao.update(bean);
+    }
+
+    @Transactional(readOnly = true)
+    public List<MainUiList> findDatasetMainUiList() {
+        return dao.getDatasetMainUiList(UserUtil.getUserWorkplaceUid());
     }
 }

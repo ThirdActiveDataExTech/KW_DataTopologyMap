@@ -1,0 +1,18 @@
+package kware.apps.thirdeye.approveddataset.dto.request;
+
+
+import cetus.bean.FileBean;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+@Getter @NoArgsConstructor(access = AccessLevel.PROTECTED)
+public class SaveDataset extends FileBean {
+
+    private Long datasetId;
+    private String createdId;
+    private Long mainUiUid;
+    private String showAt;
+    private Long sortNo;
+
+}

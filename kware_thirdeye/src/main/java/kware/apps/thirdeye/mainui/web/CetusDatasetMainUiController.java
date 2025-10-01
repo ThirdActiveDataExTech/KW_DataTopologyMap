@@ -1,6 +1,7 @@
 package kware.apps.thirdeye.mainui.web;
 
 
+import kware.apps.thirdeye.datasetui.service.CetusDatasetUiService;
 import kware.apps.thirdeye.mainui.dto.response.MainUiView;
 import kware.apps.thirdeye.mainui.service.CetusDatasetMainUiService;
 import kware.common.config.auth.menu.MenuNavigationManager;
@@ -18,6 +19,7 @@ public class CetusDatasetMainUiController {
 
     private final CetusDatasetMainUiService service;
     private final MenuNavigationManager menuNavigationManager;
+    private final CetusDatasetUiService datasetUiService;
 
     @GetMapping
     public String index(Model model) {
@@ -35,7 +37,7 @@ public class CetusDatasetMainUiController {
     public String form(@PathVariable("uid") Long uid, Model model) {
         menuNavigationManager.renderingPage("/admin/main-ui", "데이터셋 메인UI 수정", false, model);
 
-        Integer datasetMainUiUse = service.countDatasetMainUiUse(uid);
+        Integer datasetMainUiUse = datasetUiService.countDatasetMainUiUse(uid);
         model.addAttribute("datasetMainUiUse", datasetMainUiUse);
 
         MainUiView view = service.findDatasetMainUiByUid(uid);

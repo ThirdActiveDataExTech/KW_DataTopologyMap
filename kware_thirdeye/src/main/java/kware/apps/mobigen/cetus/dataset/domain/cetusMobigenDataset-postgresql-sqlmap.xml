@@ -15,6 +15,9 @@
         <if test="@Ognl@isNotEmpty(registrantId)">
            AND CMD.REGISTRANT_ID LIKE '%' || #{registrantId} || '%'
         </if>
+        <if test="@Ognl@isNotEmpty(approvedIds)">
+           AND CMD.UID NOT IN <foreach collection="approvedIds" item="id" open="(" separator="," close=")">#{id}</foreach>
+        </if>
          ORDER BY CMD.REG_DT DESC
         <if test="@Ognl@isNotEmpty(startNumber) and  @Ognl@isNotEmpty(endNumber)">
         OFFSET ${startNumber} LIMIT ${endNumber}
@@ -29,6 +32,9 @@
            AND CMD.DELETE_AT = 'N'
         <if test="@Ognl@isNotEmpty(registrantId)">
            AND CMD.REGISTRANT_ID LIKE '%' || #{registrantId} || '%'
+        </if>
+        <if test="@Ognl@isNotEmpty(approvedIds)">
+           AND CMD.UID NOT IN <foreach collection="approvedIds" item="id" open="(" separator="," close=")">#{id}</foreach>
         </if>
     </select>
 

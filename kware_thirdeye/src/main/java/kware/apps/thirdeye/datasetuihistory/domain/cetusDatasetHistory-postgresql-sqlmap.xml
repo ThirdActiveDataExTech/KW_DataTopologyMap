@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cetusDatasetHistory">
+
+    <insert id="insert" parameterType="CetusDatasetHistory">
+        /* cetusDatasetHistory.insert */
+        INSERT INTO CETUS_DATASET_HISTORY (
+             APPROVED_DATASET_UID
+            ,CHNG_CNT
+            ,CHNG_DT
+            ,CHNG_UID
+        ) VALUES (
+             #{approvedDatasetUid}
+            ,#{chngCnt}::jsonb
+            ,NOW()
+            ,#{chngUid}
+        )
+    </insert>
+</mapper>

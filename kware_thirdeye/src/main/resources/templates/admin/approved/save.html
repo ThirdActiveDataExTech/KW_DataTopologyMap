@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/default}">
+
+<th:block layout:fragment="center-image">
+  <th:block th:with="title1=${currentPageName}, title2=${navigation}, leftImg=${centerLeftImage}, rightImg=${centerRightImage}">
+    <th:block th:replace="fragments/center-image :: main-image-title(${title1}, ${title2}, ${leftImg}, ${rightImg})"></th:block>
+  </th:block>
+</th:block>
+
+<th:block layout:fragment="head">
+  <link rel="stylesheet" type="text/css" th:href="@{'/assets/css/plugins/datatables/select.dataTables.min.css'}" />
+  <style>
+    .dataTable tr.odd:hover,
+    .dataTable tr.even:hover {
+      cursor: pointer; /* 선택적으로 커서도 포인터로 */
+    }
+  </style>
+  <style>
+    /* 이미지 영역 */
+    .thumbnail-wrapper {
+      width: 200px;          /* 원하는 크기 */
+      height: 200px;
+      overflow: hidden;
+      border-radius: 20px;   /* 모서리 둥글게 */
+      background-color: #f5f5f5;
+    }
+    .thumbnail-wrapper img.profile-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;     /* 배경사진처럼 꽉 차게 */
+      border-radius: 20px;
+    }
+    /* 버튼 영역 */
+    .button-group-left {
+      display: flex;
+      gap: 10px;             /* 버튼 간격 */
+      margin-top: 10px;
+      justify-content: flex-start; /* 좌측 정렬 */
+    }
+  </style>
+  <link rel="stylesheet" th:href="@{'/assets/css/page/system/user-list.css'}"/>
+</th:block>
+
+<th:block layout:fragment="content">
+  <div class="related-product-area pb-100 pt-80" data-aos="fade-up" data-aos-delay="200">
+    <div class="container">
+
+      <div class="section-title-2 st-border-center text-center mb-35">
+        <h2>데이터 진열 관리 등록</h2>
+      </div>
+      <hr>
+
+      <!-- s:buttons -->
+      <div>
+        <div class="d-flex justify-content-end pe-4">
+          <div class="btn-container" style="margin-top: 0px !important;">
+            <!-- 왼쪽 버튼 -->
+            <!-- 오른쪽 버튼들 -->
+            <div class="right-buttons">
+              <button type="button" class="custom-button" id="list-btn">목록</button>
+              <button type="button" id="submit-btn" class="custom-button">등록하기</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- e:buttons -->
+
+      <!-- s: 데이터 진열 관리 등록 -->
+      <div class="row" style="margin-top: 10px">
+        <!-- 왼쪽: 데이터셋 목록 -->
+        <div class="col-lg-5">
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">모비젠 데이터셋 목록</h5>
+              <div class="">
+                <div class="table-responsive text-nowrap">
+                  <table class="table table-bordered" id="dataset-table">
+                    <thead>
+                    <tr>
+                      <th>번호</th>
+                      <th>제목</th>
+                      <th>등록자</th>
+                      <th>등록일</th>
+                    </tr>
+                    </thead>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-7">
+          <div class="card">
+            <form class="needs-validation" id="save-mainui" novalidate="">
+
+              <div class="card-body">
+
+                <div class="row custom-row">
+                  <div class="col-lg-12">
+                    <div class="single-input-item">
+                      <div for="mainUiUid" class="required">메인UI 유형 고르기</div>
+                      <select class="form-control form-select" id="mainUiUid" name="mainUiUid" required>
+                        <option value="" disabled selected>-- 메인UI 유형 고르기 --</option>
+                        <option th:each="mainUi : ${mainUiList}" th:value="${mainUi?.uid}" th:text="${mainUi?.name}" th:data-thumbuseat="${mainUi?.thumbUseAt}"></option>
+                      </select>
+                      <span class="validation-error-message" id="mainUiUid-error"></span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row custom-row">
+                  <div class="col-lg-6">
+                    <div class="single-input-item">
+                      <label for="sortNo" class="custom-label">정렬순서<span style="color: firebrick">*</span></label>
+                      <input class="form-control custom-input" type="number" id="sortNo" name="sortNo" placeholder="정렬순서를 입력하세요." required>
+                    </div>
+                  </div>
+                  <div class="col-lg-6">
+                    <label for="showAt-form" class="custom-label">노출 여부<span style="color: firebrick">*</span></label>
+                    <div id="showAt-form" class="custom-check-form-flex">
+                      <div class="form-check">
+                        <input type="radio" id="showAt_Y" name="showAt" class="form-check-input" value="Y" checked="">
+                        <label class="form-check-label" for="showAt_Y">사용</label>
+                      </div>
+                      <div class="form-check">
+                        <input type="radio" id="showAt_N" name="showAt" class="form-check-input" value="N">
+                        <label class="form-check-label" for="showAt_N">미사용</label>
+                      </div>
+                    </div>
+                    <span class="validation-error-message" id="showAt-error"></span>
+                  </div>
+                </div>
+
+                <div class="row custom-row" id="thumb-container-div" style="display: none">
+                  <div class="col-lg-6">
+                    <div class="single-input-item">
+                      <label for="thumbnail-upload-container" class="custom-label">썸네일<span style="color: firebrick">*</span></label>
+                      <div id="thumbnail-upload-container" style="display: none;"></div>
+                      <div class="thumbnail-wrapper">
+                        <img th:src="|/api/portal/files/view?fileId=${form?.profileId}|"
+                             onerror="this.src='/assets/images/profile/profile_noimage.png'"
+                             alt="Profile" id="thumbnail-id" class="profile-img" />
+                      </div>
+                      <div class="button-group-left">
+                        <button type="button" class="custom-button" id="upload-thumb-img">업로드</button>
+                        <button type="button" id="delete-thumb-img" class="custom-button">삭제</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+      <!-- e: 데이터 진열 관리 등록 -->
+
+    </div>
+  </div>
+
+</th:block>
+
+<th:block layout:fragment="script">
+  <script th:src="@{'/assets/js/page/admin/approved/approved-dataset-control.js'}"></script>
+  <script th:inline="javascript">
+
+    const mainUiList = [[${mainUiList}]]
+    const approvedIds = [[${approvedIds}]]
+
+    $(function () {
+
+      approvedDatasetJS.initUpload(null);
+      approvedDatasetJS.initSaveTable();
+
+      $("#list-btn").on('click', function () {
+        window.location.href = '/admin/approved/dataset'
+      });
+
+      $("#mainUiUid").on("change", function() {
+        const thumbUseAt = $(this).find("option:selected").data("thumbuseat");
+        if (thumbUseAt === "Y") {
+          approvedDatasetJS.useThumbnail = true;
+          $("#thumb-container-div").show();
+        } else {
+          approvedDatasetJS.useThumbnail = false;
+          $("#thumb-container-div").hide();
+        }
+      });
+
+      $("#upload-thumb-img").on('click', function () {
+        approvedDatasetJS.uploadThumbnailImg();
+      });
+
+      $("#delete-thumb-img").on('click', function () {
+        approvedDatasetJS.deleteThumbnailImg();
+      });
+
+      $("#submit-btn").on('click', function () {
+        approvedDatasetJS.saveDatasetApproved();
+      });
+
+    });
+
+  </script>
+</th:block>
+</html>
