@@ -5,12 +5,14 @@ import java.util.List;
 import java.util.Map;
 
 import cetus.user.UserUtil;
+import kware.apps.mobigen.cetus.dataset.dto.response.MobigenDatasetView;
+import kware.apps.mobigen.cetus.dataset.service.CetusMobigenDatasetService;
 import kware.apps.thirdeye.bookmark.domain.CetusBookMark;
 import kware.apps.thirdeye.bookmark.domain.CetusBookMarkDao;
 import kware.apps.thirdeye.bookmark.dto.request.SearchUserBookMarkToggle;
 import kware.apps.thirdeye.bookmark.dto.response.UserBookMarkList;
 import kware.apps.thirdeye.approveddataset.dto.response.DatasetView;
-import kware.apps.thirdeye.approveddataset.service.CetusDatasetService;
+import kware.apps.thirdeye.approveddataset.service.CetusApprovedDatasetService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,20 +27,15 @@ import lombok.extern.slf4j.Slf4j;
 public class CetusBookMarkService {
 
     private final CetusBookMarkDao dao;
-    private final CetusDatasetService datasetService;
+    private final CetusApprovedDatasetService datasetService;
+    private final CetusMobigenDatasetService mobigenDatasetService;
 
     @Transactional(readOnly = true)
     public List<UserBookMarkList> findUserBookMarkList(SearchUserBookMark search ) {
-
         List<UserBookMarkList> userBookMarkList = dao.getUserBookMarkList(search);
-        Map<Long, DatasetView> dataMap = datasetService.findDatasetDetailByAPI();
-
         for ( UserBookMarkList userBookMark : userBookMarkList ) {
-            Long datasetId = userBookMark.getDatasetId();
-            DatasetView data = dataMap.get(datasetId);
-            if ( data != null ) {
-                userBookMark.setDatasetInfo( data.getTitle(), data.getDescription() );
-            }
+            MobigenDatasetView mobigenDatasetView = mobigenDatasetService.findMobigenDatasetByDatasetId(userBookMark.getDatasetId());
+            userBookMark.setMobigenDatasetView(mobigenDatasetView);
         }
         return userBookMarkList;
     }

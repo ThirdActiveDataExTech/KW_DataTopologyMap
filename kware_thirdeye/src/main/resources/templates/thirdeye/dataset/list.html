@@ -28,7 +28,7 @@
 <th:block layout:fragment="content">
 
     <div class="page-area page-responsive pt-80" data-aos="fade-up" data-aos-delay="200">
-        <div class="container">
+        <div class="container" style="margin-bottom: 200px;">
             <div class="row flex-row-reverse">
 
                 <!-- col-lg-9 //-->
@@ -94,20 +94,28 @@
                     </div>
 
                     <div class="sidebar-wrapper mb-40">
-
                         <div id="sidebar-widgets-container1">
                             <div class="sidebar-widget sidebar-widget-border mb-40 pb-35" data-aos="fade-up" data-aos-delay="200">
                                 <div class="sidebar-widget-title mb-25">
                                     <h3>카테고리</h3>
                                 </div>
-                                <div id="categories" class="sidebar-widget-color sidebar-list-style"></div>
+                                <div id="categories" class="sidebar-widget-color sidebar-list-style">
+                                    <ul></ul>
+                                </div>
                             </div>
                         </div>
-
                         <div id="sidebar-widgets-container2">
+                            <div class="sidebar-widget sidebar-widget-border mb-40 pb-35" data-aos="fade-up" data-aos-delay="200">
+                                <div class="sidebar-widget-title mb-25">
+                                    <h3>태그</h3>
+                                </div>
+                                <div id="tags" class="sidebar-widget-color sidebar-list-style"></div>
+                            </div>
+                        </div>
+                        <div id="sidebar-widgets-container3">
                             <div class="sidebar-widget sidebar-widget-border mb-40 pb-35" data-aos="fade-up" data-aos-delay="600">
                                 <div class="sidebar-widget-title mb-30">
-                                    <h3>Approved Date</h3>
+                                    <h3>승인일시</h3>
                                 </div>
                                 <div class="page-filter">
                                     <div id="slider-range"></div>
@@ -121,16 +129,6 @@
                                         </div>
                                         <button type="button" id="date-btn">적용</button>
                                     </div>
-                                </div>
-                            </div>
-
-                            <div class="sidebar-widget" data-aos="fade-up" data-aos-delay="700">
-                                <div class="sidebar-widget-title mb-25">
-                                    <h3>Tags</h3>
-                                </div>
-                                <div class="sidebar-widget-tag">
-                                    <select class="select2 form-select round border_line" id="tags" name="tags" multiple></select>
-                                    <div id="badgeContainer" style="margin-top:10px;"></div>
                                 </div>
                             </div>
                         </div>
@@ -187,13 +185,13 @@
             $("#date-btn").click(function () {
                 listJS.param['date'][0] = Common.dateFormat(listJS.dom.sliderRange.slider("values", 0));
                 listJS.param['date'][1] = Common.dateFormat(listJS.dom.sliderRange.slider("values", 1));
-                listJS.fnPage(1);
+                listJS.fnPage(1, false);
             });
 
             // 5. 정렬순서 변경
             $('#order-select').change(function () {
                 listJS.sort = $(this).val();
-                listJS.fnPage(1);
+                listJS.fnPage(1, true);
             });
 
             // 6. 검색어 검색
@@ -201,19 +199,17 @@
                 if (event.key === 'Enter') {
                     event.preventDefault(); // 기본 동작(폼 제출) 막기
                     listJS.keyword = $('#keyword').val();
-                    listJS.fnPage(1);
+                    listJS.fnPage(1, false);
                 }
             });
 
             // 7. 검색조건 검색
             $(document).on('change', 'input[type="checkbox"]', function (e) {
-                e.preventDefault();
-                e.stopPropagation();
                 const type = $(this).attr('id').split('_')[0];
                 const value = $(this).attr('value');
                 if ($(this).is(':checked')) listJS.param[type]?.push(value);
                 else listJS.param[type] = listJS.param[type].filter(item => item !== value);
-                listJS.fnPage(1);
+                listJS.fnPage(1, false);
             });
 
             // 8. 뷰 버튼 클릭

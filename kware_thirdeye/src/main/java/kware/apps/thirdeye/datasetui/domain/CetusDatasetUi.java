@@ -2,13 +2,11 @@ package kware.apps.thirdeye.datasetui.domain;
 
 
 import cetus.bean.AuditBean;
-import kware.apps.thirdeye.approveddataset.dto.request.SaveDataset;
+import kware.apps.thirdeye.approveddataset.dto.request.SaveApprovedDataset;
 import kware.apps.thirdeye.datasetui.dto.request.ChangeDatasetUi;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import javax.swing.plaf.PanelUI;
 
 @Getter @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class CetusDatasetUi extends AuditBean {
@@ -20,7 +18,7 @@ public class CetusDatasetUi extends AuditBean {
     private String showAt;
     private Long thumbUid;
 
-    public CetusDatasetUi(Long approvedDatasetUid, Long thumbUid, SaveDataset request) {
+    public CetusDatasetUi(Long approvedDatasetUid, Long thumbUid, SaveApprovedDataset request) {
         this.approvedDatasetUid = approvedDatasetUid;
         this.thumbUid = thumbUid;
         this.sortNo = request.getSortNo();

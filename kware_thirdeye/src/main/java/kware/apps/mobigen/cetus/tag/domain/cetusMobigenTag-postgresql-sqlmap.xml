@@ -10,4 +10,12 @@
              #{tagNm}
         )
     </insert>
+
+    <select id="getMobigenTagList" resultType="TagList">
+        /* cetusMobigenTag.getMobigenTagList */
+        SELECT UID AS TAG_UID
+              ,TAG_NM
+          FROM CETUS_MOBIGEN_TAG
+    </select>
+
 </mapper>

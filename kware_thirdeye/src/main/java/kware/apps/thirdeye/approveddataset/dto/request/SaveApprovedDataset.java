@@ -7,7 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class SaveDataset extends FileBean {
+public class SaveApprovedDataset extends FileBean {
 
     private Long datasetId;
     private String createdId;

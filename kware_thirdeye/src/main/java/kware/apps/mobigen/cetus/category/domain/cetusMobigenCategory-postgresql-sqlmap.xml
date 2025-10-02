@@ -10,4 +10,12 @@
              #{categoryNm}
         )
     </insert>
+
+    <select id="getMobigenCategoryList" resultType="CategoryList">
+        /* cetusMobigenCategory.getMobigenCategoryList */
+        SELECT UID AS CATEGORY_UID
+              ,CATEGORY_NM
+          FROM CETUS_MOBIGEN_CATEGORY
+    </select>
+
 </mapper>

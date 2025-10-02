@@ -1,0 +1,31 @@
+package kware.apps.thirdeye.approveddataset.service;
+
+
+import cetus.bean.Page;
+import cetus.bean.Pageable;
+import kware.apps.thirdeye.approveddataset.dto.request.ApprovedDatasetSearch;
+import kware.apps.thirdeye.approveddataset.dto.request.SaveApprovedDataset;
+import kware.apps.thirdeye.approveddataset.dto.response.DatasetList;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+@RestController
+@RequiredArgsConstructor
+@RequestMapping("/api/admin/approved-dataset")
+public class CetusApprovedDatasetAdminRestController {
+
+    private final CetusApprovedDatasetService service;
+
+    @GetMapping("/page")
+    public ResponseEntity findDatasetPage(ApprovedDatasetSearch search, Pageable pageable) {
+        Page<DatasetList> datasetPage = service.findDatasetPage(search, pageable);
+        return ResponseEntity.ok(datasetPage);
+    }
+
+    @PostMapping("/approve")
+    public ResponseEntity approveDataset(@RequestBody SaveApprovedDataset request) {
+        service.approveDataset(request);
+        return ResponseEntity.ok().build();
+    }
+}

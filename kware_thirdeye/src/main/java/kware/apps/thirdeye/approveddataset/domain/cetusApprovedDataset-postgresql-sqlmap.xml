@@ -1,22 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="cetusDataset">
+<mapper namespace="cetusApprovedDataset">
 
-    <select id="getDatasetPage" parameterType="DatasetSearch" resultType="DatasetList">
-        /* cetusDataset.getDatasetPage */
+    <select id="getDatasetPage" parameterType="ApprovedDatasetSearch" resultType="DatasetList">
+        /* cetusApprovedDataset.getDatasetPage */
         SELECT CAD.UID AS APPROVED_UID
               ,CAD.DATASET_ID
               ,TO_CHAR(CAD.APPROVED_DT, 'YYYY-MM-DD HH:MM') AS APPROVED_DT
               ,COALESCE(CU_CREATE.USER_NM, '자동 등록') AS CREATED_NM
-              ,CU_APP.USER_NM AS APPROVED_NM
+              ,CU_APP.USER_NM AS APPROVER_NM
               ,( SELECT COALESCE(ROUND(SUM(CDM.RATINGS) / COUNT(*)), 0)
                    FROM CETUS_DATASET_COMMENT CDM
                   WHERE CDM.APPROVED_DATASET_UID = CAD.UID
               ) AS RATINGS
+              ,CDMU.UID AS MAIN_UI_UID
+              ,CDMU.CODE AS MAIN_UI_CODE
+              ,CDUI.SHOW_AT AS SHOW_AT
           FROM CETUS_APPROVED_DATASET CAD
           LEFT JOIN CETUS_DATASET_UI CDU ON CDU.APPROVED_DATASET_UID = CAD.UID
           LEFT JOIN CETUS_USER CU_CREATE ON CU_CREATE.USER_ID = CAD.CREATED_ID
-          LEFT JOIN CETUS_USER CU_APP ON CU_APP.UID = CAD.APPROVED_UID
+          LEFT JOIN CETUS_USER CU_APP ON CU_APP.UID = CAD.APPROVER_UID
+          LEFT JOIN CETUS_DATASET_UI CDUI ON CDUI.APPROVED_DATASET_UID = CAD.UID
+          LEFT JOIN CETUS_DATASET_MAIN_UI CDMU ON CDMU.UID = CDUI.MAIN_UI_UID
          WHERE CAD.WORKPLACE_UID = #{workplaceUid}
            AND CAD.DELETE_AT = 'N'
            AND CDU.SHOW_AT = 'Y'
@@ -30,13 +35,40 @@
         </if>
     </select>
 
-    <select id="getDatasetPageCount" parameterType="DatasetSearch" resultType="int">
-        /* cetusDataset.getDatasetPageCount */
+    <select id="getDatasetList" parameterType="ApprovedDatasetSearch" resultType="DatasetList">
+        /* cetusApprovedDataset.getDatasetList */
+        SELECT CAD.UID AS APPROVED_UID
+              ,CAD.DATASET_ID
+              ,TO_CHAR(CAD.APPROVED_DT, 'YYYY-MM-DD HH:MM') AS APPROVED_DT
+              ,COALESCE(CU_CREATE.USER_NM, '자동 등록') AS CREATED_NM
+              ,CU_APP.USER_NM AS APPROVER_NM
+              ,( SELECT COALESCE(ROUND(SUM(CDM.RATINGS) / COUNT(*)), 0)
+                   FROM CETUS_DATASET_COMMENT CDM
+                  WHERE CDM.APPROVED_DATASET_UID = CAD.UID
+              ) AS RATINGS
+          FROM CETUS_APPROVED_DATASET CAD
+          LEFT JOIN CETUS_DATASET_UI CDU ON CDU.APPROVED_DATASET_UID = CAD.UID
+          LEFT JOIN CETUS_USER CU_CREATE ON CU_CREATE.USER_ID = CAD.CREATED_ID
+          LEFT JOIN CETUS_USER CU_APP ON CU_APP.UID = CAD.APPROVER_UID
+          LEFT JOIN CETUS_DATASET_UI CDUI ON CDUI.APPROVED_DATASET_UID = CAD.UID
+          LEFT JOIN CETUS_DATASET_MAIN_UI CDMU ON CDMU.UID = CDUI.MAIN_UI_UID
+         WHERE CAD.WORKPLACE_UID = #{workplaceUid}
+           AND CAD.DELETE_AT = 'N'
+           AND CDU.SHOW_AT = 'Y'
+        <if test="@Ognl@isNotEmpty(startDate) and @Ognl@isNotEmpty(endDate)">
+           AND CAD.APPROVED_DT BETWEEN #{startDate}::TIMESTAMP
+           AND (#{endDate}::DATE + INTERVAL '1 day' - INTERVAL '1 second')
+        </if>
+         ORDER BY CAD.APPROVED_DT DESC
+    </select>
+
+    <select id="getDatasetPageCount" parameterType="ApprovedDatasetSearch" resultType="int">
+        /* cetusApprovedDataset.getDatasetPageCount */
         SELECT COUNT(*)
           FROM CETUS_APPROVED_DATASET CAD
           LEFT JOIN CETUS_DATASET_UI CDU ON CDU.APPROVED_DATASET_UID = CAD.UID
           LEFT JOIN CETUS_USER CU_CREATE ON CU_CREATE.USER_ID = CAD.CREATED_ID
-          LEFT JOIN CETUS_USER CU_APP ON CU_APP.UID = CAD.APPROVED_UID
+          LEFT JOIN CETUS_USER CU_APP ON CU_APP.UID = CAD.APPROVER_UID
          WHERE CAD.WORKPLACE_UID = #{workplaceUid}
            AND CAD.DELETE_AT = 'N'
            AND CDU.SHOW_AT = 'Y'
@@ -46,63 +78,40 @@
         </if>
     </select>
 
-    <select id="getDatasetByUid" parameterType="DatasetViewSearch" resultType="DatasetDetailView">
-        /* cetusDataset.getDatasetByUid */
-        SELECT CAD.UID AS APPROVED_UID
-              ,CAD.DATASET_ID
-              ,TO_CHAR(CAD.APPROVED_DT, 'YYYY-MM-DD HH:MM') AS APPROVED_DT
-              ,COALESCE(CU_CREATE.USER_NM, '자동 등록') AS CREATED_NM
-              ,CU_APP.USER_NM AS APPROVED_NM
-              ,( SELECT COALESCE(ROUND(SUM(CDM.RATINGS) / COUNT(*)), 0)
-                   FROM CETUS_DATASET_COMMENT CDM
-                  WHERE CDM.APPROVED_DATASET_UID = CAD.UID
-              ) AS RATINGS
-              ,EXISTS (
-                SELECT 1
-                  FROM CETUS_DATASET_BOOKMARK B
-                 WHERE B.USER_UID = #{userUid}
-                   AND B.APPROVED_DATASET_UID = CAD.UID
-              ) AS BOOKMARK
-          FROM CETUS_APPROVED_DATASET CAD
-          LEFT JOIN CETUS_USER CU_CREATE ON CU_CREATE.USER_ID = CAD.CREATED_ID
-          LEFT JOIN CETUS_USER CU_APP ON CU_APP.UID = CAD.APPROVED_UID
-         WHERE CAD.UID = #{approvedUid}
-    </select>
-
-    <select id="getApprovedDatasetIdList" resultType="DatasetIdList" parameterType="Long">
-        /* cetusDataset.getApprovedDatasetIdList */
+    <select id="getApprovedDatasetIdList" resultType="ApprovedDatasetIdList" parameterType="Long">
+        /* cetusApprovedDataset.getApprovedDatasetIdList */
         SELECT CAD.DATASET_ID
           FROM CETUS_APPROVED_DATASET CAD
          WHERE WORKPLACE_UID = #{workplaceUid}
            AND DELETE_AT = 'N'
     </select>
 
-    <insert id="insert" parameterType="CetusDataset" keyProperty="uid" useGeneratedKeys="true">
-        /* cetusDataset.insert */
+    <insert id="insert" parameterType="CetusApprovedDataset" keyProperty="uid" useGeneratedKeys="true">
+        /* cetusApprovedDataset.insert */
         INSERT INTO CETUS_APPROVED_DATASET (
              DATASET_ID
             ,WORKPLACE_UID
             ,APPROVED_DT
-            ,APPROVED_UID
+            ,APPROVER_UID
             ,CREATED_ID
             ,DELETE_AT
         ) VALUES (
              #{datasetId}
             ,#{workplaceUid}
             ,NOW()
-            ,#{approvedUid}
+            ,#{approverUid}
             ,#{createdId}
             ,'N'
         )
     </insert>
 
     <select id="getApprovedDatasetView" parameterType="Long" resultType="ApprovedDatasetView">
-        /* cetusDataset.getApprovedDatasetView */
+        /* cetusApprovedDataset.getApprovedDatasetView */
         SELECT CAD.UID
               ,CAD.DATASET_ID
               ,CAD.WORKPLACE_UID
               ,CAD.APPROVED_DT
-              ,CAD.APPROVED_UID
+              ,CAD.APPROVER_UID
               ,CAD.CREATED_ID
           FROM CETUS_APPROVED_DATASET CAD
          WHERE CAD.UID = #{uid}

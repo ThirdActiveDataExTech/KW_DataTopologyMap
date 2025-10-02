@@ -49,46 +49,48 @@
         },
 
         createSidebar: function () {
-
-            const $container = $("#categories");
-            $container.empty();
             let param = template03JS.param;
 
-            Http.getJson('/testdata/dataset_category.json').then(res => {
+            $("#categories").empty(); // 기존 내용 삭제
+            let $categoryUl = $("<ul></ul>"); // 새로운 ul 생성
+            Http.get('/api/portal/mobigen-category/list').then(categories => {
+                categories.forEach(item => {
+                    const id = `category_${item['categoryUid']}`;
+                    const $li = $("<li></li>");
+                    const $a = $('<a href="javascript:void(0);"></a>');
+                    const $input = $('<input>', { id, type: "checkbox", value: item['categoryUid'] });
+                    const $label = $('<label>', { for: id }).text(item['categoryNm']);
 
-                const categories = res
-                categories.forEach( widget => {
-                    const $widget = $(`
-                    <div class="sidebar-widget sidebar-widget-border mb-40 pb-35" data-aos="fade-up" data-aos-delay="${200}">
-                        <div class="sidebar-widget-title mb-25">
-                        <h3>${widget['field']}</h3>
-                        </div>
-                        <div class="sidebar-widget-color sidebar-list-style">
-                            <ul></ul>
-                        </div>
-                    </div>
-                `);
+                    const keysToCheck = ['category'];
+                    const isIncluded = keysToCheck.some(key => param[key]?.includes(item.code));
+                    if (isIncluded) { $input.prop('checked', true); }
 
-                const $ul = $widget.find("ul");
-                const itemList = widget.items
-                itemList.forEach( (item, i)=> {
-                        const id = `${widget['field'].toLowerCase()}_${i}`;
-                        const $li = $("<li></li>");
-                        const $a = $('<a href="#"></a>');
-                        const $input = $('<input>', { id, type: "checkbox", value: item.code });
-                        const $label = $('<label>', { for: id }).text(item.name);
-                        const $span = $("<span></span>").text(item.code);
-
-                        const keysToCheck = ['categories', 'sources', 'types'];
-                        const isIncluded = keysToCheck.some(key => param[key]?.includes(item.code));
-                        if (isIncluded) { $input.prop('checked', true); }
-
-                        $a.append($input, $label, $span);
-                        $li.append($a);
-                        $ul.append($li);
-                    });
-                    $container.append($widget);
+                    $a.append($input, $label);
+                    $li.append($a);
+                    $categoryUl.append($li);
                 });
+                $("#categories").append($categoryUl);
+            });
+
+            $("#tags").empty();          // 기존 내용 삭제
+            let $tagUl = $("<ul></ul>"); // 새로운 ul 생성
+            Http.get('/api/portal/mobigen-tag/list').then(tags => {
+                tags.forEach(item => {
+                    const id = `tag_${item['tagUid']}`;
+                    const $li = $("<li></li>");
+                    const $a = $('<a href="javascript:void(0);"></a>');
+                    const $input = $('<input>', { id, type: "checkbox", value: item['tagUid'] });
+                    const $label = $('<label>', { for: id }).text(item['tagNm']);
+
+                    const keysToCheck = ['tag'];
+                    const isIncluded = keysToCheck.some(key => param[key]?.includes(item.code));
+                    if (isIncluded) { $input.prop('checked', true); }
+
+                    $a.append($input, $label);
+                    $li.append($a);
+                    $tagUl.append($li);
+                });
+                $("#tags").append($tagUl);
             });
         },
 

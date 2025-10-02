@@ -57,7 +57,7 @@
             <div class="topbar-right">
               <div class="btn-wrapper">
                 <button type="button" class="custom-button m-2" id="new-btn">데이터셋<br>진열하기</button>
-                <button type="button" class="custom-button m-2" id="delete-btn">데이터셋 삭제</button>
+                <button type="button" class="custom-button m-2" id="delete-btn">진열 등록된<br>데이터셋 삭제</button>
               </div>
             </div>
           </div>
@@ -73,6 +73,7 @@
                   <th>번호</th>
                   <th>데이터셋Id</th>
                   <th>UI유형</th>
+                  <th>노출여부</th>
                   <th>승인자</th>
                   <th>승인일</th>
                 </tr>
@@ -97,6 +98,13 @@
 
       $("#new-btn").on('click', function () {
         window.location.href = '/admin/approved/dataset/save'
+      });
+
+      $('#search_txt1').keypress(function (e) {
+        if (e.keyCode === 13 || e.keyCode === 10 || e.key === 'Enter') {
+          e.preventDefault();
+          approvedDatasetJS.searchTable();
+        }
       });
 
     });

@@ -4,10 +4,10 @@ package kware.apps.thirdeye;
 import cetus.user.UserUtil;
 import kware.apps.system.user.dto.response.UserFullInfo;
 import kware.apps.system.user.service.CetusUserService;
+import kware.apps.thirdeye.approveddataset.dto.response.ApprovedDatasetView;
+import kware.apps.thirdeye.approveddataset.service.CetusApprovedDatasetService;
 import kware.apps.thirdeye.bbsctt.dto.response.BbscttRecentList;
 import kware.apps.thirdeye.bbsctt.service.CetusBbscttService;
-import kware.apps.thirdeye.approveddataset.dto.response.DatasetDetailView;
-import kware.apps.thirdeye.approveddataset.service.CetusDatasetService;
 import kware.common.config.auth.dto.SessionUserInfo;
 import kware.common.config.auth.menu.MenuNavigationManager;
 import lombok.RequiredArgsConstructor;
@@ -27,7 +27,7 @@ public class PortalController {
 
     private final CetusUserService cetusUserService;
     private final MenuNavigationManager menuNavigationManager;
-    private final CetusDatasetService datasetService;
+    private final CetusApprovedDatasetService datasetService;
     private final CetusBbscttService bbscttService;
 
     @GetMapping("/home")
@@ -54,7 +54,7 @@ public class PortalController {
     @GetMapping("/detail/{approvedUid}")
     public String openDetail(@PathVariable("approvedUid") Long approvedUid, Model model) {
         menuNavigationManager.renderingPage("/portal/list", "Detail", false, model);
-        DatasetDetailView dataset = datasetService.findDatasetByUid(approvedUid);
+        ApprovedDatasetView dataset = datasetService.findApprovedDatasetView(approvedUid);
         model.addAttribute("dataset", dataset);
 
         if(dataset == null) {

@@ -6,7 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class DatasetIdList {
+public class ApprovedDatasetIdList {
 
     private Long datasetId;
 }

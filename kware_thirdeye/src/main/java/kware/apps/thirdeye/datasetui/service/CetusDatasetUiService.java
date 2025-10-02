@@ -3,7 +3,7 @@ package kware.apps.thirdeye.datasetui.service;
 
 import cetus.user.UserUtil;
 import kware.apps.thirdeye.datasetui.dto.request.ChangeDatasetUi;
-import kware.apps.thirdeye.approveddataset.dto.request.SaveDataset;
+import kware.apps.thirdeye.approveddataset.dto.request.SaveApprovedDataset;
 import kware.apps.thirdeye.datasetui.domain.CetusDatasetUi;
 import kware.apps.thirdeye.datasetui.domain.CetusDatasetUiDao;
 import kware.apps.thirdeye.datasetui.dto.response.DatasetUiView;
@@ -40,7 +40,7 @@ public class CetusDatasetUiService {
      * @deacription 모비젠 데이터 저장소의 데이터셋을 진열등록하는 시점에 해당 데이터셋에 대한 UI 정보를 저장한다.
     **/
     @Transactional
-    public void saveDatasetUi(Long approvedDatasetUid, SaveDataset request) {
+    public void saveDatasetUi(Long approvedDatasetUid, SaveApprovedDataset request) {
 
         // 1. 썸네일 있다면 파일 정보 저장
         Long thumbUid = null;

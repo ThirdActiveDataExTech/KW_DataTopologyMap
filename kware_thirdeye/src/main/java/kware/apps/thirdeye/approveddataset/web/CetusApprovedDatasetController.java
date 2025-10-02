@@ -1,12 +1,10 @@
 package kware.apps.thirdeye.approveddataset.web;
 
 
-import ch.qos.logback.core.joran.event.SaxEventRecorder;
-import kware.apps.mobigen.cetus.dataset.dto.response.MobigenDatasetView;
 import kware.apps.mobigen.cetus.dataset.service.CetusMobigenDatasetService;
 import kware.apps.thirdeye.approveddataset.dto.response.ApprovedDatasetView;
-import kware.apps.thirdeye.approveddataset.dto.response.DatasetIdList;
-import kware.apps.thirdeye.approveddataset.service.CetusDatasetService;
+import kware.apps.thirdeye.approveddataset.dto.response.ApprovedDatasetIdList;
+import kware.apps.thirdeye.approveddataset.service.CetusApprovedDatasetService;
 import kware.apps.thirdeye.mainui.dto.response.MainUiList;
 import kware.apps.thirdeye.mainui.service.CetusDatasetMainUiService;
 import kware.common.config.auth.menu.MenuNavigationManager;
@@ -25,7 +23,7 @@ import java.util.stream.Collectors;
 @RequestMapping("/admin/approved/dataset")
 public class CetusApprovedDatasetController {
 
-    private final CetusDatasetService service;
+    private final CetusApprovedDatasetService service;
     private final CetusDatasetMainUiService mainUiService;
     private final CetusMobigenDatasetService mobigenDatasetService;
     private final MenuNavigationManager menuNavigationManager;
@@ -43,7 +41,7 @@ public class CetusApprovedDatasetController {
         List<MainUiList> mainUiList = mainUiService.findDatasetMainUiList();
         model.addAttribute("mainUiList", mainUiList);
 
-        List<Long> ids = service.findApprovedDatasetIdList().stream().map(DatasetIdList::getDatasetId).collect(Collectors.toList());
+        List<Long> ids = service.findApprovedDatasetIdList().stream().map(ApprovedDatasetIdList::getDatasetId).collect(Collectors.toList());
         model.addAttribute("approvedIds", ids);
 
         return "admin/approved/save";
