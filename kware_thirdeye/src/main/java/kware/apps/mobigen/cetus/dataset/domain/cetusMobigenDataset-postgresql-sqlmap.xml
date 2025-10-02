@@ -49,8 +49,8 @@
             ,METADATA
         ) VALUES (
              #{title}
-            ,#{metadataFileUid}
-            ,#{realdataFileUid}
+            ,#{metadataFileUid}::int8
+            ,#{realdataFileUid}::int8
             ,#{registrantId}
             ,NOW()
             ,'N'
@@ -82,6 +82,7 @@
         /* cetusMobigenDataset.update */
         UPDATE CETUS_MOBIGEN_DATASET
            SET TITLE = #{title}
+              ,REALDATA_FILE_UID = #{realdataFileUid}::int8
               ,METADATA = #{metadata}::jsonb
          WHERE UID = #{uid}
     </update>

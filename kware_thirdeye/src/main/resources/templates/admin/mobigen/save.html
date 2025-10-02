@@ -84,9 +84,10 @@
 
                         <!-- 3행 -->
                         <div class="row">
-                            <div class="col-lg-12 items">
-                                <label for="new-metadata">메타데이터(JSON)</label>
-                                <textarea id="new-metadata" name="metadata" class="form-control" style="height:200px;" required></textarea>
+                            <div class="col-lg-6 items">
+                                <label for="jsoneditor">메타데이터(JSON)</label>
+                                <!--<textarea id="new-metadata" name="metadata" class="form-control" style="height:200px;" required></textarea>-->
+                                <div id="jsoneditor" style="width: inherit; height: 400px;"></div>
                             </div>
                         </div>
                 </div>
@@ -212,7 +213,7 @@
         });
 
         $(function () {
-
+            mobigenDatasetFormJS.initMetadataJson();
             mobigenDatasetFormJS.initMetadataUploader("new-meta-filename", "new-meta-uploader", null);
             mobigenDatasetFormJS.initRealdataUploader("new-data-filename", "new-data-uploader", null);
 

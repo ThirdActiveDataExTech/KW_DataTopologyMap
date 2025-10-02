@@ -24,9 +24,10 @@ public class CetusMobigenDataset {
         this.metadata = request.getMetadata();
     }
 
-    public CetusMobigenDataset(Long uid, ChangeMobigenDataset request) {
+    public CetusMobigenDataset(Long uid, Long realdataFileUid, ChangeMobigenDataset request) {
         this.uid = uid;
         this.title = request.getTitle();
+        this.realdataFileUid = realdataFileUid;
         this.metadata = request.getMetadata();
     }
 

@@ -23,6 +23,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -72,7 +73,7 @@ public class CetusMobigenDatasetService {
         realdataFileUid= commonFileService.processFile2(request.getRealFile(), null, UserUtil.getUser(), realdataFileUid);
 
         // 2. save mobigen data
-        CetusMobigenDataset bean = new CetusMobigenDataset(datasetUid, request);
+        CetusMobigenDataset bean = new CetusMobigenDataset(datasetUid, realdataFileUid, request);
         dao.update(bean);
 
         // 3. save category
@@ -105,11 +106,11 @@ public class CetusMobigenDatasetService {
         view.setCategories(categories);
 
         // 4. dataset metadata file
-        List<CommonFile> metadataFiles = commonFileService.findCommonFileListByFileUid(view.getMetadataFileUid());
+        List<CommonFile> metadataFiles = (view.getMetadataFileUid() != null) ? commonFileService.findCommonFileListByFileUid(view.getMetadataFileUid()) : new ArrayList<>();
         view.setMetadataFiles(metadataFiles);
 
         // 5. dataset realdata file
-        List<CommonFile> realdataFiles = commonFileService.findCommonFileListByFileUid(view.getRealdataFileUid());
+        List<CommonFile> realdataFiles = (view.getRealdataFileUid() != null) ? commonFileService.findCommonFileListByFileUid(view.getRealdataFileUid()) : new ArrayList<>();
         view.setRealdataFiles(realdataFiles);
 
         return view;

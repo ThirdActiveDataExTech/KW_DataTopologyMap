@@ -230,7 +230,7 @@
             });
             $('#tags-select').on('select2:select select2:unselect', function (e) {
                 listJS.param['tag'] = [];
-                const data = $(this).val(); // 배열 형태
+                const data = $(this).val();
                 if (data && data.length) {
                     data.forEach(uid => {
                         listJS.param['tag'].push(uid);
