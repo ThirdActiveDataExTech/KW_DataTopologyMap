@@ -23,4 +23,8 @@ public class CetusApprovedDataset {
         this.approverUid = userUid;
         this.createdId = request.getCreatedId();
     }
+
+    public CetusApprovedDataset(Long uid) {
+        this.uid = uid;
+    }
 }

@@ -12,5 +12,6 @@ public class ChangeDatasetUi extends FileBean {
     private String showAt;
     private Long sortNo;
     private Long thumbUid;
+    private String extraJson;
 
 }

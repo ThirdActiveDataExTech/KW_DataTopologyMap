@@ -1,9 +1,8 @@
 package kware.apps.thirdeye.approveddataset.web;
 
 
-import kware.apps.mobigen.cetus.dataset.service.CetusMobigenDatasetService;
-import kware.apps.thirdeye.approveddataset.dto.response.ApprovedDatasetView;
 import kware.apps.thirdeye.approveddataset.dto.response.ApprovedDatasetIdList;
+import kware.apps.thirdeye.approveddataset.dto.response.ApprovedDatasetView;
 import kware.apps.thirdeye.approveddataset.service.CetusApprovedDatasetService;
 import kware.apps.thirdeye.mainui.dto.response.MainUiList;
 import kware.apps.thirdeye.mainui.service.CetusDatasetMainUiService;
@@ -25,7 +24,6 @@ public class CetusApprovedDatasetController {
 
     private final CetusApprovedDatasetService service;
     private final CetusDatasetMainUiService mainUiService;
-    private final CetusMobigenDatasetService mobigenDatasetService;
     private final MenuNavigationManager menuNavigationManager;
 
     @GetMapping

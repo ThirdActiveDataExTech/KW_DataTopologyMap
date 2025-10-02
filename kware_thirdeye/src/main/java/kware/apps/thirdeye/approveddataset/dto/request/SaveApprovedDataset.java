@@ -14,5 +14,6 @@ public class SaveApprovedDataset extends FileBean {
     private Long mainUiUid;
     private String showAt;
     private Long sortNo;
+    private String extraJson;
 
 }

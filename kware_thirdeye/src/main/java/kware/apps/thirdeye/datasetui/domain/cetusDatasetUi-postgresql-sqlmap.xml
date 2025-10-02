@@ -17,6 +17,7 @@
             ,MAIN_UI_UID
             ,SHOW_AT
             ,THUMB_UID
+            ,EXTRA_JSON
             ,REG_UID
             ,REG_DT
             ,UPDT_UID
@@ -27,6 +28,7 @@
             ,#{mainUiUid}
             ,#{showAt}
             ,#{thumbUid}::int8
+            ,#{extraJson}::jsonb
             ,#{regUid}
             ,NOW()
             ,#{updtUid}
@@ -42,6 +44,7 @@
               ,CDU.SHOW_AT
               ,CDU.THUMB_UID
               ,CF.FILE_ID AS THUMB_ID
+              ,CDU.EXTRA_JSON
           FROM CETUS_DATASET_UI CDU
           LEFT JOIN CETUS_FILE CF ON CF.FILE_UID = CDU.THUMB_UID AND CF.USE_AT = 'Y' AND CF.SAVED = 'Y'
          WHERE CDU.APPROVED_DATASET_UID = #{approvedDatasetUid}
@@ -54,6 +57,7 @@
               ,MAIN_UI_UID = #{mainUiUid}
               ,SHOW_AT = #{showAt}
               ,THUMB_UID = #{thumbUid}::int8
+              ,EXTRA_JSON = #{extraJson}::jsonb
               ,UPDT_UID = #{updtUid}
               ,UPDT_DT = NOW()
          WHERE UID = #{uid}

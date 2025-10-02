@@ -14,7 +14,6 @@ import java.util.List;
 public class ChangeMobigenDataset {
 
     private String title;
-    private String description;
     private String metadata;
     private Long realdataFileUid;
     private CommonFile[] realFile;

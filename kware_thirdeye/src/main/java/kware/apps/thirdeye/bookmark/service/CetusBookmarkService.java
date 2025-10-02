@@ -1,25 +1,22 @@
 
 package kware.apps.thirdeye.bookmark.service;
 
-import java.util.List;
-import java.util.Map;
-
 import cetus.user.UserUtil;
 import kware.apps.mobigen.cetus.dataset.dto.response.MobigenDatasetView;
 import kware.apps.mobigen.cetus.dataset.service.CetusMobigenDatasetService;
+import kware.apps.thirdeye.approveddataset.service.CetusApprovedDatasetService;
 import kware.apps.thirdeye.bookmark.domain.CetusBookMark;
 import kware.apps.thirdeye.bookmark.domain.CetusBookMarkDao;
+import kware.apps.thirdeye.bookmark.dto.request.SearchUserBookMark;
 import kware.apps.thirdeye.bookmark.dto.request.SearchUserBookMarkToggle;
+import kware.apps.thirdeye.bookmark.dto.request.UserBookMarkToggle;
 import kware.apps.thirdeye.bookmark.dto.response.UserBookMarkList;
-import kware.apps.thirdeye.approveddataset.dto.response.DatasetView;
-import kware.apps.thirdeye.approveddataset.service.CetusApprovedDatasetService;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import kware.apps.thirdeye.bookmark.dto.request.UserBookMarkToggle;
-import kware.apps.thirdeye.bookmark.dto.request.SearchUserBookMark;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import java.util.List;
 
 @Slf4j
 @Service

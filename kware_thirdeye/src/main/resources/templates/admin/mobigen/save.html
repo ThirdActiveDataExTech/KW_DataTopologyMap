@@ -84,11 +84,7 @@
 
                         <!-- 3행 -->
                         <div class="row">
-                            <div class="col-lg-6 items metadata-description">
-                                <label for="new-description">컨텐츠 설명</label>
-                                <div id="new-description"></div> <!-- CKEditor -->
-                            </div>
-                            <div class="col-lg-6 items">
+                            <div class="col-lg-12 items">
                                 <label for="new-metadata">메타데이터(JSON)</label>
                                 <textarea id="new-metadata" name="metadata" class="form-control" style="height:200px;" required></textarea>
                             </div>
@@ -98,13 +94,11 @@
                 <!-- 실데이터 업로드 -->
                 <div class="file-row">
                     <label>실 데이터</label>
-
                     <div class="file-display">
                         <div class="file-row" style="position: relative;">
                             <input type="text" id="new-data-filename" class="file-text" placeholder="선택된 파일 없음" readonly>
                             <button type="button" id="new-data-clear" class="clear-file">×</button>
                         </div>
-
                     </div>
                     <button type="button" class="file-btn" id="new-data-upload-btn">실데이터 업로드</button>
                     <div id="new-data-uploader" style="display: none;"></div>
@@ -221,10 +215,12 @@
 
             mobigenDatasetFormJS.initMetadataUploader("new-meta-filename", "new-meta-uploader", null);
             mobigenDatasetFormJS.initRealdataUploader("new-data-filename", "new-data-uploader", null);
-            mobigenDatasetFormJS.initCkEditor("new-description");
 
-            $("#list-btn").on('click', function () {
-                window.location.href = '/admin/mobigen/dataset'
+            $("#list-btn").on('click', async function () {
+                const isOk = await Util.confirm("작성중이신 정보는 저장되지 않습니다. <br> 목록으로 돌아가시겠습니까?")
+                if (isOk) {
+                    window.location.href = '/admin/mobigen/dataset'
+                }
             });
 
             // ===============================

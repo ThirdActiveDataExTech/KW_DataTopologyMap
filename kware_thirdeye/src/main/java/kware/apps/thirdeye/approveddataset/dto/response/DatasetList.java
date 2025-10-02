@@ -19,6 +19,10 @@ public class DatasetList {
     private String mainUiCode;      // 메인 UI 코드
     private String showAt;          // 데이터셋 노출 여부
 
+    private String thumbId;
+    private String bookmarkYn;
+    private String extraJson;
+
     private MobigenDatasetView datasetView;
 
     public void setDatasetInfo(MobigenDatasetView datasetView) {

@@ -17,6 +17,7 @@ public class CetusDatasetUi extends AuditBean {
     private Long mainUiUid;
     private String showAt;
     private Long thumbUid;
+    private String extraJson;
 
     public CetusDatasetUi(Long approvedDatasetUid, Long thumbUid, SaveApprovedDataset request) {
         this.approvedDatasetUid = approvedDatasetUid;
@@ -24,6 +25,7 @@ public class CetusDatasetUi extends AuditBean {
         this.sortNo = request.getSortNo();
         this.mainUiUid = request.getMainUiUid();
         this.showAt = request.getShowAt();
+        this.extraJson = request.getExtraJson();
     }
 
     public CetusDatasetUi(Long uid, ChangeDatasetUi request, Long thumbUid) {
@@ -32,6 +34,7 @@ public class CetusDatasetUi extends AuditBean {
         this.mainUiUid = request.getMainUiUid();
         this.showAt = request.getShowAt();
         this.thumbUid = thumbUid;
+        this.extraJson = request.getExtraJson();
     }
 
 }

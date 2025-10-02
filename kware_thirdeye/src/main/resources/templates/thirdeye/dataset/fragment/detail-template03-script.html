@@ -4,9 +4,8 @@
     var template03JS = {
 
         page: 1,
-        sort: 'title',
         keyword: '',
-        param: {category: [], provider: [], dataType: [], date: [], tags: []},
+        param : { category: [], tag: [] }, // 검색 파라미터
 
         dom: {
             showList: $("#showing-list"),
@@ -15,21 +14,24 @@
 
         drawTemplate03: function() {
             template03JS.dom.showList.hide();
-            template03JS.pageList();
+            template03JS.pageList(true);
         },
 
-        fnPage: function(selectPage) {
-            template03JS.page = selectPage;
-            template03JS.pageList();
-        },
+        // 페이지 그리기
+        pageList: function(clearSidebar = true) {
 
-        pageList() {
             template03JS.pageInit();
-            Http.getJson('/testdata/dataset_related_data.json').then((data) => {
-                template03JS.createSidebar();
+            const obj = {}
+            Http.get('/api/portal/approved-dataset/list', obj).then((res) => {
+
+                let data = res
+                if(clearSidebar) template03JS.createSidebar();
+
+                // 검색어를 통한 filter
                 if (template03JS.keyword) {
                     data = data.filter(item => item['title'].includes(template03JS.keyword));
                 }
+
                 template03JS.createList(data);
                 template03JS.createCard(data);
             });
@@ -102,23 +104,23 @@
                 const dataLength = data.length;
                 const obj = template03JS.createPagination(dataLength, 5, 5);
 
-                // 데이터 정렬
-                if(template03JS.sort === "title") { data.sort((a, b) => a.title.localeCompare(b.title)); }
-
                 data = data.slice(obj.startIndex, obj.endIndex);
                 data.forEach( content => {
 
+                    // a. 리스트 전체 감싸는 wrap
                     const $shopListWrap = $('<div>', {
                         class: 'page-list-wrap mb-30 aos-init aos-animate',
                         'data-aos': 'fade-up',
                         'data-aos-delay': '200'
                     });
 
+                    // b. 리스트를 묶는 row
                     const $row = $('<div>', { class: 'row' });
+
+                    // c. 각 한개의 리스트 형태 col => 이미지 영역
                     const $col1 = $('<div>', { class: 'col-lg-4 col-sm-5' });
                     const $productListImg = $('<div>', { class: 'page-list-img' });
                     const $productLink = $('<a>', { href: 'javascript:void(0);' });
-
                     const randomNumber = Math.floor(Math.random() * 3) + 1;  // 1, 2, 3 중 랜덤 선택
                     const $productImage = $('<img>', {
                         src: `/assets/images/page/list/data_0${randomNumber}.jpg`,
@@ -129,20 +131,23 @@
                     $productListImg.append($productLink);
                     $col1.append($productListImg);
 
+                    // d. 제목 영역
                     const $col2 = $('<div>', { class: 'col-lg-8 col-sm-7' });
                     const $shopListContent = $('<div>', { class: 'page-list-content' });
                     $shopListContent.append(
                         $('<h3>').append(
-                            $('<a>', { href: 'javascript:void(0);' }).text(content['title'])
-                        )
-                    );
-                    $shopListContent.append(
-                        $('<div>', { class: 'page-price' }).append(
-                            $('<span>').text(content['description'])
+                            $('<a>', { href: 'javascript:void(0);' }).text(content['datasetView']['title'])
                         )
                     );
 
-                    const metadata = JSON.parse(dataset['metadata']); // JSON string → 객체
+                    /*$shopListContent.append(
+                        $('<div>', { class: 'page-price' }).append(
+                            $('<span>').text(content['description'])
+                        )
+                    );*/
+
+                    // e. metadata 영역
+                    const metadata = JSON.parse(content['datasetView']['metadata']); // JSON string → 객체
                     Object.entries(metadata).forEach(([key, value]) => {
                         $shopListContent.append(
                             $('<p>').text(`${key} : ${typeof value === 'object' ? JSON.stringify(value) : value}`)
@@ -154,7 +159,6 @@
                     $shopListWrap.append($row);
                     $container.append($shopListWrap);
                 });
-
                 $container.append(obj.pageDom);
 
             } else {
@@ -169,17 +173,18 @@
                 const dataLength = data.length;
                 const obj = template03JS.createPagination(dataLength, 9, 5);
 
-                // 데이터 정렬
-                if(template03JS.sort === "title") { data.sort((a, b) => a.title.localeCompare(b.title)); }
-
                 data = data.slice(obj.startIndex, obj.endIndex);
                 data.forEach( content => {
 
+                    // a. 카드를 감싸게 될 col
                     const $colDiv = $('<div>', { class: 'col-lg-4 col-md-4 col-sm-6 col-12' });
+
+                    // b. 1개의 카드 요소
                     const $productWrap = $('<div>', { class: 'page-wrap mb-35' });
                     const $productImg = $('<div>', { class: 'page-img img-zoom mb-25' });
                     const $productLink = $('<a>', { href: 'javascript:void(0);' });
 
+                    // c. 썸네일 이미지
                     const randomNumber = Math.floor(Math.random() * 3) + 1;  // 1, 2, 3 중 랜덤 선택
                     const $productImage = $('<img>', {
                         class: 'portal-img', src: `/assets/images/page/list/data_0${randomNumber}.jpg`, alt: ''
@@ -187,20 +192,16 @@
                     $productLink.append($productImage);
                     $productImg.append($productLink);
 
-                    // Create the page-action-2-wrap div
-                    const $action2Wrap = $('<div>', { class: 'page-action-2-wrap' });
-                    $productImg.append($action2Wrap);
-
+                    // d. 제목
                     const $productContent = $('<div>', { class: 'page-content' });
-                    const $productTitle = $('<h3>').append($('<a>', { href: 'javascript:void(0);' }).text(content['title']));
-                    const $productPrice = $('<div>', { class: 'page-price' }).append($('<span>').text(content['description']));
+                    const $productTitle = $('<h3>').append($('<a>', { href: 'javascript:void(0);' }).text(content['datasetView']['title']));
+                    /*const $productPrice = $('<div>', { class: 'page-price' }).append($('<span>').text(content['description']));*/
 
-                    $productContent.append($productTitle, $productPrice);
+                    $productContent.append($productTitle/*, $productPrice*/);
                     $productWrap.append($productImg, $productContent);
                     $colDiv.append($productWrap);
                     $('#shop-1 .row').append($colDiv);
                 });
-
                 $('#shop-1 #card-pagination').html(obj.pageDom);
 
             } else {
@@ -265,6 +266,11 @@
             return obj;
         },
 
+        fnPage: function(selectPage) {
+            template03JS.page = selectPage;
+            template03JS.pageList();
+        },
+
         fnTab: function (selectTab) {
             template03JS.fnPage(1);
             if(selectTab === "card") { template03JS.dom.showCard.show(); template03JS.dom.showList.hide(); }
@@ -273,12 +279,6 @@
     }
 
     $(function () {
-
-        // 정렬순서 변경
-        /*$('.nice-select').change(function() {
-            template03JS.sort = $(this).val();
-            template03JS.fnPage(1);
-        });*/
 
         // 검색어 검색
         $('#searchForm').on('keypress', function(event) {

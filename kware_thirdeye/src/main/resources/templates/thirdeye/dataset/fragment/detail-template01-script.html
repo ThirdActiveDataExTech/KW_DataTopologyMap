@@ -8,14 +8,26 @@
         metDataFiles: [],
 
         drawTab01: function (dataset) {
-            template01JS.setDataTable(dataset);             // tab1 구성
+            template01JS.drawSummaryDescription(dataset);   // 메인 상단 디테일 영역 구성
+            template01JS.setDataTable(dataset);             // tab1 구성 > json 테이블 영역
             template01JS.setSubTabSampleVisualization();    // tab2 구성
             template01JS.setMetaDataDownloadTab();          // tab3 구성
         },
 
+        drawSummaryDescription: async function (dataset) {
+
+            const extraJson = JSON.parse(dataset['extraJson'])
+
+            const newSummary = extraJson['summary'].replace(/\n/g, "<br>");
+            $("#summary").html(newSummary);
+
+            let editor = new Editor("description", extraJson['description'], false);
+            editor = await editor.init(true);
+        },
+
         setDataTable: function (dataset) {
 
-            const jsonObj = JSON.parse(dataset['metadata']);
+            const jsonObj = JSON.parse(dataset?.['mobigenDatasetView']?.['metadata']);
             const $tableBody = $('#tab1-table tbody');
             $tableBody.empty(); // 기존 내용 제거
             const itemsPerRow = 2;

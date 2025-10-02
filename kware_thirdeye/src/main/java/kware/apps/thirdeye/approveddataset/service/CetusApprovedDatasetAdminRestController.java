@@ -4,6 +4,7 @@ package kware.apps.thirdeye.approveddataset.service;
 import cetus.bean.Page;
 import cetus.bean.Pageable;
 import kware.apps.thirdeye.approveddataset.dto.request.ApprovedDatasetSearch;
+import kware.apps.thirdeye.approveddataset.dto.request.DeleteApprovedDatasets;
 import kware.apps.thirdeye.approveddataset.dto.request.SaveApprovedDataset;
 import kware.apps.thirdeye.approveddataset.dto.response.DatasetList;
 import lombok.RequiredArgsConstructor;
@@ -26,6 +27,12 @@ public class CetusApprovedDatasetAdminRestController {
     @PostMapping("/approve")
     public ResponseEntity approveDataset(@RequestBody SaveApprovedDataset request) {
         service.approveDataset(request);
+        return ResponseEntity.ok().build();
+    }
+
+    @PutMapping("/delete-several")
+    public ResponseEntity deleteSeveralApprovedDataset(@RequestBody DeleteApprovedDatasets request) {
+        service.deleteSeveralApprovedDataset(request);
         return ResponseEntity.ok().build();
     }
 }

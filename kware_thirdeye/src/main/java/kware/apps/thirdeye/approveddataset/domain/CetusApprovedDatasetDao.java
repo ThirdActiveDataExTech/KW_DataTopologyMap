@@ -2,6 +2,7 @@ package kware.apps.thirdeye.approveddataset.domain;
 
 import cetus.dao.SuperDao;
 import kware.apps.thirdeye.approveddataset.dto.request.ApprovedDatasetSearch;
+import kware.apps.thirdeye.approveddataset.dto.request.DeleteApprovedDatasets;
 import kware.apps.thirdeye.approveddataset.dto.response.ApprovedDatasetIdList;
 import kware.apps.thirdeye.approveddataset.dto.response.ApprovedDatasetView;
 import kware.apps.thirdeye.approveddataset.dto.response.DatasetList;
@@ -26,5 +27,9 @@ public class CetusApprovedDatasetDao extends SuperDao<CetusApprovedDataset> {
 
     public List<DatasetList> getDatasetList(ApprovedDatasetSearch search) {
         return selectList("getDatasetList", search);
+    }
+
+    public void deleteApprovedDataset(CetusApprovedDataset bean) {
+        update("deleteApprovedDataset", bean);
     }
 }

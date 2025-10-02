@@ -86,11 +86,7 @@
 
                     <!-- 3행 -->
                     <div class="row">
-                        <div class="col-lg-6 items metadata-description">
-                            <label for="period-description">컨텐츠 설명</label>
-                            <div id="period-description"></div>
-                        </div>
-                        <div class="col-lg-6 items">
+                        <div class="col-lg-12 items">
                             <label for="period-metadata">메타데이터(JSON)</label>
                             <textarea id="period-metadata" name="metadata"
                                       class="form-control" style="height:200px;" required></textarea>
@@ -101,13 +97,11 @@
                 <!-- 실데이터 업로드 -->
                 <div class="file-row">
                     <label>실 데이터</label>
-
                     <div class="file-display">
                         <div class="file-row" style="position: relative;">
                             <input type="text" id="period-data-filename" class="file-text" placeholder="선택된 파일 없음" readonly>
                             <button type="button" id="period-data-clear" class="clear-file">×</button>
                         </div>
-
                     </div>
                     <button type="button" class="file-btn" id="period-data-upload-btn">실데이터 업로드</button>
                     <div id="period-data-uploader" style="display: none;"></div>
@@ -126,7 +120,6 @@
     <script th:inline="javascript">
 
         const view = [[${view}]]
-        console.log(">>> view : ", view)
 
         $(document).ready(function() {
 
@@ -231,10 +224,12 @@
         $(function () {
 
             mobigenDatasetFormJS.initRealdataUploader("period-data-filename", "period-data-uploader", null);
-            mobigenDatasetFormJS.initCkEditor("period-description", view['description']);
 
-            $("#list-btn").on('click', function () {
-                window.location.href = '/admin/mobigen/dataset'
+            $("#list-btn").on('click', async function () {
+                const isOk = await Util.confirm("수정중이신 정보는 저장되지 않습니다. <br> 목록으로 돌아가시겠습니까?")
+                if (isOk) {
+                    window.location.href = '/admin/mobigen/dataset'
+                }
             });
 
             // ===============================

@@ -8,18 +8,18 @@ import lombok.Setter;
 @Getter @NoArgsConstructor(access = AccessLevel.PROTECTED) @Setter
 public class ApprovedDatasetSearch {
 
+    private Long workplaceUid;
+    private String showAt;
+    private String browseText;
     private String startDate;
     private String endDate;
-    private Long workplaceUid;
-    private Long[] categories;
-    private Long[] tags;
 
-    public ApprovedDatasetSearch(String startDate, String endDate, Long workplaceUid, Long[] categories, Long[] tags) {
+    public ApprovedDatasetSearch(Long workplaceUid, String showAt, String browseText, String startDate, String endDate) {
+        this.workplaceUid = workplaceUid;
+        this.showAt = showAt;
+        this.browseText = browseText;
         this.startDate = startDate;
         this.endDate = endDate;
-        this.workplaceUid = workplaceUid;
-        this.categories = categories;
-        this.tags = tags;
     }
 
     public void setWorkplaceUid(Long workplaceUid) {

@@ -16,6 +16,7 @@
     .dataTable tr.even:hover {
       cursor: pointer; /* 선택적으로 커서도 포인터로 */
     }
+    .description .ck-editor__editable{ min-height: 300px; }
   </style>
   <style>
     /* 이미지 영역 */
@@ -213,10 +214,10 @@
                   </div>
                 </div>
 
-                <div class="row custom-row" id="thumb-container-div" style="display: none">
+                <div class="row custom-row">
                   <div class="col-lg-6">
                     <div class="single-input-item">
-                      <label for="thumbnail-upload-container" class="custom-label">썸네일<span style="color: firebrick">*</span></label>
+                      <label for="thumbnail-upload-container" class="custom-label">썸네일<span style="color: firebrick; display: none" id="thumbnail-required">*</span></label>
                       <div id="thumbnail-upload-container" style="display: none;"></div>
                       <div class="thumbnail-wrapper">
                         <img th:src="|/api/portal/files/view?fileId=${view?.uiView?.thumbId}|"
@@ -228,6 +229,17 @@
                         <button type="button" id="delete-thumb-img" class="custom-button">삭제</button>
                       </div>
                     </div>
+                  </div>
+                  <div class="col-lg-6">
+                    <label for="summary">요약 설명</label>
+                    <textarea id="summary" class="form-control" style="height:200px;"></textarea>
+                  </div>
+                </div>
+
+                <div class="row custom-row">
+                  <div class="col-lg-12 description">
+                    <label for="description">추가 설명</label>
+                    <div id="description"></div>
                   </div>
                 </div>
 
@@ -248,25 +260,31 @@
   <script th:inline="javascript">
 
     const view = [[${view}]]
-    console.log("view : ", view)
 
     $(function () {
 
+      const json = JSON.parse(view['extraJson'])
+      $("#summary").val(json?.['summary'] || '')
+
+      approvedDatasetJS.initEditor(json?.['description']);
       approvedDatasetJS.initUpload(view['uiView']?.['thumbUid']);
       approvedDatasetJS.settingFormMetaDataSection(view['mobigenDatasetView']?.['metadata'])
 
-      $("#list-btn").on('click', function () {
-        window.location.href = '/admin/approved/dataset'
+      $("#list-btn").on('click', async function () {
+        const isOk = await Util.confirm("수정중이신 정보는 저장되지 않습니다. <br> 목록으로 돌아가시겠습니까?")
+        if(isOk) {
+          window.location.href = '/admin/approved/dataset'
+        }
       });
 
       $("#mainUiUid").on("change", function() {
         const thumbUseAt = $(this).find("option:selected").data("thumbuseat");
         if (thumbUseAt === "Y") {
           approvedDatasetJS.useThumbnail = true;
-          $("#thumb-container-div").show();
+          $("#thumbnail-required").show();
         } else {
           approvedDatasetJS.useThumbnail = false;
-          $("#thumb-container-div").hide();
+          $("#thumbnail-required").hide();
         }
       });
       $("#mainUiUid").trigger("change");
@@ -280,7 +298,7 @@
       });
 
       $("#submit-btn").on('click', function () {
-        approvedDatasetJS.updateDatasetApproved(view['uid']);
+        approvedDatasetJS.updateDatasetApproved(view['approvedUid']);
       });
 
     });

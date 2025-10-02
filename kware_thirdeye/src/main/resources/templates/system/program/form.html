@@ -213,7 +213,7 @@
             else $('#isRootUrl-div1, #isRootUrl-div2, #isRootUrl-div3').hide()
 
             $("#list-btn").on('click', function () {
-                Util.confirm('작성중이신 정보는 저장되지 않습니다. <br> 목록으로 돌아가시겠습니까?').then((isOk) => {
+                Util.confirm('수정중이신 정보는 저장되지 않습니다. <br> 목록으로 돌아가시겠습니까?').then((isOk) => {
                     if(isOk) {
                         window.location.href = '/system/program';
                     }

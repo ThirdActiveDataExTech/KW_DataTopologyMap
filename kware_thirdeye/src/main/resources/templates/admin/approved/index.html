@@ -35,7 +35,7 @@
               <span id="total-num"></span>
               <div class="btn-wrapper">
                 <div class="col-12 col-xl-4 mb-1 mb-lg-0">
-                  <select class="form-select round select_line custom-input" id="useAt" name="useAt">
+                  <select class="form-select round select_line custom-input" id="showAt" name="showAt">
                     <option value="">노출여부 전체</option>
                     <option value="Y">노출</option>
                     <option value="N">미노출</option>
@@ -48,7 +48,7 @@
                         id="search_txt1"
                         class="form-control round border_line custom-input"
                         name="browseText"
-                        placeholder="승인자 검색"
+                        placeholder="승인자, UI유형 검색"
                     />
                   </div>
                 </div>
@@ -105,6 +105,14 @@
           e.preventDefault();
           approvedDatasetJS.searchTable();
         }
+      });
+
+      $('#showAt').on('change', function () {
+        approvedDatasetJS.searchTable();
+      });
+
+      $("#delete-btn").on('click', function () {
+        approvedDatasetJS.deleteApprovedDatasetClickEvent();
       });
 
     });

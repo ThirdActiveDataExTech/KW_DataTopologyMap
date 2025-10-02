@@ -14,7 +14,6 @@ import java.util.List;
 public class SaveMobigenDataset {
 
     private String title;
-    private String description;
     private String metadata;
     private CommonFile[] metaFile;
     private CommonFile[] realFile;

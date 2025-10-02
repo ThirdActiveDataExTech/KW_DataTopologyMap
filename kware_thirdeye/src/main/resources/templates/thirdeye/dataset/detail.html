@@ -11,6 +11,10 @@
 
 <th:block layout:fragment="head">
     <link rel="stylesheet" th:href="@{'/assets/css/page/thirdeye/dataset-detail.css'}" />
+    <style>
+        .description .ck-editor__editable_inline { border: none !important; outline: none !important; }
+        .description .ck-editor__top { display: none; }
+    </style>
 </th:block>
 
 <th:block layout:fragment="content">
@@ -21,12 +25,12 @@
 
         <div class="col-lg-3">
           <div class="page-details-img-wrap" data-aos="fade-up" data-aos-delay="200">
-              <div class="easyzoom-style">
-                  <div class="easyzoom easyzoom--overlay">
-                      <a href="#">
-                        <img id="dataImgUrl" class="portal-img" th:src="@{'/assets/images/page/thumbnail_default.png'}" alt="" />
-                      </a>
-                  </div>
+              <div>
+                  <img id="dataImgUrl" class="portal-img"
+                       th:src="|/api/portal/files/view?fileId=${dataset?.thumbId}|"
+                       onerror="this.src='/assets/images/page/thumbnail_default.png'"
+                       alt="" />
+                  </a>
               </div>
           </div>
         </div>
@@ -36,15 +40,15 @@
 
                 <div class="row">
                   <div class="col-lg-8">
-                    <h2 id="contentTitle" th:text="${dataset?.title}"></h2>
+                    <h2 id="contentTitle" th:text="${dataset?.mobigenDatasetView?.title}"></h2>
                   </div>
                   <div class="col-lg-4 justify-content-end" style="flex-direction: row; display: flex;">
                     <div class="page-details-action-wrap">
                       <div class="single-page-wishlist">
                           <button class="justify-content-center btn-custom-control" id="btnPageBookmark"
-                                  th:data-like="${dataset?.bookmark}" th:data-id="${dataset?.approvedUid}">
+                                  th:data-like="${dataset?.bookmarkYn}" th:data-id="${dataset?.approvedUid}">
                               <a class="justify-content-center" title="Wishlist" href="javascript:void(0);">
-                                  <i th:class="${dataset?.bookmark} ? 'fa fa-heart' : 'pe-7s-like'"></i>
+                                  <i th:class="${dataset?.bookmarkYn} ? 'fa fa-heart' : 'pe-7s-like'"></i>
                               </a>
                               <span class="txt-label justify-content-center">북마크</span>
                           </button>
@@ -62,26 +66,28 @@
                 </div>
 
                 <div class="page-color page-color-active page-details-color">
-                  <span id="descriptTitle" th:text="${dataset?.description}"></span>
+                  <span id="summary"></span>
                 </div>
 
-                <!--<div class="page-details-meta data-description-area">
-                  <ul>
-                    <li id="description" th:text="${dataset?.description}"></li>
-                  </ul>
-                </div>-->
+                <hr>
 
-                <!--<div class="page-details-meta data-description-area list-tag-pnl">
+                <div class="page-details-meta data-description-area description" style="margin-bottom: 0px !important;">
+                    <div id="description"></div>
+                </div>
+
+                <hr>
+
+                <div class="page-details-meta data-description-area list-tag-pnl">
                   <ul>
                       <li>
                           <ul class="tag">
-                            <li th:each="tag : ${dataset?.tags}" class="tag-content">
-                                <a href="#" th:text="${tag.tagName}"></a>
+                            <li th:each="tag : ${dataset?.mobigenDatasetView?.tags}" class="tag-content">
+                                <a href="#" th:text="${tag?.tagNm}"></a>
                             </li>
                           </ul>
                       </li>
                   </ul>
-                </div>-->
+                </div>
 
                 <div class="page-details-review">
                     <div class="page-rating" id="page-content-avg-rating">
@@ -172,8 +178,8 @@
 
 
         // 썸네일 이미지 확대 기능
-        const dataImgUrl = `/assets/images/page/thumbnail_default.png`;
-        detailJS.updateEasyZoom('.easyzoom', dataImgUrl, dataImgUrl);
+        // const dataImgUrl = `/api/portal/files/view?fileId=${dataset?.['thumbId']}`;
+        // detailJS.updateEasyZoom('.easyzoom', dataImgUrl, dataImgUrl);
 
         // 북마크 버튼
         $("#btnPageBookmark").click(function(e){

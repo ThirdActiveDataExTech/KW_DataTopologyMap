@@ -16,7 +16,6 @@ public class MobigenDatasetView {
 
     private Long uid;
     private String title;
-    private String description;
     private String registrantId;
     private String regDt;
     private Long metadataFileUid;

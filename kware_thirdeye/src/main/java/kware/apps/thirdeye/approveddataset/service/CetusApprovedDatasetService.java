@@ -3,11 +3,14 @@ package kware.apps.thirdeye.approveddataset.service;
 import cetus.bean.Page;
 import cetus.bean.Pageable;
 import cetus.user.UserUtil;
+import kware.apps.mobigen.cetus.dataset.domain.CetusMobigenDataset;
+import kware.apps.mobigen.cetus.dataset.dto.request.DeleteDatasets;
 import kware.apps.mobigen.cetus.dataset.dto.response.MobigenDatasetView;
 import kware.apps.mobigen.cetus.dataset.service.CetusMobigenDatasetService;
 import kware.apps.thirdeye.approveddataset.domain.CetusApprovedDataset;
 import kware.apps.thirdeye.approveddataset.domain.CetusApprovedDatasetDao;
 import kware.apps.thirdeye.approveddataset.dto.request.ApprovedDatasetSearch;
+import kware.apps.thirdeye.approveddataset.dto.request.DeleteApprovedDatasets;
 import kware.apps.thirdeye.approveddataset.dto.request.SaveApprovedDataset;
 import kware.apps.thirdeye.approveddataset.dto.response.ApprovedDatasetIdList;
 import kware.apps.thirdeye.approveddataset.dto.response.ApprovedDatasetView;
@@ -113,14 +116,26 @@ public class CetusApprovedDatasetService {
     **/
     @Transactional(readOnly = true)
     public ApprovedDatasetView findApprovedDatasetView(Long approvedUid) {
+
+        // 1. 진열 등록된 데이터셋 정보
         ApprovedDatasetView approvedDatasetView = dao.getApprovedDatasetView(approvedUid);
 
+        // 2. 진열 등록된 데이터셋 UI 정보
         DatasetUiView uiView = datasetUiService.findDatasetUiView(approvedUid);
         approvedDatasetView.setUiView(uiView);
 
+        // 3. 진열 등록된 데이터셋 UI => 모비젠에 저장된 데이터셋의 디테일 정보
         MobigenDatasetView mobigenDatasetView = mobigenDatasetService.findMobigenDatasetByDatasetId(approvedDatasetView.getDatasetId());
         approvedDatasetView.setMobigenDatasetView(mobigenDatasetView);
         
         return approvedDatasetView;
+    }
+
+    @Transactional
+    public void deleteSeveralApprovedDataset(DeleteApprovedDatasets request) {
+        for (Long uid: request.getUids()) {
+            CetusApprovedDataset bean = new CetusApprovedDataset(uid);
+            dao.deleteApprovedDataset(bean);
+        }
     }
 }

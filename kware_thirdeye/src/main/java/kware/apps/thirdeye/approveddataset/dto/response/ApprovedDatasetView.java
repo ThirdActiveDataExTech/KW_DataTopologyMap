@@ -10,14 +10,20 @@ import lombok.NoArgsConstructor;
 @Getter @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ApprovedDatasetView {
 
-    private Long uid;
+    private Long approvedUid;
     private Long datasetId;
     private Long workplaceUid;
     private String approvedDt;
     private Long approverUid;
     private String createdId;
+
     private DatasetUiView uiView;
     private MobigenDatasetView mobigenDatasetView;
+
+    private String thumbId;
+    private Integer ratings;
+    private String bookmarkYn;
+    private String extraJson;
 
     public void setUiView(DatasetUiView uiView) {
         this.uiView = uiView;

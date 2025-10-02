@@ -20,8 +20,17 @@
             margin-left: 6px;
             font-weight: bold;
         }
-        .select2-selection__rendered > li.select2-selection__choice {
+        /*.select2-selection__rendered > li.select2-selection__choice {
             display: none !important;
+        }*/
+        .sidebar-widget .sidebar-list-style ul li:last-child {
+            margin: 0 0 14px !important;
+            margin-left: 5px !important;
+            margin-top: 5px !important;
+        }
+        .select2-container .select2-search--inline .select2-search__field {
+            margin-left: 10px !important;
+            margin-bottom: 10px !important;
         }
     </style>
 </th:block>
@@ -45,13 +54,6 @@
                             </div>
                         </div>
                         <div class="page-topbar-right">
-                            <div class="page-sorting-area">
-                                <select class="nice-select nice-select-style-1" id="order-select">
-                                    <option value="title">이름순</option>
-                                    <option value="approve">승인순</option>
-                                    <option value="rating">별점순</option>
-                                </select>
-                            </div>
                             <div class="page-view-mode nav" role="tablist">
                                 <a class="active" href="#shop-1" data-bs-toggle="tab" aria-selected="true" tabindex="-1" role="tab" onclick="listJS.fnTab('card')">
                                     <i class=" ti-layout-grid3 "></i>
@@ -99,9 +101,7 @@
                                 <div class="sidebar-widget-title mb-25">
                                     <h3>카테고리</h3>
                                 </div>
-                                <div id="categories" class="sidebar-widget-color sidebar-list-style">
-                                    <ul></ul>
-                                </div>
+                                <div id="categories" class="sidebar-widget-color sidebar-list-style"></div>
                             </div>
                         </div>
                         <div id="sidebar-widgets-container2">
@@ -109,7 +109,9 @@
                                 <div class="sidebar-widget-title mb-25">
                                     <h3>태그</h3>
                                 </div>
-                                <div id="tags" class="sidebar-widget-color sidebar-list-style"></div>
+                                <div id="tags" class="sidebar-widget-color sidebar-list-style">
+                                    <select class="select2 round border_line" id="tags-select" multiple></select>
+                                </div>
                             </div>
                         </div>
                         <div id="sidebar-widgets-container3">
@@ -188,13 +190,7 @@
                 listJS.fnPage(1, false);
             });
 
-            // 5. 정렬순서 변경
-            $('#order-select').change(function () {
-                listJS.sort = $(this).val();
-                listJS.fnPage(1, true);
-            });
-
-            // 6. 검색어 검색
+            // 5. 검색어 검색
             $('#searchForm').on('keypress', function (event) {
                 if (event.key === 'Enter') {
                     event.preventDefault(); // 기본 동작(폼 제출) 막기
@@ -203,7 +199,7 @@
                 }
             });
 
-            // 7. 검색조건 검색
+            // 6. 검색조건 검색
             $(document).on('change', 'input[type="checkbox"]', function (e) {
                 const type = $(this).attr('id').split('_')[0];
                 const value = $(this).attr('value');
@@ -212,15 +208,35 @@
                 listJS.fnPage(1, false);
             });
 
-            // 8. 뷰 버튼 클릭
+            // 7. 뷰 버튼 클릭
             $(document).on('click', '.detail-btn', function () {
                 const uid = $(this).data('id');
                 window.location.href = `/portal/detail/${uid}`;
             });
 
-            // 9. 좋아요 버튼 클릭
+            // 8. 좋아요 버튼 클릭
             $(document).on('click', '.like-content-btn', function (e) {
                 listJS.likeClickEvent(this);
+            });
+
+            // 9. 태그 > select2 > 검색
+            $("#tags-select").select2({
+                placeholder: '태그 검색',
+                language: {
+                    noResults: function() {
+                        return "검색 결과가 없습니다.";
+                    }
+                }
+            });
+            $('#tags-select').on('select2:select select2:unselect', function (e) {
+                listJS.param['tag'] = [];
+                const data = $(this).val(); // 배열 형태
+                if (data && data.length) {
+                    data.forEach(uid => {
+                        listJS.param['tag'].push(uid);
+                    });
+                }
+                listJS.fnPage(1, false);
             });
 
         });

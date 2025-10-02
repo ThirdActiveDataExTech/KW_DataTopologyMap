@@ -6,7 +6,6 @@
         /* cetusMobigenDataset.getAllMobigenDatasetPage */
         SELECT CMD.UID
               ,CMD.TITLE
-              ,CMD.DESCRIPTION
               ,COALESCE(CMD.REGISTRANT_ID, '자동 저장') AS REGISTRANT_ID
               ,TO_CHAR(CMD.REG_DT, 'YYYY-MM-DD HH:MM') AS REG_DT
           FROM CETUS_MOBIGEN_DATASET CMD
@@ -42,7 +41,6 @@
         /* cetusMobigenDataset.insert */
         INSERT INTO CETUS_MOBIGEN_DATASET (
              TITLE
-            ,DESCRIPTION
             ,METADATA_FILE_UID
             ,REALDATA_FILE_UID
             ,REGISTRANT_ID
@@ -51,7 +49,6 @@
             ,METADATA
         ) VALUES (
              #{title}
-            ,#{description}
             ,#{metadataFileUid}
             ,#{realdataFileUid}
             ,#{registrantId}
@@ -72,7 +69,6 @@
         /* cetusMobigenDataset.getMobigenDatasetByDatasetId */
         SELECT CMD.UID
               ,CMD.TITLE
-              ,CMD.DESCRIPTION
               ,CMD.REGISTRANT_ID
               ,TO_CHAR(CMD.REG_DT, 'YYYY-MM-DD HH:MM') AS REG_DT
               ,CMD.METADATA_FILE_UID
@@ -86,7 +82,6 @@
         /* cetusMobigenDataset.update */
         UPDATE CETUS_MOBIGEN_DATASET
            SET TITLE = #{title}
-              ,DESCRIPTION = #{description}
               ,METADATA = #{metadata}::jsonb
          WHERE UID = #{uid}
     </update>

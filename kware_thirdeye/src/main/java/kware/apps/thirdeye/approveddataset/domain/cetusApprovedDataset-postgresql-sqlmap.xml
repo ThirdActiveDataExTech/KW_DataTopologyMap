@@ -16,6 +16,7 @@
               ,CDMU.UID AS MAIN_UI_UID
               ,CDMU.CODE AS MAIN_UI_CODE
               ,CDUI.SHOW_AT AS SHOW_AT
+              ,CDUI.EXTRA_JSON AS EXTRA_JSON
           FROM CETUS_APPROVED_DATASET CAD
           LEFT JOIN CETUS_DATASET_UI CDU ON CDU.APPROVED_DATASET_UID = CAD.UID
           LEFT JOIN CETUS_USER CU_CREATE ON CU_CREATE.USER_ID = CAD.CREATED_ID
@@ -24,14 +25,34 @@
           LEFT JOIN CETUS_DATASET_MAIN_UI CDMU ON CDMU.UID = CDUI.MAIN_UI_UID
          WHERE CAD.WORKPLACE_UID = #{workplaceUid}
            AND CAD.DELETE_AT = 'N'
-           AND CDU.SHOW_AT = 'Y'
-        <if test="@Ognl@isNotEmpty(startDate) and @Ognl@isNotEmpty(endDate)">
-           AND CAD.APPROVED_DT BETWEEN #{startDate}::TIMESTAMP
-           AND (#{endDate}::DATE + INTERVAL '1 day' - INTERVAL '1 second')
+        <if test="@Ognl@isNotEmpty(showAt)">
+           AND CDUI.SHOW_AT = #{showAt}
+        </if>
+        <if test="@Ognl@isNotEmpty(browseText)">
+           AND (CU_CREATE.USER_NM LIKE '%' || #{browseText} || '%' OR CDMU.CODE LIKE '%' || #{browseText} || '%' )
         </if>
          ORDER BY CAD.APPROVED_DT DESC
         <if test="@Ognl@isNotEmpty(startNumber) and  @Ognl@isNotEmpty(endNumber)">
         OFFSET ${startNumber} LIMIT ${endNumber}
+        </if>
+    </select>
+
+    <select id="getDatasetPageCount" parameterType="ApprovedDatasetSearch" resultType="int">
+        /* cetusApprovedDataset.getDatasetPageCount */
+        SELECT COUNT(*)
+          FROM CETUS_APPROVED_DATASET CAD
+          LEFT JOIN CETUS_DATASET_UI CDU ON CDU.APPROVED_DATASET_UID = CAD.UID
+          LEFT JOIN CETUS_USER CU_CREATE ON CU_CREATE.USER_ID = CAD.CREATED_ID
+          LEFT JOIN CETUS_USER CU_APP ON CU_APP.UID = CAD.APPROVER_UID
+          LEFT JOIN CETUS_DATASET_UI CDUI ON CDUI.APPROVED_DATASET_UID = CAD.UID
+          LEFT JOIN CETUS_DATASET_MAIN_UI CDMU ON CDMU.UID = CDUI.MAIN_UI_UID
+         WHERE CAD.WORKPLACE_UID = #{workplaceUid}
+           AND CAD.DELETE_AT = 'N'
+        <if test="@Ognl@isNotEmpty(showAt)">
+           AND CDUI.SHOW_AT = #{showAt}
+        </if>
+        <if test="@Ognl@isNotEmpty(browseText)">
+           AND (CU_CREATE.USER_NM LIKE '%' || #{browseText} || '%' OR CDMU.CODE LIKE '%' || #{browseText} || '%' )
         </if>
     </select>
 
@@ -46,11 +67,22 @@
                    FROM CETUS_DATASET_COMMENT CDM
                   WHERE CDM.APPROVED_DATASET_UID = CAD.UID
               ) AS RATINGS
+              ,CF.FILE_ID AS THUMB_ID
+              ,CASE
+                WHEN EXISTS (
+                        SELECT 1
+                          FROM CETUS_DATASET_BOOKMARK B
+                         WHERE B.APPROVED_DATASET_UID = CAD.UID
+                ) THEN 'Y'
+              ELSE 'N'
+               END AS BOOKMARK_YN
+              ,CDUI.EXTRA_JSON AS EXTRA_JSON
           FROM CETUS_APPROVED_DATASET CAD
           LEFT JOIN CETUS_DATASET_UI CDU ON CDU.APPROVED_DATASET_UID = CAD.UID
           LEFT JOIN CETUS_USER CU_CREATE ON CU_CREATE.USER_ID = CAD.CREATED_ID
           LEFT JOIN CETUS_USER CU_APP ON CU_APP.UID = CAD.APPROVER_UID
           LEFT JOIN CETUS_DATASET_UI CDUI ON CDUI.APPROVED_DATASET_UID = CAD.UID
+          LEFT JOIN CETUS_FILE CF ON CF.FILE_UID = CDUI.THUMB_UID AND CF.USE_AT = 'Y' AND CF.SAVED = 'Y'
           LEFT JOIN CETUS_DATASET_MAIN_UI CDMU ON CDMU.UID = CDUI.MAIN_UI_UID
          WHERE CAD.WORKPLACE_UID = #{workplaceUid}
            AND CAD.DELETE_AT = 'N'
@@ -60,22 +92,6 @@
            AND (#{endDate}::DATE + INTERVAL '1 day' - INTERVAL '1 second')
         </if>
          ORDER BY CAD.APPROVED_DT DESC
-    </select>
-
-    <select id="getDatasetPageCount" parameterType="ApprovedDatasetSearch" resultType="int">
-        /* cetusApprovedDataset.getDatasetPageCount */
-        SELECT COUNT(*)
-          FROM CETUS_APPROVED_DATASET CAD
-          LEFT JOIN CETUS_DATASET_UI CDU ON CDU.APPROVED_DATASET_UID = CAD.UID
-          LEFT JOIN CETUS_USER CU_CREATE ON CU_CREATE.USER_ID = CAD.CREATED_ID
-          LEFT JOIN CETUS_USER CU_APP ON CU_APP.UID = CAD.APPROVER_UID
-         WHERE CAD.WORKPLACE_UID = #{workplaceUid}
-           AND CAD.DELETE_AT = 'N'
-           AND CDU.SHOW_AT = 'Y'
-        <if test="@Ognl@isNotEmpty(startDate) and @Ognl@isNotEmpty(endDate)">
-           AND CAD.APPROVED_DT BETWEEN #{startDate}::TIMESTAMP
-           AND (#{endDate}::DATE + INTERVAL '1 day' - INTERVAL '1 second')
-        </if>
     </select>
 
     <select id="getApprovedDatasetIdList" resultType="ApprovedDatasetIdList" parameterType="Long">
@@ -107,13 +123,36 @@
 
     <select id="getApprovedDatasetView" parameterType="Long" resultType="ApprovedDatasetView">
         /* cetusApprovedDataset.getApprovedDatasetView */
-        SELECT CAD.UID
+        SELECT CAD.UID AS APPROVED_UID
               ,CAD.DATASET_ID
               ,CAD.WORKPLACE_UID
               ,CAD.APPROVED_DT
               ,CAD.APPROVER_UID
               ,CAD.CREATED_ID
+              ,CF.FILE_ID AS THUMB_ID
+              ,( SELECT COALESCE(ROUND(SUM(CDM.RATINGS) / COUNT(*)), 0)
+                   FROM CETUS_DATASET_COMMENT CDM
+                  WHERE CDM.APPROVED_DATASET_UID = CAD.UID
+              ) AS RATINGS
+              ,CASE
+                   WHEN EXISTS (
+                       SELECT 1
+                         FROM CETUS_DATASET_BOOKMARK B
+                        WHERE B.APPROVED_DATASET_UID = CAD.UID
+                   ) THEN 'Y'
+                   ELSE 'N'
+                END AS BOOKMARK_YN
+              ,CDU.EXTRA_JSON
           FROM CETUS_APPROVED_DATASET CAD
+          LEFT JOIN CETUS_DATASET_UI CDU ON CDU.APPROVED_DATASET_UID = CAD.UID
+          LEFT JOIN CETUS_FILE CF ON CF.FILE_UID = CDU.THUMB_UID AND CF.USE_AT = 'Y' AND CF.SAVED = 'Y'
          WHERE CAD.UID = #{uid}
     </select>
+
+    <update id="deleteApprovedDataset" parameterType="Long">
+        /* cetusApprovedDataset.deleteApprovedDataset */
+        UPDATE CETUS_APPROVED_DATASET
+           SET DELETE_AT = 'Y'
+         WHERE UID = #{uid}
+    </update>
 </mapper>
