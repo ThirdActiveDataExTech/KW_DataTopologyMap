@@ -9,9 +9,16 @@
 
         drawTab01: function (dataset) {
             template01JS.drawSummaryDescription(dataset);   // 메인 상단 디테일 영역 구성
+            template01JS.drawMetadataTab(dataset);          // tab1 구성 > 메타데이터 탭
             template01JS.setDataTable(dataset);             // tab1 구성 > json 테이블 영역
             template01JS.setSubTabSampleVisualization();    // tab2 구성
             template01JS.setMetaDataDownloadTab();          // tab3 구성
+        },
+
+        drawMetadataTab: function (dataset) {
+            const metadataFile = dataset['mobigenDatasetView']?.['metadataFiles']?.[0]
+            $("#metadata-badge").text(metadataFile['extension']);
+            $("#metadata-desc").text(metadataFile['orgFileNm']);
         },
 
         drawSummaryDescription: async function (dataset) {
@@ -93,12 +100,6 @@
 
                 template01JS.metDataFiles = data
 
-                // 1. extension 세팅
-                $("#metadata-badge").text(data.extension);
-
-                // 2. title 세팅
-                $("#metadata-desc").text(data.title);
-
                 // 3. files 길이에 따라 history-title 세팅
                 const filesLength = data.files.length;
                 const title = (filesLength === 1) ?  "신규데이터 (1건)" : `주기성 과거 데이터 ( ${filesLength}건 )`;
@@ -170,8 +171,9 @@
             console.log("file download")
         });
 
-        $("#metadata-download-btn").on('click', function (e) {
-           console.log("메타데이터 탭 > 데이터 다운로드 버튼 클릭..");
+        $("#metadata-download-btn").on('click', async function (e) {
+            const metadataFile = dataset['mobigenDatasetView']?.['metadataFiles']?.[0]
+            await FileUtil.fileDownload(metadataFile?.['fileId'])
         });
 
         $(document).on('click', `.history-table tbody tr`, function () {

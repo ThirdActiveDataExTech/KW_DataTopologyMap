@@ -4,7 +4,7 @@ package kware.apps.thirdeye.bookmark.service;
 import cetus.user.UserUtil;
 import kware.apps.mobigen.cetus.dataset.dto.response.MobigenDatasetView;
 import kware.apps.mobigen.cetus.dataset.service.CetusMobigenDatasetService;
-import kware.apps.thirdeye.approveddataset.service.CetusApprovedDatasetService;
+import kware.apps.thirdeye.mobigen.approveddataset.service.CetusApprovedDatasetService;
 import kware.apps.thirdeye.bookmark.domain.CetusBookMark;
 import kware.apps.thirdeye.bookmark.domain.CetusBookMarkDao;
 import kware.apps.thirdeye.bookmark.dto.request.SearchUserBookMark;

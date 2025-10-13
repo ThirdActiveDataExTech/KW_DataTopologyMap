@@ -13,14 +13,12 @@ public class CetusMobigenDataset {
     private String title;
     private Long metadataFileUid;
     private Long realdataFileUid;
-    private String registrantId;
     private String metadata;
 
-    public CetusMobigenDataset(SaveMobigenDataset request, Long metadataFileUid, Long realdataFileUid, String registrantId) {
+    public CetusMobigenDataset(SaveMobigenDataset request, Long metadataFileUid, Long realdataFileUid) {
         this.title = request.getTitle();
         this.metadataFileUid = metadataFileUid;
         this.realdataFileUid = realdataFileUid;
-        this.registrantId = registrantId;
         this.metadata = request.getMetadata();
     }
 

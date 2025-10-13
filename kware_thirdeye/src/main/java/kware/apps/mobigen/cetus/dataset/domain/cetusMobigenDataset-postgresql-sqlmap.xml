@@ -2,17 +2,36 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="cetusMobigenDataset">
 
+    <select id="getAllMobigenDatasetList" resultType="MobigenDatasetList" parameterType="SearchMobigenDataset">
+        /* cetusMobigenDataset.getAllMobigenDatasetList */
+        SELECT CMD.UID
+              ,CMD.TITLE
+              ,COALESCE(CU.USER_ID, '자동 저장') AS REGISTRANT_ID
+              ,TO_CHAR(CMD.REG_DT, 'YYYY-MM-DD HH:MM') AS REG_DT
+          FROM CETUS_MOBIGEN_DATASET CMD
+          LEFT JOIN CETUS_MOBIGEN_REGISTRANT CMR ON CMR.DATASET_ID = CMD.UID
+          LEFT JOIN CETUS_USER CU ON CU.UID = CMR.REGISTRANT_UID
+         WHERE 1 = 1
+           AND CMD.DELETE_AT = 'N'
+        <if test="@Ognl@isNotEmpty(registrantId)">
+           AND CU.USER_ID LIKE '%' || #{registrantId} || '%'
+        </if>
+         ORDER BY CMD.REG_DT DESC
+    </select>
+
     <select id="getAllMobigenDatasetPage" resultType="MobigenDatasetList" parameterType="SearchMobigenDataset">
         /* cetusMobigenDataset.getAllMobigenDatasetPage */
         SELECT CMD.UID
               ,CMD.TITLE
-              ,COALESCE(CMD.REGISTRANT_ID, '자동 저장') AS REGISTRANT_ID
+              ,COALESCE(CU.USER_ID, '자동 저장') AS REGISTRANT_ID
               ,TO_CHAR(CMD.REG_DT, 'YYYY-MM-DD HH:MM') AS REG_DT
           FROM CETUS_MOBIGEN_DATASET CMD
+          LEFT JOIN CETUS_MOBIGEN_REGISTRANT CMR ON CMR.DATASET_ID = CMD.UID
+          LEFT JOIN CETUS_USER CU ON CU.UID = CMR.REGISTRANT_UID
          WHERE 1 = 1
            AND CMD.DELETE_AT = 'N'
         <if test="@Ognl@isNotEmpty(registrantId)">
-           AND CMD.REGISTRANT_ID LIKE '%' || #{registrantId} || '%'
+           AND CU.USER_ID LIKE '%' || #{registrantId} || '%'
         </if>
         <if test="@Ognl@isNotEmpty(approvedIds)">
            AND CMD.UID NOT IN <foreach collection="approvedIds" item="id" open="(" separator="," close=")">#{id}</foreach>
@@ -27,10 +46,12 @@
         /* cetusMobigenDataset.getAllMobigenDatasetPageCount */
         SELECT COUNT(*)
           FROM CETUS_MOBIGEN_DATASET CMD
+          LEFT JOIN CETUS_MOBIGEN_REGISTRANT CMR ON CMR.DATASET_ID = CMD.UID
+          LEFT JOIN CETUS_USER CU ON CU.UID = CMR.REGISTRANT_UID
          WHERE 1 = 1
            AND CMD.DELETE_AT = 'N'
         <if test="@Ognl@isNotEmpty(registrantId)">
-           AND CMD.REGISTRANT_ID LIKE '%' || #{registrantId} || '%'
+           AND CU.USER_ID LIKE '%' || #{registrantId} || '%'
         </if>
         <if test="@Ognl@isNotEmpty(approvedIds)">
            AND CMD.UID NOT IN <foreach collection="approvedIds" item="id" open="(" separator="," close=")">#{id}</foreach>
@@ -43,7 +64,6 @@
              TITLE
             ,METADATA_FILE_UID
             ,REALDATA_FILE_UID
-            ,REGISTRANT_ID
             ,REG_DT
             ,DELETE_AT
             ,METADATA
@@ -51,7 +71,6 @@
              #{title}
             ,#{metadataFileUid}::int8
             ,#{realdataFileUid}::int8
-            ,#{registrantId}
             ,NOW()
             ,'N'
             ,#{metadata}::jsonb
@@ -69,12 +88,14 @@
         /* cetusMobigenDataset.getMobigenDatasetByDatasetId */
         SELECT CMD.UID
               ,CMD.TITLE
-              ,CMD.REGISTRANT_ID
+              ,CU.USER_ID AS REGISTRANT_ID
               ,TO_CHAR(CMD.REG_DT, 'YYYY-MM-DD HH:MM') AS REG_DT
               ,CMD.METADATA_FILE_UID
               ,CMD.REALDATA_FILE_UID
               ,CMD.METADATA
           FROM CETUS_MOBIGEN_DATASET CMD
+          LEFT JOIN CETUS_MOBIGEN_REGISTRANT CMR ON CMR.DATASET_ID = CMD.UID
+          LEFT JOIN CETUS_USER CU ON CU.UID = CMR.REGISTRANT_UID
          WHERE CMD.UID = #{uid}
     </select>
 
