@@ -4,12 +4,7 @@
         <div class="col-lg-12">
             <div class="specification-wrap table-responsive">
                 <table class="table" id="tab1-table">
-                    <tbody>
-                        <tr>
-                            <td class="width1">데이터 제목</td>
-                            <td id="dataTitle"></td>
-                        </tr>
-                    </tbody>
+                    <tbody id="tab1-table-tbody"></tbody>
                 </table>
             </div>
         </div>
@@ -21,7 +16,8 @@
             <div class="description-review-topbar sub-tab-bar nav" data-aos="fade-up" data-aos-delay="200">
                 <!--<a class="active" data-bs-toggle="tab" href="#des-details1-1"> 데이터 미리보기 </a>
                 <a data-bs-toggle="tab" href="#des-details1-2" class=""> 샘플 시각화 </a>-->
-                <a data-bs-toggle="active"  data-bs-toggle="tab" href="#des-details1-3" class=""> 메타데이터 </a>
+                <a class="active" data-bs-toggle="tab" href="#des-details1-3"> 메타데이터 </a>
+                <a class="" data-bs-toggle="tab" href="#des-details1-4"> 추가 정보 </a>
             </div>
 
             <div class="tab-content">
@@ -66,8 +62,9 @@
                             <div>
                                 <div class="metadata-download-box" id="metadata-download-box">
                                     <div class="metadata-info">
-                                        <span class="metadata-badge" id="metadata-badge">CSV</span>
-                                        <span class="metadata-desc" id="metadata-desc">소설/웹소설/잡지 등 공문, 성가/찬송가 정보</span>
+                                        <input type="hidden" id="metadata-id">
+                                        <span class="metadata-badge" id="metadata-badge"></span>
+                                        <span class="metadata-desc" id="metadata-desc"></span>
                                     </div>
                                     <button class="justify-content-center metadata-btn" id="metadata-download-btn">
                                         <a class="justify-content-center" title="download" href="javascript:void(0);">
@@ -77,7 +74,7 @@
                                     </button>
                                 </div>
                                 <!-- 과거 데이터 영역 -->
-                                <div class="history-box">
+                                <div class="history-box" id="history-box">
                                     <h3 class="history-title" id="metadata-file-history-title">주기성 과거 데이터 (44건)</h3>
                                     <!-- 스크롤 래퍼 -->
                                     <div class="history-table-wrapper">
@@ -93,46 +90,6 @@
                                                     <td>소설웹소설_데이터_20240923.csv</td>
                                                     <td>2024-09-23</td>
                                                 </tr>
-                                                <tr data-id="2">
-                                                    <td>소설웹소설_데이터_20240910.csv</td>
-                                                    <td>2024-09-10</td>
-                                                </tr>
-                                                <tr data-id="3">
-                                                    <td>소설웹소설_데이터_20240830.csv</td>
-                                                    <td>2024-08-30</td>
-                                                </tr>
-                                                <tr data-id="4">
-                                                    <td>소설웹소설_데이터_20240830.csv</td>
-                                                    <td>2024-08-30</td>
-                                                </tr>
-                                                <tr data-id="5">
-                                                    <td>소설웹소설_데이터_20240830.csv</td>
-                                                    <td>2024-08-30</td>
-                                                </tr>
-                                                <tr data-id="6">
-                                                    <td>소설웹소설_데이터_20240830.csv</td>
-                                                    <td>2024-08-30</td>
-                                                </tr>
-                                                <tr data-id="7">
-                                                    <td>소설웹소설_데이터_20240830.csv</td>
-                                                    <td>2024-08-30</td>
-                                                </tr>
-                                                <tr data-id="8">
-                                                    <td>소설웹소설_데이터_20240830.csv</td>
-                                                    <td>2024-08-30</td>
-                                                </tr>
-                                                <tr data-id="9">
-                                                    <td>소설웹소설_데이터_20240830.csv</td>
-                                                    <td>2024-08-30</td>
-                                                </tr>
-                                                <tr data-id="10">
-                                                    <td>소설웹소설_데이터_20240830.csv</td>
-                                                    <td>2024-08-30</td>
-                                                </tr>
-                                                <tr data-id="11">
-                                                    <td>소설웹소설_데이터_20240830.csv</td>
-                                                    <td>2024-08-30</td>
-                                                </tr>
                                             </tbody>
                                         </table>
                                     </div>
@@ -140,6 +97,10 @@
                             </div>
                         </div>
                     </div>
+                </div>
+
+                <div id="des-details1-4" class="tab-pane description">
+                    <div id="description"></div>
                 </div>
 
             </div>

@@ -13,6 +13,7 @@ import kware.apps.mobigen.cetus.dataset.dto.request.DeleteDatasets;
 import kware.apps.mobigen.cetus.dataset.dto.request.SaveMobigenDataset;
 import kware.apps.mobigen.cetus.dataset.dto.request.SearchMobigenDataset;
 import kware.apps.mobigen.cetus.dataset.dto.response.MobigenDatasetList;
+import kware.apps.mobigen.cetus.dataset.dto.response.MobigenDatasetRealDataView;
 import kware.apps.mobigen.cetus.dataset.dto.response.MobigenDatasetView;
 import kware.apps.mobigen.cetus.tag.dto.response.TagList;
 import kware.apps.mobigen.cetus.tag.service.CetusMobigenDatasetTagService;
@@ -191,5 +192,10 @@ public class CetusMobigenDatasetService {
         view.setRealdataFiles(realdataFiles);
 
         return view;
+    }
+
+    @Transactional(readOnly = true)
+    public MobigenDatasetRealDataView findRealDataInfoByFileId(String fileId) {
+        return dao.getRealDataInfoByFileId(fileId);
     }
 }

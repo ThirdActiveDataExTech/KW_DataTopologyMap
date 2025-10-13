@@ -69,14 +69,6 @@
                   <span id="summary"></span>
                 </div>
 
-                <hr>
-
-                <div class="page-details-meta data-description-area description" style="margin-bottom: 0px !important;">
-                    <div id="description"></div>
-                </div>
-
-                <hr>
-
                 <div class="page-details-meta data-description-area list-tag-pnl">
                   <ul>
                       <li>
@@ -168,19 +160,14 @@
         // 페이지 화면 초기화
         detailJS.fnPageSearch();
 
-        // 1. tab01 > table 초기화
+        // tab01 > table 초기화
         template01JS.drawTab01(dataset);
 
         // tab03
         template03JS.drawTemplate03();
 
-        // 4. tab04
+        // tab04
         template04JS.drawTemplate04(approvedUid);
-
-
-        // 썸네일 이미지 확대 기능
-        // const dataImgUrl = `/api/portal/files/view?fileId=${dataset?.['thumbId']}`;
-        // detailJS.updateEasyZoom('.easyzoom', dataImgUrl, dataImgUrl);
 
         // 북마크 버튼
         $("#btnPageBookmark").click(function(e){

@@ -107,4 +107,18 @@
               ,METADATA = #{metadata}::jsonb
          WHERE UID = #{uid}
     </update>
+
+    <select id="getRealDataInfoByFileId" parameterType="String" resultType="MobigenDatasetRealDataView">
+        /* cetusMobigenDataset.getRealDataInfoByFileId */
+        SELECT CF.FILE_ID AS FILE_ID
+              ,CF.ORG_FILE_NM AS ORG_FILE_NM
+              ,CF.FILE_PATH AS FILE_PATH
+              ,CF.FILE_SIZE AS FILE_SIZE
+              ,CF.FILE_TYPE AS FILE_TYPE
+              ,CF.EXTENSION AS EXTENSION
+              ,CF.DOWN_CNT AS DOWN_CNT
+              ,TO_CHAR(CF.REG_DT, 'YYYY-MM-DD HH:MM') AS REG_DT
+          FROM CETUS_FILE CF
+         WHERE CF.FILE_ID = #{fileId}
+    </select>
 </mapper>

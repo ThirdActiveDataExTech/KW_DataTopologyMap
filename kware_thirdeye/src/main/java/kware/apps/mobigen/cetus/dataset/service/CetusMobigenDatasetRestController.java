@@ -8,6 +8,7 @@ import kware.apps.mobigen.cetus.dataset.dto.request.DeleteDatasets;
 import kware.apps.mobigen.cetus.dataset.dto.request.SaveMobigenDataset;
 import kware.apps.mobigen.cetus.dataset.dto.request.SearchMobigenDataset;
 import kware.apps.mobigen.cetus.dataset.dto.response.MobigenDatasetList;
+import kware.apps.mobigen.cetus.dataset.dto.response.MobigenDatasetRealDataView;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -41,5 +42,11 @@ public class CetusMobigenDatasetRestController {
     public ResponseEntity changeMobigenDataset(@PathVariable("uid") Long uid, @RequestBody ChangeMobigenDataset request) {
         service.changeMobigenDataset(uid, request);
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/realdata/{fileId}")
+    public ResponseEntity findRealDataInfoByFileId(@PathVariable("fileId") String fileId) {
+        MobigenDatasetRealDataView view = service.findRealDataInfoByFileId(fileId);
+        return ResponseEntity.ok(view);
     }
 }

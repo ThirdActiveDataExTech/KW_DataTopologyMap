@@ -8,73 +8,128 @@
         metDataFiles: [],
 
         drawTab01: function (dataset) {
-            template01JS.drawSummaryDescription(dataset);   // 메인 상단 디테일 영역 구성
-            template01JS.drawMetadataTab(dataset);          // tab1 구성 > 메타데이터 탭
-            template01JS.setDataTable(dataset);             // tab1 구성 > json 테이블 영역
-            template01JS.setSubTabSampleVisualization();    // tab2 구성
-            template01JS.setMetaDataDownloadTab();          // tab3 구성
+            const extraJson = JSON.parse(dataset['extraJson'])
+            template01JS.drawSummaryDescription(extraJson);   // 메인 상단 디테일 영역 구성
+            template01JS.drawMetadataTab(dataset);            // tab1 > 메타데이터 탭
+            template01JS.setDataTable(dataset);               // tab1 > json 테이블 영역
+            /*template01JS.setSubTabSampleVisualization();      // tab1 > 차트탭*/
         },
 
         drawMetadataTab: function (dataset) {
+            /* ========= 1. 메타데이터 정보 =========*/
             const metadataFile = dataset['mobigenDatasetView']?.['metadataFiles']?.[0]
+            $("#metadata-id").val(metadataFile['fileId']);
             $("#metadata-badge").text(metadataFile['extension']);
             $("#metadata-desc").text(metadataFile['orgFileNm']);
+
+            /* ========= 2. 실(원본)데이터 정보 =========*/
+            const realDataFiles = dataset['mobigenDatasetView']?.['realdataFiles'] || []
+
+            if(realDataFiles.length !== 0) {
+                const filesLength = realDataFiles.length;
+                const title = (filesLength === 1) ?  "신규데이터 (1건)" : `주기성 과거 데이터 ( ${filesLength}건 )`;
+                $("#metadata-file-history-title").text(title);
+                const $tbody = $("#metadata-history-table-body");
+                $tbody.empty(); // 초기화
+
+                realDataFiles.forEach((data, index) => {
+                    const $tr = $("<tr>").attr("data-id", data['fileId'])
+                        .append($("<td>").text(data['orgFileNm']))
+                        .append($("<td>").text(data['regDt']));
+                    $tbody.append($tr);
+                });
+            } else {
+                const $historyBox = $("#history-box")
+                $historyBox.empty();
+                $historyBox.append(`<span>정보가 없습니다.</span>`)
+            }
         },
 
-        drawSummaryDescription: async function (dataset) {
-
-            const extraJson = JSON.parse(dataset['extraJson'])
-
+        drawSummaryDescription: async function (extraJson) {
             const newSummary = extraJson['summary'].replace(/\n/g, "<br>");
-            $("#summary").html(newSummary);
-
-            let editor = new Editor("description", extraJson['description'], false);
+            const summary = (newSummary.length !== 0) ? newSummary : '해당 데이터에 대해 요약 정보가 없습니다.'
+            $("#summary").html(summary);
+            const description = (extraJson['description'].length !== 0) ? extraJson['description'] : `<p>해당 데이터에 대해 추가 정보가 없습니다.</p>`
+            let editor = new Editor("description", description, false);
             editor = await editor.init(true);
         },
 
-        setDataTable: function (dataset) {
-
-            const jsonObj = JSON.parse(dataset?.['mobigenDatasetView']?.['metadata']);
-            const $tableBody = $('#tab1-table tbody');
+        setDataTable: function (extraJson) {
+            const addInfo = extraJson?.['addInfo'] || [];
+            const $tableBody = $('#tab1-table-tbody');
             $tableBody.empty(); // 기존 내용 제거
-            const itemsPerRow = 2;
 
-            /* jsonObj => key-value 배열로 변환 */
-            function flattenObj(obj) {
-                const result = [];
-                for (const key in obj) {
-                    if (obj.hasOwnProperty(key)) {
-                        let value = obj[key];
-                        if (Array.isArray(value)) {
-                            value = value.join(', ');
-                        } else if (typeof value === 'object' && value !== null) {
-                            value = JSON.stringify(value); // 객체는 문자열로 변환
-                        }
-                        result.push({ key, value });
-                    }
-                }
-                return result;
-            }
-            const entries = flattenObj(jsonObj);
-            const totalItems = entries.length;
-            const totalRows = Math.ceil(totalItems / itemsPerRow);
-            for (let i = 0; i < totalRows; i++) {
-                const row = $('<tr>');
-                for (let j = 0; j < itemsPerRow; j++) {
-                    const index = i * itemsPerRow + j;
-                    if (index < totalItems) {
-                        const item = entries[index];
-                        row.append(`
-                            <td class="col-2 width1">${item.key}</td>
+            if(addInfo.length === 0) $tableBody.append(`<tr class="text-center"><td colSpan="2" class="text-center py-2">정보가 없습니다.</td></tr>`)
+            else {
+                const itemsPerRow = 2
+                const totalItems = addInfo.length;
+                const totalRows = Math.ceil(totalItems / itemsPerRow);
+                for (let i = 0; i < totalRows; i++) {
+                    const row = $('<tr>');
+                    for (let j = 0; j < itemsPerRow; j++) {
+                        const index = i * itemsPerRow + j;
+                        if (index < totalItems) {
+                            const item = addInfo[index];
+                            row.append(`
+                            <td class="col-2 width1">${item.label}</td>
                             <td class="col-4">${item.value}</td>
                         `);
+                        }
                     }
+                    $tableBody.append(row);
                 }
-                $tableBody.append(row);
             }
         },
 
-        setSubTabSampleVisualization : function(){
+        showMetDataFileInfoModal: function (datafileId) {
+
+            $("#metadata-file-info").empty();
+
+            Http.get(`/api/admin/mobigen-dataset/realdata/${datafileId}`).then((res) => {
+                if(!res) {
+                    Util.alert("데이터를 찾을 수 없습니다.");
+                    return;
+                }
+                const infoList = [
+                    { key: '실데이터 파일Id', value: res['fileId'] },
+                    { key: '실데이터 파일경로', value: res['filePath'] },
+                    { key: '실데이터 파일크기', value: res['fileSize'] },
+                    { key: '실데이터 파일유형', value: res['fileType'] },
+                    { key: '실데이터 파일이름', value: res['orgFileNm'] },
+                    { key: '실데이터 다운로드횟수', value: res['downCnt'] },
+                    { key: '실데이터 파일 등록일', value: res['regDt'] },
+                    { key: '실데이터 파일 수정일', value: res['regDt'] }
+                ]
+                const randomColor = ['#ff000040', '#009fff40', '#36a92940', '#a9296f40']
+                let tableHtml = `<table style="width:100%; border-collapse: collapse; border: 1px solid #ccc;">`;
+                for (let i = 0; i < infoList.length; i += 2) {
+                    const color = randomColor[Math.floor(Math.random() * randomColor.length)];
+                    const first = infoList[i];
+                    const second = infoList[i + 1];
+                    tableHtml += `<tr>
+                                    <td style="background-color: ${color};">${first.key}</td>
+                                    <td style="vertical-align: middle;">${first.value}</td>`;
+                    if (second) tableHtml += `<td style="background-color: ${color};">${second.key}</td>
+                                              <td style="vertical-align: middle;">${second.value}</td>`;
+                    else tableHtml += `<td></td><td></td>`; // 홀수 개일 때 빈 칸
+                    tableHtml += `</tr>`;
+                }
+                tableHtml += `<tr>
+                                  <td style="background-color: #7945c940;">실데이터 파일 다운로드</td>
+                                  <td style="vertical-align: middle;">
+                                    <button class="custom-button realdata-file-download" data-id="${res['fileId']}">
+                                      <i class="ti-cloud-down"></i> 다운로드
+                                    </button>
+                                  </td>
+                              </tr>
+`
+                tableHtml += `</table>`;
+                $("#metadata-file-info").html(tableHtml);
+                $("#metaDataFileInfoModal").modal('show');
+            });
+        },
+
+        /*setSubTabSampleVisualization : function(){
             const generateSampleData = (rows = 2, cols = 12, min = 1, max = 210) =>
                 Array.from({ length: rows }, () =>
                     Array.from({ length: cols }, () =>
@@ -88,98 +143,29 @@
                                             .init();
             template01JS.chart = template01JS.chartDom._myChart;
             $(window).resize(function() { template01JS.chart.resize() });
-        },
-
-        setMetaDataDownloadTab: function () {
-
-            const randomFileNum = Math.random() < 0.5 ? 1 : 2;                      // 1 혹은 2 랜덤 선택
-            const filePath = `/testdata/dataset_real_file_${randomFileNum}.json`;   // 썸네일 이미지 랜덤 선택
-
-            // JSON 데이터 읽기
-            Http.getJson(filePath).then(data => {
-
-                template01JS.metDataFiles = data
-
-                // 3. files 길이에 따라 history-title 세팅
-                const filesLength = data.files.length;
-                const title = (filesLength === 1) ?  "신규데이터 (1건)" : `주기성 과거 데이터 ( ${filesLength}건 )`;
-                $("#metadata-file-history-title").text(title);
-
-                // 4. 테이블 body 구성
-                const $tbody = $("#metadata-history-table-body");
-                $tbody.empty(); // 초기화
-                $.each(data.files, function(index, file) {
-                    const $tr = $("<tr>").attr("data-id", file['datafileId'])
-                        .append($("<td>").text(file['fileNm']))
-                        .append($("<td>").text(file['regDt']));
-                    $tbody.append($tr);
-                });
-            });
-        },
-
-        showMetDataFileInfoModal: function (datafileId) {
-
-            console.log(">>> 클릭한 행 data-id:", datafileId);
-            $("#metadata-file-info").empty();
-
-            Http.getJson('/testdata/dataset_file_info.json').then(data => {
-                const fileData = data.find(d => d['datafileId'] === datafileId);
-                if (!fileData) {
-                    Util.alert("데이터를 찾을 수 없습니다.");
-                    return;
-                }
-                const infoList = [
-                    { key: '데이터셋명', value: fileData['datasetNm'] },
-                    { key: '데이터셋 유형', value: fileData['datasetType'] },
-                    { key: '파일 유형', value: fileData['datafileType'] },
-                    { key: '등록일', value: fileData['regDt'] },
-                    { key: '생성자', value: fileData['creator'] },
-                    { key: '연락처', value: fileData['contact'] },
-                    { key: '설명', value: fileData['desc'] },
-                    { key: '행 개수', value: fileData['rows'] },
-                    { key: '열 개수', value: fileData['cols'] },
-                    { key: '다운로드 유형', value: fileData['downloadType'] },
-                    { key: '수정이력', value: fileData['updateHistory'] },
-                    { key: '라이선스', value: fileData['license'] },
-                ];
-
-                let tableHtml = `<table style="width:100%; border-collapse: collapse;">`;
-                tableHtml += `<tr>
-                                <th>컬럼</th><th>값</th>
-                                <th>컬럼</th><th>값</th>
-                              </tr>`;
-                for ( let i = 0; i < infoList.length; i+=2 ) {
-                    const first = infoList[i]
-                    const second = infoList[i+1]
-                    tableHtml += `<tr><td>${first.key}</td><td>${first.value}</td>`;
-                    if(second) tableHtml += `<td>${second.key}</td><td>${second.value}</td>`;
-                    else tableHtml += `<td></td><td></td>`;
-                    tableHtml += `</tr>`;
-                }
-                tableHtml += `</table>`;
-                $("#metadata-file-info").html(tableHtml);
-                $("#metaDataFileInfoModal").modal('show');
-            });
-
-        }
-
+        },*/
     }
 
     $(function () {
 
-        $("#file-download").on("click", function (e) {
+        /*$("#file-download").on("click", function (e) {
             console.log("file download")
-        });
+        });*/
 
         $("#metadata-download-btn").on('click', async function (e) {
-            const metadataFile = dataset['mobigenDatasetView']?.['metadataFiles']?.[0]
-            await FileUtil.fileDownload(metadataFile?.['fileId'])
+            const metadataFileId = $("#metadata-id").val();
+            await FileUtil.fileDownload(metadataFileId)
         });
 
         $(document).on('click', `.history-table tbody tr`, function () {
             const id = $(this).data("id");
             template01JS.showMetDataFileInfoModal(id);
         });
+
+        $(document).on('click', '.realdata-file-download', async function () {
+            const fileId = $(this).data('id');
+            await FileUtil.fileDownload(fileId)
+        })
 
         $("#close-btn").on('click', function () {
            $("#metaDataFileInfoModal").modal('hide');

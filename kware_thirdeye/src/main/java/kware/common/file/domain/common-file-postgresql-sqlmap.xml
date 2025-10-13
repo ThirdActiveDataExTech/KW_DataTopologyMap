@@ -45,7 +45,7 @@
              , FILE_TYPE
              , EXTENSION
              , FILE_SIZE
-             , REG_DT
+             , TO_CHAR(REG_DT, 'YYYY-MM-DD') AS REG_DT
           FROM CETUS_FILE
          WHERE USE_AT = 'Y'
            AND FILE_UID = #{fileUid}
