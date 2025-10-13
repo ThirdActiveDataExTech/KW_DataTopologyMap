@@ -21,6 +21,7 @@ public class CetusDatasetMainUi extends AuditBean {
     private Long workplaceUid;
     private String useAt;
     private String deleteAt;
+    private String typeCd;
 
     public CetusDatasetMainUi(SaveMainUi request, Long workplaceUid) {
         this.code = request.getCode();
@@ -30,6 +31,7 @@ public class CetusDatasetMainUi extends AuditBean {
         this.titleLineClamp = request.getTitleLineClamp();
         this.thumbUseAt = request.getThumbUseAt();
         this.useAt = request.getUseAt();
+        this.typeCd = request.getTypeCd();
         this.workplaceUid = workplaceUid;
     }
 

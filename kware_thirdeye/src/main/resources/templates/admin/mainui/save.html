@@ -62,6 +62,50 @@
 
                         <div class="row custom-row">
                             <div class="col-lg-4">
+                                <label for="typeCd">유형 선택</label>
+                                <select class="form-control form-select" id="typeCd" name="typeCd" required>
+                                    <option value="" disabled selected>-- 유형 선택 --</option>
+                                    <option th:each="entry : ${uiType}"
+                                            th:value="${entry.key}"
+                                            th:text="${entry.value?.description}"
+                                            th:data-thumbnail="${entry.value?.useThumbNail}"
+                                            th:data-title="${entry.value?.useTitle}"
+                                            th:data-summary="${entry.value?.useSummary}">
+                                    </option>
+                                </select>
+                            </div>
+                            <div class="col-lg-4">
+                                <label for="thumbUseAt-form" class="custom-label">썸네일 사용 여부<span style="color: firebrick">*</span></label>
+                                <div id="thumbUseAt-form" class="custom-check-form-flex">
+                                    <div class="form-check">
+                                        <input type="radio" id="thumbUseAt_Y" name="thumbUseAt" class="form-check-input" value="Y" checked="" disabled>
+                                        <label class="form-check-label" for="thumbUseAt_Y">사용</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input type="radio" id="thumbUseAt_N" name="thumbUseAt" class="form-check-input" value="N" disabled>
+                                        <label class="form-check-label" for="thumbUseAt_N">미사용</label>
+                                    </div>
+                                </div>
+                                <span class="validation-error-message" id="thumbUseAt-error"></span>
+                            </div>
+                            <div class="col-lg-4">
+                                <label for="useAt-form" class="custom-label">사용 여부<span style="color: firebrick">*</span></label>
+                                <div id="useAt-form" class="custom-check-form-flex">
+                                    <div class="form-check">
+                                        <input type="radio" id="useAt_Y" name="useAt" class="form-check-input" value="Y" checked="">
+                                        <label class="form-check-label" for="useAt_Y">사용</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input type="radio" id="useAt_N" name="useAt" class="form-check-input" value="N">
+                                        <label class="form-check-label" for="useAt_N">미사용</label>
+                                    </div>
+                                </div>
+                                <span class="validation-error-message" id="useAt-error"></span>
+                            </div>
+                        </div>
+
+                        <div class="row custom-row">
+                            <div class="col-lg-4">
                                 <div class="single-input-item">
                                     <label for="maxCount" class="custom-label">최대 노출 개수</label>
                                     <input class="form-control custom-input" type="number" id="maxCount" name="maxCount" placeholder="최대 노출 개수를 입력하세요.">
@@ -83,37 +127,6 @@
                             </div>
                         </div>
 
-                        <div class="row custom-row">
-                            <div class="col-lg-6">
-                                <label for="thumbUseAt-form" class="custom-label">썸네일 사용 여부<span style="color: firebrick">*</span></label>
-                                <div id="thumbUseAt-form" class="custom-check-form-flex">
-                                    <div class="form-check">
-                                        <input type="radio" id="thumbUseAt_Y" name="thumbUseAt" class="form-check-input" value="Y" checked="">
-                                        <label class="form-check-label" for="thumbUseAt_Y">사용</label>
-                                    </div>
-                                    <div class="form-check">
-                                        <input type="radio" id="thumbUseAt_N" name="thumbUseAt" class="form-check-input" value="N">
-                                        <label class="form-check-label" for="thumbUseAt_N">미사용</label>
-                                    </div>
-                                </div>
-                                <span class="validation-error-message" id="thumbUseAt-error"></span>
-                            </div>
-                            <div class="col-lg-6">
-                                <label for="useAt-form" class="custom-label">사용 여부<span style="color: firebrick">*</span></label>
-                                <div id="useAt-form" class="custom-check-form-flex">
-                                    <div class="form-check">
-                                        <input type="radio" id="useAt_Y" name="useAt" class="form-check-input" value="Y" checked="">
-                                        <label class="form-check-label" for="useAt_Y">사용</label>
-                                    </div>
-                                    <div class="form-check">
-                                        <input type="radio" id="useAt_N" name="useAt" class="form-check-input" value="N">
-                                        <label class="form-check-label" for="useAt_N">미사용</label>
-                                    </div>
-                                </div>
-                                <span class="validation-error-message" id="useAt-error"></span>
-                            </div>
-                        </div>
-
                     </div>
                 </form>
             </div>
@@ -127,6 +140,9 @@
 <th:block layout:fragment="script">
     <script th:src="@{'/assets/js/page/admin/mainui/mainui-list-form.js'}"></script>
     <script th:inline="javascript">
+
+        const uiType = [[${uiType}]]
+        console.log(">> uiType : ", uiType)
 
         $(document).ready(function() {
 
@@ -143,6 +159,20 @@
                 if (isOk) {
                     window.location.href = '/admin/main-ui'
                 }
+            });
+
+            $('#typeCd').on('change', function() {
+                const selectedOption = $(this).find('option:selected');
+                // thumbnail
+                const useThumb = selectedOption.data('thumbnail') === true || selectedOption.data('thumbnail') === 'true';
+                $('#thumbUseAt_Y').prop('checked', useThumb);
+                $('#thumbUseAt_N').prop('checked', !useThumb);
+                // title
+                const useTitle = selectedOption.data('title')  === true || selectedOption.data('title') === 'true';
+                $("#titleLineClamp").prop('disabled', !useTitle);
+                // summary, description
+                const useSummary = selectedOption.data('summary')  === true || selectedOption.data('summary') === 'true';
+                $("#descLineClamp").prop('disabled', !useSummary);
             });
         });
 

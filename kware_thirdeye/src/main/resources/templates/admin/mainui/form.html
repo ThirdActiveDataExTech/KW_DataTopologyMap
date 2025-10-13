@@ -65,49 +65,34 @@
 
                         <div class="row custom-row">
                             <div class="col-lg-4">
-                                <div class="single-input-item">
-                                    <label for="maxCount" class="custom-label">최대 노출 개수</label>
-                                    <input class="form-control custom-input" type="number"
-                                           th:value="${view?.maxCount}"
-                                           id="maxCount" name="maxCount" placeholder="최대 노출 개수를 입력하세요.">
-                                </div>
+                                <label for="typeCd">유형 선택</label>
+                                <select class="form-control form-select" id="typeCd" name="typeCd" required disabled>
+                                    <option value="" disabled selected>-- 유형 선택 --</option>
+                                    <option th:each="entry : ${uiType}"
+                                            th:value="${entry.key}"
+                                            th:selected="${entry.key == view?.typeCd}"
+                                            th:text="${entry.value?.description}"
+                                            th:data-thumbnail="${entry.value?.useThumbNail}"
+                                            th:data-title="${entry.value?.useTitle}"
+                                            th:data-summary="${entry.value?.useSummary}">
+                                    </option>
+                                </select>
                             </div>
-
                             <div class="col-lg-4">
-                                <div class="single-input-item">
-                                    <label for="titleLineClamp" class="custom-label">제목 최대 라인 수</label>
-                                    <input class="form-control custom-input" type="number"
-                                           th:value="${view?.titleLineCamp}"
-                                           id="titleLineClamp" name="titleLineClamp" placeholder="제목 최대 라인 수를 입력하세요.">
-                                </div>
-                            </div>
-
-                            <div class="col-lg-4">
-                                <div class="single-input-item">
-                                    <label for="descLineClamp" class="custom-label">설명 최대 라인 수</label>
-                                    <input class="form-control custom-input" type="number"
-                                           th:value="${view?.descLineCamp}"
-                                           id="descLineClamp" name="descLineClamp" placeholder="설명 최대 라인 수를 입력하세요.">
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="row custom-row">
-                            <div class="col-lg-6">
                                 <label for="thumbUseAt-form" class="custom-label">썸네일 사용 여부<span style="color: firebrick">*</span></label>
                                 <div id="thumbUseAt-form" class="custom-check-form-flex">
                                     <div class="form-check">
-                                        <input type="radio" id="thumbUseAt_Y" name="thumbUseAt" class="form-check-input" value="Y" th:checked="${view?.thumbUseAt == 'Y'}">
+                                        <input type="radio" id="thumbUseAt_Y" name="thumbUseAt" class="form-check-input" value="Y" th:checked="${view?.thumbUseAt == 'Y'}" disabled>
                                         <label class="form-check-label" for="thumbUseAt_Y">사용</label>
                                     </div>
                                     <div class="form-check">
-                                        <input type="radio" id="thumbUseAt_N" name="thumbUseAt" class="form-check-input" value="N" th:checked="${view?.thumbUseAt == 'N'}">
+                                        <input type="radio" id="thumbUseAt_N" name="thumbUseAt" class="form-check-input" value="N" th:checked="${view?.thumbUseAt == 'N'}" disabled>
                                         <label class="form-check-label" for="thumbUseAt_N">미사용</label>
                                     </div>
                                 </div>
                                 <span class="validation-error-message" id="thumbUseAt-error"></span>
                             </div>
-                            <div class="col-lg-6">
+                            <div class="col-lg-4">
                                 <label for="useAt-form" class="custom-label">사용 여부<span style="color: firebrick">*</span></label>
                                 <div id="useAt-form" class="custom-check-form-flex">
                                     <div class="form-check">
@@ -120,6 +105,35 @@
                                     </div>
                                 </div>
                                 <span class="validation-error-message" id="useAt-error"></span>
+                            </div>
+                        </div>
+
+                        <div class="row custom-row">
+                            <div class="col-lg-4">
+                                <div class="single-input-item">
+                                    <label for="maxCount" class="custom-label">최대 노출 개수</label>
+                                    <input class="form-control custom-input" type="number"
+                                           th:value="${view?.maxCount}"
+                                           id="maxCount" name="maxCount" placeholder="최대 노출 개수를 입력하세요.">
+                                </div>
+                            </div>
+
+                            <div class="col-lg-4">
+                                <div class="single-input-item">
+                                    <label for="titleLineClamp" class="custom-label">제목 최대 라인 수</label>
+                                    <input class="form-control custom-input" type="number"
+                                           th:value="${view?.titleLineClamp}"
+                                           id="titleLineClamp" name="titleLineClamp" placeholder="제목 최대 라인 수를 입력하세요.">
+                                </div>
+                            </div>
+
+                            <div class="col-lg-4">
+                                <div class="single-input-item">
+                                    <label for="descLineClamp" class="custom-label">설명 최대 라인 수</label>
+                                    <input class="form-control custom-input" type="number"
+                                           th:value="${view?.descLineClamp}"
+                                           id="descLineClamp" name="descLineClamp" placeholder="설명 최대 라인 수를 입력하세요.">
+                                </div>
                             </div>
                         </div>
 
@@ -138,6 +152,7 @@
     <script th:inline="javascript">
 
         const uid = [[${uid}]]
+        const view = [[${view}]]
 
         $(document).ready(function() {
 
@@ -155,7 +170,17 @@
             $("#delete-btn").on('click', function () {
                 mainuiJS.deleteMainUi(uid);
             });
+
+            toggleTitleInput();
         });
+
+        function toggleTitleInput() {
+            const selectedOption = $('#typeCd option:selected');
+            const useTitle = selectedOption.data('title') === true || selectedOption.data('title') === 'true';
+            const useSummary = selectedOption.data('summary') === true || selectedOption.data('summary') === 'true';
+            $("#titleLineClamp").prop('disabled', !useTitle);
+            $("#descLineClamp").prop('disabled', !useSummary);
+        }
 
     </script>
 </th:block>

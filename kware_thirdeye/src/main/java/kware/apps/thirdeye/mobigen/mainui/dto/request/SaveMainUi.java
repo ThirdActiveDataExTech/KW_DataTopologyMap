@@ -15,4 +15,5 @@ public class SaveMainUi {
     private Integer titleLineClamp;
     private String thumbUseAt;
     private String useAt;
+    private String typeCd;
 }

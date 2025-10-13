@@ -29,6 +29,13 @@
             <div class="topbar-left">
               <span id="total-num"></span>
               <div class="btn-wrapper">
+                <div class="col-12 col-xl-4 mb-1 mb-lg-0">
+                  <select class="form-select round select_line custom-input" id="useAt" name="useAt">
+                    <option value="">사용여부 전체</option>
+                    <option value="Y">사용</option>
+                    <option value="N">미사용</option>
+                  </select>
+                </div>
                 <div class="col-12 col-xl-7 mb-1 mb-lg-0">
                   <div class="search_wrap">
                     <input
@@ -59,6 +66,7 @@
                 <tr>
                   <th>번호</th>
                   <th>이름(코드)</th>
+                  <th>메인유형</th>
                   <th>썸네일<br>사용여부</th>
                   <th>사용여부</th>
                   <th>등록자</th>
@@ -85,6 +93,10 @@
 
       $("#new-btn").on('click', function () {
         window.location.href = '/admin/main-ui/save'
+      });
+
+      $('#useAt').on('change', function () {
+        mainuiJS.searchTable();
       });
 
       $('#search_txt1').keypress(function (e) {

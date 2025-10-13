@@ -15,12 +15,14 @@ import kware.apps.thirdeye.mobigen.approveddataset.dto.response.ApprovedDatasetV
 import kware.apps.thirdeye.mobigen.approveddataset.dto.response.DatasetList;
 import kware.apps.thirdeye.mobigen.datasetui.dto.response.DatasetUiView;
 import kware.apps.thirdeye.mobigen.datasetui.service.CetusDatasetUiService;
+import kware.apps.thirdeye.mobigen.mainui.domain.DatasetMainUiType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -45,11 +47,15 @@ public class CetusApprovedDatasetService {
         Page<DatasetList> page = dao.page("getDatasetPage", "getDatasetPageCount", search, pageable);
         if(page.getList() != null && !page.getList().isEmpty()) {
             page.getList().forEach(dataset -> {
+                // 데이터셋 정보 조회
                 Long datasetId = dataset.getDatasetId();
                 MobigenDatasetView datasetView = mobigenDatasetService.findMobigenDatasetByDatasetId(datasetId);
                 if (datasetView != null) {
                     dataset.setDatasetInfo(datasetView);
                 }
+                // 데이터셋의 ui 정보
+                DatasetMainUiType mainUiType = DatasetMainUiType.valueOf(dataset.getMainUiTypeCd());
+                dataset.setMainUiTypeCdDescription(mainUiType.getDescription());
             });
         }
         return page;
@@ -67,6 +73,13 @@ public class CetusApprovedDatasetService {
         log.info(">>> [KWARE] 승인된 데이터셋 목록 조회 (리스트)");
         search.setWorkplaceUid(UserUtil.getUserWorkplaceUid());
         List<DatasetList> list = dao.getDatasetList(search);
+
+        List<Long> exceptUids = search.getExceptUids(); // 제외할 UID 목록
+        if(exceptUids != null && !exceptUids.isEmpty()) {
+            list = list.stream()
+                    .filter(dataset -> !exceptUids.contains(dataset.getDatasetId()))
+                    .collect(Collectors.toList());
+        }
         if(!list.isEmpty()) {
             list.forEach(dataset -> {
                 Long datasetId = dataset.getDatasetId();

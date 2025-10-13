@@ -11,11 +11,12 @@ public class MainUiView {
     private String code;
     private String name;
     private Integer maxCount;
-    private Integer descLineCamp;
-    private Integer titleLineCamp;
+    private Integer descLineClamp;
+    private Integer titleLineClamp;
     private String thumbUseAt;
     private Long workplaceUid;
     private String useAt;
+    private String typeCd;
     private Long regUid;
     private String regNm;
     private String regDt;

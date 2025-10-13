@@ -17,6 +17,8 @@ public class DatasetList {
 
     private Long mainUiUid;         // 메인 UI uid
     private String mainUiCode;      // 메인 UI 코드
+    private String mainUiTypeCd;    // 메인 UI 타입
+    private String mainUiTypeCdDescription; // 메인 UI 타입 설명
     private String showAt;          // 데이터셋 노출 여부
 
     private String thumbId;
@@ -27,5 +29,9 @@ public class DatasetList {
 
     public void setDatasetInfo(MobigenDatasetView datasetView) {
         this.datasetView = datasetView;
+    }
+
+    public void setMainUiTypeCdDescription(String mainUiTypeCdDescription) {
+        this.mainUiTypeCdDescription = mainUiTypeCdDescription;
     }
 }

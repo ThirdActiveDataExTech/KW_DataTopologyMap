@@ -13,6 +13,7 @@
               ,CDMU.THUMB_USE_AT
               ,CDMU.WORKPLACE_UID
               ,CDMU.USE_AT
+              ,CDMU.TYPE_CD
               ,CDMU.REG_UID
               ,CU.USER_NM AS REG_NM
               ,TO_CHAR(CDMU.REG_DT, 'YYYY-MM-DD') AS REG_DT
@@ -23,6 +24,9 @@
            AND CDMU.WORKPLACE_UID = #{workplaceUid}
         <if test="@Ognl@isNotEmpty(browseText)">
            AND (CDMU.NAME LIKE '%' || #{browseText} || '%' OR CDMU.CODE LIKE '%' || #{browseText} || '%' OR CU.USER_NM LIKE '%' || #{browseText} || '%' )
+        </if>
+        <if test="@Ognl@isNotEmpty(useAt)">
+           AND CDMU.USE_AT = #{useAt}
         </if>
          ORDER BY CDMU.REG_DT DESC
         <if test="@Ognl@isNotEmpty(startNumber) and  @Ognl@isNotEmpty(endNumber)">
@@ -40,6 +44,9 @@
            AND CDMU.WORKPLACE_UID = #{workplaceUid}
         <if test="@Ognl@isNotEmpty(browseText)">
            AND (CDMU.NAME LIKE '%' || #{browseText} || '%' OR CDMU.CODE LIKE '%' || #{browseText} || '%' OR CU.USER_NM LIKE '%' || #{browseText} || '%' )
+        </if>
+        <if test="@Ognl@isNotEmpty(useAt)">
+           AND CDMU.USE_AT = #{useAt}
         </if>
     </select>
 
@@ -67,6 +74,7 @@
             ,TITLE_LINE_CLAMP
             </if>
             ,THUMB_USE_AT
+            ,TYPE_CD
             ,WORKPLACE_UID
             ,USE_AT
             ,DELETE_AT
@@ -87,6 +95,7 @@
             ,#{titleLineClamp}
             </if>
             ,#{thumbUseAt}
+            ,#{typeCd}
             ,#{workplaceUid}
             ,#{useAt}
             ,'N'
@@ -108,6 +117,7 @@
               ,CDMU.THUMB_USE_AT
               ,CDMU.WORKPLACE_UID
               ,CDMU.USE_AT
+              ,CDMU.TYPE_CD
               ,CDMU.REG_UID
               ,CU.USER_NM AS REG_NM
               ,TO_CHAR(CDMU.REG_DT, 'YYYY-MM-DD') AS REG_DT
@@ -125,7 +135,6 @@
          WHERE UID = #{uid}
     </update>
 
-
     <update id="update" parameterType="CetusDatasetMainUi">
         /* cetusDatasetMainUi.update */
         UPDATE CETUS_DATASET_MAIN_UI
@@ -134,14 +143,16 @@
               ,MAX_COUNT = #{maxCount}
          </if>
          <if test="@Ognl@isNotEmpty(descLineClamp)">
-              ,DESC_LINE_CLAMP #{descLineClamp}
+              ,DESC_LINE_CLAMP = #{descLineClamp}
          </if>
          <if test="@Ognl@isNotEmpty(titleLineClamp)">
               ,TITLE_LINE_CLAMP = #{titleLineClamp}
          </if>
+        <if test="@Ognl@isNotEmpty(thumbUseAt)">
+              ,THUMB_USE_AT = #{thumbUseAt}
+         </if>
               ,UPDT_UID = #{updtUid}
               ,UPDT_DT = NOW()
-              ,THUMB_USE_AT = #{thumbUseAt}
               ,USE_AT = #{useAt}
          WHERE UID = #{uid}
     </update>
@@ -155,6 +166,7 @@
               ,CDMU.DESC_LINE_CLAMP
               ,CDMU.TITLE_LINE_CLAMP
               ,CDMU.THUMB_USE_AT
+              ,CDMU.TYPE_CD
               ,CDMU.WORKPLACE_UID
               ,CDMU.USE_AT
               ,CDMU.REG_UID

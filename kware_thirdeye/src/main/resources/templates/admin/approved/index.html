@@ -34,23 +34,24 @@
             <div class="topbar-left">
               <span id="total-num"></span>
               <div class="btn-wrapper">
-                <div class="col-12 col-xl-4 mb-1 mb-lg-0">
+                <div class="col-12 col-xl-5 mb-1 mb-lg-0">
                   <select class="form-select round select_line custom-input" id="showAt" name="showAt">
                     <option value="">노출여부 전체</option>
-                    <option value="Y">노출</option>
-                    <option value="N">미노출</option>
+                    <option value="Y">공개</option>
+                    <option value="N">비공개</option>
                   </select>
                 </div>
-                <div class="col-12 col-xl-7 mb-1 mb-lg-0">
-                  <div class="search_wrap">
-                    <input
-                        type="text"
-                        id="search_txt1"
-                        class="form-control round border_line custom-input"
-                        name="browseText"
-                        placeholder="승인자, UI유형 검색"
-                    />
-                  </div>
+                <div class="col-12 col-xl-5 mb-1 mb-lg-0">
+                  <select class="form-select round select_line custom-input" id="typeCd" name="typeCd">
+                    <option value="">UI유형 전체</option>
+                    <option th:each="entry : ${uiType}"
+                            th:value="${entry.key}"
+                            th:text="${entry.value?.description}"
+                            th:data-thumbnail="${entry.value?.useThumbNail}"
+                            th:data-title="${entry.value?.useTitle}"
+                            th:data-summary="${entry.value?.useSummary}">
+                    </option>
+                  </select>
                 </div>
               </div>
             </div>
@@ -100,11 +101,8 @@
         window.location.href = '/admin/approved/dataset/save'
       });
 
-      $('#search_txt1').keypress(function (e) {
-        if (e.keyCode === 13 || e.keyCode === 10 || e.key === 'Enter') {
-          e.preventDefault();
-          approvedDatasetJS.searchTable();
-        }
+      $('#typeCd').on('change', function () {
+        approvedDatasetJS.searchTable();
       });
 
       $('#showAt').on('change', function () {

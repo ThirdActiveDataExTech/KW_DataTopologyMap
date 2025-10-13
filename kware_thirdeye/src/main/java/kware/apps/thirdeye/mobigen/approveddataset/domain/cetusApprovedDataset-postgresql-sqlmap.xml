@@ -15,6 +15,7 @@
               ) AS RATINGS
               ,CDMU.UID AS MAIN_UI_UID
               ,CDMU.CODE AS MAIN_UI_CODE
+              ,CDMU.TYPE_CD AS MAIN_UI_TYPE_CD
               ,CDUI.SHOW_AT AS SHOW_AT
               ,CDUI.EXTRA_JSON AS EXTRA_JSON
           FROM CETUS_APPROVED_DATASET CAD
@@ -27,6 +28,9 @@
            AND CAD.DELETE_AT = 'N'
         <if test="@Ognl@isNotEmpty(showAt)">
            AND CDUI.SHOW_AT = #{showAt}
+        </if>
+        <if test="@Ognl@isNotEmpty(typeCd)">
+           AND CDMU.TYPE_CD = #{typeCd}
         </if>
         <if test="@Ognl@isNotEmpty(browseText)">
            AND (CU_CREATE.USER_NM LIKE '%' || #{browseText} || '%' OR CDMU.CODE LIKE '%' || #{browseText} || '%' )
@@ -50,6 +54,9 @@
            AND CAD.DELETE_AT = 'N'
         <if test="@Ognl@isNotEmpty(showAt)">
            AND CDUI.SHOW_AT = #{showAt}
+        </if>
+        <if test="@Ognl@isNotEmpty(typeCd)">
+           AND CDMU.TYPE_CD = #{typeCd}
         </if>
         <if test="@Ognl@isNotEmpty(browseText)">
            AND (CU_CREATE.USER_NM LIKE '%' || #{browseText} || '%' OR CDMU.CODE LIKE '%' || #{browseText} || '%' )

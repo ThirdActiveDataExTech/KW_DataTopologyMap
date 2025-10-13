@@ -21,7 +21,9 @@
         pageList: function(clearSidebar = true) {
 
             template03JS.pageInit();
-            const obj = {}
+            const obj = {
+                exceptUids: [dataset['datasetId']]
+            }
             Http.get('/api/portal/approved-dataset/list', obj).then((res) => {
 
                 let data = res

@@ -6,6 +6,7 @@ import cetus.bean.Pageable;
 import cetus.user.UserUtil;
 import kware.apps.thirdeye.mobigen.mainui.domain.CetusDatasetMainUi;
 import kware.apps.thirdeye.mobigen.mainui.domain.CetusDatasetMainUiDao;
+import kware.apps.thirdeye.mobigen.mainui.domain.DatasetMainUiType;
 import kware.apps.thirdeye.mobigen.mainui.dto.request.ChangeMainUi;
 import kware.apps.thirdeye.mobigen.mainui.dto.request.SaveMainUi;
 import kware.apps.thirdeye.mobigen.mainui.dto.request.SearchDuplicateCode;
@@ -36,7 +37,12 @@ public class CetusDatasetMainUiService {
     public Page<MainUiList> findDatasetMainUiPage(SearchMainUi search, Pageable pageable) {
         log.info(">>> [KWARE] 데이터셋에 대하여 화면 UI 정보 목록 페이징 조회");
         search.setWorkplaceUid(UserUtil.getUserWorkplaceUid());
-        return dao.page("getDatasetMainUiPage", "getDatasetMainUiPageCount", search, pageable);
+        Page<MainUiList> page = dao.page("getDatasetMainUiPage", "getDatasetMainUiPageCount", search, pageable);
+        page.getList().forEach(mainUi -> {
+            DatasetMainUiType mainUiType = DatasetMainUiType.valueOf(mainUi.getTypeCd());
+            mainUi.setTypeCdDescription(mainUiType.getDescription());
+        });
+        return page;
     }
 
     /**

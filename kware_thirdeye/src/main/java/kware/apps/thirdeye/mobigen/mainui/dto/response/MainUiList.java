@@ -11,12 +11,18 @@ public class MainUiList {
     private String code;
     private String name;
     private Integer maxCount;
-    private Integer descLineCamp;
-    private Integer titleLineCamp;
+    private Integer descLineClamp;
+    private Integer titleLineClamp;
     private String thumbUseAt;
     private Long workplaceUid;
     private String useAt;
+    private String typeCd;
+    private String typeCdDescription;
     private Long regUid;
     private String regNm;
     private String regDt;
+
+    public void setTypeCdDescription(String typeCdDescription) {
+        this.typeCdDescription = typeCdDescription;
+    }
 }

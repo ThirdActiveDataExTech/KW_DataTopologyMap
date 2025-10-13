@@ -10,6 +10,7 @@ public class MobigenDatasetList {
 
     private Long uid;
     private String title;
+    private boolean isRegistered;
     private String registrantId;
     private String regDt;
 

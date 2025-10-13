@@ -2,6 +2,7 @@ package kware.apps.thirdeye.mobigen.mainui.web;
 
 
 import kware.apps.thirdeye.mobigen.datasetui.service.CetusDatasetUiService;
+import kware.apps.thirdeye.mobigen.mainui.domain.DatasetMainUiType;
 import kware.apps.thirdeye.mobigen.mainui.dto.response.MainUiView;
 import kware.apps.thirdeye.mobigen.mainui.service.CetusDatasetMainUiService;
 import kware.common.config.auth.menu.MenuNavigationManager;
@@ -30,6 +31,7 @@ public class CetusDatasetMainUiController {
     @GetMapping("/save")
     public String save(Model model) {
         menuNavigationManager.renderingPage("/admin/main-ui", "데이터셋 메인UI 등록", false, model);
+        model.addAttribute("uiType", DatasetMainUiType.toMap());
         return "admin/mainui/save";
     }
 
@@ -42,6 +44,8 @@ public class CetusDatasetMainUiController {
 
         MainUiView view = service.findDatasetMainUiByUid(uid);
         model.addAttribute("view", view);
+
+        model.addAttribute("uiType", DatasetMainUiType.toMap());
 
         return "admin/mainui/form";
     }
