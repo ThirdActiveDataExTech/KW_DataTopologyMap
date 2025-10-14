@@ -182,6 +182,35 @@
 
     <select id="getHomeDatasetList" parameterType="HomeDatasetSearch" resultType="HomeDatasetList">
         /* cetusApprovedDataset.getHomeDatasetList */
+        SELECT CAD.UID AS APPROVED_UID
+              ,CAD.DATASET_ID AS DATASET_ID
+              ,CDU.CATEGORY_UID AS CATEGORY_UID
+              ,CDC.CATEGORY_NM AS CATEGORY_NM
+              ,CDU.THUMB_UID AS THUMB_UID
+              ,CF.FILE_ID AS THUMB_ID
+              ,( SELECT COALESCE(ROUND(SUM(CDM.RATINGS) / COUNT(*)), 0)
+                   FROM CETUS_DATASET_COMMENT CDM
+                  WHERE CDM.APPROVED_DATASET_UID = CAD.UID
+              ) AS RATINGS
+              ,CASE
+                   WHEN EXISTS (
+                       SELECT 1
+                         FROM CETUS_DATASET_BOOKMARK B
+                        WHERE B.APPROVED_DATASET_UID = CAD.UID
+              ) THEN 'Y'
+                ELSE 'N'
+            END AS BOOKMARK_YN
+          FROM CETUS_APPROVED_DATASET CAD
+          LEFT JOIN CETUS_DATASET_UI CDU ON CAD.UID = CDU.APPROVED_DATASET_UID
+          LEFT JOIN CETUS_DATASET_CATEGORY CDC ON CDC.UID = CDU.CATEGORY_UID
+          LEFT JOIN CETUS_FILE CF ON CF.FILE_UID = CDU.THUMB_UID AND CF.USE_AT = 'Y'
+         WHERE CAD.WORKPLACE_UID = #{workplaceUid}
+           AND CDU.MAIN_UI_UID = #{mainUiUid}
+           AND CDU.CATEGORY_UID = #{selectedCategory}
+           AND CAD.DELETE_AT = 'N'
+           AND CDU.SHOW_AT = 'Y'
+         ORDER BY CAD.APPROVED_DT DESC
+         LIMIT #{limitCount}
     </select>
 
 </mapper>

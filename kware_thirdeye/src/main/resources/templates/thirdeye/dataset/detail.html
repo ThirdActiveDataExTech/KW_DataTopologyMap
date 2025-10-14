@@ -66,7 +66,7 @@
                           <button class="justify-content-center btn-custom-control" id="btnPageBookmark"
                                   th:data-like="${dataset?.bookmarkYn}" th:data-id="${dataset?.approvedUid}">
                               <a class="justify-content-center" title="Wishlist" href="javascript:void(0);">
-                                  <i th:class="${dataset?.bookmarkYn} ? 'fa fa-heart' : 'pe-7s-like'"></i>
+                                  <i th:class="${dataset?.bookmarkYn == 'Y'} ? 'fa fa-heart' : 'pe-7s-like'"></i>
                               </a>
                               <span class="txt-label justify-content-center">북마크</span>
                           </button>

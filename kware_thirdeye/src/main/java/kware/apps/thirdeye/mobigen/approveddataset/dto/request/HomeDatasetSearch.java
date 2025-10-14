@@ -18,11 +18,17 @@ public class HomeDatasetSearch {
 
     private Long mainUiUid;
     private Integer limitCount;
-    private String selectedCategory;
+    private Long selectedCategory;
+    private Long workplaceUid;
 
-    public HomeDatasetSearch(Long mainUiUid, Integer limitCount, String selectedCategory) {
+    public HomeDatasetSearch(Long mainUiUid, Integer limitCount, Long selectedCategory, Long workplaceUid) {
         this.mainUiUid = mainUiUid;
         this.limitCount = limitCount;
         this.selectedCategory = selectedCategory;
+        this.workplaceUid = workplaceUid;
+    }
+
+    public void setWorkplaceUid(Long workplaceUid) {
+        this.workplaceUid = workplaceUid;
     }
 }

@@ -4,13 +4,15 @@
 
     <select id="getDatasetCategoryList" parameterType="SearchCategory" resultType="CategoryList">
         /* cetusDatasetCategory.getDatasetCategoryList */
-        SELECT CDC.UID AS CATEGORY_UID
+        SELECT MIN(CDC.UID) AS CATEGORY_UID
               ,CDC.CATEGORY_NM AS CATEGORY_NM
           FROM CETUS_DATASET_CATEGORY CDC
          WHERE CDC.WORKPLACE_UID = #{workplaceUid}
         <if test="@Ognl@isNotEmpty(categoryNm)">
            AND CDC.CATEGORY_NM LIKE '%' || #{categoryNm} || '%'
         </if>
+         GROUP BY CDC.CATEGORY_NM
+         ORDER BY CDC.CATEGORY_NM ASC
     </select>
 
     <insert id="insert" parameterType="CetusDatasetCategory" useGeneratedKeys="true" keyProperty="uid">
@@ -31,4 +33,24 @@
             ,NOW()
         )
     </insert>
+
+    <select id="getDatasetCategoryUsingList" parameterType="SearchUsingCategory" resultType="CategoryList">
+        /* cetusDatasetCategory.getDatasetCategoryUsingList */
+        SELECT CDC.UID AS CATEGORY_UID
+              ,CDC.CATEGORY_NM AS CATEGORY_NM
+          FROM CETUS_DATASET_CATEGORY CDC
+         WHERE CDC.WORKPLACE_UID = #{workplaceUid}
+           AND EXISTS (
+             SELECT 1
+               FROM CETUS_APPROVED_DATASET CAD
+                LEFT JOIN CETUS_DATASET_UI CDU ON CDU.APPROVED_DATASET_UID = CAD.UID
+               WHERE CDU.CATEGORY_UID = CDC.UID
+                 AND CDU.MAIN_UI_UID = #{mainUiUid}
+                 AND CAD.WORKPLACE_UID = #{workplaceUid}
+                 AND CAD.DELETE_AT = 'N'
+                 AND CDU.SHOW_AT = 'Y'
+         )
+         ORDER BY CDC.CATEGORY_NM DESC
+         LIMIT #{limit}
+    </select>
 </mapper>

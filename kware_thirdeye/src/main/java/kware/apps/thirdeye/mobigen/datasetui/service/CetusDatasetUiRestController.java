@@ -25,9 +25,4 @@ public class CetusDatasetUiRestController {
         return ResponseEntity.ok(list);
     }
 
-    /*@GetMapping("/{mainUiUid}/list")
-    public ResponseEntity findDatasetListByMainUiUid(@PathVariable("mainUiUid") Long mainUiUid) {
-        List<DatasetUiList> list = service.findDatasetListByMainUiUid(mainUiUid);
-        return ResponseEntity.ok(list);
-    }*/
 }

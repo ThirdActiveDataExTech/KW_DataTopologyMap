@@ -1,6 +1,7 @@
 package kware.apps.thirdeye.mobigen.category.service;
 
 import kware.apps.thirdeye.mobigen.category.dto.request.SearchCategory;
+import kware.apps.thirdeye.mobigen.category.dto.request.SearchUsingCategory;
 import kware.apps.thirdeye.mobigen.category.dto.response.CategoryList;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +21,12 @@ public class CetusDatasetCategoryRestController {
     @GetMapping("/list")
     public ResponseEntity findDatasetCategoryList(SearchCategory search) {
         List<CategoryList> list = service.findDatasetCategoryList(search);
+        return ResponseEntity.ok(list);
+    }
+
+    @GetMapping("/using/list")
+    public ResponseEntity findDatasetCategoryUsingList(SearchUsingCategory search) {
+        List<CategoryList> list = service.findDatasetCategoryUsingList(search);
         return ResponseEntity.ok(list);
     }
 }

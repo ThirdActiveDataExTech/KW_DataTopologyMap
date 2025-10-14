@@ -142,11 +142,7 @@
       const res = await Http.get(`/api/portal/dataset-ui/grouping`)
       homeJS.setDatasetTypes(res);
 
-      // todo 수정
-      /*const categories = await Http.get(`/api/portal/dataset-category/using/list?limit=5`);
-      homeJS.setCategories(categories);*/
-
-      homeJS.drawHomeData();
+      await homeJS.drawHomePageSection();
 
       /*const configData = await Http.getJson('/assets/data/testdata/type_config_data.json');
       homeJS.setTypeConfig(configData);

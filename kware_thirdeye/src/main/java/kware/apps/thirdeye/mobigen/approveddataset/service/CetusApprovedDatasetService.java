@@ -113,7 +113,9 @@ public class CetusApprovedDatasetService {
         Long approvedDatasetUid = bean.getUid();
 
         // 2. 데이터셋에 대한 카테고리 정보 저장
-        Long categoryUid = datasetCategoryService.saveDatasetCategory(request.getCategory());
+        Long categoryUid = (request.getCategory().getUid() == null)
+                ? datasetCategoryService.saveDatasetCategory(request.getCategory())
+                : request.getCategory().getUid();
 
         // 2. 진열/승인된 데이터에 대한 UI 정보 저장 + 카테고리
         datasetUiService.saveDatasetUi(approvedDatasetUid, categoryUid, request);
@@ -186,6 +188,16 @@ public class CetusApprovedDatasetService {
     **/
     @Transactional(readOnly = true)
     public List<HomeDatasetList> findHomeDatasetList(HomeDatasetSearch search) {
-        return dao.getHomeDatasetList(search);
+        search.setWorkplaceUid(UserUtil.getUserWorkplaceUid());
+        List<HomeDatasetList> homeDatasetList = dao.getHomeDatasetList(search);
+        homeDatasetList.forEach(home -> {
+            Long datasetId = home.getDatasetId();
+            Long approvedUid = home.getApprovedUid();
+            MobigenDatasetView mobigenDatasetView = mobigenDatasetService.findMobigenDatasetByDatasetId(datasetId);
+            home.setMobigenDatasetView(mobigenDatasetView);
+            DatasetUiView uiView = datasetUiService.findDatasetUiView(approvedUid);
+            home.setUiView(uiView);
+        });
+        return homeDatasetList;
     }
 }
