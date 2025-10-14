@@ -21,6 +21,7 @@
         pageList: function(clearSidebar = true) {
 
             template03JS.pageInit();
+            let keyword = template03JS.keyword;
             const obj = {
                 exceptUids: [dataset['datasetId']]
             }
@@ -31,9 +32,15 @@
 
                 // 검색어를 통한 filter
                 if (template03JS.keyword) {
-                    data = data.filter(item => item['title'].includes(template03JS.keyword));
+                    if(keyword) data = data.filter(item => item?.['datasetView']?.['title'].includes(template03JS.keyword));
+                    if (this.param.tag?.length) {
+                        data = data.filter(item =>
+                            item['datasetView']?.tags?.some(tagItem =>
+                                this.param.tag.includes(String(tagItem['tagUid']))
+                            )
+                        );
+                    }
                 }
-
                 template03JS.createList(data);
                 template03JS.createCard(data);
             });
@@ -53,49 +60,11 @@
         },
 
         createSidebar: function () {
-            let param = template03JS.param;
-
-            $("#categories").empty(); // 기존 내용 삭제
-            let $categoryUl = $("<ul></ul>"); // 새로운 ul 생성
-            // todo 수정
-            /*Http.get('/api/portal/mobigen-category/list').then(categories => {
-                categories.forEach(item => {
-                    const id = `category_${item['categoryUid']}`;
-                    const $li = $("<li></li>");
-                    const $a = $('<a href="javascript:void(0);"></a>');
-                    const $input = $('<input>', { id, type: "checkbox", value: item['categoryUid'] });
-                    const $label = $('<label>', { for: id }).text(item['categoryNm']);
-
-                    const keysToCheck = ['category'];
-                    const isIncluded = keysToCheck.some(key => param[key]?.includes(item.code));
-                    if (isIncluded) { $input.prop('checked', true); }
-
-                    $a.append($input, $label);
-                    $li.append($a);
-                    $categoryUl.append($li);
-                });
-                $("#categories").append($categoryUl);
-            });*/
-
-            $("#tags").empty();          // 기존 내용 삭제
-            let $tagUl = $("<ul></ul>"); // 새로운 ul 생성
+            $("#tags-select").empty();          // 기존 내용 삭제
             Http.get('/api/portal/mobigen-tag/list').then(tags => {
                 tags.forEach(item => {
-                    const id = `tag_${item['tagUid']}`;
-                    const $li = $("<li></li>");
-                    const $a = $('<a href="javascript:void(0);"></a>');
-                    const $input = $('<input>', { id, type: "checkbox", value: item['tagUid'] });
-                    const $label = $('<label>', { for: id }).text(item['tagNm']);
-
-                    const keysToCheck = ['tag'];
-                    const isIncluded = keysToCheck.some(key => param[key]?.includes(item.code));
-                    if (isIncluded) { $input.prop('checked', true); }
-
-                    $a.append($input, $label);
-                    $li.append($a);
-                    $tagUl.append($li);
+                    $("#tags-select").append(`<option value="${item['tagUid']}">${item['tagNm']}</option>`)
                 });
-                $("#tags").append($tagUl);
             });
         },
 
@@ -269,13 +238,13 @@
             return obj;
         },
 
-        fnPage: function(selectPage) {
+        fnPage: function(selectPage, clearSidebar) {
             template03JS.page = selectPage;
-            template03JS.pageList();
+            template03JS.pageList(clearSidebar);
         },
 
         fnTab: function (selectTab) {
-            template03JS.fnPage(1);
+            template03JS.fnPage(1, false);
             if(selectTab === "card") { template03JS.dom.showCard.show(); template03JS.dom.showList.hide(); }
             else if(selectTab === "list") { template03JS.dom.showList.show(); template03JS.dom.showCard.hide(); }
         },
@@ -288,7 +257,7 @@
             if (event.key === 'Enter') {
                 event.preventDefault(); // 기본 동작(폼 제출) 막기
                 template03JS.keyword = $('#keyword').val();
-                template03JS.fnPage(1);
+                template03JS.fnPage(1, false);
             }
         });
 
@@ -300,7 +269,27 @@
             else {
                 template03JS.param[type] = template03JS.param[type].filter(item => item !== value);
             }
-            template03JS.fnPage(1);
+            template03JS.fnPage(1, false);
+        });
+
+        // 태그 > select2 > 검색
+        $("#tags-select").select2({
+            placeholder: '태그 검색',
+            language: {
+                noResults: function() {
+                    return "검색 결과가 없습니다.";
+                }
+            }
+        });
+        $('#tags-select').on('select2:select select2:unselect', function (e) {
+            template03JS.param['tag'] = [];
+            const data = $(this).val();
+            if (data && data.length) {
+                data.forEach(uid => {
+                    template03JS.param['tag'].push(uid);
+                });
+            }
+            template03JS.fnPage(1, false);
         });
 
     });

@@ -17,6 +17,8 @@ public class ApprovedDatasetView {
     private Long approverUid;
     private String createdId;
 
+    private String deleteAt;
+
     private Long categoryUid;
     private String categoryNm;
 

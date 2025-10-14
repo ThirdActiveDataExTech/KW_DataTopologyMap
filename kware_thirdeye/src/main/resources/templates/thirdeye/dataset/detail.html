@@ -15,6 +15,24 @@
         .description .ck-editor__editable_inline { border: none !important; outline: none !important; }
         .description .ck-editor__top { display: none; }
     </style>
+    <style>
+        #sidebar-widgets-container2 .sidebar-widget .sidebar-list-style ul li:last-child {
+            margin: 0 0 14px !important;
+            margin-left: 5px !important;
+            margin-top: 5px !important;
+        }
+        .select2-container .select2-search--inline .select2-search__field {
+            margin-left: 10px !important;
+            margin-bottom: 10px !important;
+        }
+        .select2-container {
+            width: 100% !important; /* 부모 width 100% */
+        }
+        .select2-selection--single,
+        .select2-selection--multiple {
+            width: 100% !important; /* 내부 셀렉션도 부모에 맞춤 */
+        }
+    </style>
 </th:block>
 
 <th:block layout:fragment="content">
@@ -99,7 +117,7 @@
     <div class="container">
         <div class="description-review-topbar nav" data-aos="fade-up" data-aos-delay="200">
             <a class="active" data-bs-toggle="tab" href="#des-details1"> 데이터 </a>
-            <a data-bs-toggle="tab" href="#des-details2" class=""> API </a>
+            <!--<a data-bs-toggle="tab" href="#des-details2" class=""> API </a>-->
             <a data-bs-toggle="tab" href="#des-details3" class=""> 관련 데이터 </a>
             <a data-bs-toggle="tab" href="#des-details4" class=""> 문의/오류신고 </a>
         </div>
@@ -107,9 +125,9 @@
             <div id="des-details1" class="tab-pane active">
               <div th:replace="thirdeye/dataset/fragment/detail-template01::template01"></div>
             </div>
-            <div id="des-details2" class="tab-pane">
+            <!--<div id="des-details2" class="tab-pane">
                 <div th:replace="thirdeye/dataset/fragment/detail-template02::template02"></div>
-            </div>
+            </div>-->
             <div id="des-details3" class="tab-pane">
                 <div th:replace="thirdeye/dataset/fragment/detail-template03::template03"></div>
             </div>

@@ -47,6 +47,18 @@ public class CetusMobigenDatasetService {
     **/
     @Transactional(readOnly = true)
     public Page<MobigenDatasetList> findAllMobigenDatasetPage(SearchMobigenDataset search, Pageable pageable) {
+        log.info(">>> [Mobigen] 데이터셋 목록 페이징 조회");
+        return dao.page("getAllMobigenDatasetPage", "getAllMobigenDatasetPageCount", search, pageable);
+    }
+
+    /**
+     * @method      findAllMobigenDatasetList
+     * @author      dahyeon
+     * @date        2025-10-13
+     * @deacription [Mobigen] 데이터셋 목록 페이징 조회
+    **/
+    @Transactional(readOnly = true)
+    public List<MobigenDatasetList> findAllMobigenDatasetList(SearchMobigenDataset search) {
 
         log.info(">>> [Mobigen] 데이터셋 목록 페이징 조회");
 
@@ -64,10 +76,10 @@ public class CetusMobigenDatasetService {
                 .collect(Collectors.toList());
         int count = filteredList.size();
 
-        log.info("pageable : {} ", pageable);
-        Page<MobigenDatasetList> page = new Page<MobigenDatasetList>(filteredList, count, pageable);
-        log.info("page : {} ", page);
-        return page;
+//        log.info("pageable : {} ", pageable);
+//        Page<MobigenDatasetList> page = new Page<MobigenDatasetList>(filteredList, count, pageable);
+//        log.info("page : {} ", page);
+        return filteredList;
     }
 
     /**

@@ -11,8 +11,8 @@
             const extraJson = JSON.parse(dataset['extraJson'])
             template01JS.drawSummaryDescription(extraJson);   // 메인 상단 디테일 영역 구성
             template01JS.drawMetadataTab(dataset);            // tab1 > 메타데이터 탭
-            template01JS.setDataTable(dataset);               // tab1 > json 테이블 영역
-            /*template01JS.setSubTabSampleVisualization();      // tab1 > 차트탭*/
+            template01JS.setDataTable(extraJson);             // tab1 > json 테이블 영역
+            /*template01JS.setSubTabSampleVisualization();    // tab1 > 차트탭*/
         },
 
         drawMetadataTab: function (dataset) {
@@ -59,6 +59,9 @@
             const $tableBody = $('#tab1-table-tbody');
             $tableBody.empty(); // 기존 내용 제거
 
+            console.log("addInfo : ", addInfo)
+            console.log("extraJson : ", extraJson)
+
             if(addInfo.length === 0) $tableBody.append(`<tr class="text-center"><td colSpan="2" class="text-center py-2">정보가 없습니다.</td></tr>`)
             else {
                 const itemsPerRow = 2
@@ -100,22 +103,20 @@
                     { key: '실데이터 파일 등록일', value: res['regDt'] },
                     { key: '실데이터 파일 수정일', value: res['regDt'] }
                 ]
-                const randomColor = ['#ff000040', '#009fff40', '#36a92940', '#a9296f40']
                 let tableHtml = `<table style="width:100%; border-collapse: collapse; border: 1px solid #ccc;">`;
                 for (let i = 0; i < infoList.length; i += 2) {
-                    const color = randomColor[Math.floor(Math.random() * randomColor.length)];
                     const first = infoList[i];
                     const second = infoList[i + 1];
                     tableHtml += `<tr>
-                                    <td style="background-color: ${color};">${first.key}</td>
+                                    <td style="background-color: #2b292a24;">${first.key}</td>
                                     <td style="vertical-align: middle;">${first.value}</td>`;
-                    if (second) tableHtml += `<td style="background-color: ${color};">${second.key}</td>
+                    if (second) tableHtml += `<td style="background-color: #2b292a24;">${second.key}</td>
                                               <td style="vertical-align: middle;">${second.value}</td>`;
                     else tableHtml += `<td></td><td></td>`; // 홀수 개일 때 빈 칸
                     tableHtml += `</tr>`;
                 }
                 tableHtml += `<tr>
-                                  <td style="background-color: #7945c940;">실데이터 파일 다운로드</td>
+                                  <td style="background-color: #2b292a24;">실데이터 파일 다운로드</td>
                                   <td style="vertical-align: middle;">
                                     <button class="custom-button realdata-file-download" data-id="${res['fileId']}">
                                       <i class="ti-cloud-down"></i> 다운로드

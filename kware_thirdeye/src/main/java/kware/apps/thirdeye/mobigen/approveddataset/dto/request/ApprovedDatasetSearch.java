@@ -16,7 +16,7 @@ import java.util.List;
  *              => workplaceUid, showAt, typeCd
  *
  *              (2) 메인 리스트 화면 데이터셋 검색
- *              => workplaceUid, browseText, startDate&endDate
+ *              => workplaceUid, browseText, startDate&endDate, categories
  *
  *              (3) 연관/관련 데이터셋 목록 검색
  *              => workplaceUid, browseText
@@ -32,8 +32,9 @@ public class ApprovedDatasetSearch {
     private String startDate;
     private String endDate;
     private List<Long> exceptUids;  // 제외할 데이터셋ID 목록
+    private List<Long> categories;  // 카테고리 검색
 
-    public ApprovedDatasetSearch(Long workplaceUid, String showAt, String browseText, String typeCd, String startDate, String endDate, List<Long> exceptUids) {
+    public ApprovedDatasetSearch(Long workplaceUid, String showAt, String browseText, String typeCd, String startDate, String endDate, List<Long> exceptUids, List<Long> categories) {
         this.workplaceUid = workplaceUid;
         this.showAt = showAt;
         this.browseText = browseText;
@@ -41,6 +42,7 @@ public class ApprovedDatasetSearch {
         this.startDate = startDate;
         this.endDate = endDate;
         this.exceptUids = exceptUids;
+        this.categories = categories;
     }
 
     public void setWorkplaceUid(Long workplaceUid) {

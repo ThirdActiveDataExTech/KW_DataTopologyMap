@@ -13,6 +13,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/admin/mobigen-dataset")
@@ -23,6 +25,12 @@ public class CetusMobigenDatasetRestController {
     @GetMapping
     public ResponseEntity findAllMobigenDatasetPage(SearchMobigenDataset search, Pageable pageable) {
         Page<MobigenDatasetList> page = service.findAllMobigenDatasetPage(search, pageable);
+        return ResponseEntity.ok(page);
+    }
+
+    @GetMapping("/list")
+    public ResponseEntity findAllMobigenDatasetList(SearchMobigenDataset search, Pageable pageable) {
+        List<MobigenDatasetList> page = service.findAllMobigenDatasetList(search);
         return ResponseEntity.ok(page);
     }
 
