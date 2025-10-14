@@ -151,9 +151,7 @@
                 <!-- 카테고리/태그 -->
                 <div class="dataset-meta">
                   <div class="categories">
-                    <th:block th:each="category : ${view?.mobigenDatasetView?.categories}">
-                      <span class="badge category-badge" th:text="${category?.categoryNm}"></span>
-                    </th:block>
+                    <span class="badge category-badge" th:text="${view?.categoryNm}"></span>
                   </div>
                   <div class="tags">
                     <th:block th:each="tag : ${view?.mobigenDatasetView?.tags}">
@@ -183,7 +181,7 @@
               <div class="card-body">
 
                 <div class="row custom-row">
-                  <div class="col-lg-12">
+                  <div class="col-lg-6">
                     <div class="single-input-item">
                       <div for="mainUiUid" class="required">메인UI 유형 고르기</div>
                       <select class="form-control form-select" id="mainUiUid" name="mainUiUid" required>
@@ -193,17 +191,6 @@
                                 th:value="${mainUi?.uid}" th:text="${mainUi?.name}" th:data-thumbuseat="${mainUi?.thumbUseAt}"></option>
                       </select>
                       <span class="validation-error-message" id="mainUiUid-error"></span>
-                    </div>
-                  </div>
-                </div>
-
-                <div class="row custom-row">
-                  <div class="col-lg-6">
-                    <div class="single-input-item">
-                      <label for="sortNo" class="custom-label">정렬순서<span style="color: firebrick">*</span></label>
-                      <input class="form-control custom-input" type="number"
-                             th:value="${view?.uiView?.sortNo}"
-                             id="sortNo" name="sortNo" placeholder="정렬순서를 입력하세요." required>
                     </div>
                   </div>
                   <div class="col-lg-6">
@@ -223,6 +210,23 @@
                       </div>
                     </div>
                     <span class="validation-error-message" id="showAt-error"></span>
+                  </div>
+                </div>
+
+                <div class="row custom-row">
+                  <div class="col-lg-6">
+                    <div class="single-input-item">
+                      <label for="sortNo" class="custom-label">정렬순서<span style="color: firebrick">*</span></label>
+                      <input class="form-control custom-input" type="number"
+                             th:value="${view?.uiView?.sortNo}"
+                             id="sortNo" name="sortNo" placeholder="정렬순서를 입력하세요." required>
+                    </div>
+                  </div>
+                  <div class="col-lg-6">
+                    <label for="category">카테고리</label>
+                    <div class="mt-2">
+                      <select class="select2 round border_line" id="category"></select>
+                    </div>
                   </div>
                 </div>
 
@@ -302,18 +306,70 @@
   <script th:inline="javascript">
 
     const view = [[${view}]]
-    console.log(">> view: ", view)
 
     $(function () {
 
+      // ===============================
+      // 승인된 데이터셋 수정 화면 > 초기화
+      // ===============================
       const json = JSON.parse(view['extraJson'])
       $("#summary").val(json?.['summary'] || '')
-
       approvedDatasetJS.initEditor(json?.['description']);
       approvedDatasetJS.initUpload(view['uiView']?.['thumbUid']);
       approvedDatasetJS.settingFormMetaDataSection(view['mobigenDatasetView']?.['metadata'])
       approvedDatasetJS.settingRowInfoTable(json?.['addInfo'] || [])
 
+      // ===============================
+      // 승인된 데이터셋 수정 화면 > 카테고리
+      // ===============================
+      $("#category").select2({
+          placeholder: "카테고리 선택",
+          language: {
+              searching: function() {
+                  return "검색 중..."; // 검색 중 텍스트 변경
+              },
+              noResults: function() {
+                  return "결과가 없습니다"; // 결과 없음 텍스트 변경
+              },
+              inputTooLong: function(n) {
+                  return "너무 깁니다. "+(n.input.length-n.maximum)+" 글자 지워주세요."
+              }
+          },
+          tags: true,
+          maximumInputLength: 30,
+          allowClear: true,
+          data: [{
+            id: view['categoryUid'],
+            text: view['categoryNm'],
+            selected: true
+          }],
+          ajax: {
+              url: '/api/admin/dataset-category/list',
+              dataType: 'json',
+              delay: 250,
+              processResults: function (data, params) {
+                  return {
+                      results: data.map(item => ({
+                          id: item['categoryUid'],
+                          text: item['categoryNm']
+                      })),
+                  };
+              },
+          },
+          createTag: function (params) {
+              const term = $.trim(params.term);
+              if (term === '') { return null; }
+              return {
+                  id: term,
+                  text: term,
+                  newTag: true
+              }
+          },
+      });
+
+      // ===============================
+      // 목록 버튼
+      // ===============================
       $("#list-btn").on('click', async function () {
         const isOk = await Util.confirm("수정중이신 정보는 저장되지 않습니다. <br> 목록으로 돌아가시겠습니까?")
         if(isOk) {
@@ -321,6 +377,9 @@
         }
       });
 
+      // ===============================
+      // 메인UI 유형 고르기 > 썸네일 필수 여부
+      // ===============================
       $("#mainUiUid").on("change", function() {
         const thumbUseAt = $(this).find("option:selected").data("thumbuseat");
         if (thumbUseAt === "Y") {
@@ -333,22 +392,29 @@
       });
       $("#mainUiUid").trigger("change");
 
+      // ===============================
+      // 썸네일 업로드, 삭제
+      // ===============================
       $("#upload-thumb-img").on('click', function () {
         approvedDatasetJS.uploadThumbnailImg();
       });
-
       $("#delete-thumb-img").on('click', function () {
         approvedDatasetJS.deleteThumbnailImg();
       });
 
+      // ===============================
+      // 수정하기 버튼
+      // ===============================
       $("#submit-btn").on('click', function () {
         approvedDatasetJS.updateDatasetApproved(view['approvedUid']);
       });
 
+      // ===============================
+      // 추가 정보 > 추가, 삭제 버튼
+      // ===============================
       $("#addRowBtn").on('click', function () {
         approvedDatasetJS.addDelInfoRow();
       });
-
       $(document).on('click', '.remove-tr', function () {
         approvedDatasetJS.removeTr(this);
       });

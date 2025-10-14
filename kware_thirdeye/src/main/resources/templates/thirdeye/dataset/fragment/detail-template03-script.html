@@ -57,7 +57,8 @@
 
             $("#categories").empty(); // 기존 내용 삭제
             let $categoryUl = $("<ul></ul>"); // 새로운 ul 생성
-            Http.get('/api/portal/mobigen-category/list').then(categories => {
+            // todo 수정
+            /*Http.get('/api/portal/mobigen-category/list').then(categories => {
                 categories.forEach(item => {
                     const id = `category_${item['categoryUid']}`;
                     const $li = $("<li></li>");
@@ -74,7 +75,7 @@
                     $categoryUl.append($li);
                 });
                 $("#categories").append($categoryUl);
-            });
+            });*/
 
             $("#tags").empty();          // 기존 내용 삭제
             let $tagUl = $("<ul></ul>"); // 새로운 ul 생성

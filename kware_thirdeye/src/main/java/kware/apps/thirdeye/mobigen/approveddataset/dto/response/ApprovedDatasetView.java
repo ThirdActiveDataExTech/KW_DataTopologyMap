@@ -17,6 +17,9 @@ public class ApprovedDatasetView {
     private Long approverUid;
     private String createdId;
 
+    private Long categoryUid;
+    private String categoryNm;
+
     private DatasetUiView uiView;
     private MobigenDatasetView mobigenDatasetView;
 

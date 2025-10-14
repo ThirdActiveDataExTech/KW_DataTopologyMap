@@ -1,15 +1,12 @@
-package kware.apps.mobigen.cetus.category.dto.request;
+package kware.apps.thirdeye.mobigen.category.dto.response;
 
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class SearchCategory {
+public class CategoryList {
 
+    private Long categoryUid;
     private String categoryNm;
-
-    public SearchCategory(String categoryNm) {
-        this.categoryNm = categoryNm;
-    }
 }

@@ -7,6 +7,21 @@ import lombok.Setter;
 
 import java.util.List;
 
+/**
+* @fileName     ApprovedDatasetSearch
+* @author       dahyeon
+* @version      1.0.0
+* @date         2025-10-14
+* @summary      (1) 승인된 데이터셋 관리 (system)
+ *              => workplaceUid, showAt, typeCd
+ *
+ *              (2) 메인 리스트 화면 데이터셋 검색
+ *              => workplaceUid, browseText, startDate&endDate
+ *
+ *              (3) 연관/관련 데이터셋 목록 검색
+ *              => workplaceUid, browseText
+**/
+
 @Getter @NoArgsConstructor(access = AccessLevel.PROTECTED) @Setter
 public class ApprovedDatasetSearch {
 

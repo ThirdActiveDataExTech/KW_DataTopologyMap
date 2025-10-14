@@ -1,4 +1,4 @@
-package kware.apps.mobigen.cetus.category.dto.request;
+package kware.apps.thirdeye.mobigen.category.dto.request;
 
 
 import lombok.AccessLevel;

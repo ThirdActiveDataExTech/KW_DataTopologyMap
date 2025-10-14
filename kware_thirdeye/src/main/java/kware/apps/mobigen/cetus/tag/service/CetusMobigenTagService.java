@@ -1,7 +1,6 @@
 package kware.apps.mobigen.cetus.tag.service;
 
 
-import kware.apps.mobigen.cetus.category.dto.response.CategoryList;
 import kware.apps.mobigen.cetus.tag.domain.CetusMobigenTag;
 import kware.apps.mobigen.cetus.tag.domain.CetusMobigenTagDao;
 import kware.apps.mobigen.cetus.tag.dto.response.TagList;

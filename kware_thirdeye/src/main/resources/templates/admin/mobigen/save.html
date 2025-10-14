@@ -68,16 +68,10 @@
 
                         <!-- 2행 -->
                         <div class="row select2-row">
-                            <div class="col-lg-6">
+                            <div class="col-lg-12">
                                 <label for="new-tags">태그</label>
                                 <div class="mt-2">
                                     <select class="select2 round border_line" id="new-tags" multiple></select>
-                                </div>
-                            </div>
-                            <div class="col-lg-6">
-                                <label for="new-category">카테고리</label>
-                                <div class="mt-2">
-                                    <select class="select2 round border_line" id="new-category" multiple></select>
                                 </div>
                             </div>
                         </div>
@@ -118,54 +112,6 @@
     <script th:inline="javascript">
 
         $(document).ready(function() {
-
-            // ===============================
-            // 신규 데이터 등록 > 카테고리
-            // ===============================
-            $("#new-category").select2({
-                placeholder: "카테고리 선택",
-                language: {
-                    searching: function() {
-                        return "검색 중..."; // 검색 중 텍스트 변경
-                    },
-                    noResults: function() {
-                        return "결과가 없습니다"; // 결과 없음 텍스트 변경
-                    },
-                    inputTooLong: function(n) {
-                        return "너무 깁니다. "+(n.input.length-n.maximum)+" 글자 지워주세요."
-                    }
-                },
-                tags: true,
-                maximumInputLength: 30,
-                ajax: {
-                    url: '/api/admin/dataset-category/list',
-                    dataType: 'json',
-                    delay: 250,
-                    data: function (params) {
-                        return {
-                            categoryNm: params.term, // search term
-                        };
-                    },
-                    processResults: function (data, params) {
-                        return {
-                            results: data.map(item => ({
-                                id: item['categoryUid'],
-                                text: item['categoryNm']
-                            })),
-                        };
-                    },
-                },
-                createTag: function (params) {
-                    const term = $.trim(params.term);
-                    if (term === '') { return null; }
-                    return {
-                        id: term,
-                        text: term,
-                        newTag: true
-                    }
-                },
-            });
-
 
             $("#new-tags").select2({
                 placeholder: "태그 선택",

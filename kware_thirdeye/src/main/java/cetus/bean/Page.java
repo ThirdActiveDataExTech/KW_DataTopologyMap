@@ -3,8 +3,9 @@ package cetus.bean;
 import java.util.List;
 
 import lombok.Getter;
+import lombok.ToString;
 
-@Getter
+@Getter @ToString
 public class Page<B> {
 
     public Page(List<B> list, int count, Pageable pagable) {

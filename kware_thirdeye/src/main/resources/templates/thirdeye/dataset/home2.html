@@ -139,7 +139,16 @@
   <script th:inline="javascript">
     $(async function(e) {
 
-      const configData = await Http.getJson('/assets/data/testdata/type_config_data.json');
+      const res = await Http.get(`/api/portal/dataset-ui/grouping`)
+      homeJS.setDatasetTypes(res);
+
+      // todo 수정
+      /*const categories = await Http.get(`/api/portal/dataset-category/using/list?limit=5`);
+      homeJS.setCategories(categories);*/
+
+      homeJS.drawHomeData();
+
+      /*const configData = await Http.getJson('/assets/data/testdata/type_config_data.json');
       homeJS.setTypeConfig(configData);
 
       const homeData1 = await Http.getJson('/assets/data/testdata/A_list_data.json');
@@ -152,7 +161,7 @@
       homeJS.drawMainContent(homeData3);
 
       const homeData4 = await Http.getJson('/assets/data/testdata/D_list_data.json');
-      homeJS.drawMainContent(homeData4);
+      homeJS.drawMainContent(homeData4);*/
 
       $(document).on('click', '.category-list a', function(e) {
         homeJS.handleCategoryClick(this)

@@ -6,9 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class DatasetUiView {
+public class DatasetUiList {
 
-    private Long datasetUiUid;
     private Long approvedDatasetUid;
     private Long sortNo;
     private Long mainUiUid;

@@ -15,6 +15,9 @@ public class DatasetList {
     private String approverNm;      // 데이터 승인자 이름
     private Integer ratings;        // 데이터셋 의견/평점
 
+    private Long categoryUid;       // 카테고리 UID
+    private String categoryNm;      // 카테고리명
+
     private Long mainUiUid;         // 메인 UI uid
     private String mainUiCode;      // 메인 UI 코드
     private String mainUiTypeCd;    // 메인 UI 타입

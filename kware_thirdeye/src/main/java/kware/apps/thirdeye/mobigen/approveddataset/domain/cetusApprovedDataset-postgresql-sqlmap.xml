@@ -13,6 +13,8 @@
                    FROM CETUS_DATASET_COMMENT CDM
                   WHERE CDM.APPROVED_DATASET_UID = CAD.UID
               ) AS RATINGS
+              ,CDUI.CATEGORY_UID AS CATEGORY_UID
+              ,CDC.CATEGORY_NM AS CATEGORY_NM
               ,CDMU.UID AS MAIN_UI_UID
               ,CDMU.CODE AS MAIN_UI_CODE
               ,CDMU.TYPE_CD AS MAIN_UI_TYPE_CD
@@ -24,6 +26,7 @@
           LEFT JOIN CETUS_USER CU_APP ON CU_APP.UID = CAD.APPROVER_UID
           LEFT JOIN CETUS_DATASET_UI CDUI ON CDUI.APPROVED_DATASET_UID = CAD.UID
           LEFT JOIN CETUS_DATASET_MAIN_UI CDMU ON CDMU.UID = CDUI.MAIN_UI_UID
+          LEFT JOIN CETUS_DATASET_CATEGORY CDC ON CDC.UID = CDUI.CATEGORY_UID
          WHERE CAD.WORKPLACE_UID = #{workplaceUid}
            AND CAD.DELETE_AT = 'N'
         <if test="@Ognl@isNotEmpty(showAt)">
@@ -135,6 +138,8 @@
               ,CAD.WORKPLACE_UID
               ,CAD.APPROVED_DT
               ,CAD.APPROVER_UID
+              ,CDU.CATEGORY_UID AS CATEGORY_UID
+              ,CDC.CATEGORY_NM AS CATEGORY_NM
               ,CAD.CREATED_ID
               ,CF.FILE_ID AS THUMB_ID
               ,( SELECT COALESCE(ROUND(SUM(CDM.RATINGS) / COUNT(*)), 0)
@@ -152,6 +157,7 @@
               ,CDU.EXTRA_JSON
           FROM CETUS_APPROVED_DATASET CAD
           LEFT JOIN CETUS_DATASET_UI CDU ON CDU.APPROVED_DATASET_UID = CAD.UID
+          LEFT JOIN CETUS_DATASET_CATEGORY CDC ON CDC.UID = CDU.CATEGORY_UID
           LEFT JOIN CETUS_FILE CF ON CF.FILE_UID = CDU.THUMB_UID AND CF.USE_AT = 'Y' AND CF.SAVED = 'Y'
          WHERE CAD.UID = #{uid}
     </select>
@@ -162,4 +168,10 @@
            SET DELETE_AT = 'Y'
          WHERE UID = #{uid}
     </update>
+
+
+    <select id="getHomeDatasetList" parameterType="HomeDatasetSearch" resultType="HomeDatasetList">
+        /* cetusApprovedDataset.getHomeDatasetList */
+    </select>
+
 </mapper>

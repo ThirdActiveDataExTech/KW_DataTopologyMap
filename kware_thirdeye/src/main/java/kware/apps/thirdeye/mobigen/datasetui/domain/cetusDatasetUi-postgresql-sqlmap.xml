@@ -17,6 +17,7 @@
             ,MAIN_UI_UID
             ,SHOW_AT
             ,THUMB_UID
+            ,CATEGORY_UID
             ,EXTRA_JSON
             ,REG_UID
             ,REG_DT
@@ -28,6 +29,7 @@
             ,#{mainUiUid}
             ,#{showAt}
             ,#{thumbUid}::int8
+            ,#{categoryUid}::int8
             ,#{extraJson}::jsonb
             ,#{regUid}
             ,NOW()
@@ -38,7 +40,8 @@
 
     <select id="getDatasetUiView" resultType="DatasetUiView" parameterType="Long">
         /* cetusDatasetUi.getDatasetUiView */
-        SELECT CDU.APPROVED_DATASET_UID
+        SELECT CDU.UID AS DATASET_UI_UID
+              ,CDU.APPROVED_DATASET_UID
               ,CDU.SORT_NO
               ,CDU.MAIN_UI_UID
               ,CDU.SHOW_AT
@@ -57,9 +60,29 @@
               ,MAIN_UI_UID = #{mainUiUid}
               ,SHOW_AT = #{showAt}
               ,THUMB_UID = #{thumbUid}::int8
+              ,CATEGORY_UID = #{categoryUid}::int8
               ,EXTRA_JSON = #{extraJson}::jsonb
               ,UPDT_UID = #{updtUid}
               ,UPDT_DT = NOW()
          WHERE UID = #{uid}
     </update>
+
+    <select id="getDatasetUiByGroup" resultType="DatasetUiGroup" parameterType="Long">
+        /* cetusDatasetUi.getDatasetUiByGroup */
+        SELECT CDMU.UID AS MAIN_UI_UID
+              ,CDMU.CODE as MAIN_UI_CODE
+              ,CDMU.TYPE_CD
+              ,CDMU.MAX_COUNT
+              ,CDMU.TITLE_LINE_CLAMP
+              ,CDMU.DESC_LINE_CLAMP
+              ,CDMU.THUMB_USE_AT
+              ,COUNT(CDU.UID) AS USED_COUNT
+          FROM CETUS_DATASET_MAIN_UI CDMU
+          LEFT JOIN CETUS_DATASET_UI CDU ON CDU.MAIN_UI_UID = CDMU.UID
+         WHERE CDMU.WORKPLACE_UID = #{workplaceUid}
+           AND CDMU.DELETE_AT = 'N'
+         GROUP BY CDMU.UID, CDMU.CODE, CDMU.TYPE_CD,
+                  CDMU.MAX_COUNT, CDMU.TITLE_LINE_CLAMP, CDMU.DESC_LINE_CLAMP, CDMU.THUMB_USE_AT
+        ORDER BY CDMU.UID;
+    </select>
 </mapper>

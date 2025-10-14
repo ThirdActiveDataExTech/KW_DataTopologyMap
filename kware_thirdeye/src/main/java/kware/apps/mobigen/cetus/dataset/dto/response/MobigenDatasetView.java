@@ -1,10 +1,8 @@
 package kware.apps.mobigen.cetus.dataset.dto.response;
 
 
-import kware.apps.mobigen.cetus.category.dto.response.CategoryList;
 import kware.apps.mobigen.cetus.tag.dto.response.TagList;
 import kware.common.file.domain.CommonFile;
-import kware.common.file.domain.CommonFileDao;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -28,13 +26,9 @@ public class MobigenDatasetView {
     private String metadata;                    // 메타데이터
 
     private List<TagList> tags;                 // 태그 목록
-    private List<CategoryList> categories;      // 카테고리 목록
 
     public void setTags(List<TagList> tags) {
         this.tags = tags;
-    }
-    public void setCategories(List<CategoryList> categories) {
-        this.categories = categories;
     }
 
     public void setMetadataFiles(List<CommonFile> metadataFiles) {

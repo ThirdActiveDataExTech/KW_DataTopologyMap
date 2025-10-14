@@ -1,7 +1,6 @@
 package kware.apps.mobigen.cetus.dataset.dto.request;
 
 
-import kware.apps.mobigen.cetus.category.dto.request.SaveCategory;
 import kware.apps.mobigen.cetus.tag.dto.request.SaveTag;
 import kware.common.file.domain.CommonFile;
 import lombok.AccessLevel;
@@ -18,6 +17,5 @@ public class SaveMobigenDataset {
     private CommonFile[] metaFile;
     private CommonFile[] realFile;
     private List<SaveTag> tags;
-    private List<SaveCategory> categories;
 
 }

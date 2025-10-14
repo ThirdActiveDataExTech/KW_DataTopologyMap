@@ -9,10 +9,13 @@ import kware.apps.thirdeye.mobigen.approveddataset.domain.CetusApprovedDataset;
 import kware.apps.thirdeye.mobigen.approveddataset.domain.CetusApprovedDatasetDao;
 import kware.apps.thirdeye.mobigen.approveddataset.dto.request.ApprovedDatasetSearch;
 import kware.apps.thirdeye.mobigen.approveddataset.dto.request.DeleteApprovedDatasets;
+import kware.apps.thirdeye.mobigen.approveddataset.dto.request.HomeDatasetSearch;
 import kware.apps.thirdeye.mobigen.approveddataset.dto.request.SaveApprovedDataset;
 import kware.apps.thirdeye.mobigen.approveddataset.dto.response.ApprovedDatasetIdList;
 import kware.apps.thirdeye.mobigen.approveddataset.dto.response.ApprovedDatasetView;
 import kware.apps.thirdeye.mobigen.approveddataset.dto.response.DatasetList;
+import kware.apps.thirdeye.mobigen.approveddataset.dto.response.HomeDatasetList;
+import kware.apps.thirdeye.mobigen.category.service.CetusDatasetCategoryService;
 import kware.apps.thirdeye.mobigen.datasetui.dto.response.DatasetUiView;
 import kware.apps.thirdeye.mobigen.datasetui.service.CetusDatasetUiService;
 import kware.apps.thirdeye.mobigen.mainui.domain.DatasetMainUiType;
@@ -32,6 +35,8 @@ public class CetusApprovedDatasetService {
     private final CetusApprovedDatasetDao dao;
     private final CetusDatasetUiService datasetUiService;
     private final CetusMobigenDatasetService mobigenDatasetService;
+
+    private final CetusDatasetCategoryService datasetCategoryService;
 
     /**
      * @method      findDatasetPage
@@ -107,8 +112,11 @@ public class CetusApprovedDatasetService {
         dao.insert(bean);
         Long approvedDatasetUid = bean.getUid();
 
-        // 2. 진열/승인된 데이터에 대한 UI 정보 저장
-        datasetUiService.saveDatasetUi(approvedDatasetUid, request);
+        // 2. 데이터셋에 대한 카테고리 정보 저장
+        Long categoryUid = datasetCategoryService.saveDatasetCategory(request.getCategory());
+
+        // 2. 진열/승인된 데이터에 대한 UI 정보 저장 + 카테고리
+        datasetUiService.saveDatasetUi(approvedDatasetUid, categoryUid, request);
     }
 
     /**
@@ -168,5 +176,16 @@ public class CetusApprovedDatasetService {
             CetusApprovedDataset bean = new CetusApprovedDataset(uid);
             dao.deleteApprovedDataset(bean);
         }
+    }
+
+    /**
+     * @method      findHomeDatasetList
+     * @author      dahyeon
+     * @date        2025-10-14
+     * @deacription 메인 홈 화면 데이터셋 목록 리스트 조회
+    **/
+    @Transactional(readOnly = true)
+    public List<HomeDatasetList> findHomeDatasetList(HomeDatasetSearch search) {
+        return dao.getHomeDatasetList(search);
     }
 }

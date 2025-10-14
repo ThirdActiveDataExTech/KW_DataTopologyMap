@@ -4,8 +4,6 @@ package kware.apps.mobigen.cetus.dataset.service;
 import cetus.bean.Page;
 import cetus.bean.Pageable;
 import cetus.user.UserUtil;
-import kware.apps.mobigen.cetus.category.dto.response.CategoryList;
-import kware.apps.mobigen.cetus.category.service.CetusMobigenDatasetCategoryService;
 import kware.apps.mobigen.cetus.dataset.domain.CetusMobigenDataset;
 import kware.apps.mobigen.cetus.dataset.domain.CetusMobigenDatasetDao;
 import kware.apps.mobigen.cetus.dataset.dto.request.ChangeMobigenDataset;
@@ -38,7 +36,6 @@ public class CetusMobigenDatasetService {
     private final CommonFileService commonFileService;
 
     private final CetusMobigenDatasetTagService tagService;
-    private final CetusMobigenDatasetCategoryService categoryService;
 
     private final CetusMobigenRegistrantService registrantService;
 
@@ -67,8 +64,9 @@ public class CetusMobigenDatasetService {
                 .collect(Collectors.toList());
         int count = filteredList.size();
 
+        log.info("pageable : {} ", pageable);
         Page<MobigenDatasetList> page = new Page<MobigenDatasetList>(filteredList, count, pageable);
-
+        log.info("page : {} ", page);
         return page;
     }
 
@@ -107,7 +105,7 @@ public class CetusMobigenDatasetService {
         tagService.saveDatasetTag(request.getTags(), datasetUid);
 
         // 5. save tag
-        categoryService.saveDatasetCategory(request.getCategories(), datasetUid);
+        // categoryService.saveDatasetCategory(request.getCategories(), datasetUid);
 
         // 6. 모비젠 등록자 정보 저장
         registrantService.saveMobigenRegistrant(datasetUid);
@@ -142,7 +140,7 @@ public class CetusMobigenDatasetService {
         tagService.saveDatasetTag(request.getTags(), datasetUid);
 
         // 4. save tag
-        categoryService.saveDatasetCategory(request.getCategories(), datasetUid);
+        // categoryService.saveDatasetCategory(request.getCategories(), datasetUid);
     }
 
     /**
@@ -179,15 +177,11 @@ public class CetusMobigenDatasetService {
         List<TagList> tags = tagService.findMobigenDatasetTagListByDatasetUid(datasetUid);
         view.setTags(tags);
 
-        // 3. dataset category
-        List<CategoryList> categories = categoryService.findMobigenDatasetCategoryListByDatasetUid(datasetUid);
-        view.setCategories(categories);
-
-        // 4. dataset metadata file
+        // 3. dataset metadata file
         List<CommonFile> metadataFiles = (view.getMetadataFileUid() != null) ? commonFileService.findCommonFileListByFileUid(view.getMetadataFileUid()) : new ArrayList<>();
         view.setMetadataFiles(metadataFiles);
 
-        // 5. dataset realdata file
+        // 4. dataset realdata file
         List<CommonFile> realdataFiles = (view.getRealdataFileUid() != null) ? commonFileService.findCommonFileListByFileUid(view.getRealdataFileUid()) : new ArrayList<>();
         view.setRealdataFiles(realdataFiles);
 

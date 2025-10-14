@@ -6,8 +6,9 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import cetus.support.Reflector;
+import lombok.ToString;
 
-@Getter
+@Getter @ToString
 @NoArgsConstructor
 @AllArgsConstructor
 public class Pageable {
