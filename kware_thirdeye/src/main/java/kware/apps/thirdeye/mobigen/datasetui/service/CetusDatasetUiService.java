@@ -17,6 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Comparator;
 import java.util.List;
 
 @Slf4j
@@ -123,6 +124,7 @@ public class CetusDatasetUiService {
             DatasetMainUiType mainUiType = DatasetMainUiType.valueOf(dto.getTypeCd());
             dto.setUseInfo(mainUiType);
         });
+        datasetUiByGroup.sort(Comparator.comparingInt(dto -> dto.getTypeOrdering()));
         return datasetUiByGroup;
     }
 }

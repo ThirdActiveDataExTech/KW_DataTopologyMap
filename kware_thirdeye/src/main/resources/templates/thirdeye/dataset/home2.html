@@ -137,32 +137,15 @@
   <script th:src="@{'/assets/js/page/home2.js'}"></script>
   <script th:src="@{'/assets/js/page/draw-home2-type.js'}"></script>
   <script th:inline="javascript">
-    $(async function(e) {
 
+    $(async function(e) {
       const res = await Http.get(`/api/portal/dataset-ui/grouping`)
       homeJS.setDatasetTypes(res);
-
       await homeJS.drawHomePageSection();
+    });
 
-      /*const configData = await Http.getJson('/assets/data/testdata/type_config_data.json');
-      homeJS.setTypeConfig(configData);
-
-      const homeData1 = await Http.getJson('/assets/data/testdata/A_list_data.json');
-      homeJS.drawMainContent(homeData1);
-
-      const homeData2 = await Http.getJson('/assets/data/testdata/B_list_data.json');
-      homeJS.drawMainContent(homeData2);
-
-      const homeData3 = await Http.getJson('/assets/data/testdata/C_list_data.json');
-      homeJS.drawMainContent(homeData3);
-
-      const homeData4 = await Http.getJson('/assets/data/testdata/D_list_data.json');
-      homeJS.drawMainContent(homeData4);*/
-
-      $(document).on('click', '.category-list a', function(e) {
-        homeJS.handleCategoryClick(this)
-      });
-
+    $(document).on('click', '.category-list a', function(e) {
+      homeJS.handleCategoryClick(this)
     });
 
     // 뷰 버튼 클릭

@@ -21,10 +21,12 @@ public class DatasetUiGroup {
     private boolean useTitle;
     private boolean useSummary;
     private Integer usedCount;
+    private Integer typeOrdering;
 
     public void setUseInfo(DatasetMainUiType mainUiType) {
         this.useCategory = mainUiType.isUseCategory();
         this.useTitle = mainUiType.isUseTitle();
         this.useSummary = mainUiType.isUseSummary();
+        this.typeOrdering = mainUiType.getOrder();
     }
 }

@@ -24,6 +24,9 @@ public class HomeDatasetList {
     private Integer ratings;
     private String bookmarkYn;
 
+    private String approvedDt;
+    private String approverNm;
+
     public void setUiView(DatasetUiView uiView) {
         this.uiView = uiView;
     }

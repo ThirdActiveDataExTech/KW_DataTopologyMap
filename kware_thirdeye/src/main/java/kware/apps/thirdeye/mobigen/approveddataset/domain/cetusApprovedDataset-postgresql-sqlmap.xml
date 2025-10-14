@@ -199,14 +199,19 @@
                         WHERE B.APPROVED_DATASET_UID = CAD.UID
               ) THEN 'Y'
                 ELSE 'N'
-            END AS BOOKMARK_YN
+                 END AS BOOKMARK_YN
+             ,TO_CHAR(CAD.APPROVED_DT, 'YYYY-MM-DD HH:MM') AS APPROVED_DT
+             ,CU.USER_NM AS APPROVER_NM
           FROM CETUS_APPROVED_DATASET CAD
+          LEFT JOIN CETUS_USER CU ON CU.UID = CAD.APPROVER_UID
           LEFT JOIN CETUS_DATASET_UI CDU ON CAD.UID = CDU.APPROVED_DATASET_UID
           LEFT JOIN CETUS_DATASET_CATEGORY CDC ON CDC.UID = CDU.CATEGORY_UID
           LEFT JOIN CETUS_FILE CF ON CF.FILE_UID = CDU.THUMB_UID AND CF.USE_AT = 'Y'
          WHERE CAD.WORKPLACE_UID = #{workplaceUid}
            AND CDU.MAIN_UI_UID = #{mainUiUid}
+        <if test="@Ognl@isNotEmpty(selectedCategory)">
            AND CDU.CATEGORY_UID = #{selectedCategory}
+        </if>
            AND CAD.DELETE_AT = 'N'
            AND CDU.SHOW_AT = 'Y'
          ORDER BY CAD.APPROVED_DT DESC
