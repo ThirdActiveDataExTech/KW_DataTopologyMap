@@ -16,7 +16,4 @@ import lombok.Setter;
 @Getter @Setter
 public class DeleteMetadataResponse extends ApiResponse<DeleteMetadataResponse> {
 
-    private String metadata_id;
-    private String deleted_at;
-
 }

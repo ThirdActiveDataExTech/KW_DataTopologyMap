@@ -17,9 +17,11 @@ import java.util.List;
 @Getter @Setter
 public class SearchMetadataList {
 
-    private String action;
+    private String action;              // "search"
     private Filters filters;
     private Pagination pagination;
+    private Sort sort;
+
 
     @Getter @Setter
     public static class Filters {
@@ -27,7 +29,6 @@ public class SearchMetadataList {
         private String publisher;
         private List<String> theme;
         private DateRange date_range;
-        private Sort sort;
 
         @Getter @Setter
         public static class DateRange {

@@ -17,7 +17,13 @@ import java.util.List;
 @Getter @Setter
 public class ChangeRawdata {
 
-    private String description;
-    private List<String> tags;
+    private String action;          // "update"
+    private String metadata_id;
+    private Field field;
 
+    @Getter @Setter
+    public class Field {
+        private String description;
+        private List<String> tags;
+    }
 }

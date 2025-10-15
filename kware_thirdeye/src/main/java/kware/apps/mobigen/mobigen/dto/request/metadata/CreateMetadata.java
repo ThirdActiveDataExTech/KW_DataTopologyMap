@@ -18,15 +18,18 @@ import java.util.Map;
 @Getter @Setter
 public class CreateMetadata {
 
-    private String action;
+    private String action;      // "create"
     private Field field;
 
     @Getter @Setter
     public static class Field {
         private String title;
+        private String issued;
+        private String modified;
         private String description;
         private String publisher;
         private List<String> keywords;
+        private String landing_page;
         private List<String> theme;
         private String access_url;
         private Map<String, Object> custom_meta;

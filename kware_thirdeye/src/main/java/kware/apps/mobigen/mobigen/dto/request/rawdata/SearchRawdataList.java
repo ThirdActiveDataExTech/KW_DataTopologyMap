@@ -15,7 +15,8 @@ import lombok.Setter;
 @Getter @Setter
 public class SearchRawdataList {
 
-    private String format;
+    private String action;          // "list"
+    private String metadata_id;
     private Pagination pagination;
 
     @Getter @Setter

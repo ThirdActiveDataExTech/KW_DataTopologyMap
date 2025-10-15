@@ -17,13 +17,6 @@ import java.util.List;
 @Getter @Setter
 public class MetaKeysList {
 
-    public List<Items> items;
+    public List<String> filters;
 
-    @Getter @Setter
-    public static class Items {
-        private String name;
-        private String type;
-        private String description;
-        private String status;
-    }
 }

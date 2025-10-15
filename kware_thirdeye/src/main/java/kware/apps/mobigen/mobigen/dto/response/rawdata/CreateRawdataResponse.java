@@ -10,6 +10,7 @@ import lombok.Setter;
 * @version      1.0.0
 * @date         2025-09-23
 * @summary      원본데이터 추가 작업
+ *              => 메타데이터 하위 원본데이터 추가에 대한 응답
 **/
 
 @Getter @Setter

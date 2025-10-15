@@ -7,7 +7,7 @@ import lombok.Setter;
 import java.util.List;
 
 /**
-* @fileName     PackageExport
+* @fileName     PackageExportResponse
 * @author       dahyeon
 * @version      1.0.0
 * @date         2025-09-23
@@ -15,7 +15,7 @@ import java.util.List;
 **/
 
 @Getter @Setter
-public class PackageExport {
+public class PackageExportResponse {
 
     private String metadata_id;
     private List<String> rawdata_ids;

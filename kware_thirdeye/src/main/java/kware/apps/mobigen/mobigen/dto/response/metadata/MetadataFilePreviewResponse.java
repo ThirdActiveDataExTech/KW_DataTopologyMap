@@ -1,27 +1,25 @@
 package kware.apps.mobigen.mobigen.dto.response.metadata;
 
-
 import lombok.Getter;
 import lombok.Setter;
 
 import java.util.List;
 
 /**
-* @fileName     CreateMetadataResponse
+* @fileName     MetadataFilePreviewResponse
 * @author       dahyeon
 * @version      1.0.0
-* @date         2025-09-23
-* @summary      하나의 메타데이터 생성 요청
+* @date         2025-10-15
+* @summary      메타데이터 파일 정보 미리보기 응답 DTO
 **/
 
 @Getter @Setter
-public class CreateMetadataResponse {
+public class MetadataFilePreviewResponse {
 
-    private CreateMetadataResult metadata;
-    private CreateRawdataResult rawdata;
+    private MetadataFilePreviewMetadata metadata;
 
     @Getter @Setter
-    public class CreateMetadataResult {
+    public class MetadataFilePreviewMetadata {
         private String metadata_id;
         private String title;
         private String issued;
@@ -36,13 +34,5 @@ public class CreateMetadataResponse {
         private String domain;
         private String ingested_at;
         private String updated_at;
-    }
-
-    @Getter @Setter
-    public class CreateRawdataResult {
-        private String rawdata_id;
-        private String filename;
-        private String size;
-        private String uploaded_at;
     }
 }

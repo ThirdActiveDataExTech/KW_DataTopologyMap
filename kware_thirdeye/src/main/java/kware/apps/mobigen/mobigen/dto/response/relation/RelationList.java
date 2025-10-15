@@ -18,7 +18,10 @@ import java.util.List;
 public class RelationList {
 
     private String metadata_id;
-    private List<RelatedMetadata> related_metadata;
+    private Integer total_count;
+    private Integer page;
+    private Integer limit;
+    private List<RelatedMetadata> items;
     private List<FieldRelations> field_relations;
 
     @Getter @Setter

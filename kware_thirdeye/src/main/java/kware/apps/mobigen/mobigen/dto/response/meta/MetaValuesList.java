@@ -17,8 +17,7 @@ import java.util.List;
 @Getter @Setter
 public class MetaValuesList {
 
-    private String key;
+    private String filter;
     private List<String> values;
-    private int total;
 
 }

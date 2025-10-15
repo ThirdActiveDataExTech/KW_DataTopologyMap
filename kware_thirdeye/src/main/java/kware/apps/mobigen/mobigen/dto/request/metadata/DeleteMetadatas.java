@@ -16,6 +16,8 @@ import java.util.List;
 @Getter @Setter
 public class DeleteMetadatas {
 
+    private String action;                  // "delete"
+    private String metadata_id;
     private List<String> metadata_ids;
 
 }
