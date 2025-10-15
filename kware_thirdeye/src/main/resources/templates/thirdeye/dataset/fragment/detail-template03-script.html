@@ -28,7 +28,7 @@
                 if(clearSidebar) template03JS.createSidebar();
 
                 // 검색어를 통한 filter
-                if (template03JS.keyword) {
+                if (data.length !== 0) {
                     if(keyword) data = data.filter(item => item?.['datasetView']?.['title'].includes(template03JS.keyword));
                     if (this.param.tag?.length) {
                         data = data.filter(item =>

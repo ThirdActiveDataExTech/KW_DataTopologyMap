@@ -73,4 +73,12 @@
          WHERE CF.FILE_ID = #{fileId}
     </select>
 
+    <update id="ifExistDeleteApprovedDataset" parameterType="DeleteApprovedDatasetIfExist">
+        /* cetusApprovedDataset.ifExistDeleteApprovedDataset */
+        UPDATE CETUS_APPROVED_DATASET
+           SET DELETE_AT = 'Y'
+         WHERE WORKPLACE_UID = #{workplaceUid}
+           AND DATASET_ID = #{datasetId}
+    </update>
+
 </mapper>

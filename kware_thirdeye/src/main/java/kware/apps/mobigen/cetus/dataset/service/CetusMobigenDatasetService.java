@@ -10,6 +10,7 @@ import kware.apps.mobigen.cetus.dataset.dto.request.ChangeMobigenDataset;
 import kware.apps.mobigen.cetus.dataset.dto.request.DeleteDatasets;
 import kware.apps.mobigen.cetus.dataset.dto.request.SaveMobigenDataset;
 import kware.apps.mobigen.cetus.dataset.dto.request.SearchMobigenDataset;
+import kware.apps.mobigen.cetus.dataset.dto.response.DeleteApprovedDatasetIfExist;
 import kware.apps.mobigen.cetus.dataset.dto.response.MobigenDatasetList;
 import kware.apps.mobigen.cetus.dataset.dto.response.MobigenDatasetRealDataView;
 import kware.apps.mobigen.cetus.dataset.dto.response.MobigenDatasetView;
@@ -45,7 +46,7 @@ public class CetusMobigenDatasetService {
      * @date        2025-10-15
      * @deacription 리스트에 대한 페이징 작업
      *              => 모비젠 측에서 해주는 페이징과 kware 포탈 시스템에서 사용하는  페이징이 다를 수 있기 때문에
-     *                 kware 포탈 시스템 페이징 작업 용으로 변경     
+     *                 kware 포탈 시스템 페이징 작업 용으로 변경
     **/
     private Page<MobigenDatasetList> changeListToPage(Integer pageNumber, Integer pageSize, List<MobigenDatasetList> list) {
 
@@ -191,9 +192,13 @@ public class CetusMobigenDatasetService {
     **/
     @Transactional
     public void deleteSeveralMobigenDataset(DeleteDatasets request) {
-        for (Long uid: request.getUids()) {
-            CetusMobigenDataset bean = new CetusMobigenDataset(uid);
+        for (Long datasetId: request.getUids()) {
+            CetusMobigenDataset bean = new CetusMobigenDataset(datasetId);
             dao.deleteMobigenDataset(bean);
+
+            // {datasetId} 데이터셋이 kware 포탈 시스템에서 관리중인 값이라면 포탈 시스템에서도 삭제 (논리삭제)
+            DeleteApprovedDatasetIfExist req = new DeleteApprovedDatasetIfExist(datasetId, UserUtil.getUserWorkplaceUid());
+            dao.ifExistDeleteApprovedDataset(req);
         }
     }
 
