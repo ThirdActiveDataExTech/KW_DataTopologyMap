@@ -6,17 +6,10 @@
         /* cetusMobigenDataset.getAllMobigenDatasetList */
         SELECT CMD.UID
               ,CMD.TITLE
-              ,COALESCE(CU.USER_ID, '자동 저장') AS REGISTRANT_ID
-              ,CASE WHEN CU.USER_ID IS NULL THEN 'FALSE' ELSE 'TRUE' END AS IS_REGISTERED
               ,TO_CHAR(CMD.REG_DT, 'YYYY-MM-DD HH:MM') AS REG_DT
           FROM CETUS_MOBIGEN_DATASET CMD
-          LEFT JOIN CETUS_MOBIGEN_REGISTRANT CMR ON CMR.DATASET_ID = CMD.UID
-          LEFT JOIN CETUS_USER CU ON CU.UID = CMR.REGISTRANT_UID
          WHERE 1 = 1
            AND CMD.DELETE_AT = 'N'
-        <if test="@Ognl@isNotEmpty(registrantId)">
-           AND CU.USER_ID LIKE '%' || #{registrantId} || '%'
-        </if>
          ORDER BY CMD.REG_DT DESC
     </select>
 
@@ -24,17 +17,9 @@
         /* cetusMobigenDataset.getAllMobigenDatasetPage */
         SELECT CMD.UID
               ,CMD.TITLE
-              ,COALESCE(CU.USER_ID, '자동 저장') AS REGISTRANT_ID
-              ,CASE WHEN CU.USER_ID IS NULL THEN 'FALSE' ELSE 'TRUE' END AS IS_REGISTERED
               ,TO_CHAR(CMD.REG_DT, 'YYYY-MM-DD HH:MM') AS REG_DT
           FROM CETUS_MOBIGEN_DATASET CMD
-          LEFT JOIN CETUS_MOBIGEN_REGISTRANT CMR ON CMR.DATASET_ID = CMD.UID
-          LEFT JOIN CETUS_USER CU ON CU.UID = CMR.REGISTRANT_UID
-         WHERE 1 = 1
-           AND CMD.DELETE_AT = 'N'
-        <if test="@Ognl@isNotEmpty(registrantId)">
-           AND CU.USER_ID LIKE '%' || #{registrantId} || '%'
-        </if>
+         WHERE CMD.DELETE_AT = 'N'
          ORDER BY CMD.REG_DT DESC
         <if test="@Ognl@isNotEmpty(startNumber) and  @Ognl@isNotEmpty(endNumber)">
         OFFSET ${startNumber} LIMIT ${endNumber}
@@ -45,13 +30,7 @@
         /* cetusMobigenDataset.getAllMobigenDatasetPageCount */
         SELECT COUNT(*)
           FROM CETUS_MOBIGEN_DATASET CMD
-          LEFT JOIN CETUS_MOBIGEN_REGISTRANT CMR ON CMR.DATASET_ID = CMD.UID
-          LEFT JOIN CETUS_USER CU ON CU.UID = CMR.REGISTRANT_UID
-         WHERE 1 = 1
-           AND CMD.DELETE_AT = 'N'
-        <if test="@Ognl@isNotEmpty(registrantId)">
-           AND CU.USER_ID LIKE '%' || #{registrantId} || '%'
-        </if>
+         WHERE CMD.DELETE_AT = 'N'
     </select>
 
     <insert id="insert" parameterType="CetusMobigenDataset" useGeneratedKeys="true" keyProperty="uid">
@@ -84,14 +63,11 @@
         /* cetusMobigenDataset.getMobigenDatasetByDatasetId */
         SELECT CMD.UID
               ,CMD.TITLE
-              ,CU.USER_ID AS REGISTRANT_ID
               ,TO_CHAR(CMD.REG_DT, 'YYYY-MM-DD HH:MM') AS REG_DT
               ,CMD.METADATA_FILE_UID
               ,CMD.REALDATA_FILE_UID
               ,CMD.METADATA
           FROM CETUS_MOBIGEN_DATASET CMD
-          LEFT JOIN CETUS_MOBIGEN_REGISTRANT CMR ON CMR.DATASET_ID = CMD.UID
-          LEFT JOIN CETUS_USER CU ON CU.UID = CMR.REGISTRANT_UID
          WHERE CMD.UID = #{uid}
     </select>
 
@@ -117,4 +93,5 @@
           FROM CETUS_FILE CF
          WHERE CF.FILE_ID = #{fileId}
     </select>
+
 </mapper>

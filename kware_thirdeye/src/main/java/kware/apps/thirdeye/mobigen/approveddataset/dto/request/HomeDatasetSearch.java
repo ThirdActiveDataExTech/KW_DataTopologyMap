@@ -16,10 +16,10 @@ import lombok.NoArgsConstructor;
 @Getter @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class HomeDatasetSearch {
 
-    private Long mainUiUid;
-    private Integer limitCount;
-    private Long selectedCategory;
-    private Long workplaceUid;
+    private Long mainUiUid;             // 데이터셋에 대한 화면_ui_uid
+    private Integer limitCount;         // 각 type 별로 최대 보여지는 데이터셋 목록 개수
+    private Long selectedCategory;      // 선택된 카테고리 유형
+    private Long workplaceUid;          // 워크플레이스 uid
 
     public HomeDatasetSearch(Long mainUiUid, Integer limitCount, Long selectedCategory, Long workplaceUid) {
         this.mainUiUid = mainUiUid;

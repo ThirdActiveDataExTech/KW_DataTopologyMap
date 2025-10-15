@@ -15,6 +15,7 @@ import kware.apps.mobigen.cetus.dataset.dto.response.MobigenDatasetRealDataView;
 import kware.apps.mobigen.cetus.dataset.dto.response.MobigenDatasetView;
 import kware.apps.mobigen.cetus.tag.dto.response.TagList;
 import kware.apps.mobigen.cetus.tag.service.CetusMobigenDatasetTagService;
+import kware.apps.thirdeye.mobigen.mobigenregistrant.dto.response.MobigenRegistrantView;
 import kware.apps.thirdeye.mobigen.mobigenregistrant.service.CetusMobigenRegistrantService;
 import kware.common.config.auth.dto.SessionUserInfo;
 import kware.common.file.domain.CommonFile;
@@ -47,8 +48,14 @@ public class CetusMobigenDatasetService {
     **/
     @Transactional(readOnly = true)
     public Page<MobigenDatasetList> findAllMobigenDatasetPage(SearchMobigenDataset search, Pageable pageable) {
-        log.info(">>> [Mobigen] 데이터셋 목록 페이징 조회");
-        return dao.page("getAllMobigenDatasetPage", "getAllMobigenDatasetPageCount", search, pageable);
+        Page<MobigenDatasetList> page = dao.page("getAllMobigenDatasetPage", "getAllMobigenDatasetPageCount", search, pageable);
+        page.getList().forEach(data -> {
+            Long datasetId = data.getUid();
+            MobigenRegistrantView registrantView = registrantService.findMobigenRegistrant(datasetId);
+            if(registrantView != null) data.setRegistrantInfo(registrantView.isRegistered(), registrantView.getRegistrantId());
+            else data.setRegistrantInfo(false, null);
+        });
+        return page;
     }
 
     /**
@@ -59,8 +66,6 @@ public class CetusMobigenDatasetService {
     **/
     @Transactional(readOnly = true)
     public List<MobigenDatasetList> findAllMobigenDatasetList(SearchMobigenDataset search) {
-
-        log.info(">>> [Mobigen] 데이터셋 목록 페이징 조회");
 
         List<MobigenDatasetList> list = dao.getAllMobigenDatasetList(search);
 
@@ -74,11 +79,13 @@ public class CetusMobigenDatasetService {
         List<MobigenDatasetList> filteredList = list.stream()
                 .filter(ds -> !approvedSet.contains(ds.getUid()))
                 .collect(Collectors.toList());
-        int count = filteredList.size();
+        filteredList.forEach(data -> {
+            Long datasetId = data.getUid();
+            MobigenRegistrantView registrantView = registrantService.findMobigenRegistrant(datasetId);
+            if(registrantView != null) data.setRegistrantInfo(registrantView.isRegistered(), registrantView.getRegistrantId());
+            else data.setRegistrantInfo(false, null);
+        });
 
-//        log.info("pageable : {} ", pageable);
-//        Page<MobigenDatasetList> page = new Page<MobigenDatasetList>(filteredList, count, pageable);
-//        log.info("page : {} ", page);
         return filteredList;
     }
 
@@ -180,10 +187,11 @@ public class CetusMobigenDatasetService {
     @Transactional(readOnly = true)
     public MobigenDatasetView findMobigenDatasetByDatasetId(Long datasetUid) {
 
-        log.info(">>> [Mobigen] 데이터셋 단건 조회");
-
         // 1. dataset view
         MobigenDatasetView view = dao.getMobigenDatasetByDatasetId(datasetUid);
+        Long datasetId = view.getUid();
+        MobigenRegistrantView registrantView = registrantService.findMobigenRegistrant(datasetId);
+        view.setRegistrantId((registrantView != null) ? registrantView.getRegistrantId() : null);
 
         // 2. dataset tag
         List<TagList> tags = tagService.findMobigenDatasetTagListByDatasetUid(datasetUid);

@@ -14,4 +14,14 @@
             ,NOW()
         )
     </insert>
+
+    <select id="getMobigenRegistrant" resultType="MobigenRegistrantView" parameterType="Long">
+        /* cetusMobigenRegistrant.getMobigenRegistrant */
+        SELECT CMR.REGISTRANT_UID
+              ,CU.USER_ID AS REGISTRANT_Id
+              ,CASE WHEN CU.USER_ID IS NULL THEN 'FALSE' ELSE 'TRUE' END AS IS_REGISTERED
+          FROM CETUS_MOBIGEN_REGISTRANT CMR
+          LEFT JOIN CETUS_USER CU ON CU.UID = CMR.REGISTRANT_UID
+         WHERE CMR.DATASET_ID = #{datasetId}
+    </select>
 </mapper>

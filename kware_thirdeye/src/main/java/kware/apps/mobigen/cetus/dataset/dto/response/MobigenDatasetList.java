@@ -14,4 +14,8 @@ public class MobigenDatasetList {
     private String registrantId;
     private String regDt;
 
+    public void setRegistrantInfo(boolean isRegistered, String registrantId) {
+        this.isRegistered = isRegistered;
+        this.registrantId = registrantId;
+    }
 }

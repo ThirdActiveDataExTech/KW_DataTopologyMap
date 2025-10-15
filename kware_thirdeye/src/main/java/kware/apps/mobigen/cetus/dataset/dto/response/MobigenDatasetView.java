@@ -37,4 +37,8 @@ public class MobigenDatasetView {
     public void setRealdataFiles(List<CommonFile> realdataFiles) {
         this.realdataFiles = realdataFiles;
     }
+
+    public void setRegistrantId(String registrantId) {
+        this.registrantId = registrantId;
+    }
 }

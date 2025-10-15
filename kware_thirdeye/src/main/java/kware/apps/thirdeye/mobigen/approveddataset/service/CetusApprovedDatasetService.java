@@ -173,7 +173,6 @@ public class CetusApprovedDatasetService {
      **/
     @Transactional
     public void deleteSeveralApprovedDataset(DeleteApprovedDatasets request) {
-        log.info(">>> [KWARE] 모비젠 저장소에서 kware 포탈 시스템으로 진열 등록된 데이터셋에 대해 논리삭제");
         for (Long uid: request.getUids()) {
             CetusApprovedDataset bean = new CetusApprovedDataset(uid);
             dao.deleteApprovedDataset(bean);

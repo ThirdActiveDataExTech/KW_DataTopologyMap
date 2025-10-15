@@ -4,6 +4,7 @@ package kware.apps.thirdeye.mobigen.mobigenregistrant.service;
 import cetus.user.UserUtil;
 import kware.apps.thirdeye.mobigen.mobigenregistrant.domain.CetusMobigenRegistrant;
 import kware.apps.thirdeye.mobigen.mobigenregistrant.domain.CetusMobigenRegistrantDao;
+import kware.apps.thirdeye.mobigen.mobigenregistrant.dto.response.MobigenRegistrantView;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -27,5 +28,10 @@ public class CetusMobigenRegistrantService {
     public void saveMobigenRegistrant(Long datasetId) {
         CetusMobigenRegistrant bean = new CetusMobigenRegistrant(datasetId, UserUtil.getUser().getUid());
         dao.insert(bean);
+    }
+
+    @Transactional(readOnly = true)
+    public MobigenRegistrantView findMobigenRegistrant(Long datasetId) {
+        return dao.getMobigenRegistrant(datasetId);
     }
 }
