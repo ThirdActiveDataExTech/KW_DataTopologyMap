@@ -14,4 +14,5 @@ public class ChangeMainUi {
     private Integer titleLineClamp;
     private String thumbUseAt;
     private String useAt;
+    private Long sortNo;
 }

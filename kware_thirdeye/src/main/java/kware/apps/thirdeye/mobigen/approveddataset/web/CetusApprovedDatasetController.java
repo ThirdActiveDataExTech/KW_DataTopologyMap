@@ -38,9 +38,12 @@ public class CetusApprovedDatasetController {
     public String save(Model model) {
         menuNavigationManager.renderingPage("/admin/approved/dataset", "데이터 진열 관리 등록", false, model);
 
+        // 1. 화면 UI 유형
         List<MainUiList> mainUiList = mainUiService.findDatasetMainUiList();
         model.addAttribute("mainUiList", mainUiList);
 
+        // 2. 이미 진열등록/관리 중인 데이터셋 ID 목록
+        // => 중복 진열등록 방지
         List<Long> ids = service.findApprovedDatasetIdList().stream().map(ApprovedDatasetIdList::getDatasetId).collect(Collectors.toList());
         model.addAttribute("approvedIds", ids);
 
@@ -51,9 +54,13 @@ public class CetusApprovedDatasetController {
     public String form(@PathVariable("approvedUid") Long approvedUid, Model model) {
         menuNavigationManager.renderingPage("/admin/approved/dataset", "데이터 진열 관리 수정", false, model);
 
+        // 1. 화면 UI 유형
         List<MainUiList> mainUiList = mainUiService.findDatasetMainUiList();
         model.addAttribute("mainUiList", mainUiList);
 
+        // 2. 진열등록/관리 중인 데이터셋 정보
+        // => 데이터셋의 상세 정보 (by. 모비젠)
+        // => 데이터셋의 화면 UI 정보
         ApprovedDatasetView approvedDatasetView = service.findApprovedDatasetView(approvedUid);
         model.addAttribute("view", approvedDatasetView);
 

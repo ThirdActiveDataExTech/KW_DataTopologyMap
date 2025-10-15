@@ -63,8 +63,7 @@
                         <div class="col-lg-12 items">
                             <label for="period-title">컨텐츠 제목</label>
                             <input type="text" id="period-title" name="title"
-                                   th:value="${view?.title}"
-                                   class="form-control" placeholder="제목을 입력하세요." required>
+                                   th:value="${view?.title}" class="form-control" placeholder="제목을 입력하세요." required>
                         </div>
                     </div>
 
@@ -198,7 +197,7 @@
             // 주기성 버튼 클릭 이벤트
             // ===============================
             $('#period-submit-btn').click(function(){
-                mobigenDatasetFormJS.periodSaveClickEvent(view['uid'], view['realdataFileUid']);
+                mobigenDatasetFormJS.periodSaveClickEvent(view['datasetId'], view['realdataFileUid']);
             });
         });
     </script>

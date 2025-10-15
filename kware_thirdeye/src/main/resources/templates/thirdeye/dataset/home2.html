@@ -134,8 +134,8 @@
 </th:block>
 
 <th:block layout:fragment="script">
-  <script th:src="@{'/assets/js/page/home2.js'}"></script>
-  <script th:src="@{'/assets/js/page/draw-home2-type.js'}"></script>
+  <script th:src="@{'/assets/js/page/thirdeye/main/home2.js'}"></script>
+  <script th:src="@{'/assets/js/page/thirdeye/main/draw-home2-type.js'}"></script>
   <script th:inline="javascript">
 
     $(async function(e) {
@@ -156,8 +156,7 @@
 
     // 좋아요 버튼 클릭
     $(document).on('click', '.like-btn', function(e) {
-      const uid = $(this).data('uid');
-      console.log(">> like btn clicked ... : ", uid);
+      homeJS.likeClickEvent(this);
     });
 
   </script>

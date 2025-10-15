@@ -12,8 +12,8 @@ import kware.apps.thirdeye.mobigen.approveddataset.dto.request.DeleteApprovedDat
 import kware.apps.thirdeye.mobigen.approveddataset.dto.request.HomeDatasetSearch;
 import kware.apps.thirdeye.mobigen.approveddataset.dto.request.SaveApprovedDataset;
 import kware.apps.thirdeye.mobigen.approveddataset.dto.response.ApprovedDatasetIdList;
+import kware.apps.thirdeye.mobigen.approveddataset.dto.response.ApprovedDatasetList;
 import kware.apps.thirdeye.mobigen.approveddataset.dto.response.ApprovedDatasetView;
-import kware.apps.thirdeye.mobigen.approveddataset.dto.response.DatasetList;
 import kware.apps.thirdeye.mobigen.approveddataset.dto.response.HomeDatasetList;
 import kware.apps.thirdeye.mobigen.category.service.CetusDatasetCategoryService;
 import kware.apps.thirdeye.mobigen.datasetui.dto.response.DatasetUiView;
@@ -25,7 +25,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -46,19 +45,18 @@ public class CetusApprovedDatasetService {
      *                  => 각 승인된 datasetId 값을 가지고 모비젠 측의 API를 통해 데이터셋 상세 정보 조회
     **/
     @Transactional(readOnly = true)
-    public Page<DatasetList> findDatasetPage(ApprovedDatasetSearch search, Pageable pageable ) {
-        log.info(">>> [KWARE] 승인된 데이터셋 목록 조회 + 페이징");
+    public Page<ApprovedDatasetList> findDatasetPage(ApprovedDatasetSearch search, Pageable pageable ) {
         search.setWorkplaceUid(UserUtil.getUserWorkplaceUid());
-        Page<DatasetList> page = dao.page("getDatasetPage", "getDatasetPageCount", search, pageable);
+        Page<ApprovedDatasetList> page = dao.page("getDatasetPage", "getDatasetPageCount", search, pageable);
         if(page.getList() != null && !page.getList().isEmpty()) {
             page.getList().forEach(dataset -> {
-                // 데이터셋 정보 조회
+                // 데이터셋 > 모비젠 측을 통한 상세 정보 조회
                 Long datasetId = dataset.getDatasetId();
                 MobigenDatasetView datasetView = mobigenDatasetService.findMobigenDatasetByDatasetId(datasetId);
                 if (datasetView != null) {
                     dataset.setDatasetInfo(datasetView);
                 }
-                // 데이터셋의 ui 정보
+                // 데이터셋의 화면 UI 값에 대해서 > 해당 UI 설명 정보
                 DatasetMainUiType mainUiType = DatasetMainUiType.valueOf(dataset.getMainUiTypeCd());
                 dataset.setMainUiTypeCdDescription(mainUiType.getDescription());
             });
@@ -74,19 +72,12 @@ public class CetusApprovedDatasetService {
      *                  => 각 승인된 datasetId 값을 가지고 모비젠 측의 API를 통해 데이터셋 상세 정보 조회
      **/
     @Transactional(readOnly = true)
-    public List<DatasetList> findDatasetList( ApprovedDatasetSearch search ) {
-        log.info(">>> [KWARE] 승인된 데이터셋 목록 조회 (리스트)");
+    public List<ApprovedDatasetList> findDatasetList(ApprovedDatasetSearch search) {
         search.setWorkplaceUid(UserUtil.getUserWorkplaceUid());
-        List<DatasetList> list = dao.getDatasetList(search);
-
-        List<Long> exceptUids = search.getExceptUids(); // 제외할 UID 목록
-        if(exceptUids != null && !exceptUids.isEmpty()) {
-            list = list.stream()
-                    .filter(dataset -> !exceptUids.contains(dataset.getDatasetId()))
-                    .collect(Collectors.toList());
-        }
+        List<ApprovedDatasetList> list = dao.getDatasetList(search);
         if(!list.isEmpty()) {
             list.forEach(dataset -> {
+                // 각 승인관리 중인 데이터셋들의 상세 정보는 모비젠 측에서 가져온다.
                 Long datasetId = dataset.getDatasetId();
                 MobigenDatasetView datasetView = mobigenDatasetService.findMobigenDatasetByDatasetId(datasetId);
                 if (datasetView != null) {
@@ -105,7 +96,6 @@ public class CetusApprovedDatasetService {
     **/
     @Transactional
     public void approveDataset(SaveApprovedDataset request) {
-        log.info(">>> [KWARE] 모비젠 저장소에 저장된 데이터셋 진열등록");
 
         // 1. 모비젠 데이터셋에서 가져온 데이터 정보 진열/승인
         CetusApprovedDataset bean = new CetusApprovedDataset(request, UserUtil.getUserWorkplaceUid(), UserUtil.getUser().getUid());
@@ -126,10 +116,10 @@ public class CetusApprovedDatasetService {
      * @author      dahyeon
      * @date        2025-10-01
      * @deacription [KWARE] 모비젠 저장소에서 kware 포탈 시스템으로 진열등록된 데이터셋 ID 목록 조회
+     *              => 중복되는 데이터셋 진열 등록을 방지하기 위함
     **/
     @Transactional(readOnly = true)
     public List<ApprovedDatasetIdList> findApprovedDatasetIdList() {
-        log.info(">>> [KWARE] 모비젠 저장소에서 kware 포탈 시스템으로 진열등록된 데이터셋 ID 목록 조회");
         return dao.getApprovedDatasetIdList(UserUtil.getUserWorkplaceUid());
     }
     
@@ -147,12 +137,10 @@ public class CetusApprovedDatasetService {
     @Transactional(readOnly = true)
     public ApprovedDatasetView findApprovedDatasetView(Long approvedUid) {
 
-        log.info(">>> [KWARE] 모비젠 저장소에서 kware 포탈 시스템으로 진열 등록된 데이터셋에 대한 상세 정보 조회");
-
         // 1. 진열 등록된 데이터셋 정보
         ApprovedDatasetView approvedDatasetView = dao.getApprovedDatasetView(approvedUid);
-
         if(approvedDatasetView != null) {
+
             // 2. 진열 등록된 데이터셋 UI 정보
             DatasetUiView uiView = datasetUiService.findDatasetUiView(approvedUid);
             approvedDatasetView.setUiView(uiView);
@@ -190,10 +178,13 @@ public class CetusApprovedDatasetService {
         search.setWorkplaceUid(UserUtil.getUserWorkplaceUid());
         List<HomeDatasetList> homeDatasetList = dao.getHomeDatasetList(search);
         homeDatasetList.forEach(home -> {
+            // 1. 진열관리 중인 데이터셋에 대한 상세 정보 > 모비젠 측을 통한 조회
             Long datasetId = home.getDatasetId();
-            Long approvedUid = home.getApprovedUid();
             MobigenDatasetView mobigenDatasetView = mobigenDatasetService.findMobigenDatasetByDatasetId(datasetId);
             home.setMobigenDatasetView(mobigenDatasetView);
+            
+            // 2. 진열관리 중인 데이터셋에 대한 > 화면 UI 정보 조회
+            Long approvedUid = home.getApprovedUid();
             DatasetUiView uiView = datasetUiService.findDatasetUiView(approvedUid);
             home.setUiView(uiView);
         });

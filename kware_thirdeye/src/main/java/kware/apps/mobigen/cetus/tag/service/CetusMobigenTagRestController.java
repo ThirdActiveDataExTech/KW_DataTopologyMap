@@ -17,6 +17,14 @@ public class CetusMobigenTagRestController {
 
     private final CetusMobigenTagService service;
 
+    /**
+     *
+     * 데이터셋 목록 페이지, 연관/관계 데이터 페이지에서 검색을 통한 태그 목록 조회
+     *
+     * @api         [GET] /api/portal/mobigen-tag
+     * @author      dahyeon
+     * @date        2025-10-15
+    **/
     @GetMapping("/list")
     public ResponseEntity findMobigenTagList() {
         List<TagList> list = service.findMobigenTagList();

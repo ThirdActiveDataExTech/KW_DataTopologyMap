@@ -16,4 +16,5 @@ public class SaveMainUi {
     private String thumbUseAt;
     private String useAt;
     private String typeCd;
+    private Long sortNo;
 }

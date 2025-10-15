@@ -18,6 +18,7 @@ public class MainUiList {
     private String useAt;
     private String typeCd;
     private String typeCdDescription;
+    private Long sortNo;
     private Long regUid;
     private String regNm;
     private String regDt;

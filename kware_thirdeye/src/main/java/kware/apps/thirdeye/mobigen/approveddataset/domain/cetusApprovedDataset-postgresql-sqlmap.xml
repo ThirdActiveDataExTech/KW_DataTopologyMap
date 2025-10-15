@@ -2,17 +2,20 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="cetusApprovedDataset">
 
-    <select id="getDatasetPage" parameterType="ApprovedDatasetSearch" resultType="DatasetList">
+    <select id="getDatasetPage" parameterType="ApprovedDatasetSearch" resultType="ApprovedDatasetList">
         /* cetusApprovedDataset.getDatasetPage */
         SELECT CAD.UID AS APPROVED_UID
               ,CAD.DATASET_ID
               ,TO_CHAR(CAD.APPROVED_DT, 'YYYY-MM-DD HH:MM') AS APPROVED_DT
-              ,COALESCE(CU_CREATE.USER_NM, '자동 등록') AS CREATED_NM
               ,CU_APP.USER_NM AS APPROVER_NM
               ,( SELECT COALESCE(ROUND(SUM(CDM.RATINGS) / COUNT(*)), 0)
                    FROM CETUS_DATASET_COMMENT CDM
-                  WHERE CDM.APPROVED_DATASET_UID = CAD.UID
-              ) AS RATINGS
+                  WHERE CDM.APPROVED_DATASET_UID = CAD.UID ) AS RATINGS
+              ,CASE WHEN EXISTS (
+                        SELECT 1
+                          FROM CETUS_DATASET_BOOKMARK B
+                         WHERE B.APPROVED_DATASET_UID = CAD.UID
+              ) THEN 'Y' ELSE 'N' END AS BOOKMARK_YN
               ,CDUI.CATEGORY_UID AS CATEGORY_UID
               ,CDC.CATEGORY_NM AS CATEGORY_NM
               ,CDMU.UID AS MAIN_UI_UID
@@ -20,13 +23,16 @@
               ,CDMU.TYPE_CD AS MAIN_UI_TYPE_CD
               ,CDUI.SHOW_AT AS SHOW_AT
               ,CDUI.EXTRA_JSON AS EXTRA_JSON
+              ,CASE WHEN CU_REGISTRANT.USER_ID IS NULL THEN 'FALSE' ELSE 'TRUE' END AS IS_REGISTERED
+              ,CU_REGISTRANT.USER_ID AS REGISTRANT_ID
           FROM CETUS_APPROVED_DATASET CAD
           LEFT JOIN CETUS_DATASET_UI CDU ON CDU.APPROVED_DATASET_UID = CAD.UID
-          LEFT JOIN CETUS_USER CU_CREATE ON CU_CREATE.USER_ID = CAD.CREATED_ID
           LEFT JOIN CETUS_USER CU_APP ON CU_APP.UID = CAD.APPROVER_UID
           LEFT JOIN CETUS_DATASET_UI CDUI ON CDUI.APPROVED_DATASET_UID = CAD.UID
           LEFT JOIN CETUS_DATASET_MAIN_UI CDMU ON CDMU.UID = CDUI.MAIN_UI_UID
           LEFT JOIN CETUS_DATASET_CATEGORY CDC ON CDC.UID = CDUI.CATEGORY_UID
+          LEFT JOIN CETUS_MOBIGEN_REGISTRANT CMR ON CMR.DATASET_ID = CAD.DATASET_ID
+          LEFT JOIN CETUS_USER CU_REGISTRANT ON CU_REGISTRANT.UID = CMR.REGISTRANT_UID
          WHERE CAD.WORKPLACE_UID = #{workplaceUid}
            AND CAD.DELETE_AT = 'N'
         <if test="@Ognl@isNotEmpty(showAt)">
@@ -36,7 +42,7 @@
            AND CDMU.TYPE_CD = #{typeCd}
         </if>
         <if test="@Ognl@isNotEmpty(browseText)">
-           AND (CU_CREATE.USER_NM LIKE '%' || #{browseText} || '%' OR CDMU.CODE LIKE '%' || #{browseText} || '%' )
+           AND CDMU.CODE LIKE '%' || #{browseText} || '%'
         </if>
          ORDER BY CAD.APPROVED_DT DESC
         <if test="@Ognl@isNotEmpty(startNumber) and  @Ognl@isNotEmpty(endNumber)">
@@ -49,10 +55,12 @@
         SELECT COUNT(*)
           FROM CETUS_APPROVED_DATASET CAD
           LEFT JOIN CETUS_DATASET_UI CDU ON CDU.APPROVED_DATASET_UID = CAD.UID
-          LEFT JOIN CETUS_USER CU_CREATE ON CU_CREATE.USER_ID = CAD.CREATED_ID
           LEFT JOIN CETUS_USER CU_APP ON CU_APP.UID = CAD.APPROVER_UID
           LEFT JOIN CETUS_DATASET_UI CDUI ON CDUI.APPROVED_DATASET_UID = CAD.UID
           LEFT JOIN CETUS_DATASET_MAIN_UI CDMU ON CDMU.UID = CDUI.MAIN_UI_UID
+          LEFT JOIN CETUS_DATASET_CATEGORY CDC ON CDC.UID = CDUI.CATEGORY_UID
+          LEFT JOIN CETUS_MOBIGEN_REGISTRANT CMR ON CMR.DATASET_ID = CAD.DATASET_ID
+          LEFT JOIN CETUS_USER CU_REGISTRANT ON CU_REGISTRANT.UID = CMR.REGISTRANT_UID
          WHERE CAD.WORKPLACE_UID = #{workplaceUid}
            AND CAD.DELETE_AT = 'N'
         <if test="@Ognl@isNotEmpty(showAt)">
@@ -62,41 +70,40 @@
            AND CDMU.TYPE_CD = #{typeCd}
         </if>
         <if test="@Ognl@isNotEmpty(browseText)">
-           AND (CU_CREATE.USER_NM LIKE '%' || #{browseText} || '%' OR CDMU.CODE LIKE '%' || #{browseText} || '%' )
+           AND CDMU.CODE LIKE '%' || #{browseText} || '%'
         </if>
     </select>
 
-    <select id="getDatasetList" parameterType="ApprovedDatasetSearch" resultType="DatasetList">
+    <select id="getDatasetList" parameterType="ApprovedDatasetSearch" resultType="ApprovedDatasetList">
         /* cetusApprovedDataset.getDatasetList */
         SELECT CAD.UID AS APPROVED_UID
               ,CAD.DATASET_ID
               ,TO_CHAR(CAD.APPROVED_DT, 'YYYY-MM-DD HH:MM') AS APPROVED_DT
-              ,COALESCE(CU_CREATE.USER_NM, '자동 등록') AS CREATED_NM
               ,CU_APP.USER_NM AS APPROVER_NM
               ,( SELECT COALESCE(ROUND(SUM(CDM.RATINGS) / COUNT(*)), 0)
                    FROM CETUS_DATASET_COMMENT CDM
-                  WHERE CDM.APPROVED_DATASET_UID = CAD.UID
-              ) AS RATINGS
-              ,CF.FILE_ID AS THUMB_ID
+                  WHERE CDM.APPROVED_DATASET_UID = CAD.UID ) AS RATINGS
               ,CASE
                 WHEN EXISTS (
                         SELECT 1
                           FROM CETUS_DATASET_BOOKMARK B
                          WHERE B.APPROVED_DATASET_UID = CAD.UID
-                ) THEN 'Y'
-              ELSE 'N'
-               END AS BOOKMARK_YN
-              ,CDUI.EXTRA_JSON AS EXTRA_JSON
+                ) THEN 'Y' ELSE 'N' END AS BOOKMARK_YN
               ,CDUI.CATEGORY_UID AS CATEGORY_UID
               ,CDC.CATEGORY_NM AS CATEGORY_NM
+              ,CDUI.EXTRA_JSON AS EXTRA_JSON
+              ,CF.FILE_ID AS THUMB_ID
+              ,CASE WHEN CU_REGISTRANT.USER_ID IS NULL THEN 'FALSE' ELSE 'TRUE' END AS IS_REGISTERED
+              ,CU_REGISTRANT.USER_ID AS REGISTRANT_ID
           FROM CETUS_APPROVED_DATASET CAD
           LEFT JOIN CETUS_DATASET_UI CDU ON CDU.APPROVED_DATASET_UID = CAD.UID
-          LEFT JOIN CETUS_USER CU_CREATE ON CU_CREATE.USER_ID = CAD.CREATED_ID
           LEFT JOIN CETUS_USER CU_APP ON CU_APP.UID = CAD.APPROVER_UID
           LEFT JOIN CETUS_DATASET_UI CDUI ON CDUI.APPROVED_DATASET_UID = CAD.UID
           LEFT JOIN CETUS_FILE CF ON CF.FILE_UID = CDUI.THUMB_UID AND CF.USE_AT = 'Y' AND CF.SAVED = 'Y'
           LEFT JOIN CETUS_DATASET_MAIN_UI CDMU ON CDMU.UID = CDUI.MAIN_UI_UID
           LEFT JOIN CETUS_DATASET_CATEGORY CDC ON CDC.UID = CDUI.CATEGORY_UID
+          LEFT JOIN CETUS_MOBIGEN_REGISTRANT CMR ON CMR.DATASET_ID = CAD.DATASET_ID
+          LEFT JOIN CETUS_USER CU_REGISTRANT ON CU_REGISTRANT.UID = CMR.REGISTRANT_UID
          WHERE CAD.WORKPLACE_UID = #{workplaceUid}
            AND CAD.DELETE_AT = 'N'
            AND CDU.SHOW_AT = 'Y'
@@ -128,14 +135,12 @@
             ,WORKPLACE_UID
             ,APPROVED_DT
             ,APPROVER_UID
-            ,CREATED_ID
             ,DELETE_AT
         ) VALUES (
              #{datasetId}
             ,#{workplaceUid}
             ,NOW()
             ,#{approverUid}
-            ,#{createdId}
             ,'N'
         )
     </insert>

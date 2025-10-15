@@ -29,7 +29,6 @@ public class CetusMobigenDatasetTagService {
     **/
     @Transactional
     public void saveDatasetTag(List<SaveTag> requests, Long datasetUid) {
-        log.info(">>> [Mobigen] 태그 & 데이터셋 매핑 정보 저장");
         dao.deleteAll(datasetUid);
         for (SaveTag request: requests) {
             Long tagUid = (request.getUid() == null) ? tagService.saveMobigenTag(request.getTagNm()) : request.getUid();
@@ -46,7 +45,6 @@ public class CetusMobigenDatasetTagService {
     **/
     @Transactional(readOnly = true)
     public List<TagList> findMobigenDatasetTagList(SearchTag search) {
-        log.info(">>> [Mobigen] 태그 & 데이터셋 매핑 목록 조회");
         return dao.getMobigenDatasetTagList(search);
     }
 
@@ -58,7 +56,6 @@ public class CetusMobigenDatasetTagService {
     **/
     @Transactional(readOnly = true)
     public List<TagList> findMobigenDatasetTagListByDatasetUid(Long datasetUid) {
-        log.info(">>> [Mobigen] 태그 & 데이터셋 매핑 -> 데이터셋 기준 단건 조회");
         return dao.getMobigenDatasetTagListByDatasetId(datasetUid);
     }
 }

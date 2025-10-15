@@ -15,7 +15,6 @@ public class ApprovedDatasetView {
     private Long workplaceUid;
     private String approvedDt;
     private Long approverUid;
-    private String createdId;
 
     private String deleteAt;
 

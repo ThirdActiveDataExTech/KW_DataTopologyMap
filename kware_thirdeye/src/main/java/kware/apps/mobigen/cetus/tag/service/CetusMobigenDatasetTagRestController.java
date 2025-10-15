@@ -19,6 +19,14 @@ public class CetusMobigenDatasetTagRestController {
 
     private final CetusMobigenDatasetTagService service;
 
+    /**
+     *
+     * 관리자 영역에서 데이터셋 등록/수정 시점에 태그 정보 추가시 사용을 위한 API
+     *
+     * @api         [GET] /api/admin/dataset-tag
+     * @author      dahyeon
+     * @date        2025-10-15
+    **/
     @GetMapping("/list")
     public ResponseEntity findMobigenDatasetTagList(SearchTag search) {
         List<TagList> list = service.findMobigenDatasetTagList(search);

@@ -26,7 +26,6 @@ public class CetusMobigenTagService {
     **/
     @Transactional
     public Long saveMobigenTag(String tagNm) {
-        log.info(">>> [Mobigen] 태그 정보 저장");
         CetusMobigenTag bean = new CetusMobigenTag(tagNm);
         dao.insert(bean);
         return bean.getUid();
@@ -40,7 +39,6 @@ public class CetusMobigenTagService {
     **/
     @Transactional(readOnly = true)
     public List<TagList> findMobigenTagList() {
-        log.info(">>> [Mobigen] 태그 목록 조회");
         return dao.getMobigenTagList();
     }
 }

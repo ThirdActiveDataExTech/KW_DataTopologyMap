@@ -35,7 +35,6 @@ public class CetusDatasetMainUiService {
     **/
     @Transactional(readOnly = true)
     public Page<MainUiList> findDatasetMainUiPage(SearchMainUi search, Pageable pageable) {
-        log.info(">>> [KWARE] 데이터셋에 대하여 화면 UI 정보 목록 페이징 조회");
         search.setWorkplaceUid(UserUtil.getUserWorkplaceUid());
         Page<MainUiList> page = dao.page("getDatasetMainUiPage", "getDatasetMainUiPageCount", search, pageable);
         page.getList().forEach(mainUi -> {
@@ -53,7 +52,6 @@ public class CetusDatasetMainUiService {
     **/
     @Transactional(readOnly = true)
     public Integer findCountByCode(String code) {
-        log.info(">>> [KWARE] 데이터셋에 대하여 화면 UI 등록을 위한 코드 중복 체크");
         SearchDuplicateCode search = new SearchDuplicateCode(code, UserUtil.getUserWorkplaceUid());
         return dao.getCountByCode(search);
     }
@@ -66,7 +64,6 @@ public class CetusDatasetMainUiService {
     **/
     @Transactional
     public void saveDatasetMainUi(SaveMainUi request) {
-        log.info(">>> [KWARE] 데이터셋에 대하여 화면 UI 등록");
         CetusDatasetMainUi bean = new CetusDatasetMainUi(request, UserUtil.getUserWorkplaceUid());
         dao.insert(bean);
     }
@@ -79,7 +76,6 @@ public class CetusDatasetMainUiService {
     **/
     @Transactional(readOnly = true)
     public MainUiView findDatasetMainUiByUid(Long uid) {
-        log.info(">>> [KWARE] 데이터셋에 대하여 화면 UI 단건 조회 (BY UID)");
         return dao.getDatasetMainUiByUid(uid);
     }
 
@@ -91,7 +87,6 @@ public class CetusDatasetMainUiService {
     **/
     @Transactional
     public void deleteDatasetMainUi(Long uid) {
-        log.info(">>> [KWARE] 데이터셋에 대하여 화면 UI 단건 삭제 (BY UID)");
         CetusDatasetMainUi bean = new CetusDatasetMainUi(uid);
         dao.updateDatasetMainUidDeleteAt(bean);
     }
@@ -104,7 +99,6 @@ public class CetusDatasetMainUiService {
     **/
     @Transactional
     public void changeDatasetMainUi(Long uid, ChangeMainUi request) {
-        log.info(">>> [KWARE] 데이터셋에 대하여 화면 UI 단건 수정 (BY UID)");
         CetusDatasetMainUi bean = new CetusDatasetMainUi(uid, request);
         dao.update(bean);
     }
@@ -117,7 +111,6 @@ public class CetusDatasetMainUiService {
     **/
     @Transactional(readOnly = true)
     public List<MainUiList> findDatasetMainUiList() {
-        log.info(">>> [KWARE] 데이터셋에 대하여 화면 UI 목록 조회");
         return dao.getDatasetMainUiList(UserUtil.getUserWorkplaceUid());
     }
 }

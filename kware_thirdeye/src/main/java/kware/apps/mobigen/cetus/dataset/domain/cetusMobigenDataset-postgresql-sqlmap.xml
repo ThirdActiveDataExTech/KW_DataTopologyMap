@@ -8,29 +8,8 @@
               ,CMD.TITLE
               ,TO_CHAR(CMD.REG_DT, 'YYYY-MM-DD HH:MM') AS REG_DT
           FROM CETUS_MOBIGEN_DATASET CMD
-         WHERE 1 = 1
-           AND CMD.DELETE_AT = 'N'
-         ORDER BY CMD.REG_DT DESC
-    </select>
-
-    <select id="getAllMobigenDatasetPage" resultType="MobigenDatasetList" parameterType="SearchMobigenDataset">
-        /* cetusMobigenDataset.getAllMobigenDatasetPage */
-        SELECT CMD.UID
-              ,CMD.TITLE
-              ,TO_CHAR(CMD.REG_DT, 'YYYY-MM-DD HH:MM') AS REG_DT
-          FROM CETUS_MOBIGEN_DATASET CMD
          WHERE CMD.DELETE_AT = 'N'
          ORDER BY CMD.REG_DT DESC
-        <if test="@Ognl@isNotEmpty(startNumber) and  @Ognl@isNotEmpty(endNumber)">
-        OFFSET ${startNumber} LIMIT ${endNumber}
-        </if>
-    </select>
-
-    <select id="getAllMobigenDatasetPageCount" resultType="int" parameterType="SearchMobigenDataset">
-        /* cetusMobigenDataset.getAllMobigenDatasetPageCount */
-        SELECT COUNT(*)
-          FROM CETUS_MOBIGEN_DATASET CMD
-         WHERE CMD.DELETE_AT = 'N'
     </select>
 
     <insert id="insert" parameterType="CetusMobigenDataset" useGeneratedKeys="true" keyProperty="uid">
@@ -61,7 +40,7 @@
 
     <select id="getMobigenDatasetByDatasetId" parameterType="Long" resultType="MobigenDatasetView">
         /* cetusMobigenDataset.getMobigenDatasetByDatasetId */
-        SELECT CMD.UID
+        SELECT CMD.UID AS DATASET_ID
               ,CMD.TITLE
               ,TO_CHAR(CMD.REG_DT, 'YYYY-MM-DD HH:MM') AS REG_DT
               ,CMD.METADATA_FILE_UID

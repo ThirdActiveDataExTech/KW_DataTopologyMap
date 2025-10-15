@@ -40,7 +40,6 @@ public class CetusDatasetUiService {
      **/
     @Transactional(readOnly = true)
     public Integer countDatasetMainUiUse(Long uid) {
-        log.info(">>> [KWARE] 진열/승인된 데이터셋에 대해서 해당 main_ui 정보를 활용하는 데이터셋 개수 조회");
         return dao.getCountDatasetMainUiUse(uid);
     }
 
@@ -52,8 +51,6 @@ public class CetusDatasetUiService {
     **/
     @Transactional
     public void saveDatasetUi(Long approvedDatasetUid, Long categoryUid, SaveApprovedDataset request) {
-
-        log.info(">>> [KWARE] 모비젠 데이터 저장소의 데이터셋을 진열등록하는 시점에 해당 데이터셋에 대한 UI 정보 저장");
 
         // 1. 썸네일 있다면 파일 정보 저장
         Long thumbUid = null;
@@ -72,7 +69,6 @@ public class CetusDatasetUiService {
      **/
     @Transactional(readOnly = true)
     public DatasetUiView findDatasetUiView(Long approvedDatasetUid) {
-        log.info(">>> [KWARE] kware 포탈 시스템에 진열 등록된 데이터셋 UI 정보 조회");
         return dao.getDatasetUiView(approvedDatasetUid);
     }
 
@@ -89,8 +85,6 @@ public class CetusDatasetUiService {
      **/
     @Transactional
     public void changeApprovedDatasetUi(Long approvedDatasetUid, ChangeDatasetUi request) {
-
-        log.info(">>> [KWARE] kware 포탈 시스템에 진열 등록된 데이터셋 UI 정보 수정");
 
         // 1. 기존 정보 가져와서 history 담기
         DatasetUiView uiView = dao.getDatasetUiView(approvedDatasetUid);
@@ -124,7 +118,6 @@ public class CetusDatasetUiService {
             DatasetMainUiType mainUiType = DatasetMainUiType.valueOf(dto.getTypeCd());
             dto.setUseInfo(mainUiType);
         });
-        datasetUiByGroup.sort(Comparator.comparingInt(dto -> dto.getTypeOrdering()));
         return datasetUiByGroup;
     }
 }

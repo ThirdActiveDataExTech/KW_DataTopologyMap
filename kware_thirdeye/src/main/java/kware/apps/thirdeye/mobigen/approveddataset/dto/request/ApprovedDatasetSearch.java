@@ -31,17 +31,15 @@ public class ApprovedDatasetSearch {
     private String typeCd;
     private String startDate;
     private String endDate;
-    private List<Long> exceptUids;  // 제외할 데이터셋ID 목록
     private List<Long> categories;  // 카테고리 검색
 
-    public ApprovedDatasetSearch(Long workplaceUid, String showAt, String browseText, String typeCd, String startDate, String endDate, List<Long> exceptUids, List<Long> categories) {
+    public ApprovedDatasetSearch(Long workplaceUid, String showAt, String browseText, String typeCd, String startDate, String endDate, List<Long> categories) {
         this.workplaceUid = workplaceUid;
         this.showAt = showAt;
         this.browseText = browseText;
         this.typeCd = typeCd;
         this.startDate = startDate;
         this.endDate = endDate;
-        this.exceptUids = exceptUids;
         this.categories = categories;
     }
 

@@ -6,14 +6,14 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class DatasetList {
+public class ApprovedDatasetList {
 
     private Long approvedUid;       // cetus_approved_dataset.uid (pk)
     private Long datasetId;         // 데이터셋 ID
     private String approvedDt;      // 승인 일시
-    private String createdNm;       // 데이터 등록자 이름
     private String approverNm;      // 데이터 승인자 이름
     private Integer ratings;        // 데이터셋 의견/평점
+    private String bookmarkYn;
 
     private Long categoryUid;       // 카테고리 UID
     private String categoryNm;      // 카테고리명
@@ -25,11 +25,12 @@ public class DatasetList {
     private String showAt;          // 데이터셋 노출 여부
 
     private String thumbId;
-    private String bookmarkYn;
     private String extraJson;
 
-    private MobigenDatasetView datasetView;
+    private boolean isRegistered;
+    private String registrantId;
 
+    private MobigenDatasetView datasetView;
     public void setDatasetInfo(MobigenDatasetView datasetView) {
         this.datasetView = datasetView;
     }

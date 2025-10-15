@@ -34,10 +34,8 @@ public class CetusMobigenDatasetController {
     @GetMapping("/{uid}")
     public String form(@PathVariable("uid") Long uid, Model model) {
         menuNavigationManager.renderingPage("/admin/mobigen/dataset", "데이터 수정", false, model);
-
         MobigenDatasetView view = service.findMobigenDatasetByDatasetId(uid);
         model.addAttribute("view", view);
-
         return "admin/mobigen/form";
     }
 }

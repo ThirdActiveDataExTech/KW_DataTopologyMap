@@ -22,10 +22,7 @@
 
             template03JS.pageInit();
             let keyword = template03JS.keyword;
-            const obj = {
-                exceptUids: [dataset['datasetId']]
-            }
-            Http.get('/api/portal/approved-dataset/list', obj).then((res) => {
+            Http.get('/api/portal/approved-dataset/list').then((res) => {
 
                 let data = res
                 if(clearSidebar) template03JS.createSidebar();

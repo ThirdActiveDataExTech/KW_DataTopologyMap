@@ -30,6 +30,12 @@ public class CetusMobigenRegistrantService {
         dao.insert(bean);
     }
 
+    /**
+     * @method      findMobigenRegistrant
+     * @author      dahyeon
+     * @date        2025-10-15
+     * @deacription 모비젠 데이터셋 저장소에 데이터셋을 등록한 사용자 정보를 조회
+    **/
     @Transactional(readOnly = true)
     public MobigenRegistrantView findMobigenRegistrant(Long datasetId) {
         return dao.getMobigenRegistrant(datasetId);

@@ -6,7 +6,6 @@ import lombok.NoArgsConstructor;
 
 @Getter @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class MainUiView {
-
     private Long uid;
     private String code;
     private String name;
@@ -17,6 +16,7 @@ public class MainUiView {
     private Long workplaceUid;
     private String useAt;
     private String typeCd;
+    private Long sortNo;
     private Long regUid;
     private String regNm;
     private String regDt;

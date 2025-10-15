@@ -14,13 +14,13 @@
               ,CDMU.WORKPLACE_UID
               ,CDMU.USE_AT
               ,CDMU.TYPE_CD
+              ,CDMU.SORT_NO
               ,CDMU.REG_UID
               ,CU.USER_NM AS REG_NM
               ,TO_CHAR(CDMU.REG_DT, 'YYYY-MM-DD') AS REG_DT
           FROM CETUS_DATASET_MAIN_UI CDMU
           LEFT JOIN CETUS_USER CU ON CU.UID = CDMU.REG_UID
-         WHERE 1 = 1
-           AND CDMU.DELETE_AT = 'N'
+         WHERE CDMU.DELETE_AT = 'N'
            AND CDMU.WORKPLACE_UID = #{workplaceUid}
         <if test="@Ognl@isNotEmpty(browseText)">
            AND (CDMU.NAME LIKE '%' || #{browseText} || '%' OR CDMU.CODE LIKE '%' || #{browseText} || '%' OR CU.USER_NM LIKE '%' || #{browseText} || '%' )
@@ -39,8 +39,7 @@
         SELECT COUNT(*)
           FROM CETUS_DATASET_MAIN_UI CDMU
           LEFT JOIN CETUS_USER CU ON CU.UID = CDMU.REG_UID
-         WHERE 1 = 1
-           AND CDMU.DELETE_AT = 'N'
+         WHERE CDMU.DELETE_AT = 'N'
            AND CDMU.WORKPLACE_UID = #{workplaceUid}
         <if test="@Ognl@isNotEmpty(browseText)">
            AND (CDMU.NAME LIKE '%' || #{browseText} || '%' OR CDMU.CODE LIKE '%' || #{browseText} || '%' OR CU.USER_NM LIKE '%' || #{browseText} || '%' )
@@ -75,6 +74,7 @@
             </if>
             ,THUMB_USE_AT
             ,TYPE_CD
+            ,SORT_NO
             ,WORKPLACE_UID
             ,USE_AT
             ,DELETE_AT
@@ -96,6 +96,7 @@
             </if>
             ,#{thumbUseAt}
             ,#{typeCd}
+            ,#{sortNo}
             ,#{workplaceUid}
             ,#{useAt}
             ,'N'
@@ -118,6 +119,7 @@
               ,CDMU.WORKPLACE_UID
               ,CDMU.USE_AT
               ,CDMU.TYPE_CD
+              ,CDMU.SORT_NO
               ,CDMU.REG_UID
               ,CU.USER_NM AS REG_NM
               ,TO_CHAR(CDMU.REG_DT, 'YYYY-MM-DD') AS REG_DT
@@ -150,7 +152,10 @@
          </if>
         <if test="@Ognl@isNotEmpty(thumbUseAt)">
               ,THUMB_USE_AT = #{thumbUseAt}
-         </if>
+        </if>
+        <if test="@Ognl@isNotEmpty(sortNo)">
+              ,SORT_NO = #{sortNo}
+        </if>
               ,UPDT_UID = #{updtUid}
               ,UPDT_DT = NOW()
               ,USE_AT = #{useAt}
@@ -167,6 +172,7 @@
               ,CDMU.TITLE_LINE_CLAMP
               ,CDMU.THUMB_USE_AT
               ,CDMU.TYPE_CD
+              ,CDMU.SORT_NO
               ,CDMU.WORKPLACE_UID
               ,CDMU.USE_AT
               ,CDMU.REG_UID

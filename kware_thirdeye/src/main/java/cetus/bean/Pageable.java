@@ -1,14 +1,13 @@
 package cetus.bean;
 
-import java.util.Map;
-
+import cetus.support.Reflector;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import cetus.support.Reflector;
-import lombok.ToString;
 
-@Getter @ToString
+import java.util.Map;
+
+@Getter
 @NoArgsConstructor
 @AllArgsConstructor
 public class Pageable {

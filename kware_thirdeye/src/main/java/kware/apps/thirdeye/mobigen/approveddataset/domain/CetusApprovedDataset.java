@@ -14,7 +14,6 @@ public class CetusApprovedDataset {
     private Long workplaceUid;      // 워크플레이스 uid
     private String approvedDt;      // 승인일시
     private Long approverUid;       // 승인자 uid
-    private String createdId;        // 데이터셋 등록자 id
     private String deleteAt;        // 삭제 여부
 
     public CetusApprovedDataset(SaveApprovedDataset request, Long workplaceUid, Long userUid) {

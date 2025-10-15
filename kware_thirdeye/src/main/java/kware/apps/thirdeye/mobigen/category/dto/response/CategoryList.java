@@ -6,7 +6,6 @@ import lombok.NoArgsConstructor;
 
 @Getter @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class CategoryList {
-
     private Long categoryUid;
     private String categoryNm;
 }

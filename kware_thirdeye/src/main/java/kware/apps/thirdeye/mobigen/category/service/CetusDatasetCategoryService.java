@@ -26,6 +26,13 @@ public class CetusDatasetCategoryService {
         return dao.getDatasetCategoryList(search);
     }
 
+    /**
+     * @method          findDatasetCategoryUsingList
+     * @author          dahyeon
+     * @date            2025-10-15
+     * @deacription     KWARE 포탈 시스템에서 진열등록/관리 중인 데이터셋들 중에서,
+     *                  { show=Y, delete=N } 상태이고, 같은 화면 UI 정보들로 구성되는 데이터셋들의 카테고리 목록 조회
+    **/
     @Transactional(readOnly = true)
     public List<CategoryList> findDatasetCategoryUsingList(SearchUsingCategory search) {
         search.setWorkplaceUid(UserUtil.getUserWorkplaceUid());

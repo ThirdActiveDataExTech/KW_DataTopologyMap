@@ -19,6 +19,15 @@ public class CetusDatasetUiRestController {
 
     private final CetusDatasetUiService service;
 
+    /**
+     *
+     * 데이터셋 UI로 사용중인 MAIN_UI 정보를 그룹핑해서 조회
+     * => 메인 홈 화면을 구성하기 위한 API
+     *
+     * @api         [GET] /api/portal/dataset-ui/grouping
+     * @author      dahyeon
+     * @date        2025-10-15
+    **/
     @GetMapping("/grouping")
     public ResponseEntity findDatasetUiByGroup() {
         List<DatasetUiGroup> list = service.findDatasetUiByGroup();

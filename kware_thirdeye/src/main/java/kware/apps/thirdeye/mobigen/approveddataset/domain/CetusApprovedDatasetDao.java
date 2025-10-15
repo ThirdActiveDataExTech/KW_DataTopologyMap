@@ -5,7 +5,7 @@ import kware.apps.thirdeye.mobigen.approveddataset.dto.request.ApprovedDatasetSe
 import kware.apps.thirdeye.mobigen.approveddataset.dto.request.HomeDatasetSearch;
 import kware.apps.thirdeye.mobigen.approveddataset.dto.response.ApprovedDatasetIdList;
 import kware.apps.thirdeye.mobigen.approveddataset.dto.response.ApprovedDatasetView;
-import kware.apps.thirdeye.mobigen.approveddataset.dto.response.DatasetList;
+import kware.apps.thirdeye.mobigen.approveddataset.dto.response.ApprovedDatasetList;
 import kware.apps.thirdeye.mobigen.approveddataset.dto.response.HomeDatasetList;
 import org.springframework.stereotype.Component;
 
@@ -26,7 +26,7 @@ public class CetusApprovedDatasetDao extends SuperDao<CetusApprovedDataset> {
         return selectOne("getApprovedDatasetView", uid);
     }
 
-    public List<DatasetList> getDatasetList(ApprovedDatasetSearch search) {
+    public List<ApprovedDatasetList> getDatasetList(ApprovedDatasetSearch search) {
         return selectList("getDatasetList", search);
     }
 

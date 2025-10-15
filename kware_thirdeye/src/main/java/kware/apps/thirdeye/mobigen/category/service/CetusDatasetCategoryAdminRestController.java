@@ -18,6 +18,16 @@ public class CetusDatasetCategoryAdminRestController {
 
     private final CetusDatasetCategoryService service;
 
+    /**
+     *
+     * KWARE 포탈 시스템에서 > 모비젠 데이터셋 진열등록/관리 시점에 사용
+     * 진열등록/관리되는 각각의 데이터셋들은 1개의 카테고리를 필수로 갖는다.
+     * 따라서 KWARE 관리자는 데이터셋을 진열등록/관리하는 시점에 1개의 카테고리를 추가 입력해야 한다.
+     *
+     * @api         [GET] /api/admin/dataset-category/list
+     * @author      dahyeon
+     * @date        2025-10-15
+    **/
     @GetMapping("/list")
     public ResponseEntity findDatasetCategoryList(SearchCategory search) {
         List<CategoryList> list = service.findDatasetCategoryList(search);
