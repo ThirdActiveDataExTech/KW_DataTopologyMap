@@ -9,11 +9,10 @@ import lombok.Setter;
 * @author       dahyeon
 * @version      1.0.0
 * @date         2025-09-23
-* @summary      원본파일 삭제
+* @summary      [RAWDATA_03] 원본데이터 여러건 삭제 응답 DTO
 **/
 
 @Getter @Setter
 public class DeleteRawdatasResponse {
-
-    private int delete_count;
+    private int deleted_count;
 }

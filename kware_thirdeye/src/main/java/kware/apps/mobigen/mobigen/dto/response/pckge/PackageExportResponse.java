@@ -11,7 +11,7 @@ import java.util.List;
 * @author       dahyeon
 * @version      1.0.0
 * @date         2025-09-23
-* @summary      데이터셋을 다운로드
+* @summary      [PACKAGE_01] 데이터셋 다운로드 응답 DTO
 **/
 
 @Getter @Setter
