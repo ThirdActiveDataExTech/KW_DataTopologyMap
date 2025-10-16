@@ -62,9 +62,7 @@ public class CetusMobigenDatasetService {
         }
 
         // 3. Page 객체 생성 (카운트 포함)
-        Page<MobigenDatasetList> page = new Page<>(pagedList, totalCount, new Pageable(pageSize, pageNumber, pageSize));
-
-        return page;
+        return new Page<>(pagedList, totalCount, new Pageable(pageSize, pageNumber, pageSize));
     }
 
 
@@ -116,7 +114,6 @@ public class CetusMobigenDatasetService {
             if(registrantView != null) data.setRegistrantInfo(registrantView.isRegistered(), registrantView.getRegistrantId());
             else data.setRegistrantInfo(false, null);
         });
-
         return page;
     }
 
