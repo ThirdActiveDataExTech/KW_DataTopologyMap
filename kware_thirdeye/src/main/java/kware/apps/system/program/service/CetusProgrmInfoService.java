@@ -68,6 +68,13 @@ public class CetusProgrmInfoService {
     }
 
     @Transactional
+    public Long saveWorkplaceProgram(ProgramSave request, Long workplaceUid) {
+        CetusProgrmInfo bean = new CetusProgrmInfo(request, workplaceUid);
+        dao.insert(bean);
+        return bean.getUid();
+    }
+
+    @Transactional
     public void changeProgram(Long uid, ProgramChange request) {
         CetusProgrmInfo view = dao.view(uid);
 

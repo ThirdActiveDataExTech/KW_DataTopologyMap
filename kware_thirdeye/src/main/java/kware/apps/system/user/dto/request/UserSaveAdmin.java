@@ -29,14 +29,8 @@ public class UserSaveAdmin {
     @NotBlank @DisplayName("권한")
     private String authorCd;
 
-    @NotNull
-    @DisplayName("그룹/부서")
     private Long userDept;
-
-    @NotNull @DisplayName("소속")
     private Long userGroup;
-
-    @NotNull @DisplayName("직급")
     private Long userPosition;
 
     private String status;

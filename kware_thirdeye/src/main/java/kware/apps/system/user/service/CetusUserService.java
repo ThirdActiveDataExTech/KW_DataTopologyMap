@@ -76,16 +76,16 @@ public class CetusUserService {
         dao.insert(bean);
 
         // 2. workplace
-        workplaceUserService.saveWorkplaceUser(1L, bean.getUid());
+        workplaceUserService.saveWorkplaceUser(UserUtil.getUserWorkplaceUid(), bean.getUid());
 
         // 3. dept
-        deptUserService.saveDeptUser(request.getUserDept(), bean.getUid());
+        if(request.getUserDept() != null) deptUserService.saveDeptUser(request.getUserDept(), bean.getUid());
 
         // 4. group
-        groupUserService.saveGroupUser(request.getUserGroup(), bean.getUid());
+        if(request.getUserGroup() != null) groupUserService.saveGroupUser(request.getUserGroup(), bean.getUid());
 
         // 5. position
-        positionUserService.savePositionUser(request.getUserPosition(), bean.getUid());
+        if(request.getUserPosition() != null) positionUserService.savePositionUser(request.getUserPosition(), bean.getUid());
     }
 
     @Transactional

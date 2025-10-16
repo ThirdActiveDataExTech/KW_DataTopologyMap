@@ -50,13 +50,13 @@ public class CetusWorkplaceService {
 
 
         ProgramSave programRootBean = new ProgramSave("root", "/", "Y");
-        Long programRootUid = progrmInfoService.saveProgram(programRootBean);
+        Long programRootUid = progrmInfoService.saveWorkplaceProgram(programRootBean, workplaceUid);
 
         ProgramSave programFooterRootBean = new ProgramSave("footer_root", "/", "Y");
-        Long programFooterRootUid = progrmInfoService.saveProgram(programFooterRootBean);
+        Long programFooterRootUid = progrmInfoService.saveWorkplaceProgram(programFooterRootBean, workplaceUid);
 
         ProgramSave programHomeBean = new ProgramSave("컨텐츠 메인 (홈)", "/portal/home", "Y");
-        Long programHomeUid = progrmInfoService.saveProgram(programHomeBean);
+        Long programHomeUid = progrmInfoService.saveWorkplaceProgram(programHomeBean, workplaceUid);
 
         // 2. cetus_menu_info
         List<EnumCodeDto> authorList = UserAuthorCd.toList();
@@ -84,18 +84,29 @@ public class CetusWorkplaceService {
             Long footerRootMenuUid = menuInfoService.saveWorkplaceMenu(footerRootMenu);
 
             WorkplaceMenuSave homeMenu = WorkplaceMenuSave.builder()
-                    .programUid(programHomeUid)
+                    .programUid(null)
                     .menuNm("데이터 검색")
                     .authorCd(author.getCode())
                     .rootMenuCd(null)
                     .workplaceUid(workplaceUid)
                     .upperMenuNo(rootMenuUid)
-                    .sortNo(2)
+                    .sortNo(1)
                     .build();
             Long homeMenuUid = menuInfoService.saveWorkplaceMenu(homeMenu);
+
+            WorkplaceMenuSave homeMenu2 = WorkplaceMenuSave.builder()
+                    .programUid(programHomeUid)
+                    .menuNm("데이터 검색")
+                    .authorCd(author.getCode())
+                    .rootMenuCd(null)
+                    .workplaceUid(workplaceUid)
+                    .upperMenuNo(homeMenuUid)
+                    .sortNo(1)
+                    .build();
+            Long homeMenuUid2 = menuInfoService.saveWorkplaceMenu(homeMenu2);
         }
 
-        String userId = "system"+workplaceUid;
+        String userId = (workplaceUid < 10) ? "system0"+workplaceUid : "system"+workplaceUid;
         String userEmail = userId + "@kware.co.kr";
         WorkplaceUserSave userSaveRequest = WorkplaceUserSave.builder()
                 .userId(userId)
