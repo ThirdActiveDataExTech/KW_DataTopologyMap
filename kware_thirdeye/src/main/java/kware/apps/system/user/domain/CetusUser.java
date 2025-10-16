@@ -44,6 +44,15 @@ public class CetusUser extends AuditBean {
         this.metaData = metaData;
     }
 
+    public CetusUser(WorkplaceUserSave request, String encodePassword) {
+        this.userId = request.getUserId();
+        this.password = encodePassword;
+        this.userNm = request.getUserNm();
+        this.userEmail = request.getUserEmail();
+        this.authorCd = request.getAuthorCd();
+        this.status = request.getStatus();
+    }
+
     public CetusUser(String userId) {
         this.userId = userId;
     }

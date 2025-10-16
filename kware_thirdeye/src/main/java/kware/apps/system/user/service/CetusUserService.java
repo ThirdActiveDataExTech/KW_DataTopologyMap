@@ -89,6 +89,14 @@ public class CetusUserService {
     }
 
     @Transactional
+    public void saveWorkplaceUser(WorkplaceUserSave request, Long workplaceUid) {
+        String encodePassword = passwordEncoder.encode(request.getPassword());
+        CetusUser bean = new CetusUser(request, encodePassword);
+        dao.insert(bean);
+        workplaceUserService.saveWorkplaceUser(workplaceUid, bean.getUid());
+    }
+
+    @Transactional
     public void changeUser(Long uid, UserChange request) {
         if(!UserAuthorCd.isValidCode(request.getUserAuthor())) {
             throw new SimpleException("유효하지 않은 사용자 권한 코드입니다.");

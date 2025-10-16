@@ -285,7 +285,7 @@
 		   AND CMI.UPPER_MENU_NO is null
 	</select>
 
-	<insert id="insert" parameterType="CetusMenuInfo">
+	<insert id="insert" parameterType="CetusMenuInfo" keyProperty="menuNo" useGeneratedKeys="true">
 		/* cetusMenuInfo.insert */
 		INSERT INTO cetus_menu_info (
 			 MENU_NM
@@ -322,7 +322,7 @@
 		</if>
 		) VALUES (
 			 #{menuNm}
-			,#{upperMenuNo}
+			,#{upperMenuNo}::bigint
 			,#{sortNo}
 			,#{authorCd}
 			,#{workplaceUid}::bigint

@@ -4,6 +4,7 @@ import cetus.annotation.Key;
 import cetus.bean.AuditBean;
 import kware.apps.system.menu.dto.request.MenuChange;
 import kware.apps.system.menu.dto.request.MenuSave;
+import kware.apps.system.menu.dto.request.WorkplaceMenuSave;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -37,6 +38,16 @@ public class CetusMenuInfo extends AuditBean {
 		this.menuNm = request.getMenuNm();
 		this.authorCd = request.getAuthorCd();
 		this.workplaceUid = workplaceUid;
+	}
+
+	public CetusMenuInfo(WorkplaceMenuSave request) {
+		this.programUid = request.getProgramUid();
+		this.menuNm = request.getMenuNm();
+		this.authorCd = request.getAuthorCd();
+		this.rootMenuCd = request.getRootMenuCd();
+		this.workplaceUid = request.getWorkplaceUid();
+		this.upperMenuNo = request.getUpperMenuNo();
+		this.sortNo = request.getSortNo();
 	}
 
 	public CetusMenuInfo changeMenu(Long menuNo, MenuChange request) {

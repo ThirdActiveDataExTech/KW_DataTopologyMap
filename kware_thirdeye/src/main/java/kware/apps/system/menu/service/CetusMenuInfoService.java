@@ -52,6 +52,13 @@ public class CetusMenuInfoService {
     }
 
     @Transactional
+    public Long saveWorkplaceMenu(WorkplaceMenuSave request) {
+        CetusMenuInfo bean = new CetusMenuInfo(request);
+        dao.insert(bean);
+        return bean.getMenuNo();
+    }
+
+    @Transactional
     public void changeMenu(Long menuNo, MenuChange request) {
         CetusMenuInfo view = dao.view(menuNo);
         dao.update(view.changeMenu(menuNo, request));

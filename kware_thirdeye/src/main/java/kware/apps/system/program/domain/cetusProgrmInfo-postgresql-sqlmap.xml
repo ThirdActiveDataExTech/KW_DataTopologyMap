@@ -86,7 +86,7 @@
         </if>
     </select>
     
-    <insert id="insert" parameterType="CetusProgrmInfo">
+    <insert id="insert" parameterType="CetusProgrmInfo" useGeneratedKeys="true" keyProperty="uid">
         /* cetusProgrmInfo.insert */
         INSERT INTO CETUS_PROGRM_INFO (
              PROGRM_NM

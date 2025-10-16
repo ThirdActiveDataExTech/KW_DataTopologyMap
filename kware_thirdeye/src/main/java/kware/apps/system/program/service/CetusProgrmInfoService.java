@@ -52,7 +52,7 @@ public class CetusProgrmInfoService {
     }
 
     @Transactional
-    public void saveProgram(ProgramSave request) {
+    public Long saveProgram(ProgramSave request) {
 
         // img
         Long leftSlideImg = commonFileService.processFileSeparately(request.getLeftImg(), null, null);
@@ -62,8 +62,9 @@ public class CetusProgrmInfoService {
 
         CetusProgrmInfo bean = new CetusProgrmInfo(request, UserUtil.getUserWorkplaceUid());
         bean.setImgUids(leftSlideImg, rightSlideImg, mainLogoImg, companyImg);
-
         dao.insert(bean);
+
+        return bean.getUid();
     }
 
     @Transactional

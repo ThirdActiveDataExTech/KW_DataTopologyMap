@@ -57,7 +57,7 @@ public class CustomLoginSuccessHandler implements AuthenticationSuccessHandler {
 		if ("127.0.0.1".equals(ip) || "::1".equals(ip) || "0:0:0:0:0:0:0:1".equals(ip)) loginRegion = "[내부] 로컬 접속";
 		else {
 			Map<String, Object> geoInfo = ipWhoService.getGeoInfo(ip);
-			if( (Boolean) geoInfo.get("success") == true ) {
+			if((Boolean) geoInfo.get("success")) {
 				String country = (String) geoInfo.get("country");
 				String city = (String) geoInfo.get("city");
 				loginRegion = country + " " + city;

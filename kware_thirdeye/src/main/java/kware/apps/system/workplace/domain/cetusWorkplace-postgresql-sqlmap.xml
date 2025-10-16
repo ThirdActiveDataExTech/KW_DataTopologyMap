@@ -54,7 +54,7 @@
          WHERE UID = #{uid}
     </select>
 
-    <insert id="insert" parameterType="CetusWorkplace">
+    <insert id="insert" parameterType="CetusWorkplace" keyProperty="uid" useGeneratedKeys="true">
         /* cetusWorkplace.insert */
         INSERT INTO CETUS_WORKPLACE (
              NAME
