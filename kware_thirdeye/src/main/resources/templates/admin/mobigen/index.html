@@ -44,6 +44,7 @@
             </div>
             <div class="topbar-right">
               <div class="btn-wrapper">
+                <button type="button" class="custom-button m-2" id="package-new-btn">패키지<br>데이터셋 등록</button>
                 <button type="button" class="custom-button m-2" id="new-btn">데이터셋 등록</button>
                 <button type="button" class="custom-button m-2" id="delete-btn">데이터셋 삭제</button>
               </div>
@@ -85,6 +86,10 @@
 
       $("#new-btn").on('click', function () {
         window.location.href = '/admin/mobigen/dataset/save';
+      });
+
+      $("#package-new-btn").on('click', function () {
+        window.location.href = '/admin/mobigen/dataset/package/save';
       });
 
       $("#delete-btn").on('click', function () {

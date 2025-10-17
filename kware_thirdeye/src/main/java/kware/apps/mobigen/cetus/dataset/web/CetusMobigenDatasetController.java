@@ -31,6 +31,12 @@ public class CetusMobigenDatasetController {
         return "admin/mobigen/save";
     }
 
+    @GetMapping("/package/save")
+    public String packageSave(Model model) {
+        menuNavigationManager.renderingPage("/admin/mobigen/dataset", "패키지 데이터셋 등록", false, model);
+        return "admin/mobigen/save-package";
+    }
+
     @GetMapping("/{uid}")
     public String form(@PathVariable("uid") Long uid, Model model) {
         menuNavigationManager.renderingPage("/admin/mobigen/dataset", "데이터 수정", false, model);

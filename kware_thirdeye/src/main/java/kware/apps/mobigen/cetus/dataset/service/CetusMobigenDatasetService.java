@@ -6,10 +6,7 @@ import cetus.bean.Pageable;
 import cetus.user.UserUtil;
 import kware.apps.mobigen.cetus.dataset.domain.CetusMobigenDataset;
 import kware.apps.mobigen.cetus.dataset.domain.CetusMobigenDatasetDao;
-import kware.apps.mobigen.cetus.dataset.dto.request.ChangeMobigenDataset;
-import kware.apps.mobigen.cetus.dataset.dto.request.DeleteDatasets;
-import kware.apps.mobigen.cetus.dataset.dto.request.SaveMobigenDataset;
-import kware.apps.mobigen.cetus.dataset.dto.request.SearchMobigenDataset;
+import kware.apps.mobigen.cetus.dataset.dto.request.*;
 import kware.apps.mobigen.cetus.dataset.dto.response.DeleteApprovedDatasetIfExist;
 import kware.apps.mobigen.cetus.dataset.dto.response.MobigenDatasetList;
 import kware.apps.mobigen.cetus.dataset.dto.response.MobigenDatasetRealDataView;
@@ -151,6 +148,18 @@ public class CetusMobigenDatasetService {
 
         // 5. 모비젠 등록자 정보 저장
         registrantService.saveMobigenRegistrant(datasetUid);
+    }
+
+    /**
+     * @method      saveMobigenPackageDataset
+     * @author      dahyeon
+     * @date        2025-10-17
+     * @deacription [Mobigen] 데이터셋 저장
+     *              => 패키지 파일 형태 업로드 (zip)
+    **/
+    public void saveMobigenPackageDataset(SaveMobigenPackageDataset request) {
+        /*Long metadataFileUid = null;
+        metadataFileUid= commonFileService.processFile2(request.getMetaFile(), null, user, metadataFileUid);*/
     }
 
     /**

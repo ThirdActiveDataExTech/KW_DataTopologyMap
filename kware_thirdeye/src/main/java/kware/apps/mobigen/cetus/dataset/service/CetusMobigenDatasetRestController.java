@@ -2,10 +2,7 @@ package kware.apps.mobigen.cetus.dataset.service;
 
 
 import cetus.bean.Page;
-import kware.apps.mobigen.cetus.dataset.dto.request.ChangeMobigenDataset;
-import kware.apps.mobigen.cetus.dataset.dto.request.DeleteDatasets;
-import kware.apps.mobigen.cetus.dataset.dto.request.SaveMobigenDataset;
-import kware.apps.mobigen.cetus.dataset.dto.request.SearchMobigenDataset;
+import kware.apps.mobigen.cetus.dataset.dto.request.*;
 import kware.apps.mobigen.cetus.dataset.dto.response.MobigenDatasetList;
 import kware.apps.mobigen.cetus.dataset.dto.response.MobigenDatasetRealDataView;
 import lombok.RequiredArgsConstructor;
@@ -58,6 +55,22 @@ public class CetusMobigenDatasetRestController {
     @PostMapping
     public ResponseEntity saveMobigenDataset(@RequestBody SaveMobigenDataset request) {
         service.saveMobigenDataset(request);
+        return ResponseEntity.ok().build();
+    }
+
+
+    /**
+     *
+     * 모비젠 측에 데이터셋 정보 등록(저장)
+     * => 패키지 파일 형태로 업로드 (zip)
+     *
+     * @api         [POST] /api/admin/mobigen-dataset/package
+     * @author      dahyeon
+     * @date        2025-10-17
+    **/
+    @PostMapping("/package")
+    public ResponseEntity saveMobigenPackageDataset(@RequestBody SaveMobigenPackageDataset request) {
+        service.saveMobigenPackageDataset(request);
         return ResponseEntity.ok().build();
     }
 
