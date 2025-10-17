@@ -16,6 +16,15 @@
       cursor: pointer; /* 선택적으로 커서도 포인터로 */
     }
   </style>
+  <style>
+    .line {
+      border-top: 1px solid #eff3f8;
+      height: 1px;
+    }
+    .search-card {
+      padding: 1.5rem 0;
+    }
+  </style>
   <link rel="stylesheet" th:href="@{'/assets/css/page/system/user-list.css'}"/>
 </th:block>
 
@@ -29,41 +38,71 @@
 
       <div>
         <!-- s:search -->
-        <form id="search-form-id">
+        <div class="card-body search-card">
+          <form class="needs-validation" novalidate="" id="search-form-id">
+            <div class="row mb-1">
+              <div class="col-12 col-xl-2 mb-1 mb-lg-0">
+                <select class="form-select round select_line custom-input" id="showAt" name="showAt">
+                  <option value="">노출여부 전체</option>
+                  <option value="Y">공개</option>
+                  <option value="N">비공개</option>
+                </select>
+              </div>
+              <div class="col-12 col-xl-2 mb-1 mb-lg-0">
+                <select class="form-select round select_line custom-input" id="typeCd" name="typeCd">
+                  <option value="">UI유형 전체</option>
+                  <option th:each="entry : ${uiType}"
+                          th:value="${entry.key}"
+                          th:text="${entry.value?.description}"
+                          th:data-thumbnail="${entry.value?.useThumbNail}"
+                          th:data-title="${entry.value?.useTitle}"
+                          th:data-summary="${entry.value?.useSummary}">
+                  </option>
+                </select>
+              </div>
+              <div class="col-12 col-xl-3 mb-1 mb-lg-0">
+                <select class="select2 round border_line" id="categoryUid" name="categories" multiple></select>
+              </div>
+              <!--<div class="col-12 col-xl-4"></div>-->
+            </div>
+          </form>
+        </div>
+        <!-- e:search -->
+
+        <div class="line"></div>
+
+        <!-- s:button-handle -->
+        <div class="card-body search-card">
           <div class="topbar-container">
             <div class="topbar-left">
               <span id="total-num"></span>
-              <div class="btn-wrapper">
-                <div class="col-12 col-xl-5 mb-1 mb-lg-0">
-                  <select class="form-select round select_line custom-input" id="showAt" name="showAt">
-                    <option value="">노출여부 전체</option>
-                    <option value="Y">공개</option>
-                    <option value="N">비공개</option>
-                  </select>
-                </div>
-                <div class="col-12 col-xl-5 mb-1 mb-lg-0">
-                  <select class="form-select round select_line custom-input" id="typeCd" name="typeCd">
-                    <option value="">UI유형 전체</option>
-                    <option th:each="entry : ${uiType}"
-                            th:value="${entry.key}"
-                            th:text="${entry.value?.description}"
-                            th:data-thumbnail="${entry.value?.useThumbNail}"
-                            th:data-title="${entry.value?.useTitle}"
-                            th:data-summary="${entry.value?.useSummary}">
-                    </option>
-                  </select>
-                </div>
-              </div>
+              <ul class="btn_toplist">
+                <li>
+                  <button type="button" class="custom-button m-2" id="delete-btn">
+                    <span>진열 등록된<br>데이터셋 삭제</span>
+                  </button>
+                </li>
+                <li>
+                  <button type="button" class="custom-button m-2" id="showY-btn">
+                    <span>진열 등록된<br>데이터셋 공개</span>
+                  </button>
+                </li>
+                <li>
+                  <button type="button" class="custom-button m-2" id="showN-btn">
+                    <span>진열 등록된<br>데이터셋 비공개</span>
+                  </button>
+                </li>
+              </ul>
             </div>
             <div class="topbar-right">
               <div class="btn-wrapper">
                 <button type="button" class="custom-button m-2" id="new-btn">데이터셋<br>진열하기</button>
-                <button type="button" class="custom-button m-2" id="delete-btn">진열 등록된<br>데이터셋 삭제</button>
               </div>
             </div>
           </div>
-        </form>
-        <!-- e:search -->
+        </div>
+        <!-- e:button-handle -->
+
         <!-- s:list -->
         <div class="">
           <div class="table-responsive text-nowrap">
@@ -96,22 +135,49 @@
 
     $(function () {
 
+      approvedDatasetJS.initCategorySearch();
       approvedDatasetJS.initTable();
 
       $("#new-btn").on('click', function () {
         window.location.href = '/admin/approved/dataset/save'
       });
 
+      // 데이터셋 UI유형 > 조회 이벤트
       $('#typeCd').on('change', function () {
         approvedDatasetJS.searchTable();
       });
 
+      // 데이터셋 공개/비공개 > 조회 이벤트
       $('#showAt').on('change', function () {
         approvedDatasetJS.searchTable();
       });
 
+      // 데이터셋 삭제 > 버튼 클릭 이벤트
       $("#delete-btn").on('click', function () {
-        approvedDatasetJS.deleteApprovedDatasetClickEvent();
+        approvedDatasetJS.approvedDatasetClickEvent('delete');
+      });
+
+      // 데이터셋 공개 > 버튼 클릭 이벤트
+      $("#showY-btn").on('click', function () {
+        approvedDatasetJS.approvedDatasetClickEvent('showY');
+      });
+
+      // 데이터셋 비공개 > 버튼 클릭 이벤트
+      $("#showN-btn").on('click', function () {
+        approvedDatasetJS.approvedDatasetClickEvent('showN');
+      });
+
+      // 카테고리 > select2 > 검색
+      $("#categoryUid").select2({
+        placeholder: '카테고리 검색',
+        language: {
+          noResults: function() {
+            return "검색 결과가 없습니다.";
+          }
+        }
+      });
+      $('#categoryUid').on('select2:select select2:unselect change', function (e) {
+        approvedDatasetJS.searchTable();
       });
 
     });

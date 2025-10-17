@@ -36,8 +36,8 @@ public class CommonFileRestController {
     }
 
     @GetMapping({"download2"})
-    public ResponseEntity<Resource> download2(final HttpServletRequest req, final HttpServletResponse res) throws IOException {
-        return fileService.download2(req);
+    public ResponseEntity<Resource> downloadTemp(final HttpServletRequest req, final HttpServletResponse res) throws IOException {
+        return fileService.downloadTemp(req);
     }
 
     @GetMapping("/check-file")

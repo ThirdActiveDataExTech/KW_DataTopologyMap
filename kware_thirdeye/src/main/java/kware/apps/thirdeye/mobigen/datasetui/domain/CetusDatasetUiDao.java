@@ -26,4 +26,8 @@ public class CetusDatasetUiDao extends SuperDao<CetusDatasetUi> {
     public List<DatasetUiGroup> getDatasetUiByGroup(Long workplaceUid) {
         return selectList("getDatasetUiByGroup", workplaceUid);
     }
+
+    public void updateDatasetUiShowAt(CetusDatasetUi bean) {
+        update("updateDatasetUiShowAt", bean);
+    }
 }

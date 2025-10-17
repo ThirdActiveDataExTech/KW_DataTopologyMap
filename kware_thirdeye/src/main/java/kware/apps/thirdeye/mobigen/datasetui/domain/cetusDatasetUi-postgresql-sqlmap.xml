@@ -90,4 +90,13 @@
                   CDMU.SORT_NO
         ORDER BY CDMU.SORT_NO;
     </select>
+
+    <update id="updateDatasetUiShowAt" parameterType="CetusDatasetUi">
+        /* cetusDatasetUi.updateDatasetUiShowAt */
+        UPDATE CETUS_DATASET_UI
+           SET SHOW_AT = #{showAt}
+              ,UPDT_UID = #{updtUid}
+              ,UPDT_DT = NOW()
+         WHERE UID = #{uid}
+    </update>
 </mapper>

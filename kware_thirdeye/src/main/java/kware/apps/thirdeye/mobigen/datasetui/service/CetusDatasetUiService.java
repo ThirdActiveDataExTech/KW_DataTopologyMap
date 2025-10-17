@@ -7,6 +7,7 @@ import kware.apps.thirdeye.mobigen.datasetui.dto.request.ChangeDatasetUi;
 import kware.apps.thirdeye.mobigen.approveddataset.dto.request.SaveApprovedDataset;
 import kware.apps.thirdeye.mobigen.datasetui.domain.CetusDatasetUi;
 import kware.apps.thirdeye.mobigen.datasetui.domain.CetusDatasetUiDao;
+import kware.apps.thirdeye.mobigen.datasetui.dto.request.ChangeShowUiDatasets;
 import kware.apps.thirdeye.mobigen.datasetui.dto.response.DatasetUiGroup;
 import kware.apps.thirdeye.mobigen.datasetui.dto.response.DatasetUiView;
 import kware.apps.thirdeye.mobigen.datasetuihistory.service.CetusDatasetHistoryService;
@@ -119,5 +120,19 @@ public class CetusDatasetUiService {
             dto.setUseInfo(mainUiType);
         });
         return datasetUiByGroup;
+    }
+
+    @Transactional
+    public void changeShowApprovedDataset(ChangeShowUiDatasets request, String showAt) {
+        for (Long approvedDatasetUid: request.getUids()) {
+            // 1. 수정전, 이력 저장
+            DatasetUiView uiView = dao.getDatasetUiView(approvedDatasetUid);
+            historyService.saveDatasetHistory(uiView);
+            Long datasetUiUid = uiView.getDatasetUiUid();
+
+            // 2. 공개여부 수정
+            CetusDatasetUi bean = new CetusDatasetUi(datasetUiUid, showAt);
+            dao.updateDatasetUiShowAt(bean);
+        }
     }
 }

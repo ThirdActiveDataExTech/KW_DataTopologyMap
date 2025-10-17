@@ -40,4 +40,8 @@ public class CetusDatasetUi extends AuditBean {
         this.extraJson = request.getExtraJson();
     }
 
+    public CetusDatasetUi(Long uid, String showAt) {
+        this.uid = uid;
+        this.showAt = showAt;
+    }
 }

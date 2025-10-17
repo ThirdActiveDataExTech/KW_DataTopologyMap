@@ -3,7 +3,6 @@ package kware.common.file.domain;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Getter @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class CommonFileLog {
@@ -20,12 +19,9 @@ public class CommonFileLog {
     private String regDt;
     private String downloadUrl;
 
-    public CommonFileLog(Long fileUid, String fileId) {
-        this.fileUid = fileUid;
-        this.fileId = fileId;
-    }
-
-    public void setWorkerInfo(String workerUid, String workerNm) {
+    public CommonFileLog(CommonFile commonFile, String workerUid, String workerNm){
+        this.fileUid = commonFile.getFileUid();
+        this.fileId = commonFile.getFileId();
         this.workerUid = workerUid;
         this.workerNm = workerNm;
     }
