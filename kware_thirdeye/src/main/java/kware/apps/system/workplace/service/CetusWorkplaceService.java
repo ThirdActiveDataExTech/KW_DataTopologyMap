@@ -48,14 +48,13 @@ public class CetusWorkplaceService {
         dao.insert(bean);
         Long workplaceUid = bean.getUid();
 
-
         ProgramSave programRootBean = new ProgramSave("root", "/", "Y");
         Long programRootUid = progrmInfoService.saveWorkplaceProgram(programRootBean, workplaceUid);
 
         ProgramSave programFooterRootBean = new ProgramSave("footer_root", "/", "Y");
         Long programFooterRootUid = progrmInfoService.saveWorkplaceProgram(programFooterRootBean, workplaceUid);
 
-        ProgramSave programHomeBean = new ProgramSave("컨텐츠 메인 (홈)", "/portal/home", "Y");
+        ProgramSave programHomeBean = new ProgramSave("컨텐츠 메인 (홈)", "/portal/list", "Y");
         Long programHomeUid = progrmInfoService.saveWorkplaceProgram(programHomeBean, workplaceUid);
 
         // 2. cetus_menu_info
