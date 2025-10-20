@@ -26,13 +26,13 @@ public class SearchRelationListRequest {
     private SortRequest sort;
 
     @Getter @Setter
-    public class SearchRelationListFilters {
+    public static class SearchRelationListFilters {
         private String publisher;
         private List<String> theme;
         private SimilarityScore similarity_score;
 
         @Getter @Setter
-        public class SimilarityScore {
+        public static class SimilarityScore {
             private Long min;
             private Long max;
         }

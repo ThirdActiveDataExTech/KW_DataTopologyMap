@@ -20,7 +20,7 @@ public class ChangeMetadataRequest {
     private ChangeMetadataFieldRequest field;
 
     @Getter @Setter
-    public class ChangeMetadataFieldRequest {
+    public static class ChangeMetadataFieldRequest {
         private String title;
         private String issued;
         private String modified;

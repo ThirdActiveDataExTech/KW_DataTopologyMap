@@ -57,11 +57,11 @@
             <div class="page-details-content" data-aos="fade-up" data-aos-delay="400">
 
                 <div class="row">
-                  <div class="col-lg-8">
+                  <div class="col-lg-6">
                     <h2 id="contentTitle" th:text="${dataset?.mobigenDatasetView?.title}"></h2>
                   </div>
-                  <div class="col-lg-4 justify-content-end" style="flex-direction: row; display: flex;">
-                    <div class="page-details-action-wrap">
+                  <div class="col-lg-6 justify-content-end" style="flex-direction: row; display: flex;">
+                    <div class="page-details-action-wrap" style="margin-right: 17px !important;">
                       <div class="single-page-wishlist">
                           <button class="justify-content-center btn-custom-control" id="btnPageBookmark"
                                   th:data-like="${dataset?.bookmarkYn}" th:data-id="${dataset?.approvedUid}">
@@ -71,12 +71,20 @@
                               <span class="txt-label justify-content-center">북마크</span>
                           </button>
                       </div>
+                        <div class="single-page-wishlist">
+                            <button class="justify-content-center btn-custom-control" id="btnPageShare">
+                                <a class="justify-content-center" title="Wishlist" href="javascript:void(0);">
+                                    <i class="pe-7s-share"></i>
+                                </a>
+                                <span class="txt-label justify-content-center">공유</span>
+                            </button>
+                        </div>
                       <div class="single-page-compare">
-                          <button class="justify-content-center btn-custom-control" id="btnPageShare">
-                              <a class="justify-content-center" title="Wishlist" href="javascript:void(0);">
-                                  <i class="pe-7s-share"></i>
+                          <button class="justify-content-center btn-custom-control" id="downloadPackage">
+                              <a class="justify-content-center" title="Download" href="javascript:void(0);">
+                                  <i class="pe-7s-cloud-download"></i>
                               </a>
-                              <span class="txt-label justify-content-center">공유</span>
+                              <span class="txt-label justify-content-center">패키지 다운로드</span>
                           </button>
                       </div>
                     </div>
@@ -173,7 +181,10 @@
     const dataset = /*[[${dataset}]]*/ {};
     console.log(">> dataset: ", dataset)
 
-    $(function() {
+    $(async function () {
+
+        // todo[mobigen] search metadata view
+        await detailJS.searchMobigenDatasetView(dataset['datasetId']);
 
         // 페이지 화면 초기화
         detailJS.fnPageSearch();
@@ -181,21 +192,21 @@
         // tab01 > table 초기화
         template01JS.drawTab01(dataset);
 
-        // tab03
+        // tab03 초기화
         template03JS.drawTemplate03();
 
-        // tab04
+        // tab04 초기화
         template04JS.drawTemplate04(approvedUid);
 
         // 북마크 버튼
-        $("#btnPageBookmark").click(function(e){
+        $("#btnPageBookmark").click(function (e) {
             detailJS.likeClickEvent(this);
             e.preventDefault();
             e.stopPropagation();
         });
 
         // 공유 버튼
-        $("#btnPageShare").click(function(e) {
+        $("#btnPageShare").click(function (e) {
             e.preventDefault();
             e.stopPropagation();
             const fullUrl = window.location.origin + `/portal/detail/${approvedUid}`;
@@ -203,8 +214,12 @@
         });
 
         // { 관련 데이터 더보기 }, { 목록 돌아가기 } 버튼
-        $("#btnPageMoveList, #btnGoList").click(function(e){
+        $("#btnPageMoveList, #btnGoList").click(function (e) {
             window.location.href = '/portal/list'
+        });
+
+        $("#downloadPackage").on('click', async function () {
+            await template01JS.packageDownloadBtnClickEvent(dataset['datasetId'], []);
         });
 
     });

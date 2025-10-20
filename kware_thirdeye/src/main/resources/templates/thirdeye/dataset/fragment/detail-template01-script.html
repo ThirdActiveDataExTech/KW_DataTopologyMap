@@ -15,7 +15,7 @@
             /*template01JS.setSubTabSampleVisualization();    // tab1 > 차트탭*/
         },
 
-        drawMetadataTab: function (dataset) {
+        drawMetadataTab: async function (dataset) {
             /* ========= 1. 메타데이터 정보 =========*/
             const metadataFile = dataset['mobigenDatasetView']?.['metadataFiles']?.[0]
             $("#metadata-id").val(metadataFile['fileId']);
@@ -23,11 +23,19 @@
             $("#metadata-desc").text(metadataFile['orgFileNm']);
 
             /* ========= 2. 실(원본)데이터 정보 =========*/
+            // todo[mobigen] list of realdata
+            const mobigen_obj = {
+                metadata_id: dataset['datasetId'],
+                pagination: { page: 1, limit: 10 }
+            }
+            const res = await Http.post('/api/admin/mobigen-dataset2/rawdata01', mobigen_obj, true)
+            console.log(">> res : ", res)
+
             const realDataFiles = dataset['mobigenDatasetView']?.['realdataFiles'] || []
 
-            if(realDataFiles.length !== 0) {
+            if (realDataFiles.length !== 0) {
                 const filesLength = realDataFiles.length;
-                const title = (filesLength === 1) ?  "신규데이터 (1건)" : `주기성 과거 데이터 ( ${filesLength}건 )`;
+                const title = (filesLength === 1) ? "신규데이터 (1건)" : `주기성 과거 데이터 ( ${filesLength}건 )`;
                 $("#metadata-file-history-title").text(title);
                 const $tbody = $("#metadata-history-table-body");
                 $tbody.empty(); // 초기화
@@ -59,9 +67,6 @@
             const $tableBody = $('#tab1-table-tbody');
             $tableBody.empty(); // 기존 내용 제거
 
-            console.log("addInfo : ", addInfo)
-            console.log("extraJson : ", extraJson)
-
             if(addInfo.length === 0) $tableBody.append(`<tr class="text-center"><td colSpan="2" class="text-center py-2">정보가 없습니다.</td></tr>`)
             else {
                 const itemsPerRow = 2
@@ -84,12 +89,17 @@
             }
         },
 
-        showMetDataFileInfoModal: function (datafileId) {
+        showMetDataFileInfoModal: async function (datafileId) {
+
+            // [todo] mobigen rawdata view
+            const mobigen_obj = {metadata_id: 1, rawdata_id: datafileId}
+            const res = await Http.post(`/api/admin/mobigen-dataset2/rawdata04`, mobigen_obj, true)
+            console.log(">> res : ", res)
 
             $("#metadata-file-info").empty();
 
             Http.get(`/api/admin/mobigen-dataset/realdata/${datafileId}`).then((res) => {
-                if(!res) {
+                if (!res) {
                     Util.alert("데이터를 찾을 수 없습니다.");
                     return;
                 }
@@ -130,6 +140,13 @@
             });
         },
 
+        packageDownloadBtnClickEvent: async function (datasetId, rawdataIds = []) {
+            // todo[mobigen] download package
+            const obj = { metadataId: datasetId, rawdataIds: rawdataIds }
+            const res = await Http.post('/api/admin/mobigen-dataset2/package01', obj, true)
+            console.log(">> res : ", res);
+        }
+
         /*setSubTabSampleVisualization : function(){
             const generateSampleData = (rows = 2, cols = 12, min = 1, max = 210) =>
                 Array.from({ length: rows }, () =>
@@ -154,7 +171,14 @@
         });*/
 
         $("#metadata-download-btn").on('click', async function (e) {
+
             const metadataFileId = $("#metadata-id").val();
+
+            // [todo] mobigen metadata file download
+            const mobigen_obj = { metadata_id: metadataFileId }
+            const res = await Http.post('/api/admin/mobigen-dataset2/metadata08', mobigen_obj, true)
+            console.log(">>> res : ", res)
+
             await FileUtil.fileDownload(metadataFileId)
         });
 
@@ -165,6 +189,12 @@
 
         $(document).on('click', '.realdata-file-download', async function () {
             const fileId = $(this).data('id');
+
+            // [todo] mobigen rawdata file download
+            const mobigen_obj = { metadata_id: 1, rawdata_id: fileId }
+            const res = await Http.post(`/api/admin/mobigen-dataset2/rawdata07`, mobigen_obj, true)
+            console.log(">> res : ", res)
+
             await FileUtil.fileDownload(fileId)
         })
 

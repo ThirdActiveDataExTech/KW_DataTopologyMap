@@ -25,7 +25,7 @@ public class SearchRecommendationListRequest {
     private SortRequest sort;
 
     @Getter @Setter
-    public class SearchRecommendationListFilters {
+    public static class SearchRecommendationListFilters {
         private List<String> recommendation_type;
         private String publisher;
         private List<String> theme;

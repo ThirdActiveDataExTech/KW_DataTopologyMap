@@ -22,7 +22,7 @@ public class ChangeRawdataRequest {
     private ChangeRawdataFieldRequest field;
 
     @Getter @Setter
-    public class ChangeRawdataFieldRequest {
+    public static class ChangeRawdataFieldRequest {
         private String description;
         private List<String> tags;
     }
