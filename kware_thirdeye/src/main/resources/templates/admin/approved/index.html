@@ -133,12 +133,38 @@
   <script th:src="@{'/assets/js/page/admin/approved/approved-dataset-control.js'}"></script>
   <script th:inline="javascript">
 
+    $(document).ready(function() {
+
+      const string = window.localStorage.getItem('approved_obj')
+      const obj = JSON.parse(string)
+      if(obj) {
+        if(obj['showAt']) $("#showAt").val(obj['showAt']).trigger("change")
+        if(obj['typeCd']) $("#typeCd").val(obj['typeCd']).trigger("change")
+      }
+      approvedDatasetJS.initCategorySearch( (obj && obj['categoryUid']) ? obj['categoryUid'] : [] )
+          .then(() => {
+            approvedDatasetJS.initTable( (obj && obj['pageNumber']) ? obj['pageNumber'] : 1 );
+          }).then(() => {
+            approvedDatasetJS.table._table.draw('page')
+            window.localStorage.removeItem('approved_obj')
+          });
+    });
+
+    function setSearchOption() {
+      const obj = {
+        pageNumber: approvedDatasetJS.table._data.number,
+        typeCd: $("#typeCd").val(),
+        showAt: $("#showAt").val(),
+        categoryUid: $("#categoryUid").val()
+      }
+      const string = JSON.stringify(obj);
+      window.localStorage.setItem('approved_obj', string);
+    }
+
     $(function () {
 
-      approvedDatasetJS.initCategorySearch();
-      approvedDatasetJS.initTable();
-
       $("#new-btn").on('click', function () {
+        setSearchOption();
         window.location.href = '/admin/approved/dataset/save'
       });
 

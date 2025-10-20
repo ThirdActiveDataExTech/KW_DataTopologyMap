@@ -88,11 +88,36 @@
   <script th:src="@{'/assets/js/page/admin/mainui/mainui-list-form.js'}"></script>
   <script th:inline="javascript">
 
+    $(document).ready(function() {
+      const string = window.localStorage.getItem('mainui_obj')
+      const obj = JSON.parse(string)
+      if(obj) {
+        if(obj['useAt']) $("#useAt").val(obj['useAt']).trigger("change")
+        if(obj['search_txt1']) $("#search_txt1").val(obj['search_txt1']).trigger("change")
+      }
+      new Promise((resolve, reject) => {
+        mainuiJS.initTable( (obj && obj['pageNumber']) ? obj['pageNumber'] : 1 );
+        resolve();
+      }).then(() => {
+        mainuiJS.table._table.draw('page')
+        window.localStorage.removeItem('mainui_obj')
+      })
+    });
+
+    function setSearchOption() {
+      const obj = {
+        pageNumber: mainuiJS.table._data.number,
+        useAt: $("#useAt").val(),
+        search_txt1: $("#search_txt1").val(),
+      }
+      const string = JSON.stringify(obj);
+      window.localStorage.setItem('mainui_obj', string);
+    }
+
     $(function () {
 
-      mainuiJS.initTable();
-
       $("#new-btn").on('click', function () {
+        setSearchOption();
         window.location.href = '/admin/main-ui/save'
       });
 
