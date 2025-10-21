@@ -30,4 +30,8 @@ public class CetusDatasetUiDao extends SuperDao<CetusDatasetUi> {
     public void updateDatasetUiShowAt(CetusDatasetUi bean) {
         update("updateDatasetUiShowAt", bean);
     }
+
+    public void updateDatasetCategory(CetusDatasetUi bean) {
+        update("updateDatasetCategory", bean);
+    }
 }

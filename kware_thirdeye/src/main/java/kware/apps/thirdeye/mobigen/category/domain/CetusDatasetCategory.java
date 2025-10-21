@@ -25,4 +25,8 @@ public class CetusDatasetCategory extends AuditBean {
         this.workplaceUid = workplaceUid;
         this.categoryNm = request.getCategoryNm();
     }
+
+    public CetusDatasetCategory(Long uid) {
+        this.uid = uid;
+    }
 }

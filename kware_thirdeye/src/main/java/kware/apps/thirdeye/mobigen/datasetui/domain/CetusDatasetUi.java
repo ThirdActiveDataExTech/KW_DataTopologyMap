@@ -44,4 +44,9 @@ public class CetusDatasetUi extends AuditBean {
         this.uid = uid;
         this.showAt = showAt;
     }
+
+    public CetusDatasetUi(Long uid, Long categoryUid) {
+        this.uid = uid;
+        this.categoryUid = categoryUid;
+    }
 }

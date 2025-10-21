@@ -99,4 +99,11 @@
               ,UPDT_DT = NOW()
          WHERE UID = #{uid}
     </update>
+
+    <update id="updateDatasetCategory" parameterType="CetusDatasetUi">
+        /* cetusDatasetUi.updateDatasetCategory */
+        UPDATE CETUS_DATASET_UI
+           SET CATEGORY_UID = #{categoryUid}
+         WHERE UID = #{uid}
+    </update>
 </mapper>

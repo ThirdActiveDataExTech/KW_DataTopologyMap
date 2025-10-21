@@ -53,4 +53,95 @@
          ORDER BY CDC.CATEGORY_NM DESC
          LIMIT #{limit}
     </select>
+
+    <select id="getDatasetCategoryPage" parameterType="SearchPageCategory" resultType="CategoryListPage">
+        /* cetusDatasetCategory.getDatasetCategoryPage */
+        SELECT CDC.UID AS CATEGORY_UID
+              ,CDC.CATEGORY_NM
+              ,TO_CHAR(CDC.REG_DT, 'YYYY-MM-DD') AS REG_DT
+              ,CDC.REG_UID
+              ,CU.USER_NM AS REG_NM
+              ,COUNT(CDU.CATEGORY_UID) AS USE_CNT
+          FROM CETUS_DATASET_CATEGORY CDC
+          LEFT JOIN CETUS_USER CU ON CU.UID = CDC.REG_UID
+          LEFT JOIN CETUS_DATASET_UI CDU ON CDU.CATEGORY_UID = CDC.UID
+         WHERE CDC.WORKPLACE_UID = #{workplaceUid}
+        <if test="@Ognl@isNotEmpty(browseText)">
+           AND (CU.USER_NM LIKE '%' || #{browseText} || '%' OR CDC.CATEGORY_NM LIKE '%' || #{browseText} || '%')
+        </if>
+        <if test="@Ognl@isNotEmpty(useAt)">
+            <choose>
+                <when test="useAt eq 'Y'.toString()">
+                    -- 사용중인 (CDU 데이터가 1개 이상)
+                    AND EXISTS (
+                        SELECT 1
+                          FROM CETUS_DATASET_UI CDU2
+                         WHERE CDU2.CATEGORY_UID = CDC.UID
+                    )
+                </when>
+                <when test="useAt eq 'N'.toString()">
+                    -- 사용 안 하는 (CDU 데이터가 없는)
+                    AND NOT EXISTS (
+                        SELECT 1
+                          FROM CETUS_DATASET_UI CDU3
+                         WHERE CDU3.CATEGORY_UID = CDC.UID
+                    )
+                </when>
+            </choose>
+        </if>
+         GROUP BY CDC.UID, CU.USER_NM
+         ORDER BY CDC.UID DESC
+        <if test="@Ognl@isNotEmpty(startNumber) and  @Ognl@isNotEmpty(endNumber)">
+        OFFSET ${startNumber} LIMIT ${endNumber}
+        </if>
+    </select>
+
+    <select id="getDatasetCategoryPageCount" parameterType="SearchPageCategory" resultType="int">
+        /* cetusDatasetCategory.getDatasetCategoryPageCount */
+        SELECT COUNT(DISTINCT CDC.UID) AS TOTAL_COUNT
+          FROM CETUS_DATASET_CATEGORY CDC
+          LEFT JOIN CETUS_USER CU ON CU.UID = CDC.REG_UID
+          LEFT JOIN CETUS_DATASET_UI CDU ON CDU.CATEGORY_UID = CDC.UID
+         WHERE CDC.WORKPLACE_UID = #{workplaceUid}
+        <if test="@Ognl@isNotEmpty(browseText)">
+           AND (CU.USER_NM LIKE '%' || #{browseText} || '%' OR CDC.CATEGORY_NM LIKE '%' || #{browseText} || '%')
+        </if>
+        <if test="@Ognl@isNotEmpty(useAt)">
+            <choose>
+                <when test="useAt eq 'Y'.toString()">
+                    -- 사용중인 (CDU 데이터가 1개 이상)
+                    AND EXISTS (
+                        SELECT 1
+                          FROM CETUS_DATASET_UI CDU2
+                         WHERE CDU2.CATEGORY_UID = CDC.UID
+                    )
+                </when>
+                <when test="useAt eq 'N'.toString()">
+                    -- 사용 안 하는 (CDU 데이터가 없는)
+                    AND NOT EXISTS (
+                        SELECT 1
+                          FROM CETUS_DATASET_UI CDU3
+                         WHERE CDU3.CATEGORY_UID = CDC.UID
+                    )
+                </when>
+            </choose>
+        </if>
+    </select>
+
+    <delete id="delete" parameterType="Long">
+        /* cetusDatasetCategory.delete */
+        DELETE FROM CETUS_DATASET_CATEGORY
+         WHERE UID = #{uid}
+    </delete>
+
+    <select id="getDatasetCategoryForClone" parameterType="CloneCategory" resultType="Long">
+        /* cetusDatasetCategory.getDatasetCategoryForClone */
+        SELECT CDU.UID
+          FROM CETUS_DATASET_UI CDU
+         INNER JOIN CETUS_DATASET_CATEGORY CDC ON CDC.UID = CDU.CATEGORY_UID
+         WHERE CDC.UID IN
+        <foreach collection="uids" item="uid" open="(" separator="," close=")">
+            #{uid}
+        </foreach>
+    </select>
 </mapper>

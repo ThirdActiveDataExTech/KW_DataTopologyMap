@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/default}">
+
+<th:block layout:fragment="center-image">
+  <th:block th:with="title1=${currentPageName}, title2=${navigation}, leftImg=${centerLeftImage}, rightImg=${centerRightImage}">
+    <th:block th:replace="fragments/center-image :: main-image-title(${title1}, ${title2}, ${leftImg}, ${rightImg})"></th:block>
+  </th:block>
+</th:block>
+
+<th:block layout:fragment="head">
+  <link rel="stylesheet" th:href="@{'/assets/css/page/admin/mobigen-metadata.css'}" />
+  <link rel="stylesheet" th:href="@{'/assets/css/page/system/user-list.css'}"/>
+  <style>
+    .select2-container--default .select2-selection--single .select2-selection__arrow b {
+      border-color: #335480 transparent transparent transparent !important;
+      border-width: 8px 6px 0 6px !important;
+      margin-left: -10px !important;
+      margin-top: 2px !important;
+    }
+  </style>
+</th:block>
+
+<th:block layout:fragment="content">
+  <div class="related-product-area pb-100 pt-80"  data-aos="fade-up" data-aos-delay="200">
+    <div class="container">
+      <div class="section-title-2 st-border-center text-center mb-35">
+        <h2>데이터셋 카테고리 관리</h2>
+      </div>
+      <hr>
+
+      <div>
+        <!-- s:search -->
+        <form id="search-form-id">
+          <div class="topbar-container">
+            <div class="topbar-left">
+              <span id="total-num"></span>
+              <div class="btn-wrapper">
+                <div class="col-12 col-xl-4 mb-1 mb-lg-0">
+                  <select class="form-select round select_line custom-input" id="useAt" name="useAt">
+                    <option value="">사용여부 전체</option>
+                    <option value="Y">사용</option>
+                    <option value="N">미사용</option>
+                  </select>
+                </div>
+                <div class="col-12 col-xl-7 mb-1 mb-lg-0">
+                  <div class="search_wrap">
+                    <input
+                        type="text"
+                        id="search_txt1"
+                        class="form-control round border_line custom-input"
+                        name="browseText"
+                        placeholder="카테고리명, 등록자"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="topbar-right">
+              <div class="btn-wrapper">
+                <button type="button" class="custom-button m-2" id="delete-category">카테고리명 삭제</button>
+              </div>
+            </div>
+          </div>
+        </form>
+        <!-- e:search -->
+
+        <!-- s:list -->
+        <div class="row">
+          <div class="col-lg-8" style="margin-top: 20px;">
+            <div class="">
+              <div class="table-responsive text-nowrap">
+                <table class="table table-bordered" id="category-table">
+                  <thead>
+                  <tr>
+                    <th></th>
+                    <th>번호</th>
+                    <th>카테고리명</th>
+                    <th>해당 카테고리<br>사용개수</th>
+                    <th>등록자</th>
+                    <th>등록일</th>
+                  </tr>
+                  </thead>
+                </table>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-4" style="margin-top: 20px;">
+            <label for="category">카테고리<span style="color: firebrick">*</span></label>
+            <div class="mt-2">
+              <select class="select2 round border_line" id="category"></select>
+            </div>
+            <div class="d-flex justify-content-end">
+              <button type="button" class="custom-button m-2" id="save-btn">카테고리 수정</button>
+            </div>
+          </div>
+        </div>
+        <!-- e:list -->
+      </div>
+
+    </div>
+  </div>
+
+</th:block>
+
+<th:block layout:fragment="script">
+  <script th:src="@{'/assets/js/page/admin/category/category-list.js'}"></script>
+  <script th:inline="javascript">
+    $(function () {
+
+      categoryJS.initTable();
+
+      $("#new-btn").on('click', function () {
+        console.log("new category add?")
+      });
+
+      $('#useAt').on('change', function () {
+        categoryJS.searchTable();
+      });
+
+      $('#search_txt1').keypress(function (e) {
+        if (e.keyCode === 13 || e.keyCode === 10 || e.key === 'Enter') {
+          e.preventDefault();
+          categoryJS.searchTable();
+        }
+      });
+
+      $("#delete-category").on('click', function () {
+        categoryJS.deleteCategory();
+      });
+
+      $("#save-btn").on('click', function () {
+        categoryJS.saveBtn();
+      });
+
+      // ===============================
+      // > 카테고리
+      // ===============================
+      $("#category").select2({
+        placeholder: "카테고리 선택",
+        language: {
+          searching: function() {
+            return "검색 중..."; // 검색 중 텍스트 변경
+          },
+          noResults: function() {
+            return "결과가 없습니다"; // 결과 없음 텍스트 변경
+          },
+          inputTooLong: function(n) {
+            return "너무 깁니다. "+(n.input.length-n.maximum)+" 글자 지워주세요."
+          }
+        },
+        tags: true,
+        maximumInputLength: 30,
+        allowClear: true,
+        ajax: {
+          url: '/api/admin/dataset-category/list',
+          dataType: 'json',
+          delay: 250,
+          data: function (params) {
+            return {
+              categoryNm: params.term, // search term
+            };
+          },
+          processResults: function (data, params) {
+            return {
+              results: data.map(item => ({
+                id: item['categoryUid'],
+                text: item['categoryNm']
+              })),
+            };
+          },
+        },
+        createTag: function (params) {
+          const term = $.trim(params.term);
+          if (term === '') { return null; }
+          return {
+            id: term,
+            text: term,
+            newTag: true
+          }
+        },
+      });
+
+    });
+
+  </script>
+</th:block>
+</html>
