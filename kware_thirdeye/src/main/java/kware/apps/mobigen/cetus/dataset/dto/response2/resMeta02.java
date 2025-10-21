@@ -1,7 +1,6 @@
 package kware.apps.mobigen.cetus.dataset.dto.response2;
 
 
-import kware.apps.mobigen.mobigen.dto.request.common.PaginationRequest;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

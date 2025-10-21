@@ -64,6 +64,7 @@
                   <th>제목</th>
                   <th>등록자</th>
                   <th>등록일</th>
+                  <th>원본데이터파일<br>관리</th>
                 </tr>
               </thead>
             </table>
@@ -80,6 +81,7 @@
   <script th:src="@{'/assets/js/page/admin/mobigen/mobigen-dataset-control-list.js'}"></script>
   <script th:inline="javascript">
 
+    /* 시작 시점 */
     $(document).ready(function() {
       const string = window.localStorage.getItem('mobigen_obj')
       const obj = JSON.parse(string)
@@ -121,6 +123,11 @@
           e.preventDefault();
           mobigenDatasetListJS.searchTable();
         }
+      });
+
+      $(document).on('click', '#mobigen-dataset-table #realdata-mng', function (e) {
+        const uid = $(this).data('uid')
+        mobigenDatasetListJS.mngRealdataClickEvent(uid);
       });
     });
 

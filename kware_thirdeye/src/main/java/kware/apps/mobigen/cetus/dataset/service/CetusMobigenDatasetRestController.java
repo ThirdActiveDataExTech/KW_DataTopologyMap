@@ -4,8 +4,10 @@ package kware.apps.mobigen.cetus.dataset.service;
 import cetus.bean.Page;
 import kware.apps.mobigen.cetus.dataset.dto.request.*;
 import kware.apps.mobigen.cetus.dataset.dto.response.MobigenDatasetList;
+import kware.apps.mobigen.cetus.dataset.dto.response.MobigenDatasetRealDataList;
 import kware.apps.mobigen.cetus.dataset.dto.response.MobigenDatasetRealDataView;
 import lombok.RequiredArgsConstructor;
+import org.apache.ibatis.annotations.Delete;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -118,5 +120,33 @@ public class CetusMobigenDatasetRestController {
     public ResponseEntity findRealDataInfoByFileId(@PathVariable("fileId") String fileId) {
         MobigenDatasetRealDataView view = service.findRealDataInfoByFileId(fileId);
         return ResponseEntity.ok(view);
+    }
+
+    /**
+     *
+     * 메타데이터 하위 원본데이터파일 목록 페이징 조회
+     *
+     * @api         [GET] /api/admin/mobigen-dataset/realdata/page/{datasetId}
+     * @author      dahyeon
+     * @date        2025-10-21
+    **/
+    @GetMapping("/realdata/page/{datasetId}")
+    public ResponseEntity findRealDataPage(@PathVariable("datasetId") Long datasetId, SearchMobigenDatasetRealdata search) {
+        Page<MobigenDatasetRealDataList> page =  service.findRealDataPage(datasetId, search);
+        return ResponseEntity.ok(page);
+    }
+
+    /**
+     *
+     * 메타데이터 하위 원본데이너파일 여러건 삭제
+     *
+     * @api         [PUT] /api/admin/mobigen-dataset/delete-realdatas
+     * @author      dahyeon
+     * @date        2025-10-21
+    **/
+    @PutMapping("/delete-realdatas")
+    public ResponseEntity deleteRealdatas(@RequestBody DeleteRealdatas request) {
+        service.deleteRealdatas(request);
+        return ResponseEntity.ok().build();
     }
 }

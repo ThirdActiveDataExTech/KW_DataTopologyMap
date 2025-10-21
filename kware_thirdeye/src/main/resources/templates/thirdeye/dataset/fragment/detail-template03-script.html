@@ -30,7 +30,7 @@
                 pagination: {page: 1, limit: 20},
                 sort: {field: "similarity_score", order: "desc"}
             }
-            const res1 = await Http.post('/api/admin/mobigen-dataset2/relation01', mobigen_obj1, true);
+            const res1 = await Http.post('/api/portal/mobigen-dataset2/relation01', mobigen_obj1, true);
             console.log(">> res1 : ", res1)
 
             // [todo] mobigen search recommendation metadata
@@ -49,7 +49,7 @@
                     "order": "desc"
                 }
             }
-            const res2 = await Http.post('/api/admin/mobigen-dataset2/recommendation01', mobigen_obj2, true);
+            const res2 = await Http.post('/api/portal/mobigen-dataset2/recommendation01', mobigen_obj2, true);
             console.log(">> res2 : ", res2)
 
             template03JS.pageInit();

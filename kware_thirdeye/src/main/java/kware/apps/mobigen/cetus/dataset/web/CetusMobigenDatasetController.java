@@ -44,4 +44,12 @@ public class CetusMobigenDatasetController {
         model.addAttribute("view", view);
         return "admin/mobigen/form";
     }
+
+    @GetMapping("/realdata/{uid}")
+    public String realdataForm(@PathVariable("uid") Long uid, Model model) {
+        menuNavigationManager.renderingPage("/admin/mobigen/dataset", "원본데이터파일 수정", false, model);
+        MobigenDatasetView view = service.findMobigenDatasetByDatasetId(uid);
+        model.addAttribute("view", view);
+        return "admin/mobigen/realdata-form";
+    }
 }

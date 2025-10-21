@@ -7,10 +7,7 @@ import cetus.user.UserUtil;
 import kware.apps.mobigen.cetus.dataset.domain.CetusMobigenDataset;
 import kware.apps.mobigen.cetus.dataset.domain.CetusMobigenDatasetDao;
 import kware.apps.mobigen.cetus.dataset.dto.request.*;
-import kware.apps.mobigen.cetus.dataset.dto.response.DeleteApprovedDatasetIfExist;
-import kware.apps.mobigen.cetus.dataset.dto.response.MobigenDatasetList;
-import kware.apps.mobigen.cetus.dataset.dto.response.MobigenDatasetRealDataView;
-import kware.apps.mobigen.cetus.dataset.dto.response.MobigenDatasetView;
+import kware.apps.mobigen.cetus.dataset.dto.response.*;
 import kware.apps.mobigen.cetus.tag.dto.response.TagList;
 import kware.apps.mobigen.cetus.tag.service.CetusMobigenDatasetTagService;
 import kware.apps.thirdeye.mobigen.mobigenregistrant.dto.response.MobigenRegistrantView;
@@ -20,6 +17,7 @@ import kware.common.file.domain.CommonFile;
 import kware.common.file.service.CommonFileService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.ibatis.annotations.Delete;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -54,6 +52,31 @@ public class CetusMobigenDatasetService {
 
         // 2. 리스트 자르기
         List<MobigenDatasetList> pagedList = new ArrayList<>();
+        if (fromIndex < totalCount) {
+            pagedList = list.subList(fromIndex, toIndex);
+        }
+
+        // 3. Page 객체 생성 (카운트 포함)
+        return new Page<>(pagedList, totalCount, new Pageable(pageSize, pageNumber, pageSize));
+    }
+
+    /**
+     * @method      changeListToPage2
+     * @author      dahyeon
+     * @date        2025-10-15
+     * @deacription 리스트에 대한 페이징 작업
+     *              => 모비젠 측에서 해주는 페이징과 kware 포탈 시스템에서 사용하는  페이징이 다를 수 있기 때문에
+     *                 kware 포탈 시스템 페이징 작업 용으로 변경
+     **/
+    private Page<MobigenDatasetRealDataList> changeListToPage2(Integer pageNumber, Integer pageSize, List<MobigenDatasetRealDataList> list) {
+
+        // 1. 전체 개수 및 페이지 정보
+        int totalCount = list.size();
+        int fromIndex = (pageNumber - 1) * pageSize;
+        int toIndex = Math.min(fromIndex + pageSize, totalCount);
+
+        // 2. 리스트 자르기
+        List<MobigenDatasetRealDataList> pagedList = new ArrayList<>();
         if (fromIndex < totalCount) {
             pagedList = list.subList(fromIndex, toIndex);
         }
@@ -112,6 +135,18 @@ public class CetusMobigenDatasetService {
             else data.setRegistrantInfo(false, null);
         });
         return page;
+    }
+
+    /**
+     * @method      findRealDataPage
+     * @author      dahyeon
+     * @date        2025-10-21
+     * @deacription 메타데이터 하위 원본데이터 파일 목록 페이징 조회
+    **/
+    @Transactional(readOnly = true)
+    public Page<MobigenDatasetRealDataList> findRealDataPage(Long datasetId, SearchMobigenDatasetRealdata search) {
+        List<MobigenDatasetRealDataList> realDataList = dao.getRealDataList(datasetId);
+        return this.changeListToPage2(search.getPageNumber(), search.getSize(), realDataList);
     }
 
     /**
@@ -253,5 +288,12 @@ public class CetusMobigenDatasetService {
     @Transactional(readOnly = true)
     public MobigenDatasetRealDataView findRealDataInfoByFileId(String fileId) {
         return dao.getRealDataInfoByFileId(fileId);
+    }
+
+    @Transactional
+    public void deleteRealdatas(DeleteRealdatas request) {
+        for (String fileId: request.getFileIds()) {
+            dao.deleteRealdata(fileId);
+        }
     }
 }

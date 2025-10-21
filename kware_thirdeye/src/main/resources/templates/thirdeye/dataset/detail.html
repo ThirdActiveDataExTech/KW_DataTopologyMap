@@ -60,7 +60,7 @@
                   <div class="col-lg-6">
                     <h2 id="contentTitle" th:text="${dataset?.mobigenDatasetView?.title}"></h2>
                   </div>
-                  <div class="col-lg-6 justify-content-end" style="flex-direction: row; display: flex;">
+                  <div class="col-lg-6 d-flex justify-content-end" style="flex-direction: row; align-items: flex-start;">
                     <div class="page-details-action-wrap" style="margin-right: 17px !important;">
                       <div class="single-page-wishlist">
                           <button class="justify-content-center btn-custom-control" id="btnPageBookmark"
@@ -79,12 +79,12 @@
                                 <span class="txt-label justify-content-center">공유</span>
                             </button>
                         </div>
-                      <div class="single-page-compare">
-                          <button class="justify-content-center btn-custom-control" id="downloadPackage">
+                      <div class="single-page-compare" th:if="${user != null} and (${user.role} == 'ROLE_SYSTEM' or ${user.role} == 'ROLE_ADMIN')">
+                          <button class="justify-content-center btn-custom-control" id="editMetadataUI">
                               <a class="justify-content-center" title="Download" href="javascript:void(0);">
-                                  <i class="pe-7s-cloud-download"></i>
+                                  <i class="pe-7s-pencil"></i>
                               </a>
-                              <span class="txt-label justify-content-center">패키지 다운로드</span>
+                              <span class="txt-label justify-content-center">데이터UI 수정</span>
                           </button>
                       </div>
                     </div>
@@ -218,8 +218,14 @@
             window.location.href = '/portal/list'
         });
 
+        // 패키디 다운로드
         $("#downloadPackage").on('click', async function () {
             await template01JS.packageDownloadBtnClickEvent(dataset['datasetId'], []);
+        });
+
+        // 데이터 수정하기
+        $("#editMetadataUI").on('click', function () {
+            window.location.href = `/admin/approved/dataset/form/${approvedUid}`
         });
 
     });

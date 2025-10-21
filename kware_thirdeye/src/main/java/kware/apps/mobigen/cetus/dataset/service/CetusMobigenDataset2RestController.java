@@ -6,7 +6,6 @@ import kware.apps.mobigen.cetus.dataset.dto.response2.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -15,7 +14,7 @@ import java.util.*;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/admin/mobigen-dataset2")
+@RequestMapping("/api/portal/mobigen-dataset2")
 public class CetusMobigenDataset2RestController {
 
     private final CetusMobigenDatasetService service;
