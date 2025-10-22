@@ -52,7 +52,7 @@ public class CetusApprovedDatasetService {
             page.getList().forEach(dataset -> {
                 // 데이터셋 > 모비젠 측을 통한 상세 정보 조회
                 Long datasetId = dataset.getDatasetId();
-                MobigenDatasetView datasetView = mobigenDatasetService.findMobigenDatasetByDatasetId(datasetId);
+                MobigenDatasetView datasetView = mobigenDatasetService.findMobigenDatasetByDatasetId(datasetId, true, false);
                 if (datasetView != null) {
                     dataset.setDatasetInfo(datasetView);
                 }
@@ -79,7 +79,7 @@ public class CetusApprovedDatasetService {
             list.forEach(dataset -> {
                 // 각 승인관리 중인 데이터셋들의 상세 정보는 모비젠 측에서 가져온다.
                 Long datasetId = dataset.getDatasetId();
-                MobigenDatasetView datasetView = mobigenDatasetService.findMobigenDatasetByDatasetId(datasetId);
+                MobigenDatasetView datasetView = mobigenDatasetService.findMobigenDatasetByDatasetId(datasetId, true, false);
                 if (datasetView != null) {
                     dataset.setDatasetInfo(datasetView);
                 }
@@ -146,7 +146,7 @@ public class CetusApprovedDatasetService {
             approvedDatasetView.setUiView(uiView);
 
             // 3. 진열 등록된 데이터셋 UI => 모비젠에 저장된 데이터셋의 디테일 정보
-            MobigenDatasetView mobigenDatasetView = mobigenDatasetService.findMobigenDatasetByDatasetId(approvedDatasetView.getDatasetId());
+            MobigenDatasetView mobigenDatasetView = mobigenDatasetService.findMobigenDatasetByDatasetId(approvedDatasetView.getDatasetId(), true, true);
             approvedDatasetView.setMobigenDatasetView(mobigenDatasetView);
         }
         
@@ -180,7 +180,7 @@ public class CetusApprovedDatasetService {
         homeDatasetList.forEach(home -> {
             // 1. 진열관리 중인 데이터셋에 대한 상세 정보 > 모비젠 측을 통한 조회
             Long datasetId = home.getDatasetId();
-            MobigenDatasetView mobigenDatasetView = mobigenDatasetService.findMobigenDatasetByDatasetId(datasetId);
+            MobigenDatasetView mobigenDatasetView = mobigenDatasetService.findMobigenDatasetByDatasetId(datasetId, false, false);
             home.setMobigenDatasetView(mobigenDatasetView);
             
             // 2. 진열관리 중인 데이터셋에 대한 > 화면 UI 정보 조회

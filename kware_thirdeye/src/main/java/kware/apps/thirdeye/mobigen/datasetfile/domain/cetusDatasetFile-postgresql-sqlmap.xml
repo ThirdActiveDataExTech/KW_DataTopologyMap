@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cetusDatasetFile">
+
+    <select id="key" resultType="Long" flushCache="true">
+        /* cetusDatasetFile.key */
+        SELECT NEXTVAL('k_thirdeye.cetus_dataset_file_file_uid_seq')
+    </select>
+
+    <select id="getFileInfoByFileId" parameterType="String" resultType="CetusDatasetFile">
+        /* cetusDatasetFile.getFileInfoByFileId */
+        SELECT FILE_UID
+              ,FILE_ID
+              ,FILE_PATH
+              ,ORG_FILE_NM
+              ,METADATA_ID
+              ,RAWDATA_ID
+          FROM CETUS_DATASET_FILE
+         WHERE FILE_ID = #{fileId}
+    </select>
+
+    <update id="increaseDownCnt" parameterType="CetusDatasetFile">
+        /* cetusDatasetFile.increaseDownCnt */
+        UPDATE CETUS_DATASET_FILE
+           SET DOWN_CNT = DOWN_CNT + 1
+         WHERE FILE_ID = #{fileId}
+           AND FILE_UID = #{fileUid}
+    </update>
+
+    <select id="getFileList" resultType="CetusDatasetFileList" parameterType="CetusDatasetFile">
+        /* cetusDatasetFile.getFileList */
+        SELECT FILE_UID
+              ,FILE_ID
+              ,FILE_NM
+              ,ORG_FILE_NM
+              ,FILE_PATH
+              ,FILE_URL
+              ,FILE_SIZE
+              ,FILE_TYPE
+              ,EXTENSION
+              ,DOWN_CNT
+              ,USE_AT
+              ,REG_DT
+              ,UPDT_DT
+              ,SAVED
+              ,REG_ID
+              ,METADATA_ID
+              ,RAWDATA_ID
+              ,DATA_TP_CD
+          FROM CETUS_DATASET_FILE
+         WHERE FILE_UID = #{fileUid}
+           AND SAVED = 'Y'
+           AND USE_AT = 'Y'
+         ORDER BY REG_DT DESC
+    </select>
+
+    <select id="getMetadataFileByMetadataId" resultType="CetusDatasetFileView" parameterType="String">
+        /* cetusDatasetFile.getMetadataFileByMetadataId */
+        SELECT FILE_UID
+              ,FILE_ID
+              ,FILE_NM
+              ,ORG_FILE_NM
+              ,FILE_PATH
+              ,FILE_URL
+              ,FILE_SIZE
+              ,FILE_TYPE
+              ,EXTENSION
+              ,DOWN_CNT
+              ,USE_AT
+              ,REG_DT
+              ,UPDT_DT
+              ,SAVED
+              ,REG_ID
+              ,METADATA_ID
+              ,RAWDATA_ID
+              ,DATA_TP_CD
+          FROM CETUS_DATASET_FILE
+         WHERE METADATA_ID = #{metadataId}
+           AND DATA_TP_CD = 'METADATA'
+    </select>
+
+    <select id="getRawdataFileByMetadataId" resultType="CetusDatasetFileView" parameterType="String">
+        /* cetusDatasetFile.getRawdataFileByMetadataId */
+        SELECT FILE_UID
+              ,FILE_ID
+              ,FILE_NM
+              ,ORG_FILE_NM
+              ,FILE_PATH
+              ,FILE_URL
+              ,FILE_SIZE
+              ,FILE_TYPE
+              ,EXTENSION
+              ,DOWN_CNT
+              ,USE_AT
+              ,REG_DT
+              ,UPDT_DT
+              ,SAVED
+              ,REG_ID
+              ,METADATA_ID
+              ,RAWDATA_ID
+              ,DATA_TP_CD
+          FROM CETUS_DATASET_FILE
+         WHERE METADATA_ID = #{metadataId}
+           AND DATA_TP_CD = 'RAWDATA'
+    </select>
+
+    <select id="getRawdataFileView" resultType="CetusDatasetFileView" parameterType="SearchDatasetFileView">
+        /* cetusDatasetFile.getRawdataFileView */
+        SELECT FILE_UID
+              ,FILE_ID
+              ,FILE_NM
+              ,ORG_FILE_NM
+              ,FILE_PATH
+              ,FILE_URL
+              ,FILE_SIZE
+              ,FILE_TYPE
+              ,EXTENSION
+              ,DOWN_CNT
+              ,USE_AT
+              ,REG_DT
+              ,UPDT_DT
+              ,SAVED
+              ,REG_ID
+              ,METADATA_ID
+              ,RAWDATA_ID
+              ,DATA_TP_CD
+          FROM CETUS_DATASET_FILE
+         WHERE METADATA_ID = #{metadataId}
+           AND RAWDATA_ID = #{rawdataId}
+           AND DATA_TP_CD = 'RAWDATA'
+    </select>
+
+    <insert id="insert" parameterType="CetusDatasetFile">
+        /* cetusDatasetFile.insert */
+        INSERT INTO CETUS_DATASET_FILE (
+             FILE_ID
+            ,ORG_FILE_NM
+            ,FILE_PATH
+            ,FILE_URL
+            ,FILE_SIZE
+            ,FILE_TYPE
+            ,EXTENSION
+            ,REG_DT
+            ,UPDT_DT
+            ,SAVED
+            ,REG_ID
+            ,METADATA_ID
+            ,RAWDATA_ID
+            ,DATA_TP_CD
+        ) VALUES (
+             #{fileId}
+            ,#{orgFileNm}
+            ,#{filePath}
+            ,#{fileUrl}
+            ,#{fileSize}
+            ,#{fileType}
+            ,#{extension}
+            ,NOW()
+            ,NOW()
+            ,#{saved}
+            ,#{regId}
+            ,#{metadataId}
+            ,#{rawdataId}
+            ,#{dataTpCd}
+        )
+    </insert>
+
+    <delete id="deleteFile" parameterType="CetusDatasetFile">
+        /* cetusDatasetFile.deleteFile */
+        UPDATE CETUS_DATASET_FILE
+           SET USE_AT = 'N'
+              ,UPDT_DT = NOW()
+         WHERE FILE_ID = #{fileId}
+    </delete>
+
+</mapper>

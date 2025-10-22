@@ -2,7 +2,7 @@ package kware.apps.mobigen.cetus.dataset.dto.request;
 
 
 import kware.apps.mobigen.cetus.tag.dto.request.SaveTag;
-import kware.common.file.domain.CommonFile;
+import kware.apps.thirdeye.mobigen.datasetfile.domain.CetusDatasetFile;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,8 +14,8 @@ public class SaveMobigenDataset {
 
     private String title;
     private String metadata;
-    private CommonFile[] metaFile;
-    private CommonFile[] realFile;
+    private CetusDatasetFile metaFile;
+    private CetusDatasetFile[] realFiles;
     private List<SaveTag> tags;
 
 }

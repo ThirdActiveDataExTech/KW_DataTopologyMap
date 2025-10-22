@@ -16,15 +16,11 @@
         /* cetusMobigenDataset.insert */
         INSERT INTO CETUS_MOBIGEN_DATASET (
              TITLE
-            ,METADATA_FILE_UID
-            ,REALDATA_FILE_UID
             ,REG_DT
             ,DELETE_AT
             ,METADATA
         ) VALUES (
              #{title}
-            ,#{metadataFileUid}::int8
-            ,#{realdataFileUid}::int8
             ,NOW()
             ,'N'
             ,#{metadata}::jsonb
@@ -43,8 +39,6 @@
         SELECT CMD.UID AS DATASET_ID
               ,CMD.TITLE
               ,TO_CHAR(CMD.REG_DT, 'YYYY-MM-DD HH:MM') AS REG_DT
-              ,CMD.METADATA_FILE_UID
-              ,CMD.REALDATA_FILE_UID
               ,CMD.METADATA
           FROM CETUS_MOBIGEN_DATASET CMD
          WHERE CMD.UID = #{uid}
@@ -54,24 +48,9 @@
         /* cetusMobigenDataset.update */
         UPDATE CETUS_MOBIGEN_DATASET
            SET TITLE = #{title}
-              ,REALDATA_FILE_UID = #{realdataFileUid}::int8
               ,METADATA = #{metadata}::jsonb
          WHERE UID = #{uid}
     </update>
-
-    <select id="getRealDataInfoByFileId" parameterType="String" resultType="MobigenDatasetRealDataView">
-        /* cetusMobigenDataset.getRealDataInfoByFileId */
-        SELECT CF.FILE_ID AS FILE_ID
-              ,CF.ORG_FILE_NM AS ORG_FILE_NM
-              ,CF.FILE_PATH AS FILE_PATH
-              ,CF.FILE_SIZE AS FILE_SIZE
-              ,CF.FILE_TYPE AS FILE_TYPE
-              ,CF.EXTENSION AS EXTENSION
-              ,CF.DOWN_CNT AS DOWN_CNT
-              ,TO_CHAR(CF.REG_DT, 'YYYY-MM-DD HH:MM') AS REG_DT
-          FROM CETUS_FILE CF
-         WHERE CF.FILE_ID = #{fileId}
-    </select>
 
     <update id="ifExistDeleteApprovedDataset" parameterType="DeleteApprovedDatasetIfExist">
         /* cetusApprovedDataset.ifExistDeleteApprovedDataset */
@@ -81,23 +60,8 @@
            AND DATASET_ID = #{datasetId}
     </update>
 
-    <select id="getRealDataList" parameterType="Long" resultType="MobigenDatasetRealDataList">
-        /* cetusApprovedDataset.getRealDataList */
-        SELECT CF.FILE_ID AS FILE_ID
-              ,CF.ORG_FILE_NM AS ORG_FILE_NM
-              ,CF.FILE_PATH AS FILE_PATH
-              ,CF.FILE_SIZE AS FILE_SIZE
-              ,CF.FILE_TYPE AS FILE_TYPE
-              ,CF.EXTENSION AS EXTENSION
-              ,CF.DOWN_CNT AS DOWN_CNT
-              ,TO_CHAR(CF.REG_DT, 'YYYY-MM-DD HH:MM') AS REG_DT
-          FROM CETUS_MOBIGEN_DATASET CMD
-         INNER JOIN CETUS_FILE CF ON CF.FILE_UID = CMD.REALDATA_FILE_UID AND CF.USE_AT = 'Y' AND CF.SAVED = 'Y'
-         WHERE CMD.UID = #{uid}
-    </select>
-
     <update id="deleteRealdata" parameterType="String">
-        /* getRealDataList.deleteRealdata */
+        /* cetusApprovedDataset.deleteRealdata */
         UPDATE CETUS_FILE
            SET USE_AT = 'N'
          WHERE FILE_ID = #{fileId}

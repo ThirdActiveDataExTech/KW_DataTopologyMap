@@ -28,11 +28,11 @@ public class CetusMobigenDatasetTagService {
      * @deacription [Mobigen] 태그 & 데이터셋 매핑 정보 저장
     **/
     @Transactional
-    public void saveDatasetTag(List<SaveTag> requests, Long datasetUid) {
-        dao.deleteAll(datasetUid);
+    public void saveDatasetTag(List<SaveTag> requests, Long datasetId) {
+        dao.deleteAll(datasetId);
         for (SaveTag request: requests) {
             Long tagUid = (request.getUid() == null) ? tagService.saveMobigenTag(request.getTagNm()) : request.getUid();
-            CetusMobigenDatasetTag bean = new CetusMobigenDatasetTag(datasetUid, tagUid);
+            CetusMobigenDatasetTag bean = new CetusMobigenDatasetTag(datasetId, tagUid);
             dao.insert(bean);
         }
     }

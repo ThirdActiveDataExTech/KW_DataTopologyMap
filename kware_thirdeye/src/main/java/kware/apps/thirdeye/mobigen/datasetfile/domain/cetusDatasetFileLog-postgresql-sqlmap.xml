@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cetusDatasetFileLog">
+
+    <insert id="insertLog" parameterType="CetusDatasetFileLog">
+        /* cetusDatasetFileLog.insertLog */
+        INSERT INTO CETUS_DATASET_FILE_LOG (
+             FILE_UID
+            ,FILE_ID
+            ,WORKER_UID
+            ,WORKER_NM
+            ,REG_DT
+            ,DOWNLOAD_URL
+        ) VALUES (
+             #{fileUid}
+            ,#{fileId}
+            ,#{workerUid}
+            ,#{workerNm}
+            ,NOW()
+            ,#{downloadUrl}
+        )
+    </insert>
+</mapper>

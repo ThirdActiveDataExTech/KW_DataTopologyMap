@@ -2,11 +2,11 @@ package kware.apps.thirdeye.mobigen.datasetui.service;
 
 
 import cetus.user.UserUtil;
-import kware.apps.thirdeye.mobigen.category.service.CetusDatasetCategoryService;
-import kware.apps.thirdeye.mobigen.datasetui.dto.request.ChangeDatasetUi;
 import kware.apps.thirdeye.mobigen.approveddataset.dto.request.SaveApprovedDataset;
+import kware.apps.thirdeye.mobigen.category.service.CetusDatasetCategoryService;
 import kware.apps.thirdeye.mobigen.datasetui.domain.CetusDatasetUi;
 import kware.apps.thirdeye.mobigen.datasetui.domain.CetusDatasetUiDao;
+import kware.apps.thirdeye.mobigen.datasetui.dto.request.ChangeDatasetUi;
 import kware.apps.thirdeye.mobigen.datasetui.dto.request.ChangeShowUiDatasets;
 import kware.apps.thirdeye.mobigen.datasetui.dto.response.DatasetUiGroup;
 import kware.apps.thirdeye.mobigen.datasetui.dto.response.DatasetUiView;
@@ -18,7 +18,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Comparator;
 import java.util.List;
 
 @Slf4j

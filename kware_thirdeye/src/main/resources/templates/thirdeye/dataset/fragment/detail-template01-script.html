@@ -18,7 +18,7 @@
 
         drawMetadataTab: async function (dataset) {
             /* ========= 1. 메타데이터 정보 =========*/
-            const metadataFile = dataset['mobigenDatasetView']?.['metadataFiles']?.[0]
+            const metadataFile = dataset['mobigenDatasetView']?.['metadataFile']
             $("#metadata-id").val(metadataFile['fileId']);
             $("#metadata-badge").text(metadataFile['extension']);
             $("#metadata-desc").text(metadataFile['orgFileNm']);
@@ -32,17 +32,18 @@
             const res = await Http.post('/api/portal/mobigen-dataset2/rawdata01', mobigen_obj, true)
             console.log(">> res : ", res)
 
-            const realDataFiles = dataset['mobigenDatasetView']?.['realdataFiles'] || []
-
-            if (realDataFiles.length !== 0) {
-                const filesLength = realDataFiles.length;
+            const rawdataFiles = dataset['mobigenDatasetView']?.['rawdataFiles'] || []
+            if (rawdataFiles.length !== 0) {
+                const filesLength = rawdataFiles.length;
                 const title = (filesLength === 1) ? "신규데이터 (1건)" : `주기성 과거 데이터 ( ${filesLength}건 )`;
                 $("#metadata-file-history-title").text(title);
                 const $tbody = $("#metadata-history-table-body");
                 $tbody.empty(); // 초기화
 
-                realDataFiles.forEach((data, index) => {
-                    const $tr = $("<tr>").attr("data-id", data['fileId'])
+                rawdataFiles.forEach((data) => {
+                    const $tr = $("<tr>")
+                        .attr("data-meta", data['metadataId'])
+                        .attr("data-raw", data['rawdataId'])
                         .append($("<td>").text(data['orgFileNm']))
                         .append($("<td>").text(data['regDt']));
                     $tbody.append($tr);
@@ -55,19 +56,17 @@
         },
 
         drawExtraMetadata: function (dataset) {
-            console.log("drawExtraMetadata >>> ", dataset)
             const metadataStr = dataset?.['mobigenDatasetView']?.['metadata'] || "{}"
             const metadataObj = JSON.parse(metadataStr)
-            console.log(">>> obj : ", metadataObj)
 
             const container = document.getElementById("jsoneditor");
             const options = {
                 mode: "view",  // view 모드로 읽기 전용
                 onError: function (err) {
-                    alert(err.toString());
+                    console.error('err: ', err)
                 },
                 onModeChange: function (newMode, oldMode) {
-                    console.log("Mode changed from", oldMode, "to", newMode);
+                    //console.log("Mode changed from", oldMode, "to", newMode);
                 }
             };
             const editor = new JSONEditor(container, options);
@@ -114,16 +113,17 @@
             }
         },
 
-        showMetDataFileInfoModal: async function (datafileId) {
+        showMetDataFileInfoModal: async function (metaId, rawId) {
 
             // [todo] mobigen rawdata view
-            const mobigen_obj = {metadata_id: 1, rawdata_id: datafileId}
+            const mobigen_obj = {metadata_id: metaId, rawdata_id: rawId}
             const res = await Http.post(`/api/portal/mobigen-dataset2/rawdata04`, mobigen_obj, true)
             console.log(">> res : ", res)
 
-            $("#metadata-file-info").empty();
 
-            Http.get(`/api/admin/mobigen-dataset/realdata/${datafileId}`).then((res) => {
+            $("#metadata-file-info").empty();
+            const obj = { metadataId: metaId, rawdataId: rawId }
+            Http.get(`/api/portal/dataset-file/rawdata-file-view`, obj).then((res) => {
                 if (!res) {
                     Util.alert("데이터를 찾을 수 없습니다.");
                     return;
@@ -204,12 +204,13 @@
             const res = await Http.post('/api/portal/mobigen-dataset2/metadata08', mobigen_obj, true)
             console.log(">>> res : ", res)
 
-            await FileUtil.fileDownload(metadataFileId)
+            await DataFileUtil.fileDownload(metadataFileId)
         });
 
         $(document).on('click', `.history-table tbody tr`, function () {
-            const id = $(this).data("id");
-            template01JS.showMetDataFileInfoModal(id);
+            const metaId = $(this).data("meta");
+            const rawId = $(this).data("raw");
+            template01JS.showMetDataFileInfoModal(metaId, rawId);
         });
 
         $(document).on('click', '.realdata-file-download', async function () {
@@ -220,7 +221,7 @@
             const res = await Http.post(`/api/portal/mobigen-dataset2/rawdata07`, mobigen_obj, true)
             console.log(">> res : ", res)
 
-            await FileUtil.fileDownload(fileId)
+            await DataFileUtil.fileDownload(fileId)
         })
 
         $("#close-btn").on('click', function () {
