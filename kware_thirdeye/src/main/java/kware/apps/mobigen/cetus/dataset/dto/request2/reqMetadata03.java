@@ -21,7 +21,7 @@ public class reqMetadata03 {
         private String modified;
         private String description;
         private String publisher;
-        private List<String> keywords;
+        private String keywords;
         private String landing_page;
         private List<String> theme;
         private String access_url;

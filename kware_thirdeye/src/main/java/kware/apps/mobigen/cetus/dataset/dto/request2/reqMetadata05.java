@@ -23,8 +23,7 @@ public class reqMetadata05 {
         private String modified;
         private String identifier;
         private String publisher;
-        private String keyword;
-        private List<String> keywords;
+        private String keywords;
         private String landing_page;
         private List<String> theme;
         private String access_url;

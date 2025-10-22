@@ -36,8 +36,7 @@ public class resPackage02 {
         private String modified;
         private String identifier;
         private String publisher;
-        private String keyword;
-        private List<String> keywords;
+        private String keywords;
         private String landing_page;
         private String theme;
         private String access_url;
@@ -46,7 +45,7 @@ public class resPackage02 {
         private String ingested_at;
         private String updated_at;
 
-        public resPackage02_Metadata(String metadata_id, String title, List<String> keywords) {
+        public resPackage02_Metadata(String metadata_id, String title, String keywords) {
             this.metadata_id = metadata_id;
             this.title = title;
             this.keywords = keywords;

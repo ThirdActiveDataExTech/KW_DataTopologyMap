@@ -20,9 +20,6 @@
             margin-left: 6px;
             font-weight: bold;
         }
-        /*.select2-selection__rendered > li.select2-selection__choice {
-            display: none !important;
-        }*/
         .sidebar-widget .sidebar-list-style ul li:last-child {
             margin: 0 0 14px !important;
             margin-left: 0px !important;
@@ -255,8 +252,11 @@
                     const value = $this.val();
                     listJS.param[type] = listJS.param[type] || [];
 
-                    if ($this.is(':checked')) if (!listJS.param[type].includes(value)) listJS.param[type].push(value);
-                    else listJS.param[type] = listJS.param[type].filter(item => item !== value);
+                    if ($this.is(':checked')) {
+                        if (!listJS.param[type].includes(value)) listJS.param[type].push(value);
+                    } else {
+                        listJS.param[type] = listJS.param[type].filter(item => item !== value);
+                    }
 
                     const total = $(".category-item").length;
                     const checked = $(".category-item:checked").length;

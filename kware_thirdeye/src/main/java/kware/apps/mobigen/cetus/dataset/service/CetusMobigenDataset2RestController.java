@@ -40,7 +40,7 @@ public class CetusMobigenDataset2RestController {
         resPackage02.resPackage02_Metadata metadata = new resPackage02.resPackage02_Metadata(
                 "metadata_9999",
                 "test title you can change",
-                Arrays.asList("tag1", "tag2", "tag3")
+                "tag1, tag2, tag3"
         );
         return ResponseEntity.ok(new resPackage02("package02_100200", "Package import completed", metadata));
     }
@@ -58,8 +58,8 @@ public class CetusMobigenDataset2RestController {
         for (int i = 1; i <= itemCount; i++) {
             String metadataId = "metadata_" + i;
             String title = "Test Title " + i;
-            List<String> keywords = Arrays.asList("tag" + i, "tag" + (i + 1), "tag" + (i + 2));
-            items.add(new resMetadata01.resMetadata01_result.resMetadata01_items(metadataId, title, keywords));
+            String joined = String.join("," , Arrays.asList("tag" + i, "tag" + (i + 1), "tag" + (i + 2)));
+            items.add(new resMetadata01.resMetadata01_result.resMetadata01_items(metadataId, title, joined));
         }
         resMetadata01.resMetadata01_result resMetadata01Result = new resMetadata01.resMetadata01_result(
                 itemCount, search.getPagination().getPage(), search.getPagination().getLimit(), items
@@ -112,7 +112,7 @@ public class CetusMobigenDataset2RestController {
         resMetadata07.reqMetadata07_Metadata metadata = new resMetadata07.reqMetadata07_Metadata(
                 "metadata_9999",
                 "test title you can change",
-                Arrays.asList("tag1", "tag2", "tag3")
+                "tag1, tag2, tag3"
         );
         return ResponseEntity.ok(new resMetadata07("metadata07_100200", "Package import completed", metadata));
     }

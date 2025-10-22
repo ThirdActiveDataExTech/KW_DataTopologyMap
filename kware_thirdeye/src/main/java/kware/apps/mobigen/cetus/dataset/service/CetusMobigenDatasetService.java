@@ -39,11 +39,10 @@ public class CetusMobigenDatasetService {
      * @method      changeListToPage
      * @author      dahyeon
      * @date        2025-10-15
-     * @deacription 리스트에 대한 페이징 작업
-     *              => 모비젠 측에서 해주는 페이징과 kware 포탈 시스템에서 사용하는  페이징이 다를 수 있기 때문에
-     *                 kware 포탈 시스템 페이징 작업 용으로 변경
-    **/
-    private Page<MobigenDatasetList> changeListToPage(Integer pageNumber, Integer pageSize, List<MobigenDatasetList> list) {
+     * @description 리스트에 대한 페이징 작업 (공통)
+     *              => 모비젠 측과 kware 포탈의 페이징 로직 차이로 인한 공통 메서드
+     */
+    private <T> Page<T> changeListToPage(Integer pageNumber, Integer pageSize, List<T> list) {
 
         // 1. 전체 개수 및 페이지 정보
         int totalCount = list.size();
@@ -51,32 +50,7 @@ public class CetusMobigenDatasetService {
         int toIndex = Math.min(fromIndex + pageSize, totalCount);
 
         // 2. 리스트 자르기
-        List<MobigenDatasetList> pagedList = new ArrayList<>();
-        if (fromIndex < totalCount) {
-            pagedList = list.subList(fromIndex, toIndex);
-        }
-
-        // 3. Page 객체 생성 (카운트 포함)
-        return new Page<>(pagedList, totalCount, new Pageable(pageSize, pageNumber, pageSize));
-    }
-
-    /**
-     * @method      changeListToPage2
-     * @author      dahyeon
-     * @date        2025-10-15
-     * @deacription 리스트에 대한 페이징 작업
-     *              => 모비젠 측에서 해주는 페이징과 kware 포탈 시스템에서 사용하는  페이징이 다를 수 있기 때문에
-     *                 kware 포탈 시스템 페이징 작업 용으로 변경
-     **/
-    private Page<MobigenDatasetRealDataList> changeListToPage2(Integer pageNumber, Integer pageSize, List<MobigenDatasetRealDataList> list) {
-
-        // 1. 전체 개수 및 페이지 정보
-        int totalCount = list.size();
-        int fromIndex = (pageNumber - 1) * pageSize;
-        int toIndex = Math.min(fromIndex + pageSize, totalCount);
-
-        // 2. 리스트 자르기
-        List<MobigenDatasetRealDataList> pagedList = new ArrayList<>();
+        List<T> pagedList = new ArrayList<>();
         if (fromIndex < totalCount) {
             pagedList = list.subList(fromIndex, toIndex);
         }
@@ -146,7 +120,7 @@ public class CetusMobigenDatasetService {
     @Transactional(readOnly = true)
     public Page<MobigenDatasetRealDataList> findRealDataPage(Long datasetId, SearchMobigenDatasetRealdata search) {
         List<MobigenDatasetRealDataList> realDataList = dao.getRealDataList(datasetId);
-        return this.changeListToPage2(search.getPageNumber(), search.getSize(), realDataList);
+        return this.changeListToPage(search.getPageNumber(), search.getSize(), realDataList);
     }
 
     /**
@@ -193,8 +167,7 @@ public class CetusMobigenDatasetService {
      *              => 패키지 파일 형태 업로드 (zip)
     **/
     public void saveMobigenPackageDataset(SaveMobigenPackageDataset request) {
-        /*Long metadataFileUid = null;
-        metadataFileUid= commonFileService.processFile2(request.getMetaFile(), null, user, metadataFileUid);*/
+        // todo mobigen API 태우기
     }
 
     /**
@@ -258,6 +231,7 @@ public class CetusMobigenDatasetService {
         Long datasetId = view.getDatasetId();
 
         // 2. dataset registrant info
+        // => kware 백단 태우기 유지
         MobigenRegistrantView registrantView = registrantService.findMobigenRegistrant(datasetId);
         view.setRegistrantId((registrantView != null) ? registrantView.getRegistrantId() : null);
 

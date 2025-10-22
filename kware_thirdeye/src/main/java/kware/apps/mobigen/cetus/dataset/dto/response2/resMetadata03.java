@@ -47,8 +47,7 @@ public class resMetadata03 {
             private String modified;
             private String identifier;
             private String publisher;
-            private String keyword;
-            private List<String> keywords;
+            private String keywords;
             private String landing_page;
             private String theme;
             private String access_url;
@@ -57,7 +56,7 @@ public class resMetadata03 {
             private String ingested_at;
             private String updated_at;
 
-            public resMetadata03_metadata(String title, List<String> keywords) {
+            public resMetadata03_metadata(String title, String keywords) {
                 Random random = new Random();
                 int randomNum = random.nextInt(5) + 1;
                 this.metadata_id = "metadata_" + randomNum;

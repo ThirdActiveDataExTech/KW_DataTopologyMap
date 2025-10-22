@@ -58,7 +58,7 @@ public class CetusApprovedDatasetService {
                 }
                 // 데이터셋의 화면 UI 값에 대해서 > 해당 UI 설명 정보
                 DatasetMainUiType mainUiType = DatasetMainUiType.valueOf(dataset.getMainUiTypeCd());
-                dataset.setMainUiTypeCdDescription(mainUiType.getDescription());
+                dataset.setMainUiTypeCdDesc(mainUiType.getDescription());
             });
         }
         return page;

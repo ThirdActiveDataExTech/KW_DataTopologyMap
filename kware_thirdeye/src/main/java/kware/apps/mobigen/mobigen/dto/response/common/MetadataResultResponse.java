@@ -23,8 +23,7 @@ public class MetadataResultResponse {
     private String modified;
     private String identifier;
     private String publisher;
-    private String keyword;
-    private List<String> keywords;
+    private String keywords;
     private String landing_page;
     private String theme;
     private String access_url;

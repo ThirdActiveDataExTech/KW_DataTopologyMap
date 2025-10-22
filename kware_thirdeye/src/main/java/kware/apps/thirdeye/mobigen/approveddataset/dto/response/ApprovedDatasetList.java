@@ -18,24 +18,21 @@ public class ApprovedDatasetList {
     private Long categoryUid;       // 카테고리 UID
     private String categoryNm;      // 카테고리명
 
-    private Long mainUiUid;         // 메인 UI uid
-    private String mainUiCode;      // 메인 UI 코드
-    private String mainUiTypeCd;    // 메인 UI 타입
-    private String mainUiTypeCdDescription; // 메인 UI 타입 설명
-    private String showAt;          // 데이터셋 노출 여부
+    private Long mainUiUid;          // 메인 UI uid
+    private String mainUiCode;       // 메인 UI 코드
+    private String mainUiTypeCd;     // 메인 UI 타입
+    private String mainUiTypeCdDesc; // 메인 UI 타입 설명
+    private String showAt;           // 데이터셋 노출 여부
 
     private String thumbId;
     private String extraJson;
-
-    private boolean isRegistered;
-    private String registrantId;
 
     private MobigenDatasetView datasetView;
     public void setDatasetInfo(MobigenDatasetView datasetView) {
         this.datasetView = datasetView;
     }
 
-    public void setMainUiTypeCdDescription(String mainUiTypeCdDescription) {
-        this.mainUiTypeCdDescription = mainUiTypeCdDescription;
+    public void setMainUiTypeCdDesc(String mainUiTypeCdDesc) {
+        this.mainUiTypeCdDesc = mainUiTypeCdDesc;
     }
 }
