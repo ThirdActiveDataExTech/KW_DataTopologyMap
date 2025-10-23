@@ -1,0 +1,64 @@
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<script th:inline="javascript">
+
+    console.log("mobigen dataset manage tab")
+
+    $(document).ready(function() {
+        const string = window.localStorage.getItem('mobigen_obj')
+        const obj = JSON.parse(string)
+        new Promise((resolve, reject) => {
+            mobigenDatasetListJS.initTable( (obj && obj['pageNumber']) ? obj['pageNumber'] : 1 );
+            resolve();
+        }).then(() => {
+            mobigenDatasetListJS.table._table.draw('page')
+            window.localStorage.removeItem('mobigen_obj')
+        })
+    });
+
+    // ===============================
+    // 모비젠 > 테이블 검색 조건 유지
+    // ===============================
+    function setSearchOption() {
+        const obj = {
+            pageNumber: mobigenDatasetListJS.table._data.number
+        }
+        const string = JSON.stringify(obj);
+        window.localStorage.setItem('mobigen_obj', string);
+    }
+
+    $(function () {
+
+        // ===============================
+        // 모비젠 > 데이터셋 등록
+        // ===============================
+        $("#new-btn").on('click', function () {
+            setSearchOption();
+            window.location.href = '/admin/metadata/dataset/save';
+        });
+
+        // ===============================
+        // 모비젠 > 패키지 데이터셋 등록
+        // ===============================
+        $("#package-new-btn").on('click', function () {
+            setSearchOption();
+            window.location.href = '/admin/metadata/dataset/package/save';
+        });
+
+        // ===============================
+        // 모비젠 > 데이터셋 삭제 (물리 삭제)
+        // ===============================
+        $("#delete-btn").on('click', function () {
+            mobigenDatasetListJS.deleteDatasetClickEvent();
+        });
+
+        // =================================
+        // 모비젠 > 테이블 > 관리하기 버튼 클릭
+        // =================================
+        $(document).on('click', '#mobigen-dataset-table #realdata-mng', function (e) {
+            const uid = $(this).data('uid')
+            mobigenDatasetListJS.mngRealdataClickEvent(uid);
+        });
+    });
+
+</script>
+</html>

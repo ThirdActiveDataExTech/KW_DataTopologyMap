@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/default}">
+
+<th:block layout:fragment="center-image">
+    <th:block th:with="title1=${currentPageName}, title2=${navigation}, leftImg=${centerLeftImage}, rightImg=${centerRightImage}">
+        <th:block th:replace="fragments/center-image :: main-image-title(${title1}, ${title2}, ${leftImg}, ${rightImg})"></th:block>
+    </th:block>
+</th:block>
+
+<th:block layout:fragment="head">
+    <link rel="stylesheet" th:href="@{'/assets/css/page/admin/mobigen-metadata.css'}" />
+</th:block>
+
+<th:block layout:fragment="content">
+    <div class="related-product-area pb-100 pt-80" data-aos="fade-up" data-aos-delay="200">
+        <div class="container">
+
+            <div class="section-title-2 st-border-center text-center mb-35">
+                <h2>데이터셋 등록</h2>
+            </div>
+            <hr>
+
+            <!-- s:buttons -->
+            <div>
+                <div class="d-flex justify-content-end pe-4">
+                    <div class="btn-container" style="margin-top: 0px !important;">
+                        <!-- 왼쪽 버튼 -->
+                        <!-- 오른쪽 버튼들 -->
+                        <div class="right-buttons">
+                            <button type="button" class="custom-button" id="list-btn">목록</button>
+                            <button id="new-submit-btn" class="custom-button">등록하기</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- e:buttons -->
+
+            <!-- s: 신규 데이터셋 등록 -->
+            <div class="card card-custom" style="margin-top: 10px">
+                <h4>신규 데이터 등록 화면</h4>
+                <!-- 메타데이터 업로드 -->
+                <div class="file-row">
+                    <label>메타데이터 파일</label>
+                    <div class="file-display">
+                        <div class="file-row" style="position: relative;">
+                            <input type="text" id="new-meta-filename" class="file-text" placeholder="선택된 파일 없음" readonly>
+                            <button type="button" id="new-meta-clear" class="clear-file">×</button>
+                        </div>
+                        <span style="font-size: 11px;color: #393838;">* xml, csv, pdf 형태만 업로드 가능합니다.</span>
+                    </div>
+                    <button type="button" class="file-btn" id="new-meta-upload-btn">메타데이터 업로드</button>
+                    <div id="new-meta-uploader" style="display: none;"></div>
+                </div>
+
+                <!-- 기본정보 -->
+                <div class="basic-info">
+
+                        <div class="header">기본 정보</div>
+
+                        <!-- 1행 -->
+                        <div class="row">
+                            <div class="col-lg-12 items">
+                                <label for="new-title">컨텐츠 제목</label>
+                                <input type="text" id="new-title" name="title" class="form-control" placeholder="제목을 입력하세요." required>
+                            </div>
+                        </div>
+
+                        <!-- 2행 -->
+                        <div class="row select2-row">
+                            <div class="col-lg-12">
+                                <label for="new-tags">태그</label>
+                                <div class="mt-2">
+                                    <select class="select2 round border_line" id="new-tags" multiple></select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 3행 -->
+                        <div class="row">
+                            <div class="col-lg-6 items">
+                                <label for="jsoneditor">메타데이터(JSON)</label>
+                                <!--<textarea id="new-metadata" name="metadata" class="form-control" style="height:200px;" required></textarea>-->
+                                <div id="jsoneditor" style="width: inherit; height: 400px;"></div>
+                            </div>
+                        </div>
+                </div>
+
+                <!-- 실데이터 업로드 -->
+                <div class="file-row">
+                    <label>실 데이터</label>
+                    <div class="file-display">
+                        <div class="file-row" style="position: relative;">
+                            <input type="text" id="new-data-filename" class="file-text" placeholder="선택된 파일 없음" readonly>
+                            <button type="button" id="new-data-clear" class="clear-file">×</button>
+                        </div>
+                        <span style="font-size: 11px;color: #393838;">* xml, csv, pdf 형태만 업로드 가능합니다.</span>
+                    </div>
+                    <button type="button" class="file-btn" id="new-data-upload-btn">실데이터 업로드</button>
+                    <div id="new-data-uploader" style="display: none;"></div>
+                </div>
+
+            </div>
+            <!-- e: 신규 데이터셋 등록 -->
+
+        </div>
+    </div>
+
+</th:block>
+
+<th:block layout:fragment="script">
+    <script th:src="@{'/assets/js/page/admin/metadata/mobigen/mobigen-dataset-control-form.js'}"></script>
+    <script th:inline="javascript">
+
+        $(document).ready(function() {
+
+            $("#new-tags").select2({
+                placeholder: "태그 선택",
+                language: {
+                    searching: function() {
+                        return "검색 중..."; // 검색 중 텍스트 변경
+                    },
+                    noResults: function() {
+                        return "결과가 없습니다"; // 결과 없음 텍스트 변경
+                    },
+                    inputTooLong: function(n) {
+                        return "너무 깁니다. "+(n.input.length-n.maximum)+" 글자 지워주세요."
+                    }
+                },
+                tags: true,
+                maximumInputLength: 30,
+                ajax: {
+                    url: '/api/admin/dataset-tag/list',
+                    dataType: 'json',
+                    delay: 250,
+                    data: function (params) {
+                        return {
+                            tagNm: params.term,
+                        };
+                    },
+                    processResults: function (data, params) {
+                        return {
+                            results: data.map(item => ({
+                                id: item['tagUid'],
+                                text: item['tagNm']
+                            })),
+                        };
+                    },
+                },
+                createTag: function (params) {
+                    const term = $.trim(params.term);
+                    if (term === '') { return null; }
+                    return {
+                        id: term,
+                        text: term,
+                        newTag: true
+                    }
+                },
+            });
+        });
+
+        $(function () {
+            mobigenDatasetFormJS.initMetadataJson();
+            mobigenDatasetFormJS.initMetadataUploader("new-meta-filename", "new-meta-uploader", null);
+            mobigenDatasetFormJS.initRealdataUploader("new-data-filename", "new-data-uploader", null);
+
+            $("#list-btn").on('click', async function () {
+                const isOk = await Util.confirm("작성중이신 정보는 저장되지 않습니다. <br> 목록으로 돌아가시겠습니까?")
+                if (isOk) {
+                    window.location.href = '/admin/metadata/dataset'
+                }
+            });
+
+            // ===============================
+            // 신규 데이터 등록 > 메타데이터 파일 > 업로드, 삭제
+            // ===============================
+            $('#new-meta-upload-btn').on('click', function () {
+                mobigenDatasetFormJS.metadataFileUpload();
+            });
+            $("#new-meta-clear").on('click', function () {
+                mobigenDatasetFormJS.metadataFileDelete();
+            });
+
+            // ===============================
+            // 신규 데이터 등록 > 실데이터 파일 > 업로드, 삭제
+            // ===============================
+            $("#new-data-upload-btn").on('click', function () {
+                mobigenDatasetFormJS.realdataFileUpload();
+            });
+            $("#new-data-clear").on('click', function () {
+                mobigenDatasetFormJS.realdataFileDelete();
+            });
+
+            // ===============================
+            // 등록 버튼 클릭 이벤트
+            // ===============================
+            $('#new-submit-btn').click(function(){
+                mobigenDatasetFormJS.newSaveClickEvent();
+            });
+        });
+    </script>
+</th:block>
+</html>

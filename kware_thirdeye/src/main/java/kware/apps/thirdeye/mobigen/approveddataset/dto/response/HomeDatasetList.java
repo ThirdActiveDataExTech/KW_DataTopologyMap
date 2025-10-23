@@ -18,6 +18,9 @@ public class HomeDatasetList {
     private Long thumbUid;
     private String thumbId;
 
+    private String targetTpCd;      // 원본 데이터셋 저장 위치
+    private String targetTpCdNm;    // 원본 데이터셋 저장 위치 설명
+
     private DatasetUiView uiView;
     private MobigenDatasetView mobigenDatasetView;
 
@@ -32,5 +35,8 @@ public class HomeDatasetList {
     }
     public void setMobigenDatasetView(MobigenDatasetView mobigenDatasetView){
         this.mobigenDatasetView = mobigenDatasetView;
+    }
+    public void setTargetTpCdNm(String targetTpCdNm) {
+        this.targetTpCdNm = targetTpCdNm;
     }
 }

@@ -15,6 +15,8 @@ public class ApprovedDatasetView {
     private Long workplaceUid;
     private String approvedDt;
     private Long approverUid;
+    private String targetTpCd;      // 원본 데이터셋 저장 위치
+    private String targetTpCdNm;    // 원본 데이터셋 저장 위치 설명
 
     private String deleteAt;
 
@@ -35,5 +37,9 @@ public class ApprovedDatasetView {
 
     public void setMobigenDatasetView(MobigenDatasetView mobigenDatasetView) {
         this.mobigenDatasetView = mobigenDatasetView;
+    }
+
+    public void setTargetTpCdNm(String targetTpCdNm) {
+        this.targetTpCdNm = targetTpCdNm;
     }
 }

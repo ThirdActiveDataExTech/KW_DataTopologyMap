@@ -8,6 +8,7 @@
               ,CAD.DATASET_ID
               ,TO_CHAR(CAD.APPROVED_DT, 'YYYY-MM-DD HH:MM') AS APPROVED_DT
               ,CU_APP.USER_NM AS APPROVER_NM
+              ,CAD.TARGET_TP_CD
               ,( SELECT COALESCE(ROUND(SUM(CDM.RATINGS) / COUNT(*)), 0)
                    FROM CETUS_DATASET_COMMENT CDM
                   WHERE CDM.APPROVED_DATASET_UID = CAD.UID ) AS RATINGS
@@ -84,6 +85,7 @@
               ,CAD.DATASET_ID
               ,TO_CHAR(CAD.APPROVED_DT, 'YYYY-MM-DD HH:MM') AS APPROVED_DT
               ,CU_APP.USER_NM AS APPROVER_NM
+              ,CAD.TARGET_TP_CD
               ,( SELECT COALESCE(ROUND(SUM(CDM.RATINGS) / COUNT(*)), 0)
                    FROM CETUS_DATASET_COMMENT CDM
                   WHERE CDM.APPROVED_DATASET_UID = CAD.UID ) AS RATINGS
@@ -134,12 +136,14 @@
             ,WORKPLACE_UID
             ,APPROVED_DT
             ,APPROVER_UID
+            ,TARGET_TP_CD
             ,DELETE_AT
         ) VALUES (
              #{datasetId}
             ,#{workplaceUid}
             ,NOW()
             ,#{approverUid}
+            ,#{targetTpCd}
             ,'N'
         )
     </insert>
@@ -151,9 +155,9 @@
               ,CAD.WORKPLACE_UID
               ,CAD.APPROVED_DT
               ,CAD.APPROVER_UID
+              ,CAD.TARGET_TP_CD
               ,CDU.CATEGORY_UID AS CATEGORY_UID
               ,CDC.CATEGORY_NM AS CATEGORY_NM
-              ,CAD.CREATED_ID
               ,CF.FILE_ID AS THUMB_ID
               ,( SELECT COALESCE(ROUND(SUM(CDM.RATINGS) / COUNT(*)), 0)
                    FROM CETUS_DATASET_COMMENT CDM
@@ -192,6 +196,7 @@
               ,CDC.CATEGORY_NM AS CATEGORY_NM
               ,CDU.THUMB_UID AS THUMB_UID
               ,CF.FILE_ID AS THUMB_ID
+              ,CAD.TARGET_TP_CD
               ,( SELECT COALESCE(ROUND(SUM(CDM.RATINGS) / COUNT(*)), 0)
                    FROM CETUS_DATASET_COMMENT CDM
                   WHERE CDM.APPROVED_DATASET_UID = CAD.UID

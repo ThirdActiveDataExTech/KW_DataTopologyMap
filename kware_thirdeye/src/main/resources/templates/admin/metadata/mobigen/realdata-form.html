@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/default}">
+
+<th:block layout:fragment="center-image">
+  <th:block th:with="title1=${currentPageName}, title2=${navigation}, leftImg=${centerLeftImage}, rightImg=${centerRightImage}">
+    <th:block th:replace="fragments/center-image :: main-image-title(${title1}, ${title2}, ${leftImg}, ${rightImg})"></th:block>
+  </th:block>
+</th:block>
+
+<th:block layout:fragment="head">
+  <link rel="stylesheet" type="text/css" th:href="@{'/assets/css/plugins/datatables/select.dataTables.min.css'}" />
+  <style>
+    .dataTable tr.odd:hover,
+    .dataTable tr.even:hover {
+      cursor: pointer; /* 선택적으로 커서도 포인터로 */
+    }
+    .topbar-container {
+      padding-bottom: 0.1rem !important;
+      border-bottom: none !important;
+      padding-top: 1rem !important;
+    }
+  </style>
+  <link rel="stylesheet" th:href="@{'/assets/css/page/system/user-list.css'}"/>
+</th:block>
+
+<th:block layout:fragment="content">
+  <div class="related-product-area pb-100 pt-80" data-aos="fade-up" data-aos-delay="200">
+    <div class="container">
+
+      <div class="section-title-2 st-border-center text-center mb-35">
+        <h2>원본데이터파일 관리</h2>
+      </div>
+      <hr>
+
+      <!-- s:buttons -->
+      <div>
+        <div class="d-flex justify-content-end pe-4">
+          <div class="btn-container" style="margin-top: 0px !important;">
+            <!-- 왼쪽 버튼 -->
+            <!-- 오른쪽 버튼들 -->
+            <div class="right-buttons">
+              <button type="button" class="custom-button" id="list-btn">목록</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- e:buttons -->
+
+      <!-- s: 데이터 진열 관리 등록 -->
+      <div class="row" style="margin-top: 10px">
+        <!-- 왼쪽: 데이터셋 목록 -->
+        <div class="col-lg-5">
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title mb-0">원본데이터파일 목록</h5>
+              <div class="topbar-container">
+                <div class="topbar-left">
+                  <span id="total-num"></span>
+                </div>
+                <div class="topbar-right">
+                  <div class="btn-wrapper">
+                    <button type="button" id="delete-realdatas" class="custom-button">삭제</button>
+                  </div>
+                </div>
+              </div>
+              <div class="">
+                <div class="table-responsive text-nowrap">
+                  <table class="table table-bordered" id="realdata-table">
+                    <thead>
+                      <tr>
+                        <th></th>
+                        <th>번호</th>
+                        <th>파일정보</th>
+                      </tr>
+                    </thead>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-7">
+          <div class="card">
+            <form class="needs-validation" id="mng-realdata" novalidate="">
+              <div class="card-body">
+                <div class="row custom-row">
+                  <div class="col-lg-12">
+                    <div class="d-flex justify-content-between align-items-center">
+                      <h5 class="card-title mb-0">원본데이터파일 정보</h5>
+                      <div>
+                        <button type="button" id="edit-realdata" class="custom-button" disabled>수정</button>
+                      </div>
+                    </div>
+                    <div id="empty-div" style="margin-top: 30px;">
+                      <span>좌측에서 원본데이터파일을 선택해주세요.</span>
+                    </div>
+                    <div id="realdata-div" style="margin-top: 30px; display: none">
+                      <span>realdata</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+      <!-- e: 데이터 진열 관리 등록 -->
+
+    </div>
+  </div>
+
+</th:block>
+
+<th:block layout:fragment="script">
+  <script th:src="@{'/assets/js/page/admin/mobigen/metadata/mobigen-dataset-realdata.js'}"></script>
+  <script th:inline="javascript">
+
+    const datasetId = [[${uid}]]
+    const view = [[${view}]]
+    console.log(">> view : ", view)
+
+    $(function () {
+
+      mobigenDatasetRealdataJS.initTable();
+
+      // ===============================
+      // 목록 버튼
+      // ===============================
+      $("#list-btn").on('click', async function () {
+        const isOk = await Util.confirm("수정중이신 정보는 저장되지 않습니다. <br> 목록으로 돌아가시겠습니까?")
+        if (isOk) {
+          window.location.href = '/admin/metadata/dataset'
+        }
+      });
+
+      // ===============================
+      // 원본데이터 파일 목록 삭제 버튼
+      // ===============================
+      $("#delete-realdatas").on('click', function () {
+        mobigenDatasetRealdataJS.deleteRealdatasClickEvent();
+      });
+
+      // ===============================
+      // 원본데이터 파일 수정 버튼
+      // ===============================
+      $("#edit-realdata").on('click', function () {
+        mobigenDatasetRealdataJS.updateRealdataClickEvent();
+      });
+
+    });
+
+  </script>
+</th:block>
+</html>

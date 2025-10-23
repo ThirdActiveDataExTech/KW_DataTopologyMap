@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/default}">
+
+<th:block layout:fragment="center-image">
+  <th:block th:with="title1=${currentPageName}, title2=${navigation}, leftImg=${centerLeftImage}, rightImg=${centerRightImage}">
+    <th:block th:replace="fragments/center-image :: main-image-title(${title1}, ${title2}, ${leftImg}, ${rightImg})"></th:block>
+  </th:block>
+</th:block>
+
+<th:block layout:fragment="head">
+  <link rel="stylesheet" th:href="@{'/assets/css/page/admin/mobigen-metadata.css'}" />
+  <link rel="stylesheet" th:href="@{'/assets/css/page/system/user-list.css'}"/>
+</th:block>
+
+<th:block layout:fragment="content">
+  <div class="related-product-area pb-100 pt-80"  data-aos="fade-up" data-aos-delay="200">
+    <div class="container">
+
+      <div class="section-title-2 st-border-center text-center mb-35">
+        <h2>메타 데이터 관리</h2>
+      </div>
+
+      <hr>
+
+      <div class="description-review-area pb-85">
+        <div class="container">
+          <div class="description-review-topbar nav" data-aos="fade-up" data-aos-delay="200">
+            <a class="active" data-bs-toggle="tab" href="#des-details1"> 모비젠 데이터셋 관리 </a>
+            <a data-bs-toggle="tab" href="#des-details2" class=""> 케이웨어 데이터셋 관리 </a>
+          </div>
+          <div class="tab-content">
+
+            <div id="des-details1" class="tab-pane active" data-code="MOBIGEN">
+              <div th:replace="admin/metadata/fragment/mobigen-list::mobigen"></div>
+            </div>
+
+            <div id="des-details2" class="tab-pane" data-code="KWARE">
+              <div th:replace="admin/metadata/fragment/kware-list::kware"></div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</th:block>
+
+<th:block layout:fragment="script">
+  <th:block th:replace="admin/metadata/fragment/mobigen-list-script::script"></th:block>
+  <th:block th:replace="admin/metadata/fragment/kware-list-script::script"></th:block>
+  <script th:src="@{'/assets/js/page/admin/metadata/mobigen/mobigen-dataset-control-list.js'}"></script>
+  <script th:inline="javascript">
+    //
+  </script>
+</th:block>
+</html>

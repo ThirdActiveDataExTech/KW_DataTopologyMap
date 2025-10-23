@@ -5,6 +5,7 @@ import cetus.bean.Pageable;
 import cetus.user.UserUtil;
 import kware.apps.mobigen.cetus.dataset.dto.response.MobigenDatasetView;
 import kware.apps.mobigen.cetus.dataset.service.CetusMobigenDatasetService;
+import kware.apps.thirdeye.mobigen.approveddataset.domain.ApprovedDatasetTargetTpCd;
 import kware.apps.thirdeye.mobigen.approveddataset.domain.CetusApprovedDataset;
 import kware.apps.thirdeye.mobigen.approveddataset.domain.CetusApprovedDatasetDao;
 import kware.apps.thirdeye.mobigen.approveddataset.dto.request.ApprovedDatasetSearch;
@@ -50,15 +51,18 @@ public class CetusApprovedDatasetService {
         Page<ApprovedDatasetList> page = dao.page("getDatasetPage", "getDatasetPageCount", search, pageable);
         if(page.getList() != null && !page.getList().isEmpty()) {
             page.getList().forEach(dataset -> {
-                // 데이터셋 > 모비젠 측을 통한 상세 정보 조회
+                // (1) 데이터셋 > 모비젠 측을 통한 상세 정보 조회
                 Long datasetId = dataset.getDatasetId();
                 MobigenDatasetView datasetView = mobigenDatasetService.findMobigenDatasetByDatasetId(datasetId, true, false);
                 if (datasetView != null) {
                     dataset.setDatasetInfo(datasetView);
                 }
-                // 데이터셋의 화면 UI 값에 대해서 > 해당 UI 설명 정보
+                // (2) 데이터셋의 화면 UI 값에 대해서 > 해당 UI 설명 정보
                 DatasetMainUiType mainUiType = DatasetMainUiType.valueOf(dataset.getMainUiTypeCd());
                 dataset.setMainUiTypeCdDesc(mainUiType.getDescription());
+                // (3) 원본 데이터셋 저장 위치 정보
+                ApprovedDatasetTargetTpCd targetTpCd = ApprovedDatasetTargetTpCd.valueOf(dataset.getTargetTpCd());
+                dataset.setTargetTpCdNm(targetTpCd.getDescription());
             });
         }
         return page;
@@ -77,12 +81,15 @@ public class CetusApprovedDatasetService {
         List<ApprovedDatasetList> list = dao.getDatasetList(search);
         if(!list.isEmpty()) {
             list.forEach(dataset -> {
-                // 각 승인관리 중인 데이터셋들의 상세 정보는 모비젠 측에서 가져온다.
+                // (1) 각 승인관리 중인 데이터셋들의 상세 정보는 모비젠 측에서 가져온다.
                 Long datasetId = dataset.getDatasetId();
                 MobigenDatasetView datasetView = mobigenDatasetService.findMobigenDatasetByDatasetId(datasetId, true, false);
                 if (datasetView != null) {
                     dataset.setDatasetInfo(datasetView);
                 }
+                // (2) 원본 데이터셋 저장 위치 정보
+                ApprovedDatasetTargetTpCd targetTpCd = ApprovedDatasetTargetTpCd.valueOf(dataset.getTargetTpCd());
+                dataset.setTargetTpCdNm(targetTpCd.getDescription());
             });
         }
         return list;
@@ -96,7 +103,6 @@ public class CetusApprovedDatasetService {
     **/
     @Transactional
     public void approveDataset(SaveApprovedDataset request) {
-
         // 1. 모비젠 데이터셋에서 가져온 데이터 정보 진열/승인
         CetusApprovedDataset bean = new CetusApprovedDataset(request, UserUtil.getUserWorkplaceUid(), UserUtil.getUser().getUid());
         dao.insert(bean);
@@ -136,7 +142,6 @@ public class CetusApprovedDatasetService {
     **/
     @Transactional(readOnly = true)
     public ApprovedDatasetView findApprovedDatasetView(Long approvedUid) {
-
         // 1. 진열 등록된 데이터셋 정보
         ApprovedDatasetView approvedDatasetView = dao.getApprovedDatasetView(approvedUid);
         if(approvedDatasetView != null) {
@@ -148,6 +153,10 @@ public class CetusApprovedDatasetService {
             // 3. 진열 등록된 데이터셋 UI => 모비젠에 저장된 데이터셋의 디테일 정보
             MobigenDatasetView mobigenDatasetView = mobigenDatasetService.findMobigenDatasetByDatasetId(approvedDatasetView.getDatasetId(), true, true);
             approvedDatasetView.setMobigenDatasetView(mobigenDatasetView);
+
+            // 4. 원본 데이터셋 저장 위치 정보
+            ApprovedDatasetTargetTpCd targetTpCd = ApprovedDatasetTargetTpCd.valueOf(approvedDatasetView.getTargetTpCd());
+            approvedDatasetView.setTargetTpCdNm(targetTpCd.getDescription());
         }
         
         return approvedDatasetView;
@@ -157,7 +166,7 @@ public class CetusApprovedDatasetService {
      * @method      deleteSeveralApprovedDataset
      * @author      dahyeon
      * @date        2025-10-13
-     * @deacription [KWARE] 모비젠 저장소에서 kware 포탈 시스템으로 진열 등록된 데이터셋에 대해 논리삭제
+     * @deacription [KWARE] 모비젠 저장소에서 kware 포탈 시스템으로 진열 등록된 데이터셋에 대해 '논리삭제'
      **/
     @Transactional
     public void deleteSeveralApprovedDataset(DeleteApprovedDatasets request) {
@@ -187,6 +196,10 @@ public class CetusApprovedDatasetService {
             Long approvedUid = home.getApprovedUid();
             DatasetUiView uiView = datasetUiService.findDatasetUiView(approvedUid);
             home.setUiView(uiView);
+
+            // 3. 원본 데이터셋 저장 위치 정보
+            ApprovedDatasetTargetTpCd targetTpCd = ApprovedDatasetTargetTpCd.valueOf(home.getTargetTpCd());
+            home.setTargetTpCdNm(targetTpCd.getDescription());
         });
         return homeDatasetList;
     }

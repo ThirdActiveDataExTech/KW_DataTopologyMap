@@ -12,6 +12,8 @@ public class ApprovedDatasetList {
     private Long datasetId;         // 데이터셋 ID
     private String approvedDt;      // 승인 일시
     private String approverNm;      // 데이터 승인자 이름
+    private String targetTpCd;      // 원본 데이터셋 저장 위치
+    private String targetTpCdNm;    // 원본 데이터셋 저장 위치 설명
     private Integer ratings;        // 데이터셋 의견/평점
     private String bookmarkYn;
 
@@ -34,5 +36,9 @@ public class ApprovedDatasetList {
 
     public void setMainUiTypeCdDesc(String mainUiTypeCdDesc) {
         this.mainUiTypeCdDesc = mainUiTypeCdDesc;
+    }
+
+    public void setTargetTpCdNm(String targetTpCdNm) {
+        this.targetTpCdNm = targetTpCdNm;
     }
 }

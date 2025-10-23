@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 @RequiredArgsConstructor
-@RequestMapping("/admin/mobigen/dataset")
+@RequestMapping("/admin/metadata/dataset")
 public class CetusMobigenDatasetController {
 
     private final CetusMobigenDatasetService service;
@@ -21,35 +21,35 @@ public class CetusMobigenDatasetController {
     
     @GetMapping
     public String index(Model model) {
-        menuNavigationManager.renderingPage("/admin/mobigen/dataset", "데이터 관리", true, model);
-        return "admin/mobigen/index";
+        menuNavigationManager.renderingPage("/admin/metadata/dataset", "메타 데이터 관리", true, model);
+        return "admin/metadata/index";
     }
 
     @GetMapping("/save")
     public String save(Model model) {
-        menuNavigationManager.renderingPage("/admin/mobigen/dataset", "데이터 등록", false, model);
-        return "admin/mobigen/save";
+        menuNavigationManager.renderingPage("/admin/metadata/dataset", "메타 데이터 등록", false, model);
+        return "admin/metadata/mobigen/save";
     }
 
     @GetMapping("/package/save")
     public String packageSave(Model model) {
-        menuNavigationManager.renderingPage("/admin/mobigen/dataset", "패키지 데이터셋 등록", false, model);
-        return "admin/mobigen/save-package";
+        menuNavigationManager.renderingPage("/admin/metadata/dataset", "패키지 데이터셋 등록", false, model);
+        return "admin/metadata/mobigen/save-package";
     }
 
     @GetMapping("/{uid}")
     public String form(@PathVariable("uid") Long uid, Model model) {
-        menuNavigationManager.renderingPage("/admin/mobigen/dataset", "데이터 수정", false, model);
+        menuNavigationManager.renderingPage("/admin/metadata/dataset", "메타 데이터 수정", false, model);
         MobigenDatasetView view = service.findMobigenDatasetByDatasetId(uid, true, true);
         model.addAttribute("view", view);
-        return "admin/mobigen/form";
+        return "admin/metadata/mobigen/form";
     }
 
     @GetMapping("/realdata/{uid}")
     public String realdataForm(@PathVariable("uid") Long uid, Model model) {
-        menuNavigationManager.renderingPage("/admin/mobigen/dataset", "원본데이터파일 수정", false, model);
+        menuNavigationManager.renderingPage("/admin/metadata/dataset", "원본 데이터파일 수정", false, model);
         MobigenDatasetView view = service.findMobigenDatasetByDatasetId(uid, true, true);
         model.addAttribute("view", view);
-        return "admin/mobigen/realdata-form";
+        return "admin/metadata/mobigen/realdata-form";
     }
 }
