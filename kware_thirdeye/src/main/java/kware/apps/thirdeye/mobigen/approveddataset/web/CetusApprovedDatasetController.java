@@ -1,6 +1,7 @@
 package kware.apps.thirdeye.mobigen.approveddataset.web;
 
 
+import kware.apps.thirdeye.mobigen.approveddataset.domain.ApprovedDatasetTargetTpCd;
 import kware.apps.thirdeye.mobigen.approveddataset.dto.response.ApprovedDatasetIdList;
 import kware.apps.thirdeye.mobigen.approveddataset.dto.response.ApprovedDatasetView;
 import kware.apps.thirdeye.mobigen.approveddataset.service.CetusApprovedDatasetService;
@@ -31,6 +32,7 @@ public class CetusApprovedDatasetController {
     public String index(Model model) {
         menuNavigationManager.renderingPage("/admin/approved/dataset", "데이터 진열 관리", true, model);
         model.addAttribute("uiType", DatasetMainUiType.toMap());
+        model.addAttribute("targetType", ApprovedDatasetTargetTpCd.toMap());
         return "admin/approved/index";
     }
 

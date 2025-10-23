@@ -32,36 +32,6 @@ public class CetusMobigenDatasetRestController {
 
     /**
      *
-     * 모비젠 측에 데이터셋 정보 등록(저장)
-     *
-     * @api         [POST] /api/admin/mobigen-dataset
-     * @author      dahyeon
-     * @date        2025-10-15
-    **/
-    @PostMapping
-    public ResponseEntity saveMobigenDataset(@RequestBody SaveMobigenDataset request) {
-        service.saveMobigenDataset(request);
-        return ResponseEntity.ok().build();
-    }
-
-
-    /**
-     *
-     * 모비젠 측에 데이터셋 정보 등록(저장)
-     * => 패키지 파일 형태로 업로드 (zip)
-     *
-     * @api         [POST] /api/admin/mobigen-dataset/package
-     * @author      dahyeon
-     * @date        2025-10-17
-    **/
-    @PostMapping("/package")
-    public ResponseEntity saveMobigenPackageDataset(@RequestBody SaveMobigenPackageDataset request) {
-        service.saveMobigenPackageDataset(request);
-        return ResponseEntity.ok().build();
-    }
-
-    /**
-     *
      * 모비젠 측의 데이터셋 정보 삭제
      * => 추후 모비젠 측 연결시, [하드 삭제]로 동작된다.
      * => KWARE 포탈 시스템 구성은 [논리 삭제]로 동작중

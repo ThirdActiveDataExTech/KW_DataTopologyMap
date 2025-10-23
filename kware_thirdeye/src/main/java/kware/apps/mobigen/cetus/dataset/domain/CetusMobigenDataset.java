@@ -1,7 +1,7 @@
 package kware.apps.mobigen.cetus.dataset.domain;
 
 import kware.apps.mobigen.cetus.dataset.dto.request.ChangeMobigenDataset;
-import kware.apps.mobigen.cetus.dataset.dto.request.SaveMobigenDataset;
+import kware.apps.mobigen.integration.dto.request.pckg.SaveMetadata;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,7 +18,7 @@ public class CetusMobigenDataset {
         this.metadata = metadata;
     }
 
-    public CetusMobigenDataset(SaveMobigenDataset request) {
+    public CetusMobigenDataset(SaveMetadata request) {
         this.title = request.getTitle();
         this.metadata = request.getMetadata();
     }

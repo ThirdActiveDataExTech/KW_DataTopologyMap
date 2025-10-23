@@ -21,6 +21,11 @@ public class CreateMetadataRequest {
     private String action;                      // "create"
     private CreateMetadataFieldRequest field;
 
+    public CreateMetadataRequest(CreateMetadataFieldRequest field) {
+        this.action = "create";
+        this.field = field;
+    }
+
     @Getter @Setter
     public static class CreateMetadataFieldRequest {
         private String title;
@@ -33,5 +38,9 @@ public class CreateMetadataRequest {
         private List<String> theme;
         private String access_url;
         private Map<String, Object> custom_meta;
+
+        public CreateMetadataFieldRequest(String title) {
+            this.title = title;
+        }
     }
 }

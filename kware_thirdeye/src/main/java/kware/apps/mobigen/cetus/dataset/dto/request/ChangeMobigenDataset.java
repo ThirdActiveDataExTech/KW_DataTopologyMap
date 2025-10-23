@@ -14,7 +14,7 @@ public class ChangeMobigenDataset {
 
     private String title;
     private String metadata;
-    private CetusDatasetFile[] realFiles;
+    private CetusDatasetFile realFile;
     private List<SaveTag> tags;
 
 }

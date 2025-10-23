@@ -2,6 +2,11 @@ package kware.apps.thirdeye.mobigen.approveddataset.domain;
 
 import lombok.Getter;
 
+import java.util.Arrays;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.stream.Collectors;
+
 @Getter
 public enum ApprovedDatasetTargetTpCd {
 
@@ -14,4 +19,8 @@ public enum ApprovedDatasetTargetTpCd {
         this.description = description;
     }
 
+    public static Map<String, String> toMap() {
+        return Arrays.stream(values())
+                .collect(Collectors.toMap(ApprovedDatasetTargetTpCd::getDescription, Enum::name));
+    }
 }

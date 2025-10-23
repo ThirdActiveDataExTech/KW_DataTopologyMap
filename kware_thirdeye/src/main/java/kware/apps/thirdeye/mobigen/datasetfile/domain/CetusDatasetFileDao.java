@@ -1,6 +1,7 @@
 package kware.apps.thirdeye.mobigen.datasetfile.domain;
 
 import cetus.dao.SuperDao;
+import kware.apps.thirdeye.mobigen.datasetfile.dto.request.ChangeDatasetFile;
 import kware.apps.thirdeye.mobigen.datasetfile.dto.request.SearchDatasetFile;
 import kware.apps.thirdeye.mobigen.datasetfile.dto.request.SearchDatasetFileView;
 import kware.apps.thirdeye.mobigen.datasetfile.dto.response.CetusDatasetFileList;
@@ -42,5 +43,9 @@ public class CetusDatasetFileDao extends SuperDao<CetusDatasetFile> {
 
     public CetusDatasetFileView getRawdataFileView(SearchDatasetFileView search) {
         return selectOne("getRawdataFileView", search);
+    }
+
+    public void updateDatasetFile(ChangeDatasetFile request) {
+        update("updateDatasetFile", request);
     }
 }

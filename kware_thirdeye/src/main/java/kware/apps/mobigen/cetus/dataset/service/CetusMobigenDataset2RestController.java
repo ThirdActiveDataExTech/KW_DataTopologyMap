@@ -30,20 +30,6 @@ public class CetusMobigenDataset2RestController {
         );
         return ResponseEntity.ok(result);
     }
-
-    @PostMapping("/package02")
-    public ResponseEntity package02(@RequestParam("file") MultipartFile file) {
-        if(file.isEmpty()) {
-            return ResponseEntity.badRequest().body("no file founded");
-        }
-        log.info("[PACKAGE02] file: {} ", file.getOriginalFilename());
-        resPackage02.resPackage02_Metadata metadata = new resPackage02.resPackage02_Metadata(
-                "metadata_9999",
-                "test title you can change",
-                "tag1, tag2, tag3"
-        );
-        return ResponseEntity.ok(new resPackage02("package02_100200", "Package import completed", metadata));
-    }
     /* =*=*=*=*=*=*=*=*=*=*=*=* [E:PACKAGE] =*=*=*=*=*=*=*=*=*=*=*=* */
 
 
@@ -101,20 +87,6 @@ public class CetusMobigenDataset2RestController {
         log.info("[METADATA05] request : {} ", request);
         resMetadata05.resMetadata05_result result = new resMetadata05.resMetadata05_result(request.getMetadata_id());
         return ResponseEntity.ok(new resMetadata05("metadata05_100200", "Metadata updated successfully", result));
-    }
-
-    @PostMapping("/metadata07")
-    public ResponseEntity metadata07(@RequestParam("file") MultipartFile file) {
-        if(file.isEmpty()) {
-            return ResponseEntity.badRequest().body("no file founded");
-        }
-        log.info("[METADATA07] file: {} ", file.getOriginalFilename());
-        resMetadata07.reqMetadata07_Metadata metadata = new resMetadata07.reqMetadata07_Metadata(
-                "metadata_9999",
-                "test title you can change",
-                "tag1, tag2, tag3"
-        );
-        return ResponseEntity.ok(new resMetadata07("metadata07_100200", "Package import completed", metadata));
     }
 
     @PostMapping("/metadata08")

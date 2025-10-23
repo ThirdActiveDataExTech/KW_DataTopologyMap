@@ -16,5 +16,6 @@ public class SaveApprovedDataset extends FileBean {
     private Long sortNo;
     private String extraJson;
     private SaveCategory category;
+    private String targetTpCd;      // 원본 데이터셋 저장 위치
 
 }

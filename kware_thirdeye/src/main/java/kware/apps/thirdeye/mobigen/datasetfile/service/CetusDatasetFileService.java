@@ -6,6 +6,7 @@ import kware.apps.thirdeye.mobigen.datasetfile.domain.CetusDatasetFile;
 import kware.apps.thirdeye.mobigen.datasetfile.domain.CetusDatasetFileDao;
 import kware.apps.thirdeye.mobigen.datasetfile.domain.CetusDatasetFileLog;
 import kware.apps.thirdeye.mobigen.datasetfile.domain.CetusDatasetFileLogDao;
+import kware.apps.thirdeye.mobigen.datasetfile.dto.request.ChangeDatasetFile;
 import kware.apps.thirdeye.mobigen.datasetfile.dto.request.SearchDatasetFile;
 import kware.apps.thirdeye.mobigen.datasetfile.dto.request.SearchDatasetFileView;
 import kware.apps.thirdeye.mobigen.datasetfile.dto.response.CetusDatasetFileList;
@@ -29,7 +30,10 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @Service
@@ -178,10 +182,14 @@ public class CetusDatasetFileService {
     }
 
     @Transactional
-    public void processAddFile(CetusDatasetFile[] fileAdd) {
+    public List<Map<String, String>> processAddFiles(CetusDatasetFile[] fileAdd) {
+
+        List<Map<String, String>> list = new ArrayList<>();
 
         if (fileAdd != null) {
             for (CetusDatasetFile f : fileAdd) {
+                Map<String, String> map = new HashMap<>();
+
                 f.setRegId(UserUtil.getUser().getUserId());
 
                 try {
@@ -193,12 +201,46 @@ public class CetusDatasetFileService {
 
                 f.setSaved(CommonFileState.Y.name());
                 fileDao.insert(f);
+
+                map.put("fileId", f.getFileId());
+                map.put("filePath", f.getFilePath());
+                list.add(map);
             }
         }
+        return list;
+    }
+
+    @Transactional
+    public Map<String, String> processAddFile(CetusDatasetFile f) {
+
+        Map<String, String> map = new HashMap<>();
+
+        if (f != null) {
+            f.setRegId(UserUtil.getUser().getUserId());
+
+            try {
+                f = tusDatasetFileService.moveToDefaultStorage(f);
+            } catch (IOException e) {
+                log.error(e.toString(), e);
+            }
+
+            f.setSaved(CommonFileState.Y.name());
+            fileDao.insert(f);
+
+            map.put("fileId", f.getFileId());
+            map.put("filePath", f.getFilePath());
+        }
+
+        return map;
     }
 
     @Transactional
     public void processDelFile(String fileId) {
         fileDao.deleteFile(new CetusDatasetFile(fileId)); //논리적인 삭제: 물리적인 파일을 삭제하지 않는다.
+    }
+
+    @Transactional
+    public void changeDatasetFile(ChangeDatasetFile request) {
+        fileDao.updateDatasetFile(request);
     }
 }

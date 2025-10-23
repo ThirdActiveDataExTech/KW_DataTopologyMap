@@ -39,6 +39,7 @@ public class CetusMobigenDatasetService {
     private final CetusMobigenDatasetTagService tagService;
     private final CetusMobigenRegistrantService registrantService;
 
+
     /**
      * @method      changeListToPage
      * @author      dahyeon
@@ -110,72 +111,6 @@ public class CetusMobigenDatasetService {
         return this.changeListToPage(search.getPageNumber(), search.getSize(), rawdataFiles);
     }
 
-    /**
-     * @method      saveMobigenDataset
-     * @author      dahyeon
-     * @date        2025-10-13
-     * @deacription [Mobigen] 데이터셋 저장
-     * 
-     *                  (1) 메타데이터 파일 저장
-     *                  (2) 실데이터(원본데이터) 파일 저장
-     *                  (3) 모비젠 데이터 정보 저장
-     *                  (4) 모비젠 데이터에 대한 태그 정보 저장
-     *                  (5) 모비젠 등록자 정보 저장
-    **/
-    @Transactional
-    public void saveMobigenDataset(SaveMobigenDataset request) {
-
-        // 1. save mobigen data
-        CetusMobigenDataset bean = new CetusMobigenDataset(request);
-        dao.insert(bean);
-        Long datasetId = bean.getUid();
-
-        // 1. save metadata file
-        CetusDatasetFile metaFile = request.getMetaFile();
-        metaFile.setMetadataId(Long.toString(datasetId));
-        metaFile.setDataTpCd(DataFileTpCd.METADATA.name());
-        datasetFileService.processAddFile(new CetusDatasetFile[]{ metaFile });
-
-        // 2. save realdata file
-        CetusDatasetFile[] realFiles = request.getRealFiles();
-        for (CetusDatasetFile datasetFile: realFiles) {
-            datasetFile.setMetadataId(Long.toString(datasetId));
-            datasetFile.setDataTpCd(DataFileTpCd.RAWDATA.name());
-            String rawdataId = "raw_" + datasetId + "_" + StringUtil.random(3);
-            datasetFile.setRawdataId(rawdataId);
-        }
-        datasetFileService.processAddFile(realFiles);
-
-        // 3. save tag
-        tagService.saveDatasetTag(request.getTags(), datasetId);
-
-        // 4. 모비젠 등록자 정보 저장
-        registrantService.saveMobigenRegistrant(datasetId);
-    }
-
-    /**
-     * @method      saveMobigenPackageDataset
-     * @author      dahyeon
-     * @date        2025-10-17
-     * @deacription [Mobigen] 데이터셋 저장
-     *              => 패키지 파일 형태 업로드 (zip)
-    **/
-    public void saveMobigenPackageDataset(SaveMobigenPackageDataset request) {
-        // 1. save mobigen data
-        String title = "random package title_" + StringUtil.random(3);
-        CetusMobigenDataset bean = new CetusMobigenDataset(title, "{}");
-        dao.insert(bean);
-        Long datasetId = bean.getUid();
-
-        // 2. save package data file
-        CetusDatasetFile metaFile = request.getPackageFile();
-        metaFile.setMetadataId(Long.toString(datasetId));
-        metaFile.setDataTpCd(DataFileTpCd.PACKAGE.name());
-        datasetFileService.processAddFile(new CetusDatasetFile[]{ metaFile });
-
-        // 3. 모비젠 등록자 정보 저장
-        registrantService.saveMobigenRegistrant(datasetId);
-    }
 
     /**
      * @method      changeMobigenDataset
@@ -193,14 +128,12 @@ public class CetusMobigenDatasetService {
     public void changeMobigenDataset(Long datasetId, ChangeMobigenDataset request) {
 
         // 1. save realdata file
-        CetusDatasetFile[] realFiles = request.getRealFiles();
-        for (CetusDatasetFile datasetFile: realFiles) {
-            datasetFile.setMetadataId(Long.toString(datasetId));
-            datasetFile.setDataTpCd(DataFileTpCd.RAWDATA.name());
-            String rawdataId = "raw_" + datasetId + "_" + StringUtil.random(3);
-            datasetFile.setRawdataId(rawdataId);
-        }
-        datasetFileService.processAddFile(realFiles);
+        CetusDatasetFile realFile = request.getRealFile();
+        realFile.setMetadataId(Long.toString(datasetId));
+        realFile.setDataTpCd(DataFileTpCd.RAWDATA.name());
+        String rawdataId = "raw_" + datasetId + "_" + StringUtil.random(3);
+        realFile.setRawdataId(rawdataId);
+        datasetFileService.processAddFile(realFile);
 
         // 2. update mobigen data
         CetusMobigenDataset bean = new CetusMobigenDataset(datasetId, request);
@@ -285,5 +218,10 @@ public class CetusMobigenDatasetService {
         for (String fileId: request.getFileIds()) {
             datasetFileService.processDelFile(fileId);
         }
+    }
+
+    @Transactional
+    public void insert(CetusMobigenDataset bean) {
+        dao.insert(bean);
     }
 }

@@ -90,28 +90,53 @@
 
       <!-- s: 데이터 진열 관리 등록 -->
       <div class="row" style="margin-top: 10px">
+
         <!-- 왼쪽: 데이터셋 목록 -->
         <div class="col-lg-6">
           <div class="card">
-            <div class="card-body">
-              <h5 class="card-title">모비젠 데이터셋 목록</h5>
-              <div class="">
-                <div class="table-responsive text-nowrap">
-                  <table class="table table-bordered" id="dataset-table">
-                    <thead>
-                    <tr>
-                      <th>번호</th>
-                      <th>제목</th>
-                      <th>등록자</th>
-                      <th>등록일</th>
-                    </tr>
-                    </thead>
-                  </table>
+
+            <div class="description-review-area pb-85">
+              <div class="container" style="padding: 20px;">
+
+                <div class="description-review-topbar nav" data-aos="fade-up" data-aos-delay="200" id="tab-toggle-div">
+                  <a class="active" data-bs-toggle="tab" href="#des-details1"> 모비젠 데이터셋 목록 </a>
+                  <a data-bs-toggle="tab" href="#des-details2" class=""> 케이웨어 데이터셋 목록 </a>
                 </div>
+
+                <div class="tab-content">
+                  <div id="des-details1" class="tab-pane active" data-code="MOBIGEN">
+                    <div class="card-body">
+                      <div class="">
+                        <div class="table-responsive text-nowrap">
+                          <table class="table table-bordered" id="dataset-table">
+                            <thead>
+                            <tr>
+                              <th>번호</th>
+                              <th>제목</th>
+                              <th>등록자</th>
+                              <th>등록일</th>
+                            </tr>
+                            </thead>
+                          </table>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div id="des-details2" class="tab-pane" data-code="KWARE">
+                    KWARE dataset table
+                  </div>
+
+                </div>
+
               </div>
             </div>
+
           </div>
         </div>
+        <!-- 왼쪽: 데이터셋 목록 -->
+
+        <!-- 오른쪽: 데이터셋 UI 상세 정보 -->
         <div class="col-lg-6">
           <div class="card">
             <form class="needs-validation" id="save-mainui" novalidate="">
@@ -223,6 +248,8 @@
             </form>
           </div>
         </div>
+        <!-- 오른쪽: 데이터셋 UI 상세 정보 -->
+
       </div>
       <!-- e: 데이터 진열 관리 등록 -->
 
@@ -245,6 +272,22 @@
       approvedDatasetJS.initEditor();
       approvedDatasetJS.initUpload(null);
       approvedDatasetJS.initSaveTable();
+
+      // ===============================
+      // 좌측 원본데이터셋 타겟 탭 > 클릭 이벤트
+      // ===============================
+      $('#tab-toggle-div a').on('shown.bs.tab', function (e) {
+        const targetPaneId = $(e.target).attr('href'); // ex: "#des-details1"
+        const $activePane = $(targetPaneId);
+        const code = $activePane.data('code');
+        console.log('활성 탭 data-code:', code);
+
+        approvedDatasetJS.saveTable.submit()
+        console.log("submit(초기화) kware table too")
+
+        approvedDatasetJS.selectMetadataDataset = null
+      });
+
 
       // ===============================
       // 데이터셋 승인/등록 화면 > 카테고리

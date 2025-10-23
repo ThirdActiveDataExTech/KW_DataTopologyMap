@@ -34,17 +34,20 @@
         <if test="@Ognl@isNotEmpty(showAt)">
            AND CDU.SHOW_AT = #{showAt}
         </if>
-        <if test="@Ognl@isNotEmpty(typeCd)">
-           AND CDMU.TYPE_CD = #{typeCd}
+        <if test="@Ognl@isNotEmpty(uiTypeCd)">
+           AND CDMU.TYPE_CD = #{uiTypeCd}
         </if>
-        <if test="@Ognl@isNotEmpty(browseText)">
-           AND CDMU.CODE LIKE '%' || #{browseText} || '%'
+        <if test="@Ognl@isNotEmpty(dataTarType)">
+           AND CAD.TARGET_TP_CD = #{dataTarType}
         </if>
         <if test="@Ognl@isNotEmpty(categories)">
            AND CDC.UID IN
-           <foreach collection="categories" item="categoryUid" open="(" separator="," close=")">
+            <foreach collection="categories" item="categoryUid" open="(" separator="," close=")">
                #{categoryUid}
-           </foreach>
+            </foreach>
+        </if>
+        <if test="@Ognl@isNotEmpty(browseText)">
+           AND CDMU.CODE LIKE '%' || #{browseText} || '%'
         </if>
          ORDER BY CAD.APPROVED_DT DESC
         <if test="@Ognl@isNotEmpty(startNumber) and  @Ognl@isNotEmpty(endNumber)">
@@ -65,8 +68,11 @@
         <if test="@Ognl@isNotEmpty(showAt)">
            AND CDU.SHOW_AT = #{showAt}
         </if>
-        <if test="@Ognl@isNotEmpty(typeCd)">
-           AND CDMU.TYPE_CD = #{typeCd}
+        <if test="@Ognl@isNotEmpty(uiTypeCd)">
+           AND CDMU.TYPE_CD = #{uiTypeCd}
+        </if>
+        <if test="@Ognl@isNotEmpty(dataTarType)">
+           AND CAD.TARGET_TP_CD = #{dataTarType}
         </if>
         <if test="@Ognl@isNotEmpty(categories)">
            AND CDC.UID IN

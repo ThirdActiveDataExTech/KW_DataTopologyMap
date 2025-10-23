@@ -1,6 +1,8 @@
 package kware.apps.mobigen.mobigen.service;
 
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.netty.channel.ChannelOption;
 import io.netty.handler.timeout.ReadTimeoutHandler;
 import io.netty.handler.timeout.WriteTimeoutHandler;
@@ -22,6 +24,7 @@ import kware.apps.mobigen.mobigen.dto.response.relation.RelationListResponse;
 import kware.apps.mobigen.mobigen.dto.url.ExternalUrl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -42,7 +45,7 @@ import java.util.concurrent.TimeUnit;
 
 @Slf4j
 @Service
-public class ExternalApiService {
+public class MobigenExternalApiService {
 
     private final String BASE_URL = "https://api.example.com";
 
@@ -64,9 +67,7 @@ public class ExternalApiService {
             ))
             .build();
 
-    private <T> ApiResponse<T> upload(String uri, Path filePath, ParameterizedTypeReference<ApiResponse<T>> typeRef) {
-        MultipartBodyBuilder builder = new MultipartBodyBuilder();
-        builder.part("file", new FileSystemResource(filePath.toFile()));
+    private <T> ApiResponse<T> upload(String uri, MultipartBodyBuilder builder, ParameterizedTypeReference<ApiResponse<T>> typeRef) {
         return WEB_CLIENT
                 .post()
                 .uri(uri)
@@ -150,7 +151,9 @@ public class ExternalApiService {
      *      - file: binary (package.zip)
     **/
     public ApiResponse<PackageImportResponse> packageImport(Path filePath) {
-        return upload(ExternalUrl.PACKAGE_02, filePath, new ParameterizedTypeReference<ApiResponse<PackageImportResponse>>() {});
+        MultipartBodyBuilder builder = new MultipartBodyBuilder();
+        builder.part("file", new FileSystemResource(filePath.toFile()));
+        return upload(ExternalUrl.PACKAGE_02, builder, new ParameterizedTypeReference<ApiResponse<PackageImportResponse>>() {});
     }
 
 
@@ -180,8 +183,26 @@ public class ExternalApiService {
      * @date        2025-09-23
      * @deacription 메타데이터 생성
     **/
-    public ApiResponse<CreateMetadataResponse> createMetadata(CreateMetadataRequest request) {
-        return post(ExternalUrl.METADATA_03, request, new ParameterizedTypeReference<ApiResponse<CreateMetadataResponse>>() {});
+    public ApiResponse<CreateMetadataResponse> createMetadata(CreateMetadataRequest request, Path filePath) {
+        MultipartBodyBuilder builder = new MultipartBodyBuilder();
+
+        // ✅ 1. JSON 형태 필드 추가
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            String metadataJson = mapper.writeValueAsString(request);
+            builder.part("metadata", metadataJson)
+                    .contentType(MediaType.APPLICATION_JSON);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException("메타데이터 직렬화 실패", e);
+        }
+
+        // ✅ 2. 파일이 존재할 경우에만 multipart에 추가
+        if (filePath != null) {
+            builder.part("file", new FileSystemResource(filePath.toFile()))
+                    .filename(filePath.getFileName().toString())
+                    .contentType(MediaType.APPLICATION_OCTET_STREAM);
+        }
+        return upload(ExternalUrl.METADATA_03, builder, new ParameterizedTypeReference<ApiResponse<CreateMetadataResponse>>() {});
     }
 
 
@@ -212,7 +233,9 @@ public class ExternalApiService {
      * @deacription 특정 메타데이터 파일 정보 미리보기
     **/
     public ApiResponse<MetadataFilePreviewResponse> previewMetadataFile(Path filePath) {
-        return upload(ExternalUrl.METADATA_07, filePath, new ParameterizedTypeReference<ApiResponse<MetadataFilePreviewResponse>>() {});
+        MultipartBodyBuilder builder = new MultipartBodyBuilder();
+        builder.part("file", new FileSystemResource(filePath.toFile()));
+        return upload(ExternalUrl.METADATA_07, builder, new ParameterizedTypeReference<ApiResponse<MetadataFilePreviewResponse>>() {});
     }
 
     /**
@@ -250,8 +273,8 @@ public class ExternalApiService {
         builder.part("rawdata_format", request.getRawdata_format());
         builder.part("file", new FileSystemResource(filePath))
                 .filename(filePath.getFileName().toString())
-                .contentType(MediaType.TEXT_PLAIN); // or MediaType.APPLICATION_OCTET_STREAM
-        return upload(ExternalUrl.RAWDATA_02, filePath, new ParameterizedTypeReference<ApiResponse<UploadRawdataResponse>>() {});
+                .contentType(MediaType.APPLICATION_OCTET_STREAM);
+        return upload(ExternalUrl.RAWDATA_02, builder, new ParameterizedTypeReference<ApiResponse<UploadRawdataResponse>>() {});
     }
     
     /**

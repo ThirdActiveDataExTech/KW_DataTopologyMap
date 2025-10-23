@@ -28,16 +28,19 @@ public class ApprovedDatasetSearch {
     private Long workplaceUid;
     private String showAt;
     private String browseText;
-    private String typeCd;
+    private String uiTypeCd;
+    private String dataTarType;
     private String startDate;
     private String endDate;
     private List<Long> categories;  // 카테고리 검색
 
-    public ApprovedDatasetSearch(Long workplaceUid, String showAt, String browseText, String typeCd, String startDate, String endDate, List<Long> categories) {
+    public ApprovedDatasetSearch( Long workplaceUid, String showAt, String browseText, String uiTypeCd, String dataTarType,
+                                  String startDate, String endDate, List<Long> categories ) {
         this.workplaceUid = workplaceUid;
         this.showAt = showAt;
         this.browseText = browseText;
-        this.typeCd = typeCd;
+        this.uiTypeCd = uiTypeCd;
+        this.dataTarType = dataTarType;
         this.startDate = startDate;
         this.endDate = endDate;
         this.categories = categories;

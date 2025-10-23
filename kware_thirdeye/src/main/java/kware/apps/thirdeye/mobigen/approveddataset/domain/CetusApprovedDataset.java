@@ -21,7 +21,7 @@ public class CetusApprovedDataset {
         this.datasetId = request.getDatasetId();
         this.workplaceUid = workplaceUid;
         this.approverUid = userUid;
-        this.targetTpCd = ApprovedDatasetTargetTpCd.MOBIGEN.name();
+        this.targetTpCd = request.getTargetTpCd();
     }
 
     public CetusApprovedDataset(Long uid) {

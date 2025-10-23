@@ -155,4 +155,17 @@
          WHERE FILE_ID = #{fileId}
     </delete>
 
+    <update id="updateDatasetFile" parameterType="ChangeDatasetFile">
+        /* cetusDatasetFile.updateDatasetFile */
+        UPDATE CETUS_DATASET_FILE
+           SET UPDT_DT = NOW()
+        <if test="@Ognl@isNotEmpty(metadataId)">
+              ,METADATA_ID = #{metadataId}
+        </if>
+        <if test="@Ognl@isNotEmpty(rawdataId)">
+              ,RAWDATA_ID = #{rawdataId}
+        </if>
+         WHERE FILE_ID = #{fileId}
+    </update>
+
 </mapper>

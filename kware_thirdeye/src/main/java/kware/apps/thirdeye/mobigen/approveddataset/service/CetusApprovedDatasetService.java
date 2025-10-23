@@ -46,7 +46,7 @@ public class CetusApprovedDatasetService {
      *                  => 각 승인된 datasetId 값을 가지고 모비젠 측의 API를 통해 데이터셋 상세 정보 조회
     **/
     @Transactional(readOnly = true)
-    public Page<ApprovedDatasetList> findDatasetPage(ApprovedDatasetSearch search, Pageable pageable ) {
+    public Page<ApprovedDatasetList> findDatasetPage( ApprovedDatasetSearch search, Pageable pageable ) {
         search.setWorkplaceUid(UserUtil.getUserWorkplaceUid());
         Page<ApprovedDatasetList> page = dao.page("getDatasetPage", "getDatasetPageCount", search, pageable);
         if(page.getList() != null && !page.getList().isEmpty()) {
@@ -58,11 +58,15 @@ public class CetusApprovedDatasetService {
                     dataset.setDatasetInfo(datasetView);
                 }
                 // (2) 데이터셋의 화면 UI 값에 대해서 > 해당 UI 설명 정보
-                DatasetMainUiType mainUiType = DatasetMainUiType.valueOf(dataset.getMainUiTypeCd());
-                dataset.setMainUiTypeCdDesc(mainUiType.getDescription());
+                if(dataset.getMainUiTypeCd() != null) {
+                    DatasetMainUiType mainUiType = DatasetMainUiType.valueOf(dataset.getMainUiTypeCd());
+                    dataset.setMainUiTypeCdDesc(mainUiType.getDescription());
+                }
                 // (3) 원본 데이터셋 저장 위치 정보
-                ApprovedDatasetTargetTpCd targetTpCd = ApprovedDatasetTargetTpCd.valueOf(dataset.getTargetTpCd());
-                dataset.setTargetTpCdNm(targetTpCd.getDescription());
+                if(dataset.getTargetTpCd() != null) {
+                    ApprovedDatasetTargetTpCd targetTpCd = ApprovedDatasetTargetTpCd.valueOf(dataset.getTargetTpCd());
+                    dataset.setTargetTpCdNm(targetTpCd.getDescription());
+                }
             });
         }
         return page;
@@ -88,8 +92,10 @@ public class CetusApprovedDatasetService {
                     dataset.setDatasetInfo(datasetView);
                 }
                 // (2) 원본 데이터셋 저장 위치 정보
-                ApprovedDatasetTargetTpCd targetTpCd = ApprovedDatasetTargetTpCd.valueOf(dataset.getTargetTpCd());
-                dataset.setTargetTpCdNm(targetTpCd.getDescription());
+                if(dataset.getTargetTpCd() != null) {
+                    ApprovedDatasetTargetTpCd targetTpCd = ApprovedDatasetTargetTpCd.valueOf(dataset.getTargetTpCd());
+                    dataset.setTargetTpCdNm(targetTpCd.getDescription());
+                }
             });
         }
         return list;
@@ -155,8 +161,10 @@ public class CetusApprovedDatasetService {
             approvedDatasetView.setMobigenDatasetView(mobigenDatasetView);
 
             // 4. 원본 데이터셋 저장 위치 정보
-            ApprovedDatasetTargetTpCd targetTpCd = ApprovedDatasetTargetTpCd.valueOf(approvedDatasetView.getTargetTpCd());
-            approvedDatasetView.setTargetTpCdNm(targetTpCd.getDescription());
+            if(approvedDatasetView.getTargetTpCd() != null) {
+                ApprovedDatasetTargetTpCd targetTpCd = ApprovedDatasetTargetTpCd.valueOf(approvedDatasetView.getTargetTpCd());
+                approvedDatasetView.setTargetTpCdNm(targetTpCd.getDescription());
+            }
         }
         
         return approvedDatasetView;
@@ -198,8 +206,10 @@ public class CetusApprovedDatasetService {
             home.setUiView(uiView);
 
             // 3. 원본 데이터셋 저장 위치 정보
-            ApprovedDatasetTargetTpCd targetTpCd = ApprovedDatasetTargetTpCd.valueOf(home.getTargetTpCd());
-            home.setTargetTpCdNm(targetTpCd.getDescription());
+            if(home.getTargetTpCd() != null) {
+                ApprovedDatasetTargetTpCd targetTpCd = ApprovedDatasetTargetTpCd.valueOf(home.getTargetTpCd());
+                home.setTargetTpCdNm(targetTpCd.getDescription());
+            }
         });
         return homeDatasetList;
     }
