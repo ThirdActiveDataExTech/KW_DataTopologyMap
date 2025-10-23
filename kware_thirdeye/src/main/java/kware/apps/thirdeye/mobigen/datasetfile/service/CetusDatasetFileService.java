@@ -6,6 +6,7 @@ import kware.apps.thirdeye.mobigen.datasetfile.domain.CetusDatasetFile;
 import kware.apps.thirdeye.mobigen.datasetfile.domain.CetusDatasetFileDao;
 import kware.apps.thirdeye.mobigen.datasetfile.domain.CetusDatasetFileLog;
 import kware.apps.thirdeye.mobigen.datasetfile.domain.CetusDatasetFileLogDao;
+import kware.apps.thirdeye.mobigen.datasetfile.dto.request.SearchDatasetFile;
 import kware.apps.thirdeye.mobigen.datasetfile.dto.request.SearchDatasetFileView;
 import kware.apps.thirdeye.mobigen.datasetfile.dto.response.CetusDatasetFileList;
 import kware.apps.thirdeye.mobigen.datasetfile.dto.response.CetusDatasetFileView;
@@ -160,13 +161,8 @@ public class CetusDatasetFileService {
     }
 
     @Transactional(readOnly = true)
-    public CetusDatasetFileView findMetadataFileByMetadataId(String metadataId) {
-        return fileDao.getMetadataFileByMetadataId(metadataId);
-    }
-
-    @Transactional(readOnly = true)
-    public List<CetusDatasetFileView> findRawdataFilesByMetadataId(String metadataId) {
-        return fileDao.getRawdataFileByMetadataId(metadataId);
+    public List<CetusDatasetFileView> findDataFile(SearchDatasetFile search) {
+        return fileDao.getDataFile(search);
     }
 
     @Transactional(readOnly = true)
@@ -182,7 +178,7 @@ public class CetusDatasetFileService {
     }
 
     @Transactional
-    public void processFile(CetusDatasetFile[] fileAdd, CetusDatasetFile[] fileDel) {
+    public void processAddFile(CetusDatasetFile[] fileAdd) {
 
         if (fileAdd != null) {
             for (CetusDatasetFile f : fileAdd) {
@@ -199,11 +195,10 @@ public class CetusDatasetFileService {
                 fileDao.insert(f);
             }
         }
+    }
 
-        if (fileDel != null) {
-            for (CetusDatasetFile f : fileDel) {
-                fileDao.deleteFile(f); //논리적인 삭제: 물리적인 파일을 삭제하지 않는다.
-            }
-        }
+    @Transactional
+    public void processDelFile(String fileId) {
+        fileDao.deleteFile(new CetusDatasetFile(fileId)); //논리적인 삭제: 물리적인 파일을 삭제하지 않는다.
     }
 }

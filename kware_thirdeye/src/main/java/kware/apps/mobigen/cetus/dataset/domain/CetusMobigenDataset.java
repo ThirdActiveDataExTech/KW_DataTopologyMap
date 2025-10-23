@@ -13,6 +13,11 @@ public class CetusMobigenDataset {
     private String title;
     private String metadata;
 
+    public CetusMobigenDataset(String title, String metadata) {
+        this.title = title;
+        this.metadata = metadata;
+    }
+
     public CetusMobigenDataset(SaveMobigenDataset request) {
         this.title = request.getTitle();
         this.metadata = request.getMetadata();

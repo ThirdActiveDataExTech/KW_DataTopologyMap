@@ -32,20 +32,6 @@ public class CetusMobigenDatasetRestController {
 
     /**
      *
-     * 모비젠 데이터셋 리스트 조회
-     *
-     * @api         [GET] /api/admin/mobigen-dataset/list
-     * @author      dahyeon
-     * @date        2025-10-15
-    **/
-    @GetMapping("/list")
-    public ResponseEntity findAllMobigenDatasetList(SearchMobigenDataset search) {
-        Page<MobigenDatasetList> page = service.findAllMobigenDatasetList(search);
-        return ResponseEntity.ok(page);
-    }
-
-    /**
-     *
      * 모비젠 측에 데이터셋 정보 등록(저장)
      *
      * @api         [POST] /api/admin/mobigen-dataset
@@ -122,7 +108,7 @@ public class CetusMobigenDatasetRestController {
 
     /**
      *
-     * 메타데이터 하위 원본데이너파일 여러건 삭제
+     * 메타데이터 하위 원본데이터파일 여러건 삭제
      *
      * @api         [PUT] /api/admin/mobigen-dataset/delete-realdatas
      * @author      dahyeon

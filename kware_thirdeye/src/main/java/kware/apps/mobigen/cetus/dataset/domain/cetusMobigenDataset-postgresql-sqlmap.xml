@@ -60,11 +60,4 @@
            AND DATASET_ID = #{datasetId}
     </update>
 
-    <update id="deleteRealdata" parameterType="String">
-        /* cetusApprovedDataset.deleteRealdata */
-        UPDATE CETUS_FILE
-           SET USE_AT = 'N'
-         WHERE FILE_ID = #{fileId}
-    </update>
-
 </mapper>

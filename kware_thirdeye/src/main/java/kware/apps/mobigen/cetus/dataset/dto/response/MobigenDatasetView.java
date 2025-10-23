@@ -29,6 +29,7 @@ public class MobigenDatasetView {
 
     private List<TagList> tags;                 // 태그 목록
 
+    private CetusDatasetFileView packagedataFile;     // 패키지데이터 파일
     private CetusDatasetFileView metadataFile;        // 메타데이터 파일
     private List<CetusDatasetFileView> rawdataFiles;  // 원본데이터 파일 목록
 
@@ -36,6 +37,9 @@ public class MobigenDatasetView {
         this.tags = tags;
     }
 
+    public void setPackagedataFile(CetusDatasetFileView packagedataFile) {
+        this.packagedataFile = packagedataFile;
+    }
     public void setMetadataFile(CetusDatasetFileView metadataFile) {
         this.metadataFile = metadataFile;
     }

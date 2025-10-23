@@ -1,9 +1,10 @@
 package kware.apps.thirdeye.mobigen.datasetfile.domain;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Getter @Setter
+@Getter @Setter @NoArgsConstructor
 public class CetusDatasetFile {
 
     private Long fileUid;
@@ -22,4 +23,8 @@ public class CetusDatasetFile {
     private String metadataId;
     private String rawdataId;
     private String dataTpCd;
+
+    public CetusDatasetFile(String fileId) {
+        this.fileId = fileId;
+    }
 }

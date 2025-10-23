@@ -1,6 +1,7 @@
 package kware.apps.thirdeye.mobigen.datasetfile.domain;
 
 import cetus.dao.SuperDao;
+import kware.apps.thirdeye.mobigen.datasetfile.dto.request.SearchDatasetFile;
 import kware.apps.thirdeye.mobigen.datasetfile.dto.request.SearchDatasetFileView;
 import kware.apps.thirdeye.mobigen.datasetfile.dto.response.CetusDatasetFileList;
 import kware.apps.thirdeye.mobigen.datasetfile.dto.response.CetusDatasetFileView;
@@ -35,12 +36,8 @@ public class CetusDatasetFileDao extends SuperDao<CetusDatasetFile> {
         update("deleteFile", bean);
     }
 
-    public CetusDatasetFileView getMetadataFileByMetadataId(String metadataId) {
-        return selectOne("getMetadataFileByMetadataId", metadataId);
-    }
-
-    public List<CetusDatasetFileView> getRawdataFileByMetadataId(String metadataId) {
-        return selectList("getRawdataFileByMetadataId", metadataId);
+    public List<CetusDatasetFileView> getDataFile(SearchDatasetFile search) {
+        return selectList("getDataFile", search);
     }
 
     public CetusDatasetFileView getRawdataFileView(SearchDatasetFileView search) {

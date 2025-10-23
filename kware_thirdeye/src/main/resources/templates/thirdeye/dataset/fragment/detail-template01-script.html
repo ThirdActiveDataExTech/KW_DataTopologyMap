@@ -17,11 +17,19 @@
         },
 
         drawMetadataTab: async function (dataset) {
+
+            if(!dataset['mobigenDatasetView']?.['packagedataFile']) {
+                console.log("its null")
+                $("#downloadPackage").prop('disabled', true).prop('readonly', true)
+            }
+
             /* ========= 1. 메타데이터 정보 =========*/
-            const metadataFile = dataset['mobigenDatasetView']?.['metadataFile']
-            $("#metadata-id").val(metadataFile['fileId']);
-            $("#metadata-badge").text(metadataFile['extension']);
-            $("#metadata-desc").text(metadataFile['orgFileNm']);
+            const metadataFile = dataset['mobigenDatasetView']?.['metadataFile'] || dataset['mobigenDatasetView']?.['packagedataFile']
+            if(metadataFile){
+                $("#metadata-id").val(metadataFile['fileId']);
+                $("#metadata-badge").text(metadataFile['extension']);
+                $("#metadata-desc").text(metadataFile['orgFileNm']);
+            }
 
             /* ========= 2. 실(원본)데이터 정보 =========*/
             // todo[mobigen] list of realdata
@@ -190,10 +198,6 @@
     }
 
     $(function () {
-
-        /*$("#file-download").on("click", function (e) {
-            console.log("file download")
-        });*/
 
         $("#metadata-download-btn").on('click', async function (e) {
 

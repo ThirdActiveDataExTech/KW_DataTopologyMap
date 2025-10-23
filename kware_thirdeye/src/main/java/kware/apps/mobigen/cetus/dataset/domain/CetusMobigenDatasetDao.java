@@ -32,8 +32,4 @@ public class CetusMobigenDatasetDao extends SuperDao<CetusMobigenDataset> {
     public void ifExistDeleteApprovedDataset(DeleteApprovedDatasetIfExist request) {
         update("ifExistDeleteApprovedDataset", request);
     }
-
-    public void deleteRealdata(String fileId) {
-        update("deleteRealdata", fileId);
-    }
 }

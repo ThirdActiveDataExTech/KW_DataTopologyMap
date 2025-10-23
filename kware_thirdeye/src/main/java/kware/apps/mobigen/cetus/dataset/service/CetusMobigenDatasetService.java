@@ -8,16 +8,18 @@ import cetus.util.StringUtil;
 import kware.apps.mobigen.cetus.dataset.domain.CetusMobigenDataset;
 import kware.apps.mobigen.cetus.dataset.domain.CetusMobigenDatasetDao;
 import kware.apps.mobigen.cetus.dataset.dto.request.*;
-import kware.apps.mobigen.cetus.dataset.dto.response.*;
+import kware.apps.mobigen.cetus.dataset.dto.response.DeleteApprovedDatasetIfExist;
+import kware.apps.mobigen.cetus.dataset.dto.response.MobigenDatasetList;
+import kware.apps.mobigen.cetus.dataset.dto.response.MobigenDatasetView;
 import kware.apps.mobigen.cetus.tag.dto.response.TagList;
 import kware.apps.mobigen.cetus.tag.service.CetusMobigenDatasetTagService;
 import kware.apps.thirdeye.mobigen.datasetfile.domain.CetusDatasetFile;
+import kware.apps.thirdeye.mobigen.datasetfile.dto.request.SearchDatasetFile;
 import kware.apps.thirdeye.mobigen.datasetfile.dto.response.CetusDatasetFileView;
 import kware.apps.thirdeye.mobigen.datasetfile.enumcd.DataFileTpCd;
 import kware.apps.thirdeye.mobigen.datasetfile.service.CetusDatasetFileService;
 import kware.apps.thirdeye.mobigen.mobigenregistrant.dto.response.MobigenRegistrantView;
 import kware.apps.thirdeye.mobigen.mobigenregistrant.service.CetusMobigenRegistrantService;
-import kware.common.config.auth.dto.SessionUserInfo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -70,7 +72,20 @@ public class CetusMobigenDatasetService {
     **/
     @Transactional(readOnly = true)
     public Page<MobigenDatasetList> findAllMobigenDatasetPage(SearchMobigenDataset search) {
+
         List<MobigenDatasetList> allMobigenDatasetList = dao.getAllMobigenDatasetList(search);
+        if(search.getApprovedIds() != null && search.getApprovedIds().length != 0) {
+            // {approvedIds}에 포함되지 않은 dataset 목록만 필터링
+            Long[] approvedIds = search.getApprovedIds();
+            Set<Long> approvedSet = approvedIds != null
+                    ? new HashSet<>(Arrays.asList(approvedIds))
+                    : Collections.emptySet();
+            // 필터링
+            allMobigenDatasetList = allMobigenDatasetList.stream()
+                    .filter(ds -> !approvedSet.contains(ds.getUid()))
+                    .collect(Collectors.toList());
+        }
+
         Page<MobigenDatasetList> page = this.changeListToPage(search.getPageNumber(), search.getSize(), allMobigenDatasetList);
         page.getList().forEach(data -> {
             Long datasetId = data.getUid();
@@ -81,37 +96,6 @@ public class CetusMobigenDatasetService {
         return page;
     }
 
-    /**
-     * @method      findAllMobigenDatasetList
-     * @author      dahyeon
-     * @date        2025-10-13
-     * @deacription [Mobigen] 데이터셋 목록 페이징 조회
-    **/
-    @Transactional(readOnly = true)
-    public Page<MobigenDatasetList> findAllMobigenDatasetList(SearchMobigenDataset search) {
-
-        List<MobigenDatasetList> list = dao.getAllMobigenDatasetList(search);
-
-        // {approvedIds}에 포함되지 않은 dataset 목록만 필터링
-        Long[] approvedIds = search.getApprovedIds();
-        Set<Long> approvedSet = approvedIds != null
-                ? new HashSet<>(Arrays.asList(approvedIds))
-                : Collections.emptySet();
-        // 필터링
-        List<MobigenDatasetList> filteredList = list.stream()
-                .filter(ds -> !approvedSet.contains(ds.getUid()))
-                .collect(Collectors.toList());
-
-        // 최종 페이징
-        Page<MobigenDatasetList> page = this.changeListToPage(search.getPageNumber(), search.getSize(), filteredList);
-        page.getList().forEach(data -> {
-            Long datasetId = data.getUid();
-            MobigenRegistrantView registrantView = registrantService.findMobigenRegistrant(datasetId);
-            if(registrantView != null) data.setRegistrantInfo(registrantView.isRegistered(), registrantView.getRegistrantId());
-            else data.setRegistrantInfo(false, null);
-        });
-        return page;
-    }
 
     /**
      * @method      findRealDataPage
@@ -121,8 +105,9 @@ public class CetusMobigenDatasetService {
     **/
     @Transactional(readOnly = true)
     public Page<CetusDatasetFileView> findRealDataPage(Long datasetId, SearchMobigenDatasetRealdata search) {
-        List<CetusDatasetFileView> realdataFiles = datasetFileService.findRawdataFilesByMetadataId(Long.toString(datasetId));
-        return this.changeListToPage(search.getPageNumber(), search.getSize(), realdataFiles);
+        SearchDatasetFile searchFile = new SearchDatasetFile(Long.toString(datasetId), null, DataFileTpCd.RAWDATA.name());
+        List<CetusDatasetFileView> rawdataFiles = datasetFileService.findDataFile(searchFile);
+        return this.changeListToPage(search.getPageNumber(), search.getSize(), rawdataFiles);
     }
 
     /**
@@ -139,7 +124,6 @@ public class CetusMobigenDatasetService {
     **/
     @Transactional
     public void saveMobigenDataset(SaveMobigenDataset request) {
-        SessionUserInfo user = UserUtil.getUser();
 
         // 1. save mobigen data
         CetusMobigenDataset bean = new CetusMobigenDataset(request);
@@ -150,7 +134,7 @@ public class CetusMobigenDatasetService {
         CetusDatasetFile metaFile = request.getMetaFile();
         metaFile.setMetadataId(Long.toString(datasetId));
         metaFile.setDataTpCd(DataFileTpCd.METADATA.name());
-        datasetFileService.processFile(new CetusDatasetFile[]{ metaFile }, null);
+        datasetFileService.processAddFile(new CetusDatasetFile[]{ metaFile });
 
         // 2. save realdata file
         CetusDatasetFile[] realFiles = request.getRealFiles();
@@ -160,7 +144,7 @@ public class CetusMobigenDatasetService {
             String rawdataId = "raw_" + datasetId + "_" + StringUtil.random(3);
             datasetFile.setRawdataId(rawdataId);
         }
-        datasetFileService.processFile(realFiles, null);
+        datasetFileService.processAddFile(realFiles);
 
         // 3. save tag
         tagService.saveDatasetTag(request.getTags(), datasetId);
@@ -177,7 +161,20 @@ public class CetusMobigenDatasetService {
      *              => 패키지 파일 형태 업로드 (zip)
     **/
     public void saveMobigenPackageDataset(SaveMobigenPackageDataset request) {
-        // todo mobigen API 태우기
+        // 1. save mobigen data
+        String title = "random package title_" + StringUtil.random(3);
+        CetusMobigenDataset bean = new CetusMobigenDataset(title, "{}");
+        dao.insert(bean);
+        Long datasetId = bean.getUid();
+
+        // 2. save package data file
+        CetusDatasetFile metaFile = request.getPackageFile();
+        metaFile.setMetadataId(Long.toString(datasetId));
+        metaFile.setDataTpCd(DataFileTpCd.PACKAGE.name());
+        datasetFileService.processAddFile(new CetusDatasetFile[]{ metaFile });
+
+        // 3. 모비젠 등록자 정보 저장
+        registrantService.saveMobigenRegistrant(datasetId);
     }
 
     /**
@@ -203,7 +200,7 @@ public class CetusMobigenDatasetService {
             String rawdataId = "raw_" + datasetId + "_" + StringUtil.random(3);
             datasetFile.setRawdataId(rawdataId);
         }
-        datasetFileService.processFile(realFiles, null);
+        datasetFileService.processAddFile(realFiles);
 
         // 2. update mobigen data
         CetusMobigenDataset bean = new CetusMobigenDataset(datasetId, request);
@@ -257,17 +254,26 @@ public class CetusMobigenDatasetService {
             view.setTags(tags);
         }
 
-        // 4. dataset metadata file
-        // => todo 추후에 해당 부분은 API 이용 변경
-        if(useFiles){
-            CetusDatasetFileView metadataFile = datasetFileService.findMetadataFileByMetadataId(Long.toString(datasetId));
-            view.setMetadataFile(metadataFile);
+        // 4. dataset package file
+        if(useFiles) {
+            SearchDatasetFile search = new SearchDatasetFile(Long.toString(datasetId), null, DataFileTpCd.PACKAGE.name());
+            List<CetusDatasetFileView> packagedataFiles = datasetFileService.findDataFile(search);
+            view.setPackagedataFile((packagedataFiles != null && !packagedataFiles.isEmpty()) ? packagedataFiles.get(0) : null);
         }
 
-        // 5. dataset realdata file
+        // 5. dataset metadata file
         // => todo 추후에 해당 부분은 API 이용 변경
         if(useFiles){
-            List<CetusDatasetFileView> rawdataFiles = datasetFileService.findRawdataFilesByMetadataId(Long.toString(datasetId));
+            SearchDatasetFile search = new SearchDatasetFile(Long.toString(datasetId), null, DataFileTpCd.METADATA.name());
+            List<CetusDatasetFileView> metadataFiles = datasetFileService.findDataFile(search);
+            view.setMetadataFile((metadataFiles != null && !metadataFiles.isEmpty()) ? metadataFiles.get(0) : null);
+        }
+
+        // 6. dataset rawdata file
+        // => todo 추후에 해당 부분은 API 이용 변경
+        if(useFiles){
+            SearchDatasetFile search = new SearchDatasetFile(Long.toString(datasetId), null, DataFileTpCd.RAWDATA.name());
+            List<CetusDatasetFileView> rawdataFiles = datasetFileService.findDataFile(search);
             view.setRawdataFiles(rawdataFiles);
         }
 
@@ -277,7 +283,7 @@ public class CetusMobigenDatasetService {
     @Transactional
     public void deleteRealdatas(DeleteRealdatas request) {
         for (String fileId: request.getFileIds()) {
-            dao.deleteRealdata(fileId);
+            datasetFileService.processDelFile(fileId);
         }
     }
 }

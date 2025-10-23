@@ -4,7 +4,7 @@ import lombok.Getter;
 
 @Getter
 public enum DataFileTpCd {
-
+    PACKAGE,
     METADATA,
     RAWDATA;
 }
