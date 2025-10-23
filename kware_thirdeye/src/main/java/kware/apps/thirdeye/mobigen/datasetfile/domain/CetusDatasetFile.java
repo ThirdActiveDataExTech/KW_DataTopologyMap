@@ -23,8 +23,4 @@ public class CetusDatasetFile {
     private String metadataId;
     private String rawdataId;
     private String dataTpCd;
-
-    public CetusDatasetFile(String fileId) {
-        this.fileId = fileId;
-    }
 }

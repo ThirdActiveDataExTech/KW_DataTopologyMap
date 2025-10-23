@@ -155,6 +155,22 @@
          WHERE FILE_ID = #{fileId}
     </delete>
 
+    <delete id="deleteFileByRawdataId" parameterType="CetusDatasetFile">
+        /* cetusDatasetFile.deleteFileByRawdataId */
+        UPDATE CETUS_DATASET_FILE
+           SET USE_AT = 'N'
+              ,UPDT_DT = NOW()
+         WHERE RAWDATA_ID = #{rawdataId}
+    </delete>
+
+    <delete id="deleteFileByMetadataId" parameterType="CetusDatasetFile">
+        /* cetusDatasetFile.deleteFileByMetadataId */
+        UPDATE CETUS_DATASET_FILE
+           SET USE_AT = 'N'
+              ,UPDT_DT = NOW()
+         WHERE METADATA_ID = #{metadataId}
+    </delete>
+
     <update id="updateDatasetFile" parameterType="ChangeDatasetFile">
         /* cetusDatasetFile.updateDatasetFile */
         UPDATE CETUS_DATASET_FILE

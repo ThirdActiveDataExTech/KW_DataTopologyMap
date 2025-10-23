@@ -19,4 +19,8 @@ public class DeleteMetadatasRequest {
     private String action;                  // "delete"
     private List<String> metadata_ids;
 
+    public DeleteMetadatasRequest(List<String> metadata_ids) {
+        this.metadata_ids = metadata_ids;
+    }
+
 }

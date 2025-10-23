@@ -3,17 +3,14 @@ package kware.apps.mobigen.cetus.dataset.service;
 
 import cetus.bean.Page;
 import cetus.bean.Pageable;
-import cetus.user.UserUtil;
-import cetus.util.StringUtil;
 import kware.apps.mobigen.cetus.dataset.domain.CetusMobigenDataset;
 import kware.apps.mobigen.cetus.dataset.domain.CetusMobigenDatasetDao;
-import kware.apps.mobigen.cetus.dataset.dto.request.*;
-import kware.apps.mobigen.cetus.dataset.dto.response.DeleteApprovedDatasetIfExist;
+import kware.apps.mobigen.cetus.dataset.dto.request.SearchMobigenDataset;
+import kware.apps.mobigen.cetus.dataset.dto.request.SearchMobigenDatasetRealdata;
 import kware.apps.mobigen.cetus.dataset.dto.response.MobigenDatasetList;
 import kware.apps.mobigen.cetus.dataset.dto.response.MobigenDatasetView;
 import kware.apps.mobigen.cetus.tag.dto.response.TagList;
 import kware.apps.mobigen.cetus.tag.service.CetusMobigenDatasetTagService;
-import kware.apps.thirdeye.mobigen.datasetfile.domain.CetusDatasetFile;
 import kware.apps.thirdeye.mobigen.datasetfile.dto.request.SearchDatasetFile;
 import kware.apps.thirdeye.mobigen.datasetfile.dto.response.CetusDatasetFileView;
 import kware.apps.thirdeye.mobigen.datasetfile.enumcd.DataFileTpCd;
@@ -111,57 +108,6 @@ public class CetusMobigenDatasetService {
         return this.changeListToPage(search.getPageNumber(), search.getSize(), rawdataFiles);
     }
 
-
-    /**
-     * @method      changeMobigenDataset
-     * @author      dahyeon
-     * @date        2025-10-13
-     * @deacription [Mobigen] 데이터셋 수정
-     *
-     *                  (1) 실데이터(원본데이터) 파일 저장
-     *                      => 해당 파일은 누적 등록 가능
-     *                      => 누적 등록될 경우, 주기성 데이터셋처럼 보이게 됨
-     *                  (2) 모비젠 데이터 정보 수정
-     *                  (3) 모비젠 데이터에 대한 태그 정보 저장
-    **/
-    @Transactional
-    public void changeMobigenDataset(Long datasetId, ChangeMobigenDataset request) {
-
-        // 1. save realdata file
-        CetusDatasetFile realFile = request.getRealFile();
-        realFile.setMetadataId(Long.toString(datasetId));
-        realFile.setDataTpCd(DataFileTpCd.RAWDATA.name());
-        String rawdataId = "raw_" + datasetId + "_" + StringUtil.random(3);
-        realFile.setRawdataId(rawdataId);
-        datasetFileService.processAddFile(realFile);
-
-        // 2. update mobigen data
-        CetusMobigenDataset bean = new CetusMobigenDataset(datasetId, request);
-        dao.update(bean);
-
-        // 3. save tag
-        tagService.saveDatasetTag(request.getTags(), datasetId);
-    }
-
-    /**
-     * @method      deleteSeveralMobigenDataset
-     * @author      dahyeon
-     * @date        2025-10-13
-     * @deacription [Mobigen] 데이터셋 삭제
-     *                  => 예비 KWARE 포탈 시스템에서는 논리 삭제로 동작중
-    **/
-    @Transactional
-    public void deleteSeveralMobigenDataset(DeleteDatasets request) {
-        for (Long datasetId: request.getUids()) {
-            CetusMobigenDataset bean = new CetusMobigenDataset(datasetId);
-            dao.deleteMobigenDataset(bean);
-
-            // {datasetId} 데이터셋이 kware 포탈 시스템에서 관리중인 값이라면 포탈 시스템에서도 삭제 (논리삭제)
-            DeleteApprovedDatasetIfExist req = new DeleteApprovedDatasetIfExist(datasetId, UserUtil.getUserWorkplaceUid());
-            dao.ifExistDeleteApprovedDataset(req);
-        }
-    }
-
     /**
      * @method      findMobigenDatasetByDatasetId
      * @author      dahyeon
@@ -213,15 +159,26 @@ public class CetusMobigenDatasetService {
         return view;
     }
 
-    @Transactional
-    public void deleteRealdatas(DeleteRealdatas request) {
-        for (String fileId: request.getFileIds()) {
-            datasetFileService.processDelFile(fileId);
-        }
-    }
+
+    /* =============== */
 
     @Transactional
     public void insert(CetusMobigenDataset bean) {
         dao.insert(bean);
+    }
+
+    @Transactional
+    public void update(CetusMobigenDataset bean) {
+        dao.update(bean);
+    }
+
+    @Transactional
+    public void ifExistDeleteApprovedDataset(Long datasetId) {
+        dao.ifExistDeleteApprovedDataset(datasetId);
+    }
+
+    @Transactional
+    public void deleteMobigenDataset(CetusMobigenDataset bean) {
+        dao.deleteMobigenDataset(bean);
     }
 }

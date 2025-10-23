@@ -236,7 +236,23 @@ public class CetusDatasetFileService {
 
     @Transactional
     public void processDelFile(String fileId) {
-        fileDao.deleteFile(new CetusDatasetFile(fileId)); //논리적인 삭제: 물리적인 파일을 삭제하지 않는다.
+        CetusDatasetFile datasetFile = new CetusDatasetFile();
+        datasetFile.setFileId(fileId);
+        fileDao.deleteFile(datasetFile); //논리적인 삭제: 물리적인 파일을 삭제하지 않는다.
+    }
+
+    @Transactional
+    public void processDelFileByRawdataId(String rawdataId) {
+        CetusDatasetFile datasetFile = new CetusDatasetFile();
+        datasetFile.setRawdataId(rawdataId);
+        fileDao.deleteFileByRawdataId(datasetFile); //논리적인 삭제: 물리적인 파일을 삭제하지 않는다.
+    }
+
+    @Transactional
+    public void processDelFileByMetadataId(String metadataId) {
+        CetusDatasetFile datasetFile = new CetusDatasetFile();
+        datasetFile.setMetadataId(metadataId);
+        fileDao.deleteFileByMetadataId(datasetFile); //논리적인 삭제: 물리적인 파일을 삭제하지 않는다.
     }
 
     @Transactional

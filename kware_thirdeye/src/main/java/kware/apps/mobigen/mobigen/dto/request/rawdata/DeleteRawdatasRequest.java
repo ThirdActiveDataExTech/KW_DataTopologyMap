@@ -19,4 +19,10 @@ public class DeleteRawdatasRequest {
     private String action;              // "delete"
     private String metadata_id;
     private List<String> rawdata_ids;
+
+    public DeleteRawdatasRequest(String metadata_id, List<String> rawdata_ids) {
+        this.action = "delete";
+        this.metadata_id = metadata_id;
+        this.rawdata_ids = rawdata_ids;
+    }
 }

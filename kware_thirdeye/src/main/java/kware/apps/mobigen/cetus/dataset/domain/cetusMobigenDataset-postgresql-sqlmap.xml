@@ -52,12 +52,11 @@
          WHERE UID = #{uid}
     </update>
 
-    <update id="ifExistDeleteApprovedDataset" parameterType="DeleteApprovedDatasetIfExist">
+    <update id="ifExistDeleteApprovedDataset" parameterType="Long">
         /* cetusApprovedDataset.ifExistDeleteApprovedDataset */
         UPDATE CETUS_APPROVED_DATASET
            SET DELETE_AT = 'Y'
-         WHERE WORKPLACE_UID = #{workplaceUid}
-           AND DATASET_ID = #{datasetId}
+         WHERE DATASET_ID = #{datasetId}
     </update>
 
 </mapper>

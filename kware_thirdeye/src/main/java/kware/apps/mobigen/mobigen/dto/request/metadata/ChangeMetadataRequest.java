@@ -19,6 +19,12 @@ public class ChangeMetadataRequest {
     private String metadata_id;
     private ChangeMetadataFieldRequest field;
 
+    public ChangeMetadataRequest(String metadata_id, ChangeMetadataFieldRequest field) {
+        this.action = "update";
+        this.metadata_id = metadata_id;
+        this.field = field;
+    }
+
     @Getter @Setter
     public static class ChangeMetadataFieldRequest {
         private String title;
@@ -30,5 +36,9 @@ public class ChangeMetadataRequest {
         private String landing_page;
         private String theme;
         private String access_url;
+
+        public ChangeMetadataFieldRequest(String title) {
+            this.title = title;
+        }
     }
 }

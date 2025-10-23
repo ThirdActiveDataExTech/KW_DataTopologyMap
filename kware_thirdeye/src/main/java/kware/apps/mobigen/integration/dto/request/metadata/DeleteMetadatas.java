@@ -1,4 +1,4 @@
-package kware.apps.mobigen.cetus.dataset.dto.request;
+package kware.apps.mobigen.integration.dto.request.metadata;
 
 
 import lombok.AccessLevel;
@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 import java.util.List;
 
 @Getter @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class DeleteDatasets {
-
+public class DeleteMetadatas {
     private List<Long> uids;
 }

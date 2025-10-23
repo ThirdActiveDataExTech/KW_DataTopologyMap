@@ -3,7 +3,6 @@ package kware.apps.mobigen.cetus.dataset.domain;
 
 import cetus.dao.SuperDao;
 import kware.apps.mobigen.cetus.dataset.dto.request.SearchMobigenDataset;
-import kware.apps.mobigen.cetus.dataset.dto.response.DeleteApprovedDatasetIfExist;
 import kware.apps.mobigen.cetus.dataset.dto.response.MobigenDatasetList;
 import kware.apps.mobigen.cetus.dataset.dto.response.MobigenDatasetView;
 import org.springframework.stereotype.Component;
@@ -29,7 +28,7 @@ public class CetusMobigenDatasetDao extends SuperDao<CetusMobigenDataset> {
         return selectList("getAllMobigenDatasetList", search);
     }
 
-    public void ifExistDeleteApprovedDataset(DeleteApprovedDatasetIfExist request) {
-        update("ifExistDeleteApprovedDataset", request);
+    public void ifExistDeleteApprovedDataset(Long datasetId) {
+        update("ifExistDeleteApprovedDataset", datasetId);
     }
 }

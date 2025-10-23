@@ -37,6 +37,14 @@ public class CetusDatasetFileDao extends SuperDao<CetusDatasetFile> {
         update("deleteFile", bean);
     }
 
+    public void deleteFileByRawdataId(CetusDatasetFile bean) {
+        update("deleteFileByRawdataId", bean);
+    }
+
+    public void deleteFileByMetadataId(CetusDatasetFile bean) {
+        update("deleteFileByMetadataId", bean);
+    }
+
     public List<CetusDatasetFileView> getDataFile(SearchDatasetFile search) {
         return selectList("getDataFile", search);
     }

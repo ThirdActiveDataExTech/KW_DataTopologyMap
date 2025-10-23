@@ -6,8 +6,10 @@ import kware.apps.mobigen.cetus.dataset.dto.response2.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.*;
 
@@ -54,39 +56,11 @@ public class CetusMobigenDataset2RestController {
         return ResponseEntity.ok(new resMetadata01("metadata01_100200", "Metadata search completed", resMetadata01Result));
     }
 
-    @PostMapping("/metadata02")
-    public ResponseEntity metadata02(@RequestBody reqMetadata02 request){
-        log.info("[METADATA02] request: {} ", request);
-        return ResponseEntity.ok().build();
-    }
-
-    @PostMapping("/metadata03")
-    public ResponseEntity metadata03(@RequestPart("metadata") reqMetadata03 metadata,
-                                     @RequestPart(value = "file", required = false) MultipartFile file) {
-        log.info("[METADATA03] metadata: {} ", metadata);
-        resMetadata03.resMetadata03_result result = null;
-        if(file != null && !file.isEmpty()) {
-            log.info("[METADATA03] file: {} ", file.getOriginalFilename());
-            result = new resMetadata03.resMetadata03_result(metadata, file);
-        } else {
-            log.info("[METADATA03] no file uploaded");
-            result = new resMetadata03.resMetadata03_result(metadata);
-        }
-        return ResponseEntity.ok(new resMetadata03("metadata03_100200", "Import completed", result));
-    }
-
     @PostMapping("/metadata04")
     public ResponseEntity metadata04(@RequestBody reqMetadata04 request) {
         log.info("[METADATA04] request : {} ", request);
         resMetadata04.resMetadata04_result result = new resMetadata04.resMetadata04_result("테스트 타이틀", "키워드?");
         return ResponseEntity.ok(new resMetadata04("metadata04_100200", "Metadata found", result));
-    }
-
-    @PostMapping("/metadata05")
-    public ResponseEntity metadata05(@RequestBody reqMetadata05 request) {
-        log.info("[METADATA05] request : {} ", request);
-        resMetadata05.resMetadata05_result result = new resMetadata05.resMetadata05_result(request.getMetadata_id());
-        return ResponseEntity.ok(new resMetadata05("metadata05_100200", "Metadata updated successfully", result));
     }
 
     @PostMapping("/metadata08")
@@ -112,17 +86,6 @@ public class CetusMobigenDataset2RestController {
                 request.getMetadata_id(), itemCount, items
         );
         return ResponseEntity.ok(new resRawdata01("rawdata01_100200", "Raw data list retrieved", resRawdata01Result));
-    }
-
-    @PostMapping("/rawdata02")
-    public ResponseEntity rawdata02(@RequestPart("rawdata") reqRawdata02 rawdata,
-                                    @RequestPart("file") MultipartFile file) {
-        if(file.isEmpty()) {
-            return ResponseEntity.badRequest().body("no file founded");
-        }
-        log.info("[RAWDATA02] rawdata : {}, file: {} ", rawdata, file.getOriginalFilename());
-        resRawdata02.resRawdata02_result result = new resRawdata02.resRawdata02_result(file);
-        return ResponseEntity.ok(new resRawdata02("rawdata02_100200", "Raw data uploaded successfully", result));
     }
 
     @PostMapping("/rawdata04")
