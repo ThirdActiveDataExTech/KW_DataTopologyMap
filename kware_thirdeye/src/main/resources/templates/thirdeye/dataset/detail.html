@@ -126,7 +126,7 @@
         <div class="description-review-topbar nav" data-aos="fade-up" data-aos-delay="200">
             <a class="active" data-bs-toggle="tab" href="#des-details1"> 데이터 </a>
             <!--<a data-bs-toggle="tab" href="#des-details2" class=""> API </a>-->
-            <!--<a data-bs-toggle="tab" href="#des-details3" class=""> 관련 데이터 </a>-->
+            <a data-bs-toggle="tab" href="#des-details3" class=""> 관련 데이터 </a>
             <a data-bs-toggle="tab" href="#des-details4" class=""> 문의/오류신고 </a>
         </div>
         <div class="tab-content">
@@ -136,9 +136,9 @@
             <!--<div id="des-details2" class="tab-pane">
                 <div th:replace="thirdeye/dataset/fragment/detail-template02::template02"></div>
             </div>-->
-            <!--<div id="des-details3" class="tab-pane">
+            <div id="des-details3" class="tab-pane">
                 <div th:replace="thirdeye/dataset/fragment/detail-template03::template03"></div>
-            </div>-->
+            </div>
             <div id="des-details4" class="tab-pane">
               <div th:replace="thirdeye/dataset/fragment/detail-template04::template04"></div>
             </div>
@@ -190,7 +190,7 @@
         template01JS.drawTab01(dataset);
 
         // tab03 초기화
-        // template03JS.drawTemplate03();
+        template03JS.drawTemplate03();
 
         // tab04 초기화
         template04JS.drawTemplate04(approvedUid);

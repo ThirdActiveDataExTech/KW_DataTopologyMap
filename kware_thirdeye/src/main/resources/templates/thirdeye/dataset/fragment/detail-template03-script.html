@@ -20,58 +20,14 @@
         // 페이지 그리기
         pageList: async function (clearSidebar = true) {
 
-            // [todo] mobigen search relation metadata
-            const mobigen_obj1 = {
-                filters: {
-                    publisher: "교통",
-                    theme: ["교통", "인프라"],
-                    similarity_score: {min: 0.8, max: 1.0}
-                },
-                pagination: {page: 1, limit: 20},
-                sort: {field: "similarity_score", order: "desc"}
-            }
-            const res1 = await Http.post('/api/portal/mobigen-dataset2/relation01', mobigen_obj1, true);
-            console.log(">> res1 : ", res1)
-
-            // [todo] mobigen search recommendation metadata
-            const mobigen_obj2 = {
-                filters:  {
-                    "recommendation_type": ["content_based", "collaborative"],
-                    "publisher": "보건복지부",
-                    "theme": ["보건", "의료"]
-                },
-                "pagination": {
-                    "page": 1,
-                    "limit": 10
-                },
-                "sort": {
-                    "field": "recommendation_score",
-                    "order": "desc"
-                }
-            }
-            const res2 = await Http.post('/api/portal/mobigen-dataset2/recommendation01', mobigen_obj2, true);
-            console.log(">> res2 : ", res2)
-
             template03JS.pageInit();
-            let keyword = template03JS.keyword;
-            Http.get('/api/portal/approved-dataset/list').then((res) => {
+            if (clearSidebar) template03JS.createSidebar();
 
-                let data = res
-                if (clearSidebar) template03JS.createSidebar();
-
-                // 검색어를 통한 filter
-                if (data.length !== 0) {
-                    if (keyword) data = data.filter(item => item?.['metadataView']?.['title'].includes(template03JS.keyword));
-                    if (this.param.tag?.length) {
-                        data = data.filter(item =>
-                            item['metadataView']?.tags?.some(tagItem =>
-                                this.param.tag.includes(String(tagItem['tagUid']))
-                            )
-                        );
-                    }
-                }
-                template03JS.createList(data);
-                template03JS.createCard(data);
+            template03JS.getPageData(5).then((response) => {
+                template03JS.createList(response);
+            });
+            template03JS.getPageData(9).then((response) => {
+                template03JS.createCard(response);
             });
         },
 
@@ -97,15 +53,21 @@
             });
         },
 
-        createList: function (data) {
+        getPageData: async function (size) {
+            let keyword = template03JS.keyword;
+            const obj = { pageNumber: template03JS.page, size: size }
+            return await Http.get('/api/admin/integration-dataset/relations-page', obj);
+        },
+
+        createList: function (response) {
+
+            const data = response['list']
 
             const $container = $("#shop-2")
             if( data.length !== 0 ) {
 
-                const dataLength = data.length;
-                const obj = template03JS.createPagination(dataLength, 5, 5);
+                const obj = template03JS.createPagination(response, true);
 
-                data = data.slice(obj.startIndex, obj.endIndex);
                 data.forEach( content => {
 
                     // a. 리스트 전체 감싸는 wrap
@@ -137,7 +99,7 @@
                     const $shopListContent = $('<div>', { class: 'page-list-content' });
                     $shopListContent.append(
                         $('<h3>').append(
-                            $('<a>', { href: 'javascript:void(0);' }).text(content['metadataView']['title'])
+                            $('<a>', { href: 'javascript:void(0);' }).text(content['relationMetadata']['title'])
                         )
                     );
 
@@ -148,12 +110,12 @@
                     );*/
 
                     // e. metadata 영역
-                    const metadata = JSON.parse(content['metadataView']['metadata']); // JSON string → 객체
+                    /*const metadata = JSON.parse(content['relationMetadata']['metadata']); // JSON string → 객체
                     Object.entries(metadata).forEach(([key, value]) => {
                         $shopListContent.append(
                             $('<p>').text(`${key} : ${typeof value === 'object' ? JSON.stringify(value) : value}`)
                         );
-                    });
+                    });*/
 
                     $col2.append($shopListContent);
                     $row.append($col1, $col2);
@@ -167,14 +129,15 @@
             }
         },
 
-        createCard: function (data) {
+        createCard: function (response) {
+
+            const data = response['list']
 
             if( data.length !== 0 ) {
 
                 const dataLength = data.length;
-                const obj = template03JS.createPagination(dataLength, 9, 5);
+                const obj = template03JS.createPagination(response, false);
 
-                data = data.slice(obj.startIndex, obj.endIndex);
                 data.forEach( content => {
 
                     // a. 카드를 감싸게 될 col
@@ -195,7 +158,7 @@
 
                     // d. 제목
                     const $productContent = $('<div>', { class: 'page-content' });
-                    const $productTitle = $('<h3>').append($('<a>', { href: 'javascript:void(0);' }).text(content['metadataView']['title']));
+                    const $productTitle = $('<h3>').append($('<a>', { href: 'javascript:void(0);' }).text(content['relationMetadata']['title']));
                     /*const $productPrice = $('<div>', { class: 'page-price' }).append($('<span>').text(content['description']));*/
 
                     $productContent.append($productTitle/*, $productPrice*/);
@@ -210,19 +173,20 @@
             }
         },
 
-        createPagination: function (length, number, pageCount) {
+        createPagination: function (response, isList = true) {
 
+            const totalCount = response['totalElements']
             const obj = {
                 pageDom: null,
-                number, pageCount,
-                totalPages: 0, startIndex: 0, endIndex: 0,
-                startPage: 0, endPage: 0
+                number: response['number'],
+                pageCount: response['countPage'],
+                totalPages: response['totalPages'],
+                startIndex: 0, endIndex: 0,
+                startPage: response['startPage'],
+                endPage: response['endPage']
             }
-            obj.totalPages = Math.ceil(length / number);
-            obj.startIndex = (template03JS.page - 1) * number;
-            obj.endIndex = obj.startIndex + number;
-            obj.startPage = (Math.ceil(template03JS.page / pageCount) - 1) * pageCount + 1;
-            obj.endPage = Math.min(obj.totalPages, Math.ceil(template03JS.page / pageCount) * pageCount);
+            obj.startIndex = (response['number'] - 1) * response['size'] + 1;
+            obj.endIndex = obj.startIndex + response['size'] - 1;
 
             // 페이징 컨테이너 그리기
             const $pagination = $('<div>', {
@@ -261,8 +225,8 @@
             $pagination.append($ul);
             obj.pageDom = $pagination;
 
-            template03JS.dom.showList.text(`전체 ${length}건 중 ${obj.startIndex + 1}-${obj.endIndex > length ? length : obj.endIndex}`);
-            template03JS.dom.showCard.text(`전체 ${length}건 중 ${obj.startIndex + 1}-${obj.endIndex > length ? length : obj.endIndex}`);
+            if(isList) template03JS.dom.showList.text(`전체 ${totalCount}건 중 ${obj.startIndex}-${obj.endIndex > totalCount ? totalCount : obj.endIndex}`);
+            else template03JS.dom.showCard.text(`전체 ${totalCount}건 중 ${obj.startIndex}-${obj.endIndex > totalCount ? totalCount : obj.endIndex}`);
 
             return obj;
         },

@@ -1,6 +1,5 @@
 package kware.apps.thirdeye.mobigen.approveddataset.dto.response;
 
-import kware.apps.mobigen.cetus.dataset.dto.response.MobigenDatasetView;
 import kware.apps.mobigen.integration.dto.response.metadata.MetadataView;
 import kware.apps.thirdeye.mobigen.datasetui.dto.response.DatasetUiView;
 import lombok.AccessLevel;

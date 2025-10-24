@@ -127,6 +127,39 @@ public class CetusDatasetFileService {
     }
 
     @Transactional
+    public ResponseEntity downloadMetaFile(String fileId, final HttpServletRequest req) {
+        // 1. {fileId} -> 파일 정보
+        CetusDatasetFile datasetFile = fileDao.getFileInfoByFileId(fileId);
+        if (datasetFile == null || !new File(datasetFile.getFilePath()).exists()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        // 2.{file} contentType
+        File fileObj = new File(datasetFile.getFilePath());
+        String contentType = datasetFile.getFileType();
+        if (contentType == null || contentType.isBlank()) {
+            contentType = "application/octet-stream";
+        }
+
+        // 3. file log
+        SessionUserInfo user = UserUtil.getUser(req);
+        String workerUid = user != null ? user.getUid().toString() : WebUtil.getIpAddress(req);
+        String workerNm = user != null ? user.getUserNm() : WebUtil.getIpAddress(req);
+        CetusDatasetFileLog datasetFileLog = new CetusDatasetFileLog(datasetFile.getFileUid(), datasetFile.getFileId(), workerUid, workerNm);
+
+        // 4. insert and update download count
+        fileDao.increaseDownCnt(datasetFile);
+        logDao.insertLog(datasetFileLog);
+
+        // 5. return
+        String encodedFileName = URLEncoder.encode(datasetFile.getOrgFileNm(), StandardCharsets.UTF_8).replace("+", "%20");
+        return ResponseEntity.ok()
+                .contentType(MediaType.parseMediaType(contentType))
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + encodedFileName + "\"")
+                .body(new FileSystemResource(fileObj));
+    }
+
+    @Transactional
     public ResponseEntity downloadTemp(final HttpServletRequest req) {
         String fileId = req.getParameter("fileId");
         if(!this.ifFileIdExist(req)) return ResponseEntity.ok("fileId is not found");

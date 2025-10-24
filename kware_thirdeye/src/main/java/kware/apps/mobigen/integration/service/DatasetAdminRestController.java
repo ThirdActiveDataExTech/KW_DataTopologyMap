@@ -2,23 +2,26 @@ package kware.apps.mobigen.integration.service;
 
 import cetus.bean.Page;
 import kware.apps.mobigen.integration.dto.request.metadata.*;
+import kware.apps.mobigen.integration.dto.request.pckg.DownloadPackageDataset;
 import kware.apps.mobigen.integration.dto.request.pckg.SavePackageDataset;
-import kware.apps.mobigen.integration.dto.request.rawdata.ChangeRawdata;
-import kware.apps.mobigen.integration.dto.request.rawdata.DeleteRawdatas;
-import kware.apps.mobigen.integration.dto.request.rawdata.SearchRawdataPage;
-import kware.apps.mobigen.integration.dto.request.rawdata.SearchRawdataView;
+import kware.apps.mobigen.integration.dto.request.rawdata.*;
+import kware.apps.mobigen.integration.dto.request.relation.SearchRelationsPage;
 import kware.apps.mobigen.integration.dto.response.metadata.MetadataList;
 import kware.apps.mobigen.integration.dto.response.metadata.MetadataView;
 import kware.apps.mobigen.integration.dto.response.rawdata.RawdataList;
 import kware.apps.mobigen.integration.dto.response.rawdata.RawdataView;
+import kware.apps.mobigen.integration.dto.response.relation.RelationsList;
 import kware.apps.mobigen.mobigen.dto.response.ApiResponse;
 import kware.apps.mobigen.mobigen.dto.response.metadata.MetadataFilePreviewResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @Slf4j
@@ -198,5 +201,59 @@ public class DatasetAdminRestController {
     public ResponseEntity pageRawdata(SearchRawdataPage search) {
         Page<RawdataList> page = service.pageRawdata(search);
         return ResponseEntity.ok(page);
+    }
+
+    /**
+     * 
+     * [RELATION_01] 연관 메타데이터 목록 조회 (+) 페이징
+     * 
+     * @api         [GET] /api/admin/integration-dataset/relations-page
+     * @author      dahyeon
+     * @date        2025-10-24
+    **/
+    @GetMapping("/relations-page")
+    public ResponseEntity pageRelations(SearchRelationsPage search) {
+        Page<RelationsList> page = service.pageRelations(search);
+        return ResponseEntity.ok(page);
+    }
+
+    /**
+     *
+     * [PACKAGE_01] 패키지 파일 다운로드
+     * => todo : API 확인하고 추가 로직 구현,,
+     *
+     * @api         [POST] /api/admin/integration-dataset/download-package
+     * @author      dahyeon
+     * @date        2025-10-24
+    **/
+    @PostMapping("/download-package")
+    public ResponseEntity<Resource> downloadPackage(@RequestBody DownloadPackageDataset request) {
+        return service.downloadPackage(request);
+    }
+
+    /**
+     *
+     *  [METADATA_08] 메타데이터 파일 다운로드
+     *
+     * @api         [GET] /api/admin/integration-dataset/download-metadata
+     * @author      dahyeon
+     * @date        2025-10-24
+    **/
+    @GetMapping("/download-metadata")
+    public ResponseEntity<Resource> downloadMetadata(DownloadMetadata request, final HttpServletRequest req) throws IOException {
+        return service.downloadMetadata(request, req);
+    }
+
+    /**
+     *
+     * [RAWDATA_07] 원본데이터 파일 다운로드
+     *
+     * @api         [GET] /api/admin/integration-dataset/download-rawdata
+     * @author      dahyeon
+     * @date        2025-10-24
+    **/
+    @GetMapping("/download-rawdata")
+    public ResponseEntity<Resource> downloadRawdata(DownloadRawdata request, final HttpServletRequest req) throws IOException {
+        return service.downloadRawdata(request, req);
     }
 }

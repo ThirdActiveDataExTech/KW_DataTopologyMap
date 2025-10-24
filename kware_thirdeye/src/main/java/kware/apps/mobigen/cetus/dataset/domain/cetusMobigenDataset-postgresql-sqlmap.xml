@@ -12,13 +12,34 @@
          ORDER BY CMD.REG_DT DESC
          OFFSET #{offset} LIMIT #{limit}
     </select>
-
     <select id="getAllMobigenDatasetListCount" resultType="int">
         /* cetusMobigenDataset.getAllMobigenDatasetListCount */
         SELECT COUNT(*)
           FROM CETUS_MOBIGEN_DATASET CMD
          WHERE CMD.DELETE_AT = 'N'
     </select>
+
+
+
+    <select id="getAllRelationMobigenDatasetList" resultType="RelatedMetadataResponse" parameterType="SearchMobigenDataset">
+        /* cetusMobigenDataset.getAllRelationMobigenDatasetList */
+        SELECT CMD.UID
+              ,CMD.TITLE
+              ,TO_CHAR(CMD.REG_DT, 'YYYY-MM-DD HH:MM') AS REG_DT
+          FROM CETUS_MOBIGEN_DATASET CMD
+         WHERE CMD.DELETE_AT = 'N'
+         ORDER BY CMD.REG_DT DESC
+         OFFSET #{offset} LIMIT #{limit}
+    </select>
+    <select id="getAllRelationMobigenDatasetListCount" resultType="int">
+        /* cetusMobigenDataset.getAllRelationMobigenDatasetListCount */
+        SELECT COUNT(*)
+          FROM CETUS_MOBIGEN_DATASET CMD
+         WHERE CMD.DELETE_AT = 'N'
+    </select>
+
+
+
 
     <insert id="insert" parameterType="CetusMobigenDataset" useGeneratedKeys="true" keyProperty="uid">
         /* cetusMobigenDataset.insert */
@@ -42,7 +63,7 @@
          WHERE UID = #{uid}
     </update>
 
-    <select id="getMobigenDatasetByDatasetId" parameterType="Long" resultType="MobigenDatasetView">
+    <select id="getMobigenDatasetByDatasetId" parameterType="Long" resultType="MetadataView">
         /* cetusMobigenDataset.getMobigenDatasetByDatasetId */
         SELECT CMD.UID AS DATASET_ID
               ,CMD.TITLE

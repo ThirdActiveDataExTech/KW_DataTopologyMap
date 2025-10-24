@@ -1,6 +1,13 @@
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <script th:inline="javascript">
 
+    /** 모달 닫을때 생기는 warning 해결 **/
+    $(document).on('hide.bs.modal', function () {
+        if (document.activeElement) {
+            $(document.activeElement).blur();
+        }
+    });
+
     var template01JS = {
 
         chartDom: null,
@@ -13,20 +20,19 @@
             template01JS.drawMetadataTab(dataset);            // tab1 > 메타데이터 탭
             template01JS.drawExtraMetadata(dataset);          // tab1 > 추가 메타데이터 탭
             template01JS.setDataTable(extraJson);             // tab1 > json 테이블 영역
-            /*template01JS.setSubTabSampleVisualization();    // tab1 > 차트탭*/
         },
 
         drawMetadataTab: async function (dataset) {
 
             if(!dataset['metadataView']?.['packagedataFile']) {
-                console.log("its null")
                 $("#downloadPackage").prop('disabled', true).prop('readonly', true)
             }
 
             /* ========= 1. 메타데이터 정보 =========*/
             const metadataFile = dataset['metadataView']?.['metadataFile'] || dataset['metadataView']?.['packagedataFile']
             if(metadataFile){
-                $("#metadata-id").val(metadataFile['fileId']);
+                $("#metadata-file-id").val(metadataFile['fileId']);
+                $("#metadata-id").val(metadataFile['metadataId']);
                 $("#metadata-badge").text(metadataFile['extension']);
                 $("#metadata-desc").text(metadataFile['orgFileNm']);
             }
@@ -146,7 +152,10 @@
                 tableHtml += `<tr>
                                   <td style="background-color: #2b292a24;">실데이터 파일 다운로드</td>
                                   <td style="vertical-align: middle;">
-                                    <button class="custom-button realdata-file-download" data-id="${res['rawdataFile']['fileId']}">
+                                    <button class="custom-button realdata-file-download"
+                                    data-file="${res['rawdataFile']['fileId']}"
+                                    data-meta="${res['metadataId']}"
+                                    data-raw="${res['rawdataId']}">
                                       <i class="ti-cloud-down"></i> 다운로드
                                     </button>
                                   </td>
@@ -161,39 +170,19 @@
         packageDownloadBtnClickEvent: async function (datasetId, rawdataIds = []) {
             // todo[mobigen] download package
             const obj = { metadataId: datasetId, rawdataIds: rawdataIds }
-            const res = await Http.post('/api/portal/mobigen-dataset2/package01', obj, true)
+            const res = await Http.post('/api/admin/integration-dataset/download-package', obj, true)
             console.log(">> res : ", res);
         }
-
-        /*setSubTabSampleVisualization : function(){
-            const generateSampleData = (rows = 2, cols = 12, min = 1, max = 210) =>
-                Array.from({ length: rows }, () =>
-                    Array.from({ length: cols }, () =>
-                        +(Math.random() * (max - min) + min).toFixed(2)
-                    )
-                );
-            const sampleData = generateSampleData();
-            template01JS.chartDom = new Chart("searchTrendTimeZoneBoard")
-                                            .setData(sampleData)
-                                            .setBarChart()
-                                            .init();
-            template01JS.chart = template01JS.chartDom._myChart;
-            $(window).resize(function() { template01JS.chart.resize() });
-        },*/
     }
 
     $(function () {
 
         $("#metadata-download-btn").on('click', async function (e) {
-
-            const metadataFileId = $("#metadata-id").val();
-
-            // [todo] mobigen metadata file download
-            const mobigen_obj = { metadata_id: metadataFileId }
-            const res = await Http.post('/api/portal/mobigen-dataset2/metadata08', mobigen_obj, true)
-            console.log(">>> res : ", res)
-
-            await DataFileUtil.fileDownload(metadataFileId)
+            const metadataFileId = $("#metadata-file-id").val();
+            const metadataId = $("#metadata-id");
+            const obj = { metadataId, metadataFileId }
+            const query = new URLSearchParams(obj).toString();
+            window.location.href = `/api/admin/integration-dataset/download-metadata?${query}`
         });
 
         $(document).on('click', `.history-table tbody tr`, function () {
@@ -203,14 +192,12 @@
         });
 
         $(document).on('click', '.realdata-file-download', async function () {
-            const fileId = $(this).data('id');
-
-            // [todo] mobigen rawdata file download
-            const mobigen_obj = { metadata_id: 1, rawdata_id: fileId }
-            const res = await Http.post(`/api/portal/mobigen-dataset2/rawdata07`, mobigen_obj, true)
-            console.log(">> res : ", res)
-
-            await DataFileUtil.fileDownload(fileId)
+            const rawdataFileId = $(this).data('file');
+            const rawdataId = $(this).data('raw');
+            const metadataId = $(this).data('meta');
+            const obj = { metadataId, rawdataId, rawdataFileId }
+            const query = new URLSearchParams(obj).toString();
+            window.location.href = `/api/admin/integration-dataset/download-rawdata?${query}`
         })
 
         $("#close-btn").on('click', function () {

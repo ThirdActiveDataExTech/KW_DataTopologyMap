@@ -16,26 +16,10 @@ import java.util.List;
 
 @Getter @Setter
 public class RelationListResponse {
-
     private String metadata_id;
     private Integer total_count;
     private Integer page;
     private Integer limit;
-    private List<RelatedMetadata> items;
-    private List<FieldRelations> field_relations;
-
-    @Getter @Setter
-    public static class RelatedMetadata {
-        private String metadata_id;
-        private String title;
-        private float similarity_score;
-        private List<String> common_fields;
-    }
-
-    @Getter @Setter
-    public static class FieldRelations {
-        private String source_field;
-        private String target_field;
-        private float correlation;
-    }
+    private List<RelatedMetadataResponse> items;
+    private List<FieldRelationsResponse> field_relations;
 }

@@ -1,7 +1,6 @@
 package kware.apps.thirdeye.bookmark.dto.response;
 
 
-import kware.apps.mobigen.cetus.dataset.dto.response.MobigenDatasetView;
 import kware.apps.thirdeye.mobigen.approveddataset.dto.response.ApprovedDatasetView;
 import lombok.AccessLevel;
 import lombok.Getter;

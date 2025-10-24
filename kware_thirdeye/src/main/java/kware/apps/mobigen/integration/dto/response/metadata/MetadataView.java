@@ -10,7 +10,7 @@ import lombok.Setter;
 
 import java.util.List;
 
-@Getter @Setter
+@Getter @Setter @NoArgsConstructor
 public class MetadataView {
 
     // from. mobigen

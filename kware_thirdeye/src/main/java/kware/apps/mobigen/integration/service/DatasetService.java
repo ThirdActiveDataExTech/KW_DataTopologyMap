@@ -5,28 +5,31 @@ import cetus.bean.Pageable;
 import cetus.util.StringUtil;
 import kware.apps.mobigen.cetus.dataset.domain.CetusMobigenDataset;
 import kware.apps.mobigen.cetus.dataset.dto.request.SearchMobigenDataset;
-import kware.apps.mobigen.cetus.dataset.dto.response.MobigenDatasetView;
 import kware.apps.mobigen.cetus.dataset.service.CetusMobigenDatasetService;
 import kware.apps.mobigen.cetus.tag.dto.response.TagList;
 import kware.apps.mobigen.cetus.tag.service.CetusMobigenDatasetTagService;
 import kware.apps.mobigen.integration.dto.request.metadata.*;
+import kware.apps.mobigen.integration.dto.request.pckg.DownloadPackageDataset;
 import kware.apps.mobigen.integration.dto.request.pckg.SavePackageDataset;
-import kware.apps.mobigen.integration.dto.request.rawdata.ChangeRawdata;
-import kware.apps.mobigen.integration.dto.request.rawdata.DeleteRawdatas;
-import kware.apps.mobigen.integration.dto.request.rawdata.SearchRawdataPage;
-import kware.apps.mobigen.integration.dto.request.rawdata.SearchRawdataView;
+import kware.apps.mobigen.integration.dto.request.rawdata.*;
+import kware.apps.mobigen.integration.dto.request.relation.SearchRelationsPage;
 import kware.apps.mobigen.integration.dto.response.metadata.MetadataList;
 import kware.apps.mobigen.integration.dto.response.metadata.MetadataView;
 import kware.apps.mobigen.integration.dto.response.rawdata.RawdataList;
 import kware.apps.mobigen.integration.dto.response.rawdata.RawdataView;
-import kware.apps.mobigen.mobigen.dto.request.common.PaginationRequest;
-import kware.apps.mobigen.mobigen.dto.request.rawdata.SearchRawdataListRequest;
+import kware.apps.mobigen.integration.dto.response.relation.RelationsList;
+import kware.apps.mobigen.mobigen.dto.request.metadata.DownloadMetadataFileRequest;
+import kware.apps.mobigen.mobigen.dto.request.pckge.PackageExportRequest;
+import kware.apps.mobigen.mobigen.dto.request.rawdata.DownloadRawdataRequest;
+import kware.apps.mobigen.mobigen.dto.request.relation.SearchRelationListRequest;
 import kware.apps.mobigen.mobigen.dto.response.ApiResponse;
 import kware.apps.mobigen.mobigen.dto.response.common.MetadataResultResponse;
 import kware.apps.mobigen.mobigen.dto.response.metadata.MetadataFilePreviewResponse;
+import kware.apps.mobigen.mobigen.dto.response.pckge.PackageExportResponse;
 import kware.apps.mobigen.mobigen.dto.response.rawdata.RawdataListItemResponse;
-import kware.apps.mobigen.mobigen.dto.response.rawdata.RawdataListResponse;
 import kware.apps.mobigen.mobigen.dto.response.rawdata.ViewRawdataResponse;
+import kware.apps.mobigen.mobigen.dto.response.relation.RelatedMetadataResponse;
+import kware.apps.mobigen.mobigen.dto.response.relation.RelationListResponse;
 import kware.apps.mobigen.mobigen.service.MobigenExternalApiService;
 import kware.apps.thirdeye.mobigen.datasetfile.domain.CetusDatasetFile;
 import kware.apps.thirdeye.mobigen.datasetfile.dto.request.SearchDatasetFile;
@@ -39,10 +42,13 @@ import kware.apps.thirdeye.mobigen.mobigenregistrant.dto.response.MobigenRegistr
 import kware.apps.thirdeye.mobigen.mobigenregistrant.service.CetusMobigenRegistrantService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -232,18 +238,13 @@ public class DatasetService {
     public MetadataView viewMetadata( SearchMetadataView search ) {
 
         String metadataId = search.getMetadataId();
-        MetadataView metadataView = new MetadataView();
 
         /*SearchMetadataViewRequest searchRequest = new SearchMetadataViewRequest(metadataId);
         ApiResponse<ViewMetadataResponse> apiResponse = apiService.findMetadataById(searchRequest);
         ViewMetadataResponse result = apiResponse.getResult();*/
 
         // 0. 우선은 데이터 원본 정보들을 kware 포탈 시스템에서 가져오기
-        MobigenDatasetView view = mobigenDatasetService.findMobigenDatasetByDatasetId(Long.parseLong(metadataId));
-        metadataView.setTitle(view.getTitle());
-        metadataView.setDatasetId(view.getDatasetId());
-        metadataView.setRegDt(view.getRegDt());
-        metadataView.setMetadata(view.getMetadata());
+        MetadataView metadataView = mobigenDatasetService.findMobigenDatasetByDatasetId(Long.parseLong(metadataId));
 
         // 1. 모비젠으로부터 얻어온 데이터 정보들로 세팅
         metadataView.setMetadataResponse(null);
@@ -274,14 +275,14 @@ public class DatasetService {
 
         String metadataId = search.getMetadataId();
         String rawdataId = search.getRawdataId();
-        RawdataView rawdataView = new RawdataView();
+        RawdataView rawdataView = new RawdataView(metadataId, rawdataId);
 
         /*SearchRawdataViewRequest searchRequest = new SearchRawdataViewRequest(metadataId, rawdataId);
         ApiResponse<ViewRawdataResponse> apiResponse = apiService.findRawdataById(searchRequest);
         ViewRawdataResponse result = apiResponse.getResult();*/
 
         // mobigen 에서 얻은 정보 세팅
-        rawdataView.setRawdataResponse(new ViewRawdataResponse(metadataId, rawdataId, "filename"));
+        rawdataView.setRawdataResponse(null);
 
         // 우선은 원본데이터 파일 정보들 임시 세팅
         SearchDatasetFileView fileViewSearch = new SearchDatasetFileView(metadataId, rawdataId);
@@ -363,5 +364,63 @@ public class DatasetService {
         });
 
         return new Page<>(rawdataList, totalCount, new Pageable(search.getSize(), search.getPageNumber(), search.getSize()));
+    }
+
+    @Transactional(readOnly = true)
+    public Page<RelationsList> pageRelations(SearchRelationsPage search) {
+
+        /*SearchRelationListRequest listRequest = new SearchRelationListRequest(
+                search.getPublisher(), search.getTheme(), search.getScoreMin(), search.getScoreMax(),
+                search.getPageNumber(), search.getSize(), search.getSortOrder()
+        );
+        ApiResponse<RelationListResponse> apiResponse = apiService.findRelationDataList(listRequest);
+        RelationListResponse relationListResponse = apiResponse.getResult();*/
+
+        int totalCount =  mobigenDatasetService.findAllRelationMobigenDatasetListCount(); //relationListResponse.getTotal_count();
+        int page =  search.getPageNumber(); //relationListResponse.getPage();
+        int limit = search.getSize(); //relationListResponse.getLimit();
+        /*List<RelatedMetadataResponse> items = relationListResponse.getItems();*/
+        List<RelatedMetadataResponse> items = mobigenDatasetService.findAllRelationMobigenDatasetList(
+                new SearchMobigenDataset(search.getPageNumber(), search.getSize())
+        );
+
+        List<RelationsList> relationsList = new ArrayList<>();
+        items.forEach(data -> {
+            Long metadataId = data.getUid();
+            RelationsList relationDto = new RelationsList(Long.toString(metadataId));
+            relationDto.setRelationMetadata(data);
+            relationsList.add(relationDto);
+        });
+        return new Page<>(relationsList, totalCount, new Pageable(limit, page, limit));
+    }
+
+    @Transactional
+    public ResponseEntity downloadPackage(DownloadPackageDataset request) {
+
+        // todo API 체크해보고 더 로직 구현하기
+        /*PackageExportRequest exportRequest = new PackageExportRequest(request.getMetadataId(), request.getRawdataIds());
+        ApiResponse<PackageExportResponse> apiResponse = apiService.packageExport(exportRequest);*/
+
+        return null;
+    }
+
+    @Transactional
+    public ResponseEntity downloadMetadata(DownloadMetadata request, HttpServletRequest req) throws IOException {
+
+        /*DownloadMetadataFileRequest downloadRequest = new DownloadMetadataFileRequest(request.getMetadataId());
+        apiService.downloadMetadataFile(downloadRequest);*/
+
+        // todo 추후에는 > 로그insert & down_count++ 만 진행
+
+        return datasetFileService.downloadMetaFile(request.getMetadataFileId(), req);
+    }
+
+    @Transactional
+    public ResponseEntity downloadRawdata(DownloadRawdata request, HttpServletRequest req) throws IOException {
+
+        /*DownloadRawdataRequest downloadRequest = new DownloadRawdataRequest(request.getMetadataId(), request.getRawdataId());
+        apiService.downloadRawdata(downloadRequest);*/
+
+        return datasetFileService.downloadMetaFile(request.getRawdataFileId(), req);
     }
 }

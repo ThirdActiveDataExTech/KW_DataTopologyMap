@@ -2,6 +2,7 @@ package kware.apps.mobigen.mobigen.dto.request.metadata;
 
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
@@ -12,7 +13,11 @@ import lombok.Setter;
 * @summary      [METADATA_08] 특정 메타데이터 다운로드 요청 DTO
 **/
 
-@Getter @Setter
+@Getter @Setter @NoArgsConstructor
 public class DownloadMetadataFileRequest {
     private String metadata_id;
+
+    public DownloadMetadataFileRequest(String metadata_id) {
+        this.metadata_id = metadata_id;
+    }
 }
