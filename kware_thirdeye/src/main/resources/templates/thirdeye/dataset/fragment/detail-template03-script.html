@@ -61,10 +61,10 @@
 
                 // 검색어를 통한 filter
                 if (data.length !== 0) {
-                    if (keyword) data = data.filter(item => item?.['datasetView']?.['title'].includes(template03JS.keyword));
+                    if (keyword) data = data.filter(item => item?.['metadataView']?.['title'].includes(template03JS.keyword));
                     if (this.param.tag?.length) {
                         data = data.filter(item =>
-                            item['datasetView']?.tags?.some(tagItem =>
+                            item['metadataView']?.tags?.some(tagItem =>
                                 this.param.tag.includes(String(tagItem['tagUid']))
                             )
                         );
@@ -137,7 +137,7 @@
                     const $shopListContent = $('<div>', { class: 'page-list-content' });
                     $shopListContent.append(
                         $('<h3>').append(
-                            $('<a>', { href: 'javascript:void(0);' }).text(content['datasetView']['title'])
+                            $('<a>', { href: 'javascript:void(0);' }).text(content['metadataView']['title'])
                         )
                     );
 
@@ -148,7 +148,7 @@
                     );*/
 
                     // e. metadata 영역
-                    const metadata = JSON.parse(content['datasetView']['metadata']); // JSON string → 객체
+                    const metadata = JSON.parse(content['metadataView']['metadata']); // JSON string → 객체
                     Object.entries(metadata).forEach(([key, value]) => {
                         $shopListContent.append(
                             $('<p>').text(`${key} : ${typeof value === 'object' ? JSON.stringify(value) : value}`)
@@ -195,7 +195,7 @@
 
                     // d. 제목
                     const $productContent = $('<div>', { class: 'page-content' });
-                    const $productTitle = $('<h3>').append($('<a>', { href: 'javascript:void(0);' }).text(content['datasetView']['title']));
+                    const $productTitle = $('<h3>').append($('<a>', { href: 'javascript:void(0);' }).text(content['metadataView']['title']));
                     /*const $productPrice = $('<div>', { class: 'page-price' }).append($('<span>').text(content['description']));*/
 
                     $productContent.append($productTitle/*, $productPrice*/);

@@ -15,4 +15,9 @@ import lombok.Setter;
 public class SearchMetadataViewRequest {
     private String action;          // "detail"
     private String metadata_id;
+
+    public SearchMetadataViewRequest(String metadata_id) {
+        this.action = "detail";
+        this.metadata_id = metadata_id;
+    }
 }

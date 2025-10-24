@@ -1,11 +1,16 @@
 package kware.apps.mobigen.integration.service;
 
-import kware.apps.mobigen.integration.dto.request.metadata.ChangeMetadata;
-import kware.apps.mobigen.integration.dto.request.metadata.DeleteMetadatas;
-import kware.apps.mobigen.integration.dto.request.metadata.SaveMetadata;
+import cetus.bean.Page;
+import kware.apps.mobigen.integration.dto.request.metadata.*;
 import kware.apps.mobigen.integration.dto.request.pckg.SavePackageDataset;
 import kware.apps.mobigen.integration.dto.request.rawdata.ChangeRawdata;
 import kware.apps.mobigen.integration.dto.request.rawdata.DeleteRawdatas;
+import kware.apps.mobigen.integration.dto.request.rawdata.SearchRawdataPage;
+import kware.apps.mobigen.integration.dto.request.rawdata.SearchRawdataView;
+import kware.apps.mobigen.integration.dto.response.metadata.MetadataList;
+import kware.apps.mobigen.integration.dto.response.metadata.MetadataView;
+import kware.apps.mobigen.integration.dto.response.rawdata.RawdataList;
+import kware.apps.mobigen.integration.dto.response.rawdata.RawdataView;
 import kware.apps.mobigen.mobigen.dto.response.ApiResponse;
 import kware.apps.mobigen.mobigen.dto.response.metadata.MetadataFilePreviewResponse;
 import lombok.RequiredArgsConstructor;
@@ -138,4 +143,60 @@ public class DatasetAdminRestController {
         return ResponseEntity.ok().build();
     }
 
+    /**
+     *
+     * [METADATA_04] 메타데이터 상세 조회
+     *
+     * @api         [POST] /api/admin/integration-dataset/view-metadata
+     * @author      dahyeon
+     * @date        2025-10-24
+    **/
+    @PostMapping("/view-metadata")
+    public ResponseEntity viewMetadata(@RequestBody SearchMetadataView search) {
+        MetadataView view = service.viewMetadata(search);
+        return ResponseEntity.ok(view);
+    }
+
+    /**
+     *
+     * [RAWDATA_04] 원본데이터 파일 정보 상세 조회
+     *
+     * @api         [POST] /api/admin/integration-dataset/view-rawdata
+     * @author      dahyeon
+     * @date        2025-10-24
+    **/
+    @PostMapping("/view-rawdata")
+    public ResponseEntity viewRawdata(@RequestBody SearchRawdataView search) {
+        RawdataView view = service.viewRawdata(search);
+        return ResponseEntity.ok(view);
+    }
+
+    /**
+     *
+     * [METADATA_01] 메타데이터 목록 조회 (+) 페이징
+     *
+     * @api         [GET] /api/admin/integration-dataset/metadata-page
+     * @author      dahyeon
+     * @date        2025-10-24
+    **/
+    @GetMapping("/metadata-page")
+    public ResponseEntity pageMetadata(SearchMetadataPage search) {
+        Page<MetadataList> page = service.pageMetadata(search);
+        return ResponseEntity.ok(page);
+    }
+
+
+    /**
+     *
+     * [RAWDATA_01] 원본데이터 목록 조회 (+) 페이징
+     *
+     * @api         [GET] /api/admin/integration-dataset/rawdata-page
+     * @author      dahyeon
+     * @date        2025-10-24
+    **/
+    @GetMapping("/rawdata-page")
+    public ResponseEntity pageRawdata(SearchRawdataPage search) {
+        Page<RawdataList> page = service.pageRawdata(search);
+        return ResponseEntity.ok(page);
+    }
 }

@@ -54,6 +54,7 @@ public class PortalController {
     @GetMapping("/detail/{approvedUid}")
     public String openDetail(@PathVariable("approvedUid") Long approvedUid, Model model) {
         menuNavigationManager.renderingPage("/portal/list", "Detail", false, model);
+
         ApprovedDatasetView dataset = datasetService.findApprovedDatasetView(approvedUid);
         model.addAttribute("dataset", dataset);
 

@@ -56,13 +56,6 @@ public class CetusMobigenDataset2RestController {
         return ResponseEntity.ok(new resMetadata01("metadata01_100200", "Metadata search completed", resMetadata01Result));
     }
 
-    @PostMapping("/metadata04")
-    public ResponseEntity metadata04(@RequestBody reqMetadata04 request) {
-        log.info("[METADATA04] request : {} ", request);
-        resMetadata04.resMetadata04_result result = new resMetadata04.resMetadata04_result("테스트 타이틀", "키워드?");
-        return ResponseEntity.ok(new resMetadata04("metadata04_100200", "Metadata found", result));
-    }
-
     @PostMapping("/metadata08")
     public ResponseEntity metadata08(@RequestBody reqMetadata08 request) {
         log.info("[METADATA08] request : {} ", request);
@@ -72,29 +65,6 @@ public class CetusMobigenDataset2RestController {
 
 
     /* =*=*=*=*=*=*=*=*=*=*=*=* [S:RAWDATA] =*=*=*=*=*=*=*=*=*=*=*=* */
-    @PostMapping("/rawdata01")
-    public ResponseEntity rawdata01(@RequestBody reqRawdata01 request) {
-        log.info("[RAWDATA01] request : {} ", request);
-
-        Random random = new Random();
-        int itemCount = random.nextInt(5) + 1; // 1~5 랜덤 개수
-        List<resRawdata01.resRawdata01_result.resRawdata01_items> items = new ArrayList<>();
-        for (int i = 1; i <= itemCount; i++) {
-            items.add(new resRawdata01.resRawdata01_result.resRawdata01_items("checksum_"+i));
-        }
-        resRawdata01.resRawdata01_result resRawdata01Result = new resRawdata01.resRawdata01_result(
-                request.getMetadata_id(), itemCount, items
-        );
-        return ResponseEntity.ok(new resRawdata01("rawdata01_100200", "Raw data list retrieved", resRawdata01Result));
-    }
-
-    @PostMapping("/rawdata04")
-    public ResponseEntity rawdata04(@RequestBody reqRawdata04 search) {
-        log.info("[RAWDATA04] search : {} ", search);
-        resRawdata04.resRawdata04_result resRawdata04Result = new resRawdata04.resRawdata04_result(search.getRawdata_id(), search.getMetadata_id());
-        return ResponseEntity.ok(new resRawdata04("rawdata04_100200", "Raw data details retrieved", resRawdata04Result));
-    }
-
     @PostMapping("/rawdata07")
     public ResponseEntity rawdata07(@RequestBody reqRawdata07 request) {
         log.info("[RAWDATA07] request : {} ", request);

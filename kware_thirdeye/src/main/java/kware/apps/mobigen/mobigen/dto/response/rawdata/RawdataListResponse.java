@@ -20,14 +20,4 @@ public class RawdataListResponse {
     private String metadata_id;
     private int total_count;
     private List<RawdataListItemResponse> items;
-
-    @Getter @Setter
-    public static class RawdataListItemResponse {
-        private String rawdata_id;
-        private String filename;
-        private int file_size;
-        private String format;
-        private String updated_at;
-        private String checksum;
-    }
 }

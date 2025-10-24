@@ -8,7 +8,11 @@ import lombok.Setter;
 public class SearchMobigenDataset {
 
     private Long[] approvedIds;
+    private int offset;
+    private int limit;
 
-    private Integer pageNumber;
-    private Integer size;
+    public SearchMobigenDataset(int pageNumber, int size) {
+        this.offset = (pageNumber - 1) * size;
+        this.limit = size;
+    }
 }

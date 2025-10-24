@@ -58,7 +58,7 @@
 
                 <div class="row">
                   <div class="col-lg-6">
-                    <h2 id="contentTitle" th:text="${dataset?.mobigenDatasetView?.title}"></h2>
+                    <h2 id="contentTitle" th:text="${dataset?.metadataView?.title}"></h2>
                   </div>
                   <div class="col-lg-6 d-flex justify-content-end" style="flex-direction: row; align-items: flex-start;">
                     <div class="page-details-action-wrap" style="margin-right: 17px !important;">
@@ -99,7 +99,7 @@
                   <ul>
                       <li>
                           <ul class="tag">
-                            <li th:each="tag : ${dataset?.mobigenDatasetView?.tags}" class="tag-content">
+                            <li th:each="tag : ${dataset?.metadataView?.tags}" class="tag-content">
                                 <a href="#" th:text="${tag?.tagNm}"></a>
                             </li>
                           </ul>
@@ -182,9 +182,6 @@
     console.log(">> dataset: ", dataset)
 
     $(async function () {
-
-        // todo[mobigen] search metadata view
-        await detailJS.searchMobigenDatasetView(dataset['datasetId']);
 
         // 페이지 화면 초기화
         detailJS.fnPageSearch();

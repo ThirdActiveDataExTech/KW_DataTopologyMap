@@ -3,8 +3,10 @@ package kware.apps.thirdeye.mobigen.approveddataset.service;
 import cetus.bean.Page;
 import cetus.bean.Pageable;
 import cetus.user.UserUtil;
-import kware.apps.mobigen.cetus.dataset.dto.response.MobigenDatasetView;
 import kware.apps.mobigen.cetus.dataset.service.CetusMobigenDatasetService;
+import kware.apps.mobigen.integration.dto.request.metadata.SearchMetadataView;
+import kware.apps.mobigen.integration.dto.response.metadata.MetadataView;
+import kware.apps.mobigen.integration.service.DatasetService;
 import kware.apps.thirdeye.mobigen.approveddataset.domain.ApprovedDatasetTargetTpCd;
 import kware.apps.thirdeye.mobigen.approveddataset.domain.CetusApprovedDataset;
 import kware.apps.thirdeye.mobigen.approveddataset.domain.CetusApprovedDatasetDao;
@@ -38,6 +40,8 @@ public class CetusApprovedDatasetService {
 
     private final CetusDatasetCategoryService datasetCategoryService;
 
+    private final DatasetService datasetService;
+
     /**
      * @method      findDatasetPage
      * @author      dahyeon
@@ -53,9 +57,9 @@ public class CetusApprovedDatasetService {
             page.getList().forEach(dataset -> {
                 // (1) 데이터셋 > 모비젠 측을 통한 상세 정보 조회
                 Long datasetId = dataset.getDatasetId();
-                MobigenDatasetView datasetView = mobigenDatasetService.findMobigenDatasetByDatasetId(datasetId, true, false);
-                if (datasetView != null) {
-                    dataset.setDatasetInfo(datasetView);
+                MetadataView metadataView = datasetService.viewMetadata(new SearchMetadataView(Long.toString(datasetId)));
+                if (metadataView != null) {
+                    dataset.setMetadataView(metadataView);
                 }
                 // (2) 데이터셋의 화면 UI 값에 대해서 > 해당 UI 설명 정보
                 if(dataset.getMainUiTypeCd() != null) {
@@ -87,9 +91,9 @@ public class CetusApprovedDatasetService {
             list.forEach(dataset -> {
                 // (1) 각 승인관리 중인 데이터셋들의 상세 정보는 모비젠 측에서 가져온다.
                 Long datasetId = dataset.getDatasetId();
-                MobigenDatasetView datasetView = mobigenDatasetService.findMobigenDatasetByDatasetId(datasetId, true, false);
-                if (datasetView != null) {
-                    dataset.setDatasetInfo(datasetView);
+                MetadataView metadataView = datasetService.viewMetadata(new SearchMetadataView(Long.toString(datasetId)));
+                if (metadataView != null) {
+                    dataset.setMetadataView(metadataView);
                 }
                 // (2) 원본 데이터셋 저장 위치 정보
                 if(dataset.getTargetTpCd() != null) {
@@ -157,8 +161,8 @@ public class CetusApprovedDatasetService {
             approvedDatasetView.setUiView(uiView);
 
             // 3. 진열 등록된 데이터셋 UI => 모비젠에 저장된 데이터셋의 디테일 정보
-            MobigenDatasetView mobigenDatasetView = mobigenDatasetService.findMobigenDatasetByDatasetId(approvedDatasetView.getDatasetId(), true, true);
-            approvedDatasetView.setMobigenDatasetView(mobigenDatasetView);
+            MetadataView metadataView = datasetService.viewMetadata(new SearchMetadataView(Long.toString(approvedDatasetView.getDatasetId())));
+            approvedDatasetView.setMetadataView(metadataView);
 
             // 4. 원본 데이터셋 저장 위치 정보
             if(approvedDatasetView.getTargetTpCd() != null) {
@@ -197,8 +201,8 @@ public class CetusApprovedDatasetService {
         homeDatasetList.forEach(home -> {
             // 1. 진열관리 중인 데이터셋에 대한 상세 정보 > 모비젠 측을 통한 조회
             Long datasetId = home.getDatasetId();
-            MobigenDatasetView mobigenDatasetView = mobigenDatasetService.findMobigenDatasetByDatasetId(datasetId, false, false);
-            home.setMobigenDatasetView(mobigenDatasetView);
+            MetadataView metadataView = datasetService.viewMetadata(new SearchMetadataView(Long.toString(datasetId)));
+            home.setMetadataView(metadataView);
             
             // 2. 진열관리 중인 데이터셋에 대한 > 화면 UI 정보 조회
             Long approvedUid = home.getApprovedUid();

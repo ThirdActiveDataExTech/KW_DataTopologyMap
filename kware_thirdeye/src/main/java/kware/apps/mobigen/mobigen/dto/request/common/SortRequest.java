@@ -14,4 +14,8 @@ import lombok.Setter;
 @Getter @Setter
 public class SortRequest {
     private String order;
+
+    public SortRequest(String order) {
+        this.order = order;
+    }
 }

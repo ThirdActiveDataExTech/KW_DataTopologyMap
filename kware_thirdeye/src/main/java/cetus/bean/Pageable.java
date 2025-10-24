@@ -38,8 +38,8 @@ public class Pageable {
     }
     public final Map<String, Object> generateMap(Object bean) {
         Map<String, Object> map = Reflector.getGetterMap(bean);
-        map.put("startNumber", (this.pageNumber - 1) * this.size);
-        map.put("endNumber", this.size);
+        map.put("startNumber", (this.pageNumber - 1) * this.size);  // offset
+        map.put("endNumber", this.size);    // limit
         return map;
     }
 }

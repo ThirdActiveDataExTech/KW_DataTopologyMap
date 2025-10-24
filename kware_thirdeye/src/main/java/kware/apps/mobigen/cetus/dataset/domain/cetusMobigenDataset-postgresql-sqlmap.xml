@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="cetusMobigenDataset">
 
-    <select id="getAllMobigenDatasetList" resultType="MobigenDatasetList" parameterType="SearchMobigenDataset">
+    <select id="getAllMobigenDatasetList" resultType="MetadataResultResponse" parameterType="SearchMobigenDataset">
         /* cetusMobigenDataset.getAllMobigenDatasetList */
         SELECT CMD.UID
               ,CMD.TITLE
@@ -10,6 +10,14 @@
           FROM CETUS_MOBIGEN_DATASET CMD
          WHERE CMD.DELETE_AT = 'N'
          ORDER BY CMD.REG_DT DESC
+         OFFSET #{offset} LIMIT #{limit}
+    </select>
+
+    <select id="getAllMobigenDatasetListCount" resultType="int">
+        /* cetusMobigenDataset.getAllMobigenDatasetListCount */
+        SELECT COUNT(*)
+          FROM CETUS_MOBIGEN_DATASET CMD
+         WHERE CMD.DELETE_AT = 'N'
     </select>
 
     <insert id="insert" parameterType="CetusMobigenDataset" useGeneratedKeys="true" keyProperty="uid">

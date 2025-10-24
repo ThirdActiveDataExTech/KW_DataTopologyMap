@@ -24,6 +24,12 @@ public class SearchMetadataListRequest {
     private PaginationRequest pagination;
     private SortRequest sort;
 
+    public SearchMetadataListRequest(String publisher, List<String> theme, int page, int limit, String start, String end, String sortOrder) {
+        this.action = "search";
+        this.filters = new Filters(publisher, theme, new Filters.DateRange(start, end));
+        this.pagination = new PaginationRequest(page, limit);
+        this.sort = new SortRequest(sortOrder);
+    }
 
     @Getter @Setter
     public static class Filters {
@@ -32,10 +38,21 @@ public class SearchMetadataListRequest {
         private List<String> theme;
         private DateRange date_range;
 
+        public Filters(String publisher, List<String> theme, DateRange date_range) {
+            this.publisher = publisher;
+            this.theme = theme;
+            this.date_range = date_range;
+        }
+
         @Getter @Setter
         public static class DateRange {
             private String start;
             private String end;
+
+            public DateRange(String start, String end) {
+                this.start = start;
+                this.end = end;
+            }
         }
     }
 }

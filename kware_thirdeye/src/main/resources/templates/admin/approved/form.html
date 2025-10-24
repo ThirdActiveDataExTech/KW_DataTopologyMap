@@ -154,7 +154,7 @@
               <div class="dataset-card">
 
                 <!-- 제목 -->
-                <h2 class="dataset-title" th:text="${view?.mobigenDatasetView?.title}"></h2>
+                <h2 class="dataset-title" th:text="${view?.metadataView?.title}"></h2>
 
                 <!-- 카테고리/태그 -->
                 <div class="dataset-meta">
@@ -162,7 +162,7 @@
                     <span class="badge category-badge" th:text="${view?.categoryNm}"></span>
                   </div>
                   <div class="tags">
-                    <th:block th:each="tag : ${view?.mobigenDatasetView?.tags}">
+                    <th:block th:each="tag : ${view?.metadataView?.tags}">
                       <span class="badge tag-badge" th:text="${tag?.tagNm}"></span>
                     </th:block>
                   </div>
@@ -324,7 +324,7 @@
       $("#summary").val(json?.['summary'] || '')
       approvedDatasetJS.initEditor(json?.['description']);
       approvedDatasetJS.initUpload(view['uiView']?.['thumbUid']);
-      approvedDatasetJS.settingFormMetaDataSection(view['mobigenDatasetView']?.['metadata'])
+      approvedDatasetJS.settingFormMetaDataSection(view['metadataView']?.['metadata'])
       approvedDatasetJS.settingRowInfoTable(json?.['addInfo'] || [])
 
       // ===============================

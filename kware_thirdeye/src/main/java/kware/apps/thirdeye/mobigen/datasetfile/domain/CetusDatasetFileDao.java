@@ -1,8 +1,12 @@
 package kware.apps.thirdeye.mobigen.datasetfile.domain;
 
 import cetus.dao.SuperDao;
+import kware.apps.mobigen.integration.dto.response.rawdata.RawdataList;
+import kware.apps.mobigen.mobigen.dto.response.rawdata.RawdataListItemResponse;
+import kware.apps.mobigen.mobigen.dto.response.rawdata.RawdataListResponse;
 import kware.apps.thirdeye.mobigen.datasetfile.dto.request.ChangeDatasetFile;
 import kware.apps.thirdeye.mobigen.datasetfile.dto.request.SearchDatasetFile;
+import kware.apps.thirdeye.mobigen.datasetfile.dto.request.SearchDatasetFilePage;
 import kware.apps.thirdeye.mobigen.datasetfile.dto.request.SearchDatasetFileView;
 import kware.apps.thirdeye.mobigen.datasetfile.dto.response.CetusDatasetFileList;
 import kware.apps.thirdeye.mobigen.datasetfile.dto.response.CetusDatasetFileView;
@@ -47,6 +51,14 @@ public class CetusDatasetFileDao extends SuperDao<CetusDatasetFile> {
 
     public List<CetusDatasetFileView> getDataFile(SearchDatasetFile search) {
         return selectList("getDataFile", search);
+    }
+
+    public List<RawdataListItemResponse> getDataFilePage(SearchDatasetFilePage search) {
+        return selectList("getDataFilePage", search);
+    }
+
+    public int getDataFilePageCount(SearchDatasetFilePage search) {
+        return selectOne("getDataFilePageCount", search);
     }
 
     public CetusDatasetFileView getRawdataFileView(SearchDatasetFileView search) {

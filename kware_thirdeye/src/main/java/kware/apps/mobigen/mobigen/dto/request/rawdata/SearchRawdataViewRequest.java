@@ -17,4 +17,10 @@ public class SearchRawdataViewRequest {
     private String action;          // "detail"
     private String metadata_id;
     private String rawdata_id;
+
+    public SearchRawdataViewRequest(String metadata_id, String rawdata_id) {
+        this.action = "detail";
+        this.metadata_id = metadata_id;
+        this.rawdata_id = rawdata_id;
+    }
 }

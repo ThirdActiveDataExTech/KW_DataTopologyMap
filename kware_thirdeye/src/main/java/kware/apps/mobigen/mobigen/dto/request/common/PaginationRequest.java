@@ -16,4 +16,9 @@ import lombok.Setter;
 public class PaginationRequest {
     private int page;
     private int limit;
+
+    public PaginationRequest(int page, int limit) {
+        this.page = page;
+        this.limit = limit;
+    }
 }

@@ -1,6 +1,6 @@
 package kware.apps.thirdeye.mobigen.approveddataset.dto.response;
 
-import kware.apps.mobigen.cetus.dataset.dto.response.MobigenDatasetView;
+import kware.apps.mobigen.integration.dto.response.metadata.MetadataView;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -29,9 +29,9 @@ public class ApprovedDatasetList {
     private String thumbId;
     private String extraJson;
 
-    private MobigenDatasetView datasetView;
-    public void setDatasetInfo(MobigenDatasetView datasetView) {
-        this.datasetView = datasetView;
+    private MetadataView metadataView;
+    public void setMetadataView(MetadataView metadataView) {
+        this.metadataView = metadataView;
     }
 
     public void setMainUiTypeCdDesc(String mainUiTypeCdDesc) {

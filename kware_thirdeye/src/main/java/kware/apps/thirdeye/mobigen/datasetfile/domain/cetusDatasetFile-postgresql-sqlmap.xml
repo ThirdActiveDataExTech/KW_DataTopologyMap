@@ -84,6 +84,51 @@
            AND USE_AT = 'Y'
     </select>
 
+    <select id="getDataFilePage" resultType="RawdataListItemResponse" parameterType="SearchDatasetFilePage">
+        /* cetusDatasetFile.getDataFilePage */
+        SELECT FILE_UID
+              ,FILE_ID
+              ,FILE_NM
+              ,ORG_FILE_NM
+              ,FILE_PATH
+              ,FILE_URL
+              ,FILE_SIZE
+              ,FILE_TYPE
+              ,EXTENSION
+              ,DOWN_CNT
+              ,USE_AT
+              ,REG_DT
+              ,UPDT_DT
+              ,SAVED
+              ,REG_ID
+              ,METADATA_ID
+              ,RAWDATA_ID
+              ,DATA_TP_CD
+          FROM CETUS_DATASET_FILE
+         WHERE METADATA_ID = #{metadataId}
+        <if test="@Ognl@isNotEmpty(rawdataId)">
+           AND RAWDATA_ID = #{rawdataId}
+        </if>
+           AND DATA_TP_CD = #{dataTpCd}
+           AND SAVED = 'Y'
+           AND USE_AT = 'Y'
+         ORDER BY REG_DT DESC
+        OFFSET #{offset} LIMIT #{limit}
+    </select>
+
+    <select id="getDataFilePageCount" resultType="int" parameterType="SearchDatasetFilePage">
+        /* cetusDatasetFile.getDataFilePageCount */
+        SELECT COUNT(*)
+          FROM CETUS_DATASET_FILE
+         WHERE METADATA_ID = #{metadataId}
+        <if test="@Ognl@isNotEmpty(rawdataId)">
+           AND RAWDATA_ID = #{rawdataId}
+        </if>
+           AND DATA_TP_CD = #{dataTpCd}
+           AND SAVED = 'Y'
+           AND USE_AT = 'Y'
+    </select>
+
     <select id="getRawdataFileView" resultType="CetusDatasetFileView" parameterType="SearchDatasetFileView">
         /* cetusDatasetFile.getRawdataFileView */
         SELECT FILE_UID

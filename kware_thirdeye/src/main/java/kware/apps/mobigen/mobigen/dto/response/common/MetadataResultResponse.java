@@ -17,6 +17,9 @@ import java.util.List;
 @Getter @Setter
 public class MetadataResultResponse {
 
+    private Long uid;        // 추후 삭제
+    private String regDt;    // 추후 삭제
+
     private String metadata_id;
     private String title;
     private String issued;

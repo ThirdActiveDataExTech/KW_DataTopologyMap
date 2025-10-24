@@ -46,7 +46,7 @@
                     <div class="file-display">
                         <div class="file-row" style="position: relative;">
                             <input type="text" id="period-meta-filename"
-                                   th:value="${view?.metadataFile?.orgFileNm} ? ${view?.metadataFile?.orgFileNm} : '파일 호출 오류'"
+                                   th:value="${metadataView?.metadataFile?.orgFileNm} ? ${metadataView?.metadataFile?.orgFileNm} : '파일 호출 오류'"
                                    style="background-color: #f5f5f5 !important; color: #666 !important;"
                                    class="file-text" placeholder="선택된 파일 없음" readonly>
                         </div>
@@ -63,7 +63,7 @@
                         <div class="col-lg-12 items">
                             <label for="period-title">컨텐츠 제목</label>
                             <input type="text" id="period-title" name="title"
-                                   th:value="${view?.title}" class="form-control" placeholder="제목을 입력하세요." required>
+                                   th:value="${metadataView?.title}" class="form-control" placeholder="제목을 입력하세요." required>
                         </div>
                     </div>
 
@@ -81,7 +81,6 @@
                     <div class="row">
                         <div class="col-lg-6 items">
                             <label for="jsoneditor">메타데이터(JSON)</label>
-                            <!--<textarea id="new-metadata" name="metadata" class="form-control" style="height:200px;" required></textarea>-->
                             <div id="jsoneditor" style="width: inherit; height: 400px;"></div>
                         </div>
                     </div>
@@ -113,7 +112,8 @@
     <script th:src="@{'/assets/js/page/admin/metadata/mobigen/mobigen-dataset-control-form.js'}"></script>
     <script th:inline="javascript">
 
-        const view = [[${view}]]
+        const metadataView = [[${metadataView}]]
+        console.log(">> metadataView : ", metadataView)
 
         $(document).ready(function() {
 
@@ -132,7 +132,7 @@
                 },
                 tags: true,
                 maximumInputLength: 30,
-                data:  view['tags'].map(item => ({
+                data:  metadataView['tags'].map(item => ({
                     id: item['tagUid'],
                     text: item['tagNm'],
                     selected: true
@@ -181,7 +181,7 @@
             // ===============================
             // 주기성 데이터 등록 > metadata
             // ===============================
-            const metadataJSON = JSON.parse(view['metadata']);
+            const metadataJSON = JSON.parse(metadataView['metadata']);
             mobigenDatasetFormJS.initMetadataJson(metadataJSON);
 
             // ===============================
@@ -198,7 +198,7 @@
             // 주기성 버튼 클릭 이벤트
             // ===============================
             $('#period-submit-btn').click(function(){
-                mobigenDatasetFormJS.periodSaveClickEvent(view['datasetId']);
+                mobigenDatasetFormJS.periodSaveClickEvent(metadataView['datasetId']);
             });
         });
     </script>

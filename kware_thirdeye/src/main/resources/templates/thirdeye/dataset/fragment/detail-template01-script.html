@@ -18,13 +18,13 @@
 
         drawMetadataTab: async function (dataset) {
 
-            if(!dataset['mobigenDatasetView']?.['packagedataFile']) {
+            if(!dataset['metadataView']?.['packagedataFile']) {
                 console.log("its null")
                 $("#downloadPackage").prop('disabled', true).prop('readonly', true)
             }
 
             /* ========= 1. 메타데이터 정보 =========*/
-            const metadataFile = dataset['mobigenDatasetView']?.['metadataFile'] || dataset['mobigenDatasetView']?.['packagedataFile']
+            const metadataFile = dataset['metadataView']?.['metadataFile'] || dataset['metadataView']?.['packagedataFile']
             if(metadataFile){
                 $("#metadata-id").val(metadataFile['fileId']);
                 $("#metadata-badge").text(metadataFile['extension']);
@@ -32,15 +32,8 @@
             }
 
             /* ========= 2. 실(원본)데이터 정보 =========*/
-            // todo[mobigen] list of realdata
-            const mobigen_obj = {
-                metadata_id: dataset['datasetId'],
-                pagination: { page: 1, limit: 10 }
-            }
-            const res = await Http.post('/api/portal/mobigen-dataset2/rawdata01', mobigen_obj, true)
-            console.log(">> res : ", res)
 
-            const rawdataFiles = dataset['mobigenDatasetView']?.['rawdataFiles'] || []
+            const rawdataFiles = dataset['metadataView']?.['rawdataFiles'] || []
             if (rawdataFiles.length !== 0) {
                 const filesLength = rawdataFiles.length;
                 const title = (filesLength === 1) ? "신규데이터 (1건)" : `주기성 과거 데이터 ( ${filesLength}건 )`;
@@ -64,7 +57,7 @@
         },
 
         drawExtraMetadata: function (dataset) {
-            const metadataStr = dataset?.['mobigenDatasetView']?.['metadata'] || "{}"
+            const metadataStr = dataset?.['metadataView']?.['metadata'] || "{}"
             const metadataObj = JSON.parse(metadataStr)
 
             const container = document.getElementById("jsoneditor");
@@ -73,9 +66,7 @@
                 onError: function (err) {
                     console.error('err: ', err)
                 },
-                onModeChange: function (newMode, oldMode) {
-                    //console.log("Mode changed from", oldMode, "to", newMode);
-                }
+                onModeChange: function (newMode, oldMode) { }
             };
             const editor = new JSONEditor(container, options);
             editor.set(metadataObj);
@@ -123,28 +114,22 @@
 
         showMetDataFileInfoModal: async function (metaId, rawId) {
 
-            // [todo] mobigen rawdata view
-            const mobigen_obj = {metadata_id: metaId, rawdata_id: rawId}
-            const res = await Http.post(`/api/portal/mobigen-dataset2/rawdata04`, mobigen_obj, true)
-            console.log(">> res : ", res)
-
-
             $("#metadata-file-info").empty();
             const obj = { metadataId: metaId, rawdataId: rawId }
-            Http.get(`/api/portal/dataset-file/rawdata-file-view`, obj).then((res) => {
+            Http.post(`/api/admin/integration-dataset/view-rawdata`, obj, true).then((res) => {
                 if (!res) {
                     Util.alert("데이터를 찾을 수 없습니다.");
                     return;
                 }
                 const infoList = [
-                    { key: '실데이터 파일Id', value: res['fileId'] },
-                    { key: '실데이터 파일경로', value: res['filePath'] },
-                    { key: '실데이터 파일크기', value: res['fileSize'] },
-                    { key: '실데이터 파일유형', value: res['fileType'] },
-                    { key: '실데이터 파일이름', value: res['orgFileNm'] },
-                    { key: '실데이터 다운로드횟수', value: res['downCnt'] },
-                    { key: '실데이터 파일 등록일', value: res['regDt'] },
-                    { key: '실데이터 파일 수정일', value: res['regDt'] }
+                    { key: '실데이터 파일Id', value: res['rawdataFile']['fileId'] },
+                    { key: '실데이터 파일경로', value: res['rawdataFile']['filePath'] },
+                    { key: '실데이터 파일크기', value: res['rawdataFile']['fileSize'] },
+                    { key: '실데이터 파일유형', value: res['rawdataFile']['fileType'] },
+                    { key: '실데이터 파일이름', value: res['rawdataFile']['orgFileNm'] },
+                    { key: '실데이터 다운로드횟수', value: res['rawdataFile']['downCnt'] },
+                    { key: '실데이터 파일 등록일', value: res['rawdataFile']['regDt'] },
+                    { key: '실데이터 파일 수정일', value: res['rawdataFile']['regDt'] }
                 ]
                 let tableHtml = `<table style="width:100%; border-collapse: collapse; border: 1px solid #ccc;">`;
                 for (let i = 0; i < infoList.length; i += 2) {
@@ -161,7 +146,7 @@
                 tableHtml += `<tr>
                                   <td style="background-color: #2b292a24;">실데이터 파일 다운로드</td>
                                   <td style="vertical-align: middle;">
-                                    <button class="custom-button realdata-file-download" data-id="${res['fileId']}">
+                                    <button class="custom-button realdata-file-download" data-id="${res['rawdataFile']['fileId']}">
                                       <i class="ti-cloud-down"></i> 다운로드
                                     </button>
                                   </td>

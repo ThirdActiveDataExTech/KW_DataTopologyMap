@@ -2,12 +2,14 @@ package kware.apps.mobigen.cetus.dataset.service;
 
 
 import cetus.bean.Page;
-import kware.apps.mobigen.cetus.dataset.dto.request.*;
-import kware.apps.mobigen.cetus.dataset.dto.response.MobigenDatasetList;
+import kware.apps.mobigen.cetus.dataset.dto.request.SearchMobigenDatasetRealdata;
 import kware.apps.thirdeye.mobigen.datasetfile.dto.response.CetusDatasetFileView;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
@@ -15,20 +17,6 @@ import org.springframework.web.bind.annotation.*;
 public class CetusMobigenDatasetRestController {
 
     private final CetusMobigenDatasetService service;
-
-    /**
-     *
-     * 모비젠 데이터셋 목록 페이징 조회
-     *
-     * @api         [GET] /api/admin/mobigen-dataset
-     * @author      dahyeon
-     * @date        2025-10-15
-    **/
-    @GetMapping
-    public ResponseEntity findAllMobigenDatasetPage(SearchMobigenDataset search) {
-        Page<MobigenDatasetList> page = service.findAllMobigenDatasetPage(search);
-        return ResponseEntity.ok(page);
-    }
 
     /**
      *

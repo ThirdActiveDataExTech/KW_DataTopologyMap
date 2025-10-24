@@ -19,4 +19,10 @@ public class SearchRawdataListRequest {
     private String action;                  // "list"
     private String metadata_id;
     private PaginationRequest pagination;
+
+    public SearchRawdataListRequest(String metadata_id, PaginationRequest pagination) {
+        this.action = "list";
+        this.metadata_id = metadata_id;
+        this.pagination = pagination;
+    }
 }

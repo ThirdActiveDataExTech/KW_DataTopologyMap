@@ -1,8 +1,10 @@
 package kware.apps.mobigen.cetus.dataset.web;
 
 
-import kware.apps.mobigen.cetus.dataset.dto.response.MobigenDatasetView;
 import kware.apps.mobigen.cetus.dataset.service.CetusMobigenDatasetService;
+import kware.apps.mobigen.integration.dto.request.metadata.SearchMetadataView;
+import kware.apps.mobigen.integration.dto.response.metadata.MetadataView;
+import kware.apps.mobigen.integration.service.DatasetService;
 import kware.common.config.auth.menu.MenuNavigationManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -18,6 +20,8 @@ public class CetusMobigenDatasetController {
 
     private final CetusMobigenDatasetService service;
     private final MenuNavigationManager menuNavigationManager;
+
+    private final DatasetService datasetService;
     
     @GetMapping
     public String index(Model model) {
@@ -40,16 +44,14 @@ public class CetusMobigenDatasetController {
     @GetMapping("/{uid}")
     public String form(@PathVariable("uid") Long uid, Model model) {
         menuNavigationManager.renderingPage("/admin/metadata/dataset", "메타 데이터 수정", false, model);
-        MobigenDatasetView view = service.findMobigenDatasetByDatasetId(uid, true, true);
-        model.addAttribute("view", view);
+        MetadataView metadataView = datasetService.viewMetadata(new SearchMetadataView(Long.toString(uid)));
+        model.addAttribute("metadataView", metadataView);
         return "admin/metadata/mobigen/form";
     }
 
     @GetMapping("/realdata/{uid}")
     public String realdataForm(@PathVariable("uid") Long uid, Model model) {
         menuNavigationManager.renderingPage("/admin/metadata/dataset", "원본 데이터파일 수정", false, model);
-        MobigenDatasetView view = service.findMobigenDatasetByDatasetId(uid, true, true);
-        model.addAttribute("view", view);
         return "admin/metadata/mobigen/realdata-form";
     }
 }

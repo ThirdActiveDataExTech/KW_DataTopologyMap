@@ -4,8 +4,6 @@ package kware.apps.thirdeye.mobigen.datasetfile.service;
 import cetus.Response;
 import cetus.user.UserUtil;
 import kware.apps.thirdeye.mobigen.datasetfile.domain.CetusDatasetFile;
-import kware.apps.thirdeye.mobigen.datasetfile.dto.request.SearchDatasetFileView;
-import kware.apps.thirdeye.mobigen.datasetfile.dto.response.CetusDatasetFileView;
 import kware.common.config.auth.dto.SessionUserInfo;
 import kware.common.file.tus.util.SimpleJwtUtil;
 import lombok.RequiredArgsConstructor;
@@ -51,12 +49,6 @@ public class CetusDatasetFileRestController {
     @GetMapping("/list")
     public Response list(CetusDatasetFile bean) {
         return Response.ok(service.list(bean));
-    }
-
-    @GetMapping("/rawdata-file-view")
-    public ResponseEntity findRawdataFileView(SearchDatasetFileView search) {
-        CetusDatasetFileView view = service.findRawdataFileView(search);
-        return ResponseEntity.ok(view);
     }
 
     /**

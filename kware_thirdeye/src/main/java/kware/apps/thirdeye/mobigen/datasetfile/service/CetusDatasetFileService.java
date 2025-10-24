@@ -2,12 +2,16 @@ package kware.apps.thirdeye.mobigen.datasetfile.service;
 
 import cetus.user.UserUtil;
 import cetus.util.WebUtil;
+import kware.apps.mobigen.integration.dto.response.rawdata.RawdataList;
+import kware.apps.mobigen.mobigen.dto.response.rawdata.RawdataListItemResponse;
+import kware.apps.mobigen.mobigen.dto.response.rawdata.RawdataListResponse;
 import kware.apps.thirdeye.mobigen.datasetfile.domain.CetusDatasetFile;
 import kware.apps.thirdeye.mobigen.datasetfile.domain.CetusDatasetFileDao;
 import kware.apps.thirdeye.mobigen.datasetfile.domain.CetusDatasetFileLog;
 import kware.apps.thirdeye.mobigen.datasetfile.domain.CetusDatasetFileLogDao;
 import kware.apps.thirdeye.mobigen.datasetfile.dto.request.ChangeDatasetFile;
 import kware.apps.thirdeye.mobigen.datasetfile.dto.request.SearchDatasetFile;
+import kware.apps.thirdeye.mobigen.datasetfile.dto.request.SearchDatasetFilePage;
 import kware.apps.thirdeye.mobigen.datasetfile.dto.request.SearchDatasetFileView;
 import kware.apps.thirdeye.mobigen.datasetfile.dto.response.CetusDatasetFileList;
 import kware.apps.thirdeye.mobigen.datasetfile.dto.response.CetusDatasetFileView;
@@ -182,35 +186,6 @@ public class CetusDatasetFileService {
     }
 
     @Transactional
-    public List<Map<String, String>> processAddFiles(CetusDatasetFile[] fileAdd) {
-
-        List<Map<String, String>> list = new ArrayList<>();
-
-        if (fileAdd != null) {
-            for (CetusDatasetFile f : fileAdd) {
-                Map<String, String> map = new HashMap<>();
-
-                f.setRegId(UserUtil.getUser().getUserId());
-
-                try {
-                    f = tusDatasetFileService.moveToDefaultStorage(f);
-                } catch (IOException e) {
-                    log.error(e.toString(), e);
-                    continue;
-                }
-
-                f.setSaved(CommonFileState.Y.name());
-                fileDao.insert(f);
-
-                map.put("fileId", f.getFileId());
-                map.put("filePath", f.getFilePath());
-                list.add(map);
-            }
-        }
-        return list;
-    }
-
-    @Transactional
     public Map<String, String> processAddFile(CetusDatasetFile f) {
 
         Map<String, String> map = new HashMap<>();
@@ -258,5 +233,16 @@ public class CetusDatasetFileService {
     @Transactional
     public void changeDatasetFile(ChangeDatasetFile request) {
         fileDao.updateDatasetFile(request);
+    }
+
+
+    /* =================== */
+    @Transactional(readOnly = true)
+    public List<RawdataListItemResponse> findDataFilePage(SearchDatasetFilePage search) {
+        return fileDao.getDataFilePage(search);
+    }
+    @Transactional(readOnly = true)
+    public int findDataFilePageCount(SearchDatasetFilePage search) {
+        return fileDao.getDataFilePageCount(search);
     }
 }

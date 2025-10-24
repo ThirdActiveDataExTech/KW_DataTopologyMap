@@ -1,6 +1,7 @@
 package kware.apps.thirdeye.mobigen.approveddataset.dto.response;
 
 import kware.apps.mobigen.cetus.dataset.dto.response.MobigenDatasetView;
+import kware.apps.mobigen.integration.dto.response.metadata.MetadataView;
 import kware.apps.thirdeye.mobigen.datasetui.dto.response.DatasetUiView;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -22,7 +23,7 @@ public class HomeDatasetList {
     private String targetTpCdNm;    // 원본 데이터셋 저장 위치 설명
 
     private DatasetUiView uiView;
-    private MobigenDatasetView mobigenDatasetView;
+    private MetadataView metadataView;
 
     private Integer ratings;
     private String bookmarkYn;
@@ -33,8 +34,8 @@ public class HomeDatasetList {
     public void setUiView(DatasetUiView uiView) {
         this.uiView = uiView;
     }
-    public void setMobigenDatasetView(MobigenDatasetView mobigenDatasetView){
-        this.mobigenDatasetView = mobigenDatasetView;
+    public void setMetadataView(MetadataView metadataView){
+        this.metadataView = metadataView;
     }
     public void setTargetTpCdNm(String targetTpCdNm) {
         this.targetTpCdNm = targetTpCdNm;

@@ -27,4 +27,10 @@ public class ViewRawdataResponse {
     private String description;
     private List<String> tags;
     private int download_count;
+
+    public ViewRawdataResponse(String rawdata_id, String metadata_id, String filename) {
+        this.rawdata_id = rawdata_id;
+        this.metadata_id = metadata_id;
+        this.format = filename;
+    }
 }
