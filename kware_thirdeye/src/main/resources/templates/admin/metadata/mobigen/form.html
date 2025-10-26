@@ -45,10 +45,18 @@
                     <label>메타데이터 파일</label>
                     <div class="file-display">
                         <div class="file-row" style="position: relative;">
-                            <input type="text" id="period-meta-filename"
-                                   th:value="${metadataView?.metadataFile?.orgFileNm} ? ${metadataView?.metadataFile?.orgFileNm} : '파일 호출 오류'"
-                                   style="background-color: #f5f5f5 !important; color: #666 !important;"
-                                   class="file-text" placeholder="선택된 파일 없음" readonly>
+                            <th:block th:if="${metadataView?.metadataFile != null}">
+                                <input type="text"
+                                       th:value="${metadataView?.metadataFile?.orgFileNm} ? ${metadataView?.metadataFile?.orgFileNm} : '파일 호출 오류'"
+                                       style="background-color: #f5f5f5 !important; color: #666 !important;"
+                                       class="file-text" placeholder="선택된 파일 없음" readonly>
+                            </th:block>
+                            <th:block th:unless="${metadataView?.metadataFile != null}">
+                                <input type="text"
+                                       th:value="${metadataView?.packagedataFile?.orgFileNm} ? ${metadataView?.packagedataFile?.orgFileNm} : '파일 호출 오류'"
+                                       style="background-color: #f5f5f5 !important; color: #666 !important;"
+                                       class="file-text" placeholder="선택된 파일 없음" readonly>
+                            </th:block>
                         </div>
                     </div>
                 </div>

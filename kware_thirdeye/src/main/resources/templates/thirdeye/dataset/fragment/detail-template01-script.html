@@ -179,10 +179,14 @@
 
         $("#metadata-download-btn").on('click', async function (e) {
             const metadataFileId = $("#metadata-file-id").val();
-            const metadataId = $("#metadata-id");
-            const obj = { metadataId, metadataFileId }
-            const query = new URLSearchParams(obj).toString();
-            window.location.href = `/api/admin/integration-dataset/download-metadata?${query}`
+            const metadataId = $("#metadata-id").val()
+            const response = await Http.get(`/api/portal/dataset-file/check-file`, {"fileId": metadataFileId})
+            if (!response) Util.alert("해당 경로에 파일이 없습니다.")
+            else {
+                const obj = {metadataId, metadataFileId}
+                const query = new URLSearchParams(obj).toString();
+                window.location.href = `/api/admin/integration-dataset/download-metadata?${query}`
+            }
         });
 
         $(document).on('click', `.history-table tbody tr`, function () {
@@ -195,9 +199,14 @@
             const rawdataFileId = $(this).data('file');
             const rawdataId = $(this).data('raw');
             const metadataId = $(this).data('meta');
-            const obj = { metadataId, rawdataId, rawdataFileId }
-            const query = new URLSearchParams(obj).toString();
-            window.location.href = `/api/admin/integration-dataset/download-rawdata?${query}`
+
+            const response = await Http.get(`/api/portal/dataset-file/check-file`, {"fileId": rawdataFileId})
+            if (!response) Util.alert("해당 경로에 파일이 없습니다.")
+            else {
+                const obj = { metadataId, rawdataId, rawdataFileId }
+                const query = new URLSearchParams(obj).toString();
+                window.location.href = `/api/admin/integration-dataset/download-rawdata?${query}`
+            }
         })
 
         $("#close-btn").on('click', function () {
