@@ -5,7 +5,7 @@
 
         page: 1,
         keyword: '',
-        param : { category: [], tag: [] }, // 검색 파라미터
+        param : { tag: [] }, // 검색 파라미터
 
         dom: {
             showList: $("#showing-list"),
@@ -19,7 +19,6 @@
 
         // 페이지 그리기
         pageList: async function (clearSidebar = true) {
-
             template03JS.pageInit();
             if (clearSidebar) template03JS.createSidebar();
 
@@ -54,8 +53,12 @@
         },
 
         getPageData: async function (size) {
-            let keyword = template03JS.keyword;
-            const obj = { pageNumber: template03JS.page, size: size }
+            const obj = {
+                pageNumber: template03JS.page,
+                size: size,
+                publisher: template03JS.keyword,
+                theme: template03JS.param.tag
+            }
             return await Http.get('/api/admin/integration-dataset/relations-page', obj);
         },
 

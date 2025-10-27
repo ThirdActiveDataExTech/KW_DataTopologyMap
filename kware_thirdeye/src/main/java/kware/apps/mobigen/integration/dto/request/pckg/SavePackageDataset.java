@@ -1,6 +1,6 @@
 package kware.apps.mobigen.integration.dto.request.pckg;
 
-import kware.apps.thirdeye.mobigen.datasetfile.domain.CetusDatasetFile;
+import kware.apps.thirdeye.mobigen.datasetfile.domain.file.CetusDatasetFile;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

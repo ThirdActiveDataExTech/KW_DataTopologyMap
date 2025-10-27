@@ -18,14 +18,8 @@ import java.util.List;
 public class RecommendationListResponse {
 
     private String metadata_id;
-    private List<Recommendations> recommendations;
-
-    @Getter @Setter
-    public static class Recommendations {
-        private String metadata_id;
-        private String title;
-        private float recommendation_score;
-        private String reason;
-        private String recommendation_type;
-    }
+    private int total_count;
+    private int page;
+    private int limit;
+    private List<RecommendationsResponse> recommendations;
 }

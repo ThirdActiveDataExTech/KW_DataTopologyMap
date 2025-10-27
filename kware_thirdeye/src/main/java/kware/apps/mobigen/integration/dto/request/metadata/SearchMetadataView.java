@@ -7,8 +7,8 @@ import lombok.Setter;
 
 @Getter @Setter @NoArgsConstructor
 public class SearchMetadataView {
-    private String metadataId;
 
+    private String metadataId;
     public SearchMetadataView(String metadataId) {
         this.metadataId = metadataId;
     }

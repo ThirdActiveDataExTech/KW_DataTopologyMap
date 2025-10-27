@@ -16,6 +16,7 @@
                         SELECT 1
                           FROM CETUS_DATASET_BOOKMARK B
                          WHERE B.APPROVED_DATASET_UID = CAD.UID
+                           AND B.USER_UID = #{userUid}
               ) THEN 'Y' ELSE 'N' END AS BOOKMARK_YN
               ,CDU.CATEGORY_UID AS CATEGORY_UID
               ,CDC.CATEGORY_NM AS CATEGORY_NM
@@ -24,8 +25,10 @@
               ,CDMU.TYPE_CD AS MAIN_UI_TYPE_CD
               ,CDU.SHOW_AT AS SHOW_AT
               ,CDU.EXTRA_JSON AS EXTRA_JSON
+              ,CF.FILE_ID AS THUMB_ID
           FROM CETUS_APPROVED_DATASET CAD -- 진열관리 중인 데이터셋
           LEFT JOIN CETUS_DATASET_UI CDU ON CDU.APPROVED_DATASET_UID = CAD.UID -- 진열관리 중인 데이터셋의 UI
+          LEFT JOIN CETUS_FILE CF ON CF.FILE_UID = CDU.THUMB_UID AND CF.USE_AT = 'Y' AND CF.SAVED = 'Y' -- 진열관리 중인 데이터셋의 썸네일 이미지
           LEFT JOIN CETUS_USER CU_APP ON CU_APP.UID = CAD.APPROVER_UID -- 모비젠의 데이터셋을 진열등록한 유저
           LEFT JOIN CETUS_DATASET_MAIN_UI CDMU ON CDMU.UID = CDU.MAIN_UI_UID -- KWARE 포탈 시스템의 메인 UI
           LEFT JOIN CETUS_DATASET_CATEGORY CDC ON CDC.UID = CDU.CATEGORY_UID -- 진열관리 중인 데이터셋의 카테고리
@@ -40,14 +43,25 @@
         <if test="@Ognl@isNotEmpty(dataTarType)">
            AND CAD.TARGET_TP_CD = #{dataTarType}
         </if>
+        <if test="@Ognl@isNotEmpty(startDate) and @Ognl@isNotEmpty(endDate)">
+           AND CAD.APPROVED_DT BETWEEN #{startDate}::TIMESTAMP
+           AND (#{endDate}::DATE + INTERVAL '1 day' - INTERVAL '1 second')
+        </if>
         <if test="@Ognl@isNotEmpty(categories)">
            AND CDC.UID IN
             <foreach collection="categories" item="categoryUid" open="(" separator="," close=")">
                #{categoryUid}
             </foreach>
         </if>
-        <if test="@Ognl@isNotEmpty(browseText)">
-           AND CDMU.CODE LIKE '%' || #{browseText} || '%'
+        <if test="@Ognl@isNotEmpty(keyword)">
+           AND CAD.SEARCH_DATA ->> 'title' LIKE '%' || #{keyword} || '%'
+        </if>
+        <if test="@Ognl@isNotEmpty(tags)">
+           AND EXISTS (
+               SELECT 1
+                 FROM JSONB_ARRAY_ELEMENTS_TEXT(CAD.SEARCH_DATA -> 'tags') AS T(tagUid)
+                WHERE T.tagUid::INT8 IN <foreach collection="tags" item="tag" open="(" separator="," close=")"> #{tag} </foreach>
+           )
         </if>
          ORDER BY CAD.APPROVED_DT DESC
         <if test="@Ognl@isNotEmpty(startNumber) and  @Ognl@isNotEmpty(endNumber)">
@@ -60,6 +74,7 @@
         SELECT COUNT(*)
           FROM CETUS_APPROVED_DATASET CAD -- 진열관리 중인 데이터셋
           LEFT JOIN CETUS_DATASET_UI CDU ON CDU.APPROVED_DATASET_UID = CAD.UID -- 진열관리 중인 데이터셋의 UI
+          LEFT JOIN CETUS_FILE CF ON CF.FILE_UID = CDU.THUMB_UID AND CF.USE_AT = 'Y' AND CF.SAVED = 'Y' -- 진열관리 중인 데이터셋의 썸네일 이미지
           LEFT JOIN CETUS_USER CU_APP ON CU_APP.UID = CAD.APPROVER_UID -- 모비젠의 데이터셋을 진열등록한 유저
           LEFT JOIN CETUS_DATASET_MAIN_UI CDMU ON CDMU.UID = CDU.MAIN_UI_UID -- KWARE 포탈 시스템의 메인 UI
           LEFT JOIN CETUS_DATASET_CATEGORY CDC ON CDC.UID = CDU.CATEGORY_UID -- 진열관리 중인 데이터셋의 카테고리
@@ -74,60 +89,29 @@
         <if test="@Ognl@isNotEmpty(dataTarType)">
            AND CAD.TARGET_TP_CD = #{dataTarType}
         </if>
+        <if test="@Ognl@isNotEmpty(startDate) and @Ognl@isNotEmpty(endDate)">
+           AND CAD.APPROVED_DT BETWEEN #{startDate}::TIMESTAMP
+           AND (#{endDate}::DATE + INTERVAL '1 day' - INTERVAL '1 second')
+        </if>
         <if test="@Ognl@isNotEmpty(categories)">
            AND CDC.UID IN
            <foreach collection="categories" item="categoryUid" open="(" separator="," close=")">
                #{categoryUid}
            </foreach>
         </if>
-        <if test="@Ognl@isNotEmpty(browseText)">
-           AND CDMU.CODE LIKE '%' || #{browseText} || '%'
+        <if test="@Ognl@isNotEmpty(keyword)">
+           AND CAD.SEARCH_DATA ->> 'title' LIKE '%' || #{keyword} || '%'
+        </if>
+        <if test="@Ognl@isNotEmpty(tags)">
+            AND EXISTS (
+                SELECT 1
+                  FROM JSONB_ARRAY_ELEMENTS_TEXT(CAD.SEARCH_DATA -> 'tags') AS T(tagUid)
+                 WHERE T.tagUid::INT8 IN <foreach collection="tags" item="tag" open="(" separator="," close=")"> #{tag} </foreach>
+            )
         </if>
     </select>
 
-    <select id="getDatasetList" parameterType="ApprovedDatasetSearch" resultType="ApprovedDatasetList">
-        /* cetusApprovedDataset.getDatasetList */
-        SELECT CAD.UID AS APPROVED_UID
-              ,CAD.DATASET_ID
-              ,TO_CHAR(CAD.APPROVED_DT, 'YYYY-MM-DD HH:MM') AS APPROVED_DT
-              ,CU_APP.USER_NM AS APPROVER_NM
-              ,CAD.TARGET_TP_CD
-              ,( SELECT COALESCE(ROUND(SUM(CDM.RATINGS) / COUNT(*)), 0)
-                   FROM CETUS_DATASET_COMMENT CDM
-                  WHERE CDM.APPROVED_DATASET_UID = CAD.UID ) AS RATINGS
-              ,CASE
-                WHEN EXISTS (
-                        SELECT 1
-                          FROM CETUS_DATASET_BOOKMARK B
-                         WHERE B.APPROVED_DATASET_UID = CAD.UID
-                ) THEN 'Y' ELSE 'N' END AS BOOKMARK_YN
-              ,CDU.CATEGORY_UID AS CATEGORY_UID
-              ,CDC.CATEGORY_NM AS CATEGORY_NM
-              ,CDU.EXTRA_JSON AS EXTRA_JSON
-              ,CF.FILE_ID AS THUMB_ID
-          FROM CETUS_APPROVED_DATASET CAD -- 진열관리 중인 데이터셋
-          LEFT JOIN CETUS_DATASET_UI CDU ON CDU.APPROVED_DATASET_UID = CAD.UID  -- 진열관리 중인 데이터셋의 UI
-          LEFT JOIN CETUS_USER CU_APP ON CU_APP.UID = CAD.APPROVER_UID  -- 모비젠의 데이터셋을 진열등록한 유저
-          LEFT JOIN CETUS_FILE CF ON CF.FILE_UID = CDU.THUMB_UID AND CF.USE_AT = 'Y' AND CF.SAVED = 'Y' -- 진열관리 중인 데이터셋의 썸네일 이미지
-          LEFT JOIN CETUS_DATASET_MAIN_UI CDMU ON CDMU.UID = CDU.MAIN_UI_UID -- KWARE 포탈 시스템의 메인 UI
-          LEFT JOIN CETUS_DATASET_CATEGORY CDC ON CDC.UID = CDU.CATEGORY_UID -- 진열관리 중인 데이터셋의 카테고리
-         WHERE CAD.WORKPLACE_UID = #{workplaceUid}
-           AND CAD.DELETE_AT = 'N'
-           AND CDU.SHOW_AT = 'Y'
-        <if test="@Ognl@isNotEmpty(startDate) and @Ognl@isNotEmpty(endDate)">
-           AND CAD.APPROVED_DT BETWEEN #{startDate}::TIMESTAMP
-           AND (#{endDate}::DATE + INTERVAL '1 day' - INTERVAL '1 second')
-        </if>
-        <if test="@Ognl@isNotEmpty(categories)">
-           AND CDU.CATEGORY_UID IN
-            <foreach collection="categories" item="categoryUid" open="(" separator="," close=")">
-               #{categoryUid}
-            </foreach>
-        </if>
-         ORDER BY CAD.APPROVED_DT DESC
-    </select>
-
-    <select id="getApprovedDatasetIdList" resultType="ApprovedDatasetIdList" parameterType="Long">
+    <select id="getApprovedDatasetIdList" resultType="Long" parameterType="Long">
         /* cetusApprovedDataset.getApprovedDatasetIdList */
         SELECT CAD.DATASET_ID
           FROM CETUS_APPROVED_DATASET CAD
@@ -154,7 +138,7 @@
         )
     </insert>
 
-    <select id="getApprovedDatasetView" parameterType="Long" resultType="ApprovedDatasetView">
+    <select id="getApprovedDatasetView" parameterType="SearchApprovedDatasetView" resultType="ApprovedDatasetView">
         /* cetusApprovedDataset.getApprovedDatasetView */
         SELECT CAD.UID AS APPROVED_UID
               ,CAD.DATASET_ID
@@ -174,6 +158,7 @@
                        SELECT 1
                          FROM CETUS_DATASET_BOOKMARK B
                         WHERE B.APPROVED_DATASET_UID = CAD.UID
+                          AND B.USER_UID = #{userUid}
                    ) THEN 'Y'
                    ELSE 'N'
                 END AS BOOKMARK_YN
@@ -183,7 +168,7 @@
           LEFT JOIN CETUS_DATASET_UI CDU ON CDU.APPROVED_DATASET_UID = CAD.UID -- 진열관리 중인 데이터셋의 UI
           LEFT JOIN CETUS_DATASET_CATEGORY CDC ON CDC.UID = CDU.CATEGORY_UID -- 진열관리 중인 데이터셋의 카테고리
           LEFT JOIN CETUS_FILE CF ON CF.FILE_UID = CDU.THUMB_UID AND CF.USE_AT = 'Y' AND CF.SAVED = 'Y' -- 진열관리 중인 데이터셋의 썸네일 이미지
-         WHERE CAD.UID = #{uid}
+         WHERE CAD.UID = #{approvedUid}
     </select>
 
     <update id="deleteApprovedDataset" parameterType="Long">
@@ -192,7 +177,6 @@
            SET DELETE_AT = 'Y'
          WHERE UID = #{uid}
     </update>
-
 
     <select id="getHomeDatasetList" parameterType="HomeDatasetSearch" resultType="HomeDatasetList">
         /* cetusApprovedDataset.getHomeDatasetList */
@@ -212,6 +196,7 @@
                        SELECT 1
                          FROM CETUS_DATASET_BOOKMARK B
                         WHERE B.APPROVED_DATASET_UID = CAD.UID
+                          AND B.USER_UID = #{userUid}
               ) THEN 'Y' ELSE 'N' END AS BOOKMARK_YN
              ,TO_CHAR(CAD.APPROVED_DT, 'YYYY-MM-DD HH:MM') AS APPROVED_DT
              ,CU.USER_NM AS APPROVER_NM
@@ -230,5 +215,12 @@
          ORDER BY CDU.SORT_NO
          LIMIT #{limitCount}
     </select>
+
+    <update id="updateApprovedDatasetSearchData" parameterType="CetusApprovedDataset">
+        /* cetusApprovedDataset.updateApprovedDatasetSearchData */
+        UPDATE CETUS_APPROVED_DATASET
+           SET SEARCH_DATA = #{searchData}::jsonb
+         WHERE DATASET_ID = #{datasetId}
+    </update>
 
 </mapper>

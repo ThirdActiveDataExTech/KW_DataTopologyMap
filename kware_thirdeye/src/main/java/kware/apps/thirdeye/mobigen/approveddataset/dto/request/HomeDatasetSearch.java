@@ -20,15 +20,22 @@ public class HomeDatasetSearch {
     private Integer limitCount;         // 각 type 별로 최대 보여지는 데이터셋 목록 개수
     private Long selectedCategory;      // 선택된 카테고리 유형
     private Long workplaceUid;          // 워크플레이스 uid
+    private Long userUid;
 
-    public HomeDatasetSearch(Long mainUiUid, Integer limitCount, Long selectedCategory, Long workplaceUid) {
+    public HomeDatasetSearch( Long mainUiUid, Integer limitCount, Long selectedCategory,
+                              Long workplaceUid, Long userUid ) {
         this.mainUiUid = mainUiUid;
         this.limitCount = limitCount;
         this.selectedCategory = selectedCategory;
         this.workplaceUid = workplaceUid;
+        this.userUid = userUid;
     }
 
     public void setWorkplaceUid(Long workplaceUid) {
         this.workplaceUid = workplaceUid;
+    }
+
+    public void setUserUid(Long userUid) {
+        this.userUid = userUid;
     }
 }

@@ -139,25 +139,6 @@
             )
     </insert>
 
-    <select id="selectLog" resultType="CommonFileLog">
-        /* fileLog.selectLog */
-        SELECT FILE_UID
-             , FILE_URL
-             , WORKER_UID
-             , WORKER_NM
-             , REG_DT
-          FROM CETUS_FILE_LOG
-         WHERE FILE_URL = #{fileUrl}
-         ORDER BY REG_DT DESC
-    </select>
-
-    <select id="isRegister" resultType="boolean">
-        /* booleam.isRegister */
-        SELECT CASE WHEN COUNT(*) > 0 THEN 1 ELSE 0 END
-          FROM CETUS_FILE
-         WHERE FILE_UID = #{fileUid}
-    </select>
-
     <select id="findFileInfo" resultType="CommonFile">
         /* file.findFileInfo */
         SELECT FILE_UID

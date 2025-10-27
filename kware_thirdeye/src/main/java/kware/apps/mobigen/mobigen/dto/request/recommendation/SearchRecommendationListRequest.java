@@ -24,10 +24,25 @@ public class SearchRecommendationListRequest {
     private PaginationRequest pagination;
     private SortRequest sort;
 
+    public SearchRecommendationListRequest(List<String> recommendation_type, String publisher, List<String> theme,
+                                           int page, int limit,
+                                           String order ) {
+        this.action = "search";
+        this.filters = new SearchRecommendationListFilters(recommendation_type, publisher, theme);
+        this.pagination = new PaginationRequest(page, limit);
+        this.sort = new SortRequest(order);
+    }
+
     @Getter @Setter
     public static class SearchRecommendationListFilters {
         private List<String> recommendation_type;
         private String publisher;
         private List<String> theme;
+
+        public SearchRecommendationListFilters(List<String> recommendation_type, String publisher, List<String> theme) {
+            this.recommendation_type = recommendation_type;
+            this.publisher = publisher;
+            this.theme = theme;
+        }
     }
 }

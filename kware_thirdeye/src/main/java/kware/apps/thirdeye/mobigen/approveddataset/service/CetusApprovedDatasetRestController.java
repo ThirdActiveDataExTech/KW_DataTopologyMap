@@ -1,6 +1,8 @@
 package kware.apps.thirdeye.mobigen.approveddataset.service;
 
 
+import cetus.bean.Page;
+import cetus.bean.Pageable;
 import kware.apps.thirdeye.mobigen.approveddataset.dto.request.ApprovedDatasetSearch;
 import kware.apps.thirdeye.mobigen.approveddataset.dto.request.HomeDatasetSearch;
 import kware.apps.thirdeye.mobigen.approveddataset.dto.response.ApprovedDatasetList;
@@ -22,14 +24,14 @@ public class CetusApprovedDatasetRestController {
      *
      * kware 포탈 시스템에서 진열등록/관리 중인 데이터셋 목록 조회
      *
-     * @api         [GET] /api/portal/approved-dataset/list
+     * @api         [GET] /api/portal/approved-dataset/page
      * @author      dahyeon
      * @date        2025-10-15
     **/
-    @GetMapping("/list")
-    public ResponseEntity findDatasetList(ApprovedDatasetSearch search) {
-        List<ApprovedDatasetList> datasetList = service.findDatasetList(search);
-        return ResponseEntity.ok(datasetList);
+    @GetMapping("/page")
+    public ResponseEntity findDatasetList(ApprovedDatasetSearch search, Pageable pageable) {
+        Page<ApprovedDatasetList> datasetPage = service.findDatasetPage(search, pageable);
+        return ResponseEntity.ok(datasetPage);
     }
 
     /**

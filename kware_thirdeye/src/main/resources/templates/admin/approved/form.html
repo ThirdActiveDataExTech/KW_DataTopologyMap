@@ -138,6 +138,7 @@
             <div class="right-buttons">
               <button type="button" class="custom-button" id="list-btn">목록</button>
               <button type="button" id="submit-btn" class="custom-button">수정하기</button>
+              <button type="button" id="goto-view-btn" class="custom-button">상세페이지<br>보러가기</button>
             </div>
           </div>
         </div>
@@ -314,6 +315,7 @@
   <script th:inline="javascript">
 
     const view = [[${view}]]
+    const approvedUid = [[${approvedUid}]]
 
     $(function () {
 
@@ -373,6 +375,16 @@
                   newTag: true
               }
           },
+      });
+
+      // ===============================
+      // 상세페이지 보러가기 버튼
+      // ===============================
+      $("#goto-view-btn").on('click', async function () {
+        const isOk = await Util.confirm("수정중이신 정보는 저장되지 않습니다. <br> 상세페이지 화면으로 이동하시겠습니까?")
+        if (isOk) {
+          window.location.href = `/portal/detail/${approvedUid}`
+        }
       });
 
       // ===============================

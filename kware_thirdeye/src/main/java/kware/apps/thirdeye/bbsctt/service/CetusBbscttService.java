@@ -9,13 +9,12 @@ import kware.apps.system.bbs.domain.CetusBbs;
 import kware.apps.system.bbs.service.CetusBbsService;
 import kware.apps.thirdeye.bbsctt.domain.CetusBbsctt;
 import kware.apps.thirdeye.bbsctt.domain.CetusBbscttDao;
+import kware.apps.thirdeye.bbsctt.dto.request.*;
 import kware.apps.thirdeye.bbsctt.dto.response.BbscttExcelList;
 import kware.apps.thirdeye.bbsctt.dto.response.BbscttList;
-import kware.apps.thirdeye.bbsctt.dto.response.BbscttRecentList;
 import kware.apps.thirdeye.bbsctt.dto.response.BbscttView;
 import kware.apps.thirdeye.enumstatus.BbsTpCd;
 import kware.apps.thirdeye.enumstatus.DownloadTargetCd;
-import kware.apps.thirdeye.bbsctt.dto.request.*;
 import kware.common.excel.ExcelCreate;
 import kware.common.file.service.CommonFileService;
 import lombok.RequiredArgsConstructor;
@@ -40,12 +39,6 @@ public class CetusBbscttService {
 
     @Value("${cetus.base-url}")
     private String baseUrl;
-
-    @Transactional(readOnly = true)
-    public List<BbscttRecentList> findRecentBbsctt(int recent, String bbsTpCd) {
-        Long workplaceUid = UserUtil.getUserWorkplaceUid();
-        return dao.getRecentBbsctt(new BbscttRecentSearch(workplaceUid, recent, bbsTpCd));
-    }
 
     @Transactional(readOnly = true)
     public Page<BbscttList> findAllBbscttPage(BbscttSearch search, Pageable pageable) {

@@ -259,43 +259,6 @@
          WHERE BBSCTT_UID = #{bbscttUid}
     </update>
 
-    <select id="getRecentBbsctt" resultType="BbscttRecentList" parameterType="BbscttRecentSearch">
-        /* cetusBbsctt.getRecentBbsctt */
-        SELECT CBBSCTT.BBSCTT_UID
-              ,CBBSCTT.BBS_UID
-              ,CBBSCTT.CL_UID
-              ,CBBSCTT.BBSCTT_NM
-              ,CBBSCTT.RD_CNT
-              ,CBBSCTT.BBSCTT_CNT
-              ,CBBSCTT.NOTICE_AT
-              ,CBBSCTT.FILE_UID
-              ,( SELECT COUNT(*)
-                   FROM CETUS_FILE CF2
-                  WHERE CF2.FILE_UID = CBBSCTT.FILE_UID::BIGINT
-                    AND CF2.USE_AT = 'Y'
-                    AND CF2.SAVED = 'Y' ) AS FILE_CNT
-              ,CBBSCTT.USE_AT
-              ,CBBSCTT.OPEN_AT
-              ,CBBSCTT.DELETE_AT
-              ,CBBSCTT.REG_UID
-              ,TO_CHAR(CBBSCTT.REG_DT, 'YYYY-MM-DD') AS REG_DT
-              ,CU.USER_NM AS REG_NM
-              ,CU.USER_EMAIL AS REG_EMAIL
-              ,CF_CU.FILE_ID AS REG_PROFILE_ID
-              ,CBBSCTT.THUMBNAIL_SRC
-              ,CBBSCTT.LIKE_CNT
-          FROM CETUS_BBSCTT CBBSCTT
-         INNER JOIN CETUS_BBS CBBS ON CBBS.BBS_UID = CBBSCTT.BBS_UID
-          LEFT JOIN CETUS_USER CU ON CU.UID = CBBSCTT.REG_UID
-          LEFT JOIN CETUS_FILE CF_CU ON CF_CU.FILE_UID = CU.PROFILE_UID::BIGINT AND CF_CU.USE_AT = 'Y' AND CF_CU.SAVED = 'Y'
-         WHERE CBBS.WORKPLACE_UID = #{workplaceUid}
-           AND CBBS.BBS_TP_CD = #{bbsTpCd}
-           AND CBBSCTT.DELETE_AT = 'N'
-           AND CBBSCTT.OPEN_AT = 'Y'
-         ORDER BY CBBSCTT.REG_DT DESC
-         LIMIT #{count}
-    </select>
-
     <update id="updateBbscttLikeCount" parameterType="Long">
         /* cetusBbsctt.updateBbscttLikeCount */
         UPDATE CETUS_BBSCTT

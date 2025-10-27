@@ -5,6 +5,7 @@ import cetus.dao.SuperDao;
 import kware.apps.mobigen.cetus.dataset.dto.request.SearchMobigenDataset;
 import kware.apps.mobigen.integration.dto.response.metadata.MetadataView;
 import kware.apps.mobigen.mobigen.dto.response.common.MetadataResultResponse;
+import kware.apps.mobigen.mobigen.dto.response.recommendation.RecommendationsResponse;
 import kware.apps.mobigen.mobigen.dto.response.relation.RelatedMetadataResponse;
 import org.springframework.stereotype.Component;
 
@@ -31,6 +32,14 @@ public class CetusMobigenDatasetDao extends SuperDao<CetusMobigenDataset> {
     }
     public List<RelatedMetadataResponse> getAllRelationMobigenDatasetList(SearchMobigenDataset search) {
         return selectList("getAllRelationMobigenDatasetList", search);
+    }
+
+
+    public int getAllRecommendationMobigenDatasetListCount() {
+        return selectOne("getAllRecommendationMobigenDatasetListCount");
+    }
+    public List<RecommendationsResponse> getAllRecommendationMobigenDatasetList(SearchMobigenDataset search) {
+        return selectList("getAllRecommendationMobigenDatasetList", search);
     }
 
 

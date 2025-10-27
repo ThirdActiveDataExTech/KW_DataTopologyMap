@@ -24,10 +24,6 @@ public class CommonFileDao extends CetusDaoSupport {
         return selectList("list", bean);
     }
 
-    public List<CommonFile> getCommonFileListByFileUid(Long fileUid) {
-        return selectList("getCommonFileListByFileUid", fileUid);
-    }
-
     public int delete(CommonFile bean) {
         return delete("delete", bean);
     }
@@ -35,17 +31,11 @@ public class CommonFileDao extends CetusDaoSupport {
     public int insert(CommonFile bean) {
         return insert("insert", bean);
     }
-
     public int insertLog(CommonFileLog bean) {
         return insert("insertLog", bean);
     }
 
     public int increaseDownCnt(CommonFile bean){return update("increaseDownCnt", bean);}
-    
-    public List<CommonFileLog> selectLog(CommonFileLog bean) {
-        return selectList("selectLog", bean);
-    }
-
 	public CommonFile findFileInfo(CommonFile bean){
 	    return selectOne("findFileInfo", bean);
 	}

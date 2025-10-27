@@ -12,41 +12,43 @@ import java.util.List;
 * @author       dahyeon
 * @version      1.0.0
 * @date         2025-10-14
-* @summary      (1) 승인된 데이터셋 관리 (system)
- *              => workplaceUid, showAt, typeCd
- *
- *              (2) 메인 리스트 화면 데이터셋 검색
- *              => workplaceUid, browseText, startDate&endDate, categories
- *
- *              (3) 연관/관련 데이터셋 목록 검색
- *              => workplaceUid, browseText
+* @summary
 **/
 
 @Getter @NoArgsConstructor(access = AccessLevel.PROTECTED) @Setter
 public class ApprovedDatasetSearch {
 
     private Long workplaceUid;
+    private Long userUid;
     private String showAt;
-    private String browseText;
     private String uiTypeCd;
     private String dataTarType;
     private String startDate;
     private String endDate;
+    private String keyword;
     private List<Long> categories;  // 카테고리 검색
+    private List<Long> tags;        // tag 검색
 
-    public ApprovedDatasetSearch( Long workplaceUid, String showAt, String browseText, String uiTypeCd, String dataTarType,
-                                  String startDate, String endDate, List<Long> categories ) {
+    public ApprovedDatasetSearch( Long workplaceUid, Long userUid,
+                                  String showAt, String uiTypeCd, String dataTarType,
+                                  String startDate, String endDate,
+                                  String keyword, List<Long> categories, List<Long> tags ) {
         this.workplaceUid = workplaceUid;
+        this.userUid = userUid;
         this.showAt = showAt;
-        this.browseText = browseText;
         this.uiTypeCd = uiTypeCd;
         this.dataTarType = dataTarType;
         this.startDate = startDate;
         this.endDate = endDate;
+        this.keyword = keyword;
         this.categories = categories;
+        this.tags = tags;
     }
 
     public void setWorkplaceUid(Long workplaceUid) {
         this.workplaceUid = workplaceUid;
+    }
+    public void setUserUid(Long userUid) {
+        this.userUid = userUid;
     }
 }

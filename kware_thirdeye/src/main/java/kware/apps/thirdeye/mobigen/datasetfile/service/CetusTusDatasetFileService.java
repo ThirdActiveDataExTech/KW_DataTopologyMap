@@ -1,6 +1,6 @@
 package kware.apps.thirdeye.mobigen.datasetfile.service;
 
-import kware.apps.thirdeye.mobigen.datasetfile.domain.CetusDatasetFile;
+import kware.apps.thirdeye.mobigen.datasetfile.domain.file.CetusDatasetFile;
 import kware.apps.thirdeye.mobigen.datasetfile.enumcd.CetusDatasetFileState;
 import kware.common.file.tus.service.FileUploadService;
 import lombok.RequiredArgsConstructor;

@@ -1,15 +1,20 @@
 package kware.apps.mobigen.integration.service;
 
 import cetus.bean.Page;
+import kware.apps.mobigen.integration.dto.request.meta.SearchMetaValues;
 import kware.apps.mobigen.integration.dto.request.metadata.*;
 import kware.apps.mobigen.integration.dto.request.pckg.DownloadPackageDataset;
 import kware.apps.mobigen.integration.dto.request.pckg.SavePackageDataset;
 import kware.apps.mobigen.integration.dto.request.rawdata.*;
+import kware.apps.mobigen.integration.dto.request.recommendation.SearchRecommendationPage;
 import kware.apps.mobigen.integration.dto.request.relation.SearchRelationsPage;
+import kware.apps.mobigen.integration.dto.response.meta.MetaKeyList;
+import kware.apps.mobigen.integration.dto.response.meta.MetaKeyValueList;
 import kware.apps.mobigen.integration.dto.response.metadata.MetadataList;
 import kware.apps.mobigen.integration.dto.response.metadata.MetadataView;
 import kware.apps.mobigen.integration.dto.response.rawdata.RawdataList;
 import kware.apps.mobigen.integration.dto.response.rawdata.RawdataView;
+import kware.apps.mobigen.integration.dto.response.recommendation.RecommendationList;
 import kware.apps.mobigen.integration.dto.response.relation.RelationsList;
 import kware.apps.mobigen.mobigen.dto.response.ApiResponse;
 import kware.apps.mobigen.mobigen.dto.response.metadata.MetadataFilePreviewResponse;
@@ -21,7 +26,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @Slf4j
@@ -219,6 +223,20 @@ public class DatasetAdminRestController {
 
     /**
      *
+     * [RECOMMENDATION_01] 추천 메타데이터 목록 조회 (+) 페이징
+     *
+     * @api         [GET] /api/admin/integration-dataset/recommendation-page
+     * @author      dahyeon
+     * @date        2025-10-27
+    **/
+    @GetMapping("/recommendation-page")
+    public ResponseEntity pageRecommendation(SearchRecommendationPage search) {
+        Page<RecommendationList> page = service.pageRecommendation(search);
+        return ResponseEntity.ok(page);
+    }
+
+    /**
+     *
      * [PACKAGE_01] 패키지 파일 다운로드
      * => todo : API 확인하고 추가 로직 구현,,
      *
@@ -234,6 +252,7 @@ public class DatasetAdminRestController {
     /**
      *
      *  [METADATA_08] 메타데이터 파일 다운로드
+     * => todo : API 확인하고 추가 로직 구현,,
      *
      * @api         [GET] /api/admin/integration-dataset/download-metadata
      * @author      dahyeon
@@ -247,6 +266,7 @@ public class DatasetAdminRestController {
     /**
      *
      * [RAWDATA_07] 원본데이터 파일 다운로드
+     * => todo : API 확인하고 추가 로직 구현,,
      *
      * @api         [GET] /api/admin/integration-dataset/download-rawdata
      * @author      dahyeon
@@ -256,4 +276,33 @@ public class DatasetAdminRestController {
     public ResponseEntity<Resource> downloadRawdata(DownloadRawdata request, final HttpServletRequest req) throws IOException {
         return service.downloadRawdata(request, req);
     }
+
+    /**
+     *
+     * [META_01] 메타데이터로 사용되는 필터 KEY 값의 목록 정보 조회
+     *
+     * @api         [GET] /api/admin/integration-dataset/metakey-list
+     * @author      dahyeon
+     * @date        2025-10-27
+    **/
+    @GetMapping("/metakey-list")
+    public ResponseEntity findMetaKeyList() {
+        MetaKeyList keyList = service.findMetaKeyList();
+        return ResponseEntity.ok(keyList);
+    }
+
+    /**
+     * 
+     * [META_02] 메타데이터로 사용되는 필터 KEY 값의 VALUE 목록 정보 조회
+     *
+     * @api         [GET] /api/admin/integration-dataset/metakey-value-list
+     * @author      dahyeon
+     * @date        2025-10-27
+    **/
+    @GetMapping("/metakey-value-list")
+    public ResponseEntity findMetaKeyValueList(SearchMetaValues search) {
+        MetaKeyValueList keyValueList = service.findMetaKeyValueList(search);
+        return ResponseEntity.ok(keyValueList);
+    }
+
 }

@@ -32,8 +32,7 @@
 
     <select id="getMobigenDatasetTagListByDatasetId" resultType="TagList" parameterType="Long">
         /* cetusMobigenDatasetTag.getMobigenDatasetTagListByDatasetId */
-        SELECT CMDT.UID
-              ,CMDT.TAG_UID
+        SELECT CMDT.TAG_UID
               ,CMT.TAG_NM AS TAG_NM
           FROM CETUS_MOBIGEN_DATASET_TAG CMDT
          INNER JOIN CETUS_MOBIGEN_TAG CMT ON CMT.UID = CMDT.TAG_UID

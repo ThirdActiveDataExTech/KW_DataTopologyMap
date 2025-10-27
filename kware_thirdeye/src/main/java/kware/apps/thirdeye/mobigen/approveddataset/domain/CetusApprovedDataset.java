@@ -16,12 +16,18 @@ public class CetusApprovedDataset {
     private Long approverUid;       // 승인자 uid
     private String deleteAt;        // 삭제 여부
     private String targetTpCd;      // 원본 데이터셋 저장 위치
+    private String searchData;      // 필터링을 위한 기본 데이터 정보
 
     public CetusApprovedDataset(SaveApprovedDataset request, Long workplaceUid, Long userUid) {
         this.datasetId = request.getDatasetId();
         this.workplaceUid = workplaceUid;
         this.approverUid = userUid;
         this.targetTpCd = request.getTargetTpCd();
+    }
+
+    public CetusApprovedDataset(Long datasetId, String searchData) {
+        this.datasetId = datasetId;
+        this.searchData = searchData;
     }
 
     public CetusApprovedDataset(Long uid) {

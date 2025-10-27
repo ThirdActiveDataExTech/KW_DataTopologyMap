@@ -6,6 +6,7 @@ import kware.apps.mobigen.cetus.dataset.domain.CetusMobigenDatasetDao;
 import kware.apps.mobigen.cetus.dataset.dto.request.SearchMobigenDataset;
 import kware.apps.mobigen.integration.dto.response.metadata.MetadataView;
 import kware.apps.mobigen.mobigen.dto.response.common.MetadataResultResponse;
+import kware.apps.mobigen.mobigen.dto.response.recommendation.RecommendationsResponse;
 import kware.apps.mobigen.mobigen.dto.response.relation.RelatedMetadataResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -64,5 +65,15 @@ public class CetusMobigenDatasetService {
     @Transactional(readOnly = true)
     public List<RelatedMetadataResponse> findAllRelationMobigenDatasetList(SearchMobigenDataset search) {
         return dao.getAllRelationMobigenDatasetList(search);
+    }
+
+
+    @Transactional(readOnly = true)
+    public int findAllRecommendationMobigenDatasetListCount() {
+        return dao.getAllRecommendationMobigenDatasetListCount();
+    }
+    @Transactional(readOnly = true)
+    public List<RecommendationsResponse> findAllRecommendationMobigenDatasetList(SearchMobigenDataset search) {
+        return dao.getAllRecommendationMobigenDatasetList(search);
     }
 }

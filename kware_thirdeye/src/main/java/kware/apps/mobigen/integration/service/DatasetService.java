@@ -8,30 +8,36 @@ import kware.apps.mobigen.cetus.dataset.dto.request.SearchMobigenDataset;
 import kware.apps.mobigen.cetus.dataset.service.CetusMobigenDatasetService;
 import kware.apps.mobigen.cetus.tag.dto.response.TagList;
 import kware.apps.mobigen.cetus.tag.service.CetusMobigenDatasetTagService;
+import kware.apps.mobigen.integration.dto.request.meta.SearchMetaValues;
 import kware.apps.mobigen.integration.dto.request.metadata.*;
 import kware.apps.mobigen.integration.dto.request.pckg.DownloadPackageDataset;
 import kware.apps.mobigen.integration.dto.request.pckg.SavePackageDataset;
 import kware.apps.mobigen.integration.dto.request.rawdata.*;
+import kware.apps.mobigen.integration.dto.request.recommendation.SearchRecommendationPage;
 import kware.apps.mobigen.integration.dto.request.relation.SearchRelationsPage;
+import kware.apps.mobigen.integration.dto.response.meta.MetaKeyList;
+import kware.apps.mobigen.integration.dto.response.meta.MetaKeyValueList;
 import kware.apps.mobigen.integration.dto.response.metadata.MetadataList;
 import kware.apps.mobigen.integration.dto.response.metadata.MetadataView;
 import kware.apps.mobigen.integration.dto.response.rawdata.RawdataList;
 import kware.apps.mobigen.integration.dto.response.rawdata.RawdataView;
+import kware.apps.mobigen.integration.dto.response.recommendation.RecommendationList;
 import kware.apps.mobigen.integration.dto.response.relation.RelationsList;
-import kware.apps.mobigen.mobigen.dto.request.metadata.DownloadMetadataFileRequest;
-import kware.apps.mobigen.mobigen.dto.request.pckge.PackageExportRequest;
-import kware.apps.mobigen.mobigen.dto.request.rawdata.DownloadRawdataRequest;
-import kware.apps.mobigen.mobigen.dto.request.relation.SearchRelationListRequest;
+import kware.apps.mobigen.mobigen.dto.request.meta.SearchMetaValuesRequest;
+import kware.apps.mobigen.mobigen.dto.request.recommendation.SearchRecommendationListRequest;
 import kware.apps.mobigen.mobigen.dto.response.ApiResponse;
 import kware.apps.mobigen.mobigen.dto.response.common.MetadataResultResponse;
+import kware.apps.mobigen.mobigen.dto.response.meta.MetaKeysListResponse;
+import kware.apps.mobigen.mobigen.dto.response.meta.MetaValuesListResponse;
 import kware.apps.mobigen.mobigen.dto.response.metadata.MetadataFilePreviewResponse;
-import kware.apps.mobigen.mobigen.dto.response.pckge.PackageExportResponse;
 import kware.apps.mobigen.mobigen.dto.response.rawdata.RawdataListItemResponse;
-import kware.apps.mobigen.mobigen.dto.response.rawdata.ViewRawdataResponse;
+import kware.apps.mobigen.mobigen.dto.response.recommendation.RecommendationListResponse;
+import kware.apps.mobigen.mobigen.dto.response.recommendation.RecommendationsResponse;
 import kware.apps.mobigen.mobigen.dto.response.relation.RelatedMetadataResponse;
-import kware.apps.mobigen.mobigen.dto.response.relation.RelationListResponse;
 import kware.apps.mobigen.mobigen.service.MobigenExternalApiService;
-import kware.apps.thirdeye.mobigen.datasetfile.domain.CetusDatasetFile;
+import kware.apps.thirdeye.mobigen.approveddataset.service.CetusApprovedDatasetService2;
+import kware.apps.thirdeye.mobigen.datasetfile.domain.file.CetusDatasetFile;
+import kware.apps.thirdeye.mobigen.datasetfile.dto.request.DeleteDatasetFile;
 import kware.apps.thirdeye.mobigen.datasetfile.dto.request.SearchDatasetFile;
 import kware.apps.thirdeye.mobigen.datasetfile.dto.request.SearchDatasetFilePage;
 import kware.apps.thirdeye.mobigen.datasetfile.dto.request.SearchDatasetFileView;
@@ -48,7 +54,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -62,7 +67,7 @@ import java.util.stream.Collectors;
 * @author       dahyeon
 * @version      1.0.0
 * @date         2025-10-23
-* @summary      { kware 백엔드 -> 모비젠 백엔드 } 접근을 위한 서비스
+* @summary      { kware 백엔드 <-> 모비젠 백엔드 } 접근을 위한 서비스
 **/
 
 @Slf4j
@@ -73,6 +78,7 @@ public class DatasetService {
     private final MobigenExternalApiService apiService;
     private final CetusDatasetFileService datasetFileService;
     private final CetusMobigenRegistrantService registrantService;
+    private final CetusApprovedDatasetService2 approvedDatasetService2;
 
     // 추후 삭제
     private final CetusMobigenDatasetService mobigenDatasetService;
@@ -107,9 +113,7 @@ public class DatasetService {
 
         // 1. save [PACKAGE] data file
         CetusDatasetFile metaFile = request.getPackageFile();
-        metaFile.setMetadataId(metadataId);
-        metaFile.setRawdataId(rawdataId);
-        metaFile.setDataTpCd(DataFileTpCd.PACKAGE.name());
+        metaFile.setPackageDto(metadataId, rawdataId, DataFileTpCd.PACKAGE);
         datasetFileService.processAddFile(metaFile);
 
         // 3. 모비젠 등록자 정보 저장
@@ -143,16 +147,13 @@ public class DatasetService {
 
         // 1. save metadata file
         CetusDatasetFile metaFile = request.getMetaFile();
-        metaFile.setMetadataId(metadataId);
-        metaFile.setDataTpCd(DataFileTpCd.METADATA.name());
+        metaFile.setMetadataDto(metadataId, DataFileTpCd.METADATA);
         datasetFileService.processAddFile(metaFile);
 
         if( realFileData != null && !realFileData.isEmpty() ) {
             // 2. save realdata file
             CetusDatasetFile realFile = request.getRealFile();
-            realFile.setMetadataId(metadataId);
-            realFile.setDataTpCd(DataFileTpCd.RAWDATA.name());
-            realFile.setRawdataId(rawdataId);
+            realFile.setRawdataDto(metadataId, rawdataId, DataFileTpCd.RAWDATA);
             datasetFileService.processAddFile(realFile);
         }
 
@@ -194,6 +195,9 @@ public class DatasetService {
             realFile.setRawdataId(rawdataId);
             datasetFileService.processAddFile(realFile);
         }
+
+        MetadataView metadataView = this.viewMetadata(new SearchMetadataView(Long.toString(datasetId)));
+        approvedDatasetService2.updateDatasetSearchData(datasetId, metadataView.getTitle(), metadataView.getTags());
     }
 
     @Transactional
@@ -212,7 +216,7 @@ public class DatasetService {
             mobigenDatasetService.ifExistDeleteApprovedDataset(Long.parseLong(metadataId));
 
             // 해당 파일 정보도 삭제
-            datasetFileService.processDelFileByMetadataId(metadataId);
+            datasetFileService.processDelFile(DeleteDatasetFile.deleteMetadata(metadataId));
         }
     }
 
@@ -224,7 +228,7 @@ public class DatasetService {
         int deletedCount = apiResponse.getResult().getDeleted_count();*/
 
         for (String rawdataId: request.getRawdataIds()) {
-            datasetFileService.processDelFileByRawdataId(rawdataId);
+            datasetFileService.processDelFile(DeleteDatasetFile.deleteRawdata(rawdataId));
         }
     }
 
@@ -254,13 +258,13 @@ public class DatasetService {
         metadataView.setRegistrantId((registrantView != null) ? registrantView.getRegistrantId() : null);
 
         // 3. 데이터에 대한 파일 등록 정보가 KWARE 포탈 시스템에 있다면 세팅
-        List<CetusDatasetFileView> packagedataFiles = datasetFileService.findDataFile(new SearchDatasetFile(metadataId, null, DataFileTpCd.PACKAGE.name()));
+        List<CetusDatasetFileView> packagedataFiles = datasetFileService.findDataFileList(new SearchDatasetFile(metadataId, null, DataFileTpCd.PACKAGE.name()));
         metadataView.setPackagedataFile((packagedataFiles != null && !packagedataFiles.isEmpty()) ? packagedataFiles.get(0) : null);
 
-        List<CetusDatasetFileView> metadataFiles = datasetFileService.findDataFile(new SearchDatasetFile(metadataId, null, DataFileTpCd.METADATA.name()));
+        List<CetusDatasetFileView> metadataFiles = datasetFileService.findDataFileList(new SearchDatasetFile(metadataId, null, DataFileTpCd.METADATA.name()));
         metadataView.setMetadataFile((metadataFiles != null && !metadataFiles.isEmpty()) ? metadataFiles.get(0) : null);
 
-        List<CetusDatasetFileView> rawdataFiles = datasetFileService.findDataFile(new SearchDatasetFile(metadataId, null, DataFileTpCd.RAWDATA.name()));
+        List<CetusDatasetFileView> rawdataFiles = datasetFileService.findDataFileList(new SearchDatasetFile(metadataId, null, DataFileTpCd.RAWDATA.name()));
         metadataView.setRawdataFiles(rawdataFiles);
 
         // 4. 데이터에 대한 태그 정보 (추후 삭제할 예정)
@@ -394,6 +398,35 @@ public class DatasetService {
         return new Page<>(relationsList, totalCount, new Pageable(limit, page, limit));
     }
 
+    @Transactional(readOnly = true)
+    public Page<RecommendationList> pageRecommendation(SearchRecommendationPage search) {
+
+        SearchRecommendationListRequest pageRequest = new SearchRecommendationListRequest(
+                search.getRecommendationType(), search.getPublisher(), search.getTheme(),
+                search.getPageNumber(), search.getSize(), search.getSortOrder()
+        );
+        ApiResponse<RecommendationListResponse> apiResponse = apiService.findRecommendationDataList(pageRequest);
+        RecommendationListResponse recommendationListResponse = apiResponse.getResult();
+
+        int totalCount =  mobigenDatasetService.findAllRecommendationMobigenDatasetListCount(); //recommendationListResponse.getTotal_count();
+        int page =  search.getPageNumber(); //recommendationListResponse.getPage();
+        int limit = search.getSize(); //recommendationListResponse.getLimit();
+        String metadata_id = null; //recommendationListResponse.getMetadata_id();
+
+        List<RecommendationsResponse> items = mobigenDatasetService.findAllRecommendationMobigenDatasetList(
+                new SearchMobigenDataset(search.getPageNumber(), search.getSize())
+        );
+
+        List<RecommendationList> recommendationList = new ArrayList<>();
+        items.forEach(data -> {
+            Long metadataId = data.getUid();
+            RecommendationList recommendationDto = new RecommendationList(Long.toString(metadataId));
+            recommendationDto.setRecommendationResponse(data);
+            recommendationList.add(recommendationDto);
+        });
+        return new Page<>(recommendationList, totalCount, new Pageable(limit, page, limit));
+    }
+
     @Transactional
     public ResponseEntity downloadPackage(DownloadPackageDataset request) {
 
@@ -422,5 +455,25 @@ public class DatasetService {
         apiService.downloadRawdata(downloadRequest);*/
 
         return datasetFileService.downloadMetaFile(request.getRawdataFileId(), req);
+    }
+
+    @Transactional(readOnly = true)
+    public MetaKeyList findMetaKeyList() {
+        /*ApiResponse<MetaKeysListResponse> apiResponse = apiService.findMetaKeysList();
+        MetaKeysListResponse result = apiResponse.getResult();
+        List<String> filterList = result.getFilters();
+        return new MetaKeyList(filterList);*/
+        return new MetaKeyList(new ArrayList<>());
+    }
+
+    @Transactional(readOnly = true)
+    public MetaKeyValueList findMetaKeyValueList(SearchMetaValues search) {
+        SearchMetaValuesRequest searchKeyValueRequest = new SearchMetaValuesRequest(search.getKey());
+        ApiResponse<MetaValuesListResponse> apiResponse = apiService.findMetaValuesList(searchKeyValueRequest);
+        MetaValuesListResponse valuesListResponse = apiResponse.getResult();
+        String filter = valuesListResponse.getFilter();
+        List<String> values = valuesListResponse.getValues();
+//        return new MetaKeyValueList(filter, values);
+        return new MetaKeyValueList();
     }
 }

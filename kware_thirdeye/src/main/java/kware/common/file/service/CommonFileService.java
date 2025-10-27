@@ -58,10 +58,6 @@ public class CommonFileService {
         return resList;
     }
 
-    public List<CommonFile> findCommonFileListByFileUid(Long fileUid) {
-        return dao.getCommonFileListByFileUid(fileUid);
-    }
-
     public boolean ifFileIdExist(HttpServletRequest req) {
         return !req.getParameter("fileId").equals("null")
                 && !req.getParameter("fileId").equals("undefined")
@@ -198,36 +194,6 @@ public class CommonFileService {
 
         if (bean.getFileDel() != null) {
             for (CommonFile f : bean.getFileDel()) {
-                f.setFileId(f.getFileId());
-                dao.delete(f); //논리적인 삭제: 물리적인 파일을 삭제하지 않는다.
-            }
-        }
-
-        return fileUid;
-    }
-
-    @Transactional
-    public <T extends FileBean> Long processFile2(CommonFile[] fileAdd, CommonFile[] fileDel, SessionUserInfo user, Long fileUid) {
-        if (fileAdd != null) {
-            for (CommonFile f : fileAdd) {
-                if(fileUid == null) {
-                    fileUid = this.generateUid();
-                }
-                f.setRegId(user.getUserId());
-                f.setFileUid(fileUid);
-                try {
-                    f = cetusTusFileService.moveToDefaultStorage(f);
-                } catch (IOException e) {
-                    log.error(e.toString(), e);
-                    continue;
-                }
-                f.setSaved(CommonFileState.Y.name());
-                dao.insert(f);
-            }
-        }
-
-        if (fileDel != null) {
-            for (CommonFile f : fileDel) {
                 f.setFileId(f.getFileId());
                 dao.delete(f); //논리적인 삭제: 물리적인 파일을 삭제하지 않는다.
             }

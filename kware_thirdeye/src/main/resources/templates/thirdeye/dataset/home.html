@@ -150,13 +150,13 @@
 
     // 뷰 버튼 클릭
     $(document).on('click', '.detail-btn', function(e) {
-      const uid = $(this).data('uid');
+      const uid = $(this).data('id');
       window.location.href = `/portal/detail/${uid}`;
     });
 
     // 좋아요 버튼 클릭
     $(document).on('click', '.like-btn', function(e) {
-      homeJS.likeClickEvent(this);
+      Common.likeClickEvent(this);
     });
 
   </script>

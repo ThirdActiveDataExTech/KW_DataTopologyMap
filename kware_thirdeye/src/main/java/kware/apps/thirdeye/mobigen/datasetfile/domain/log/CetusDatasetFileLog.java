@@ -1,4 +1,4 @@
-package kware.apps.thirdeye.mobigen.datasetfile.domain;
+package kware.apps.thirdeye.mobigen.datasetfile.domain.log;
 
 import lombok.AccessLevel;
 import lombok.Getter;

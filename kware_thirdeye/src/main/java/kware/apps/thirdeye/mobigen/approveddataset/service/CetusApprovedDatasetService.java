@@ -3,18 +3,14 @@ package kware.apps.thirdeye.mobigen.approveddataset.service;
 import cetus.bean.Page;
 import cetus.bean.Pageable;
 import cetus.user.UserUtil;
-import kware.apps.mobigen.cetus.dataset.service.CetusMobigenDatasetService;
+import kware.apps.mobigen.cetus.tag.dto.response.TagList;
 import kware.apps.mobigen.integration.dto.request.metadata.SearchMetadataView;
 import kware.apps.mobigen.integration.dto.response.metadata.MetadataView;
 import kware.apps.mobigen.integration.service.DatasetService;
 import kware.apps.thirdeye.mobigen.approveddataset.domain.ApprovedDatasetTargetTpCd;
 import kware.apps.thirdeye.mobigen.approveddataset.domain.CetusApprovedDataset;
 import kware.apps.thirdeye.mobigen.approveddataset.domain.CetusApprovedDatasetDao;
-import kware.apps.thirdeye.mobigen.approveddataset.dto.request.ApprovedDatasetSearch;
-import kware.apps.thirdeye.mobigen.approveddataset.dto.request.DeleteApprovedDatasets;
-import kware.apps.thirdeye.mobigen.approveddataset.dto.request.HomeDatasetSearch;
-import kware.apps.thirdeye.mobigen.approveddataset.dto.request.SaveApprovedDataset;
-import kware.apps.thirdeye.mobigen.approveddataset.dto.response.ApprovedDatasetIdList;
+import kware.apps.thirdeye.mobigen.approveddataset.dto.request.*;
 import kware.apps.thirdeye.mobigen.approveddataset.dto.response.ApprovedDatasetList;
 import kware.apps.thirdeye.mobigen.approveddataset.dto.response.ApprovedDatasetView;
 import kware.apps.thirdeye.mobigen.approveddataset.dto.response.HomeDatasetList;
@@ -35,8 +31,8 @@ import java.util.List;
 public class CetusApprovedDatasetService {
 
     private final CetusApprovedDatasetDao dao;
+    private final CetusApprovedDatasetService2 approvedDatasetService2;
     private final CetusDatasetUiService datasetUiService;
-    private final CetusMobigenDatasetService mobigenDatasetService;
 
     private final CetusDatasetCategoryService datasetCategoryService;
 
@@ -52,6 +48,7 @@ public class CetusApprovedDatasetService {
     @Transactional(readOnly = true)
     public Page<ApprovedDatasetList> findDatasetPage( ApprovedDatasetSearch search, Pageable pageable ) {
         search.setWorkplaceUid(UserUtil.getUserWorkplaceUid());
+        search.setUserUid(UserUtil.getUser().getUid());
         Page<ApprovedDatasetList> page = dao.page("getDatasetPage", "getDatasetPageCount", search, pageable);
         if(page.getList() != null && !page.getList().isEmpty()) {
             page.getList().forEach(dataset -> {
@@ -77,35 +74,6 @@ public class CetusApprovedDatasetService {
     }
 
     /**
-     * @method      findDatasetList
-     * @author      dahyeon
-     * @date        2025-10-01
-     * @deacription [KWARE] 승인된 데이터셋 목록 조회 (리스트)
-     *                  => 각 승인된 datasetId 값을 가지고 모비젠 측의 API를 통해 데이터셋 상세 정보 조회
-     **/
-    @Transactional(readOnly = true)
-    public List<ApprovedDatasetList> findDatasetList(ApprovedDatasetSearch search) {
-        search.setWorkplaceUid(UserUtil.getUserWorkplaceUid());
-        List<ApprovedDatasetList> list = dao.getDatasetList(search);
-        if(!list.isEmpty()) {
-            list.forEach(dataset -> {
-                // (1) 각 승인관리 중인 데이터셋들의 상세 정보는 모비젠 측에서 가져온다.
-                Long datasetId = dataset.getDatasetId();
-                MetadataView metadataView = datasetService.viewMetadata(new SearchMetadataView(Long.toString(datasetId)));
-                if (metadataView != null) {
-                    dataset.setMetadataView(metadataView);
-                }
-                // (2) 원본 데이터셋 저장 위치 정보
-                if(dataset.getTargetTpCd() != null) {
-                    ApprovedDatasetTargetTpCd targetTpCd = ApprovedDatasetTargetTpCd.valueOf(dataset.getTargetTpCd());
-                    dataset.setTargetTpCdNm(targetTpCd.getDescription());
-                }
-            });
-        }
-        return list;
-    }
-
-    /**
      * @method      approveDataset
      * @author      dahyeon
      * @date        2025-10-01
@@ -113,6 +81,7 @@ public class CetusApprovedDatasetService {
     **/
     @Transactional
     public void approveDataset(SaveApprovedDataset request) {
+        
         // 1. 모비젠 데이터셋에서 가져온 데이터 정보 진열/승인
         CetusApprovedDataset bean = new CetusApprovedDataset(request, UserUtil.getUserWorkplaceUid(), UserUtil.getUser().getUid());
         dao.insert(bean);
@@ -123,8 +92,15 @@ public class CetusApprovedDatasetService {
                 ? datasetCategoryService.saveDatasetCategory(request.getCategory())
                 : request.getCategory().getUid();
 
-        // 2. 진열/승인된 데이터에 대한 UI 정보 저장 + 카테고리
+        // 3. 진열/승인된 데이터에 대한 UI 정보 저장 + 카테고리
         datasetUiService.saveDatasetUi(approvedDatasetUid, categoryUid, request);
+        
+        // 4. 데이터셋에 대한 필터링 데이터 조회 + 저장
+        // => todo 추후 수정
+        MetadataView metadataView = datasetService.viewMetadata(new SearchMetadataView(Long.toString(request.getDatasetId())));
+        String title = metadataView.getTitle();
+        List<TagList> tags = metadataView.getTags();
+        approvedDatasetService2.updateDatasetSearchData(request.getDatasetId(), title, tags);
     }
 
     /**
@@ -135,7 +111,7 @@ public class CetusApprovedDatasetService {
      *              => 중복되는 데이터셋 진열 등록을 방지하기 위함
     **/
     @Transactional(readOnly = true)
-    public List<ApprovedDatasetIdList> findApprovedDatasetIdList() {
+    public List<Long> findApprovedDatasetIdList() {
         return dao.getApprovedDatasetIdList(UserUtil.getUserWorkplaceUid());
     }
     
@@ -153,7 +129,7 @@ public class CetusApprovedDatasetService {
     @Transactional(readOnly = true)
     public ApprovedDatasetView findApprovedDatasetView(Long approvedUid) {
         // 1. 진열 등록된 데이터셋 정보
-        ApprovedDatasetView approvedDatasetView = dao.getApprovedDatasetView(approvedUid);
+        ApprovedDatasetView approvedDatasetView = dao.getApprovedDatasetView(new SearchApprovedDatasetView(approvedUid, UserUtil.getUser().getUid()));
         if(approvedDatasetView != null) {
 
             // 2. 진열 등록된 데이터셋 UI 정보
@@ -197,6 +173,7 @@ public class CetusApprovedDatasetService {
     @Transactional(readOnly = true)
     public List<HomeDatasetList> findHomeDatasetList(HomeDatasetSearch search) {
         search.setWorkplaceUid(UserUtil.getUserWorkplaceUid());
+        search.setUserUid(UserUtil.getUser().getUid());
         List<HomeDatasetList> homeDatasetList = dao.getHomeDatasetList(search);
         homeDatasetList.forEach(home -> {
             // 1. 진열관리 중인 데이터셋에 대한 상세 정보 > 모비젠 측을 통한 조회

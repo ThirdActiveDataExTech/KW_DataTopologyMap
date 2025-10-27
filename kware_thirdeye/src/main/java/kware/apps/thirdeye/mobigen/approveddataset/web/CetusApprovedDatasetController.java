@@ -2,7 +2,6 @@ package kware.apps.thirdeye.mobigen.approveddataset.web;
 
 
 import kware.apps.thirdeye.mobigen.approveddataset.domain.ApprovedDatasetTargetTpCd;
-import kware.apps.thirdeye.mobigen.approveddataset.dto.response.ApprovedDatasetIdList;
 import kware.apps.thirdeye.mobigen.approveddataset.dto.response.ApprovedDatasetView;
 import kware.apps.thirdeye.mobigen.approveddataset.service.CetusApprovedDatasetService;
 import kware.apps.thirdeye.mobigen.mainui.domain.DatasetMainUiType;
@@ -17,7 +16,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Controller
 @RequiredArgsConstructor
@@ -46,7 +44,7 @@ public class CetusApprovedDatasetController {
 
         // 2. 이미 진열등록/관리 중인 데이터셋 ID 목록
         // => 중복 진열등록 방지
-        List<Long> ids = service.findApprovedDatasetIdList().stream().map(ApprovedDatasetIdList::getDatasetId).collect(Collectors.toList());
+        List<Long> ids = service.findApprovedDatasetIdList();
         model.addAttribute("approvedIds", ids);
 
         return "admin/approved/save";

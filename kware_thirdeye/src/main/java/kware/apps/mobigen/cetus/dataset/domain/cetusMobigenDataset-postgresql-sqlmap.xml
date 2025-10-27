@@ -40,6 +40,25 @@
 
 
 
+    <select id="getAllRecommendationMobigenDatasetList" resultType="RecommendationsResponse" parameterType="SearchMobigenDataset">
+        /* cetusMobigenDataset.getAllRecommendationMobigenDatasetList */
+        SELECT CMD.UID
+              ,CMD.TITLE
+              ,TO_CHAR(CMD.REG_DT, 'YYYY-MM-DD HH:MM') AS REG_DT
+          FROM CETUS_MOBIGEN_DATASET CMD
+         WHERE CMD.DELETE_AT = 'N'
+         ORDER BY CMD.REG_DT DESC
+         OFFSET #{offset} LIMIT #{limit}
+    </select>
+    <select id="getAllRecommendationMobigenDatasetListCount" resultType="int">
+        /* cetusMobigenDataset.getAllRecommendationMobigenDatasetListCount */
+        SELECT COUNT(*)
+          FROM CETUS_MOBIGEN_DATASET CMD
+         WHERE CMD.DELETE_AT = 'N'
+    </select>
+
+
+
 
     <insert id="insert" parameterType="CetusMobigenDataset" useGeneratedKeys="true" keyProperty="uid">
         /* cetusMobigenDataset.insert */

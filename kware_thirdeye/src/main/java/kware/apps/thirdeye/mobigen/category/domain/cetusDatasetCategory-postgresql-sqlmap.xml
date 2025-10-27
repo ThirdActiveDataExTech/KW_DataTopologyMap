@@ -65,7 +65,9 @@
           FROM CETUS_DATASET_CATEGORY CDC
           LEFT JOIN CETUS_USER CU ON CU.UID = CDC.REG_UID
           LEFT JOIN CETUS_DATASET_UI CDU ON CDU.CATEGORY_UID = CDC.UID
+          LEFT JOIN CETUS_APPROVED_DATASET CAD ON CAD.UID = CDU.APPROVED_DATASET_UID
          WHERE CDC.WORKPLACE_UID = #{workplaceUid}
+           AND CAD.DELETE_AT = 'N'
         <if test="@Ognl@isNotEmpty(browseText)">
            AND (CU.USER_NM LIKE '%' || #{browseText} || '%' OR CDC.CATEGORY_NM LIKE '%' || #{browseText} || '%')
         </if>
@@ -102,7 +104,9 @@
           FROM CETUS_DATASET_CATEGORY CDC
           LEFT JOIN CETUS_USER CU ON CU.UID = CDC.REG_UID
           LEFT JOIN CETUS_DATASET_UI CDU ON CDU.CATEGORY_UID = CDC.UID
+          LEFT JOIN CETUS_APPROVED_DATASET CAD ON CAD.UID = CDU.APPROVED_DATASET_UID
          WHERE CDC.WORKPLACE_UID = #{workplaceUid}
+           AND CAD.DELETE_AT = 'N'
         <if test="@Ognl@isNotEmpty(browseText)">
            AND (CU.USER_NM LIKE '%' || #{browseText} || '%' OR CDC.CATEGORY_NM LIKE '%' || #{browseText} || '%')
         </if>
