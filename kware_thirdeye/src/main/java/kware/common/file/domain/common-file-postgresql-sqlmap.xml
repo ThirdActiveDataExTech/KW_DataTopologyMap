@@ -143,8 +143,12 @@
         /* file.findFileInfo */
         SELECT FILE_UID
               ,FILE_ID
-              ,FILE_PATH
               ,ORG_FILE_NM
+              ,FILE_PATH
+              ,FILE_URL
+              ,FILE_SIZE
+              ,FILE_TYPE
+              ,EXTENSION
           FROM CETUS_FILE
          WHERE FILE_ID = #{fileId}
     </select>

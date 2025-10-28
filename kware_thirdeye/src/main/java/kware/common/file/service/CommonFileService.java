@@ -29,6 +29,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.util.List;
 
 @Slf4j
@@ -61,6 +62,7 @@ public class CommonFileService {
     public boolean ifFileIdExist(HttpServletRequest req) {
         return !req.getParameter("fileId").equals("null")
                 && !req.getParameter("fileId").equals("undefined")
+                && !req.getParameter("fileId").equals(null)
                 && req.getParameter("fileId").length() != 0;
     }
 
@@ -71,21 +73,48 @@ public class CommonFileService {
 
             // 1. {fileId} -> 파일 정보
             CommonFile commonFile = dao.findFileInfo(new CommonFile(fileId));
-            if (commonFile == null || !new File(commonFile.getFilePath()).exists()) {
+            if (commonFile == null) {
+                return ResponseEntity.notFound().build();
+            }
+
+            File fileObj = new File(commonFile.getFilePath());
+            if (!fileObj.exists()) {
                 return ResponseEntity.notFound().build();
             }
 
             // 2.{file} contentType
-            File fileObj = new File(commonFile.getFilePath());
             String contentType = commonFile.getFileType();
             if (contentType == null || contentType.isBlank()) {
-                contentType = "application/octet-stream";
+                try {
+                    contentType = Files.probeContentType(fileObj.toPath());
+                } catch (Exception ignored) {}
+
+                if (contentType == null) {
+                    String ext = commonFile.getExtension().toLowerCase();
+                    switch (ext) {
+                        case "png":
+                            contentType = "image/png";
+                            break;
+                        case "jpg":
+                        case "jpeg":
+                            contentType = "image/jpeg";
+                            break;
+                        case "gif":
+                            contentType = "image/gif";
+                            break;
+                        case "bmp":
+                            contentType = "image/bmp";
+                            break;
+                        default:
+                            contentType = "application/octet-stream";
+                    }
+                }
             }
 
             // 3. return
             return ResponseEntity.ok()
                     .contentType(MediaType.parseMediaType(contentType))
-                    .header(HttpHeaders.CONTENT_DISPOSITION, "inline")
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + fileObj.getName() + "\"")
                     .body(new FileSystemResource(fileObj));
         }
     }
