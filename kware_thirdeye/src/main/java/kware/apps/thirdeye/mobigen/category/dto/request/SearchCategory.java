@@ -11,6 +11,10 @@ public class SearchCategory {
     private String categoryNm;
     private Long workplaceUid;
 
+    public SearchCategory(Long workplaceUid) {
+        this.workplaceUid = workplaceUid;
+    }
+
     public SearchCategory(String categoryNm, Long workplaceUid) {
         this.categoryNm = categoryNm;
         this.workplaceUid = workplaceUid;

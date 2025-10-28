@@ -3,7 +3,6 @@ package kware.apps.thirdeye.mobigen.category.service;
 import kware.apps.thirdeye.mobigen.category.dto.request.SearchCategory;
 import kware.apps.thirdeye.mobigen.category.dto.request.SearchUsingCategory;
 import kware.apps.thirdeye.mobigen.category.dto.response.CategoryList;
-import kware.apps.thirdeye.mobigen.category.dto.response.CategoryListWithCount;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,20 +29,6 @@ public class CetusDatasetCategoryRestController {
     @GetMapping("/list")
     public ResponseEntity findDatasetCategoryList(SearchCategory search) {
         List<CategoryList> list = service.findDatasetCategoryList(search);
-        return ResponseEntity.ok(list);
-    }
-
-    /**
-     *
-     * 진열등록/관리되는 데이터셋 목록 조회시 검색용으로 사용 + 카테고리 사용 개수 함께 조회
-     *
-     * @api         [GET] /api/portal/dataset-category/list-count
-     * @author      dahyeon
-     * @date        2025-10-15
-     **/
-    @GetMapping("/list-count")
-    public ResponseEntity findDatasetCategoryListWithCount(SearchCategory search) {
-        List<CategoryListWithCount> list = service.findDatasetCategoryListWithCount(search);
         return ResponseEntity.ok(list);
     }
 

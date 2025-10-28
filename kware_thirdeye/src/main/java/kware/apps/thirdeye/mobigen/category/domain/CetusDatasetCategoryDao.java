@@ -5,7 +5,6 @@ import kware.apps.thirdeye.mobigen.category.dto.request.CloneCategory;
 import kware.apps.thirdeye.mobigen.category.dto.request.SearchCategory;
 import kware.apps.thirdeye.mobigen.category.dto.request.SearchUsingCategory;
 import kware.apps.thirdeye.mobigen.category.dto.response.CategoryList;
-import kware.apps.thirdeye.mobigen.category.dto.response.CategoryListWithCount;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -19,10 +18,6 @@ public class CetusDatasetCategoryDao extends SuperDao<CetusDatasetCategory> {
 
     public List<CategoryList> getDatasetCategoryList(SearchCategory search) {
         return selectList("getDatasetCategoryList", search);
-    }
-
-    public List<CategoryListWithCount> getDatasetCategoryListWithCount(SearchCategory search) {
-        return selectList("getDatasetCategoryListWithCount", search);
     }
 
     public List<CategoryList> getDatasetCategoryUsingList(SearchUsingCategory search) {

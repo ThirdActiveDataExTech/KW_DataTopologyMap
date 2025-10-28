@@ -2,12 +2,14 @@ package kware.apps.mobigen.integration.service;
 
 import cetus.bean.Page;
 import cetus.bean.Pageable;
+import cetus.user.UserUtil;
 import cetus.util.StringUtil;
 import kware.apps.mobigen.cetus.dataset.domain.CetusMobigenDataset;
 import kware.apps.mobigen.cetus.dataset.dto.request.SearchMobigenDataset;
 import kware.apps.mobigen.cetus.dataset.service.CetusMobigenDatasetService;
 import kware.apps.mobigen.cetus.tag.dto.response.TagList;
 import kware.apps.mobigen.cetus.tag.service.CetusMobigenDatasetTagService;
+import kware.apps.mobigen.cetus.tag.service.CetusMobigenTagService;
 import kware.apps.mobigen.integration.dto.request.meta.SearchMetaValues;
 import kware.apps.mobigen.integration.dto.request.metadata.*;
 import kware.apps.mobigen.integration.dto.request.pckg.DownloadPackageDataset;
@@ -23,12 +25,9 @@ import kware.apps.mobigen.integration.dto.response.rawdata.RawdataList;
 import kware.apps.mobigen.integration.dto.response.rawdata.RawdataView;
 import kware.apps.mobigen.integration.dto.response.recommendation.RecommendationList;
 import kware.apps.mobigen.integration.dto.response.relation.RelationsList;
-import kware.apps.mobigen.mobigen.dto.request.meta.SearchMetaValuesRequest;
 import kware.apps.mobigen.mobigen.dto.request.recommendation.SearchRecommendationListRequest;
 import kware.apps.mobigen.mobigen.dto.response.ApiResponse;
 import kware.apps.mobigen.mobigen.dto.response.common.MetadataResultResponse;
-import kware.apps.mobigen.mobigen.dto.response.meta.MetaKeysListResponse;
-import kware.apps.mobigen.mobigen.dto.response.meta.MetaValuesListResponse;
 import kware.apps.mobigen.mobigen.dto.response.metadata.MetadataFilePreviewResponse;
 import kware.apps.mobigen.mobigen.dto.response.rawdata.RawdataListItemResponse;
 import kware.apps.mobigen.mobigen.dto.response.recommendation.RecommendationListResponse;
@@ -36,6 +35,9 @@ import kware.apps.mobigen.mobigen.dto.response.recommendation.RecommendationsRes
 import kware.apps.mobigen.mobigen.dto.response.relation.RelatedMetadataResponse;
 import kware.apps.mobigen.mobigen.service.MobigenExternalApiService;
 import kware.apps.thirdeye.mobigen.approveddataset.service.CetusApprovedDatasetService2;
+import kware.apps.thirdeye.mobigen.category.dto.request.SearchCategory;
+import kware.apps.thirdeye.mobigen.category.dto.response.CategoryList;
+import kware.apps.thirdeye.mobigen.category.service.CetusDatasetCategoryService;
 import kware.apps.thirdeye.mobigen.datasetfile.domain.file.CetusDatasetFile;
 import kware.apps.thirdeye.mobigen.datasetfile.dto.request.DeleteDatasetFile;
 import kware.apps.thirdeye.mobigen.datasetfile.dto.request.SearchDatasetFile;
@@ -57,9 +59,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -82,7 +82,9 @@ public class DatasetService {
 
     // 추후 삭제
     private final CetusMobigenDatasetService mobigenDatasetService;
-    private final CetusMobigenDatasetTagService tagService;
+    private final CetusMobigenDatasetTagService datasetTagService;
+    private final CetusMobigenTagService tagService;
+    private final CetusDatasetCategoryService categoryService;
 
     private Path convertToPath(MultipartFile file) throws IOException {
         if (file == null || file.isEmpty()) {
@@ -158,7 +160,7 @@ public class DatasetService {
         }
 
         // 3. save tag
-        tagService.saveDatasetTag(request.getTags(), datasetId);
+        datasetTagService.saveDatasetTag(request.getTags(), datasetId);
 
         // 4. 모비젠 등록자 정보 저장
         registrantService.saveMobigenRegistrant(datasetId);
@@ -179,7 +181,7 @@ public class DatasetService {
         mobigenDatasetService.update(bean);
 
         // >> save tag
-        tagService.saveDatasetTag(request.getTags(), datasetId);
+        datasetTagService.saveDatasetTag(request.getTags(), datasetId);
 
 
         // 2. if not empty upload real-file-data
@@ -268,7 +270,7 @@ public class DatasetService {
         metadataView.setRawdataFiles(rawdataFiles);
 
         // 4. 데이터에 대한 태그 정보 (추후 삭제할 예정)
-        List<TagList> tags = tagService.findMobigenDatasetTagListByDatasetUid(Long.parseLong(metadataId));
+        List<TagList> tags = datasetTagService.findMobigenDatasetTagListByDatasetUid(Long.parseLong(metadataId));
         metadataView.setTags(tags);
 
         return metadataView;
@@ -463,17 +465,34 @@ public class DatasetService {
         MetaKeysListResponse result = apiResponse.getResult();
         List<String> filterList = result.getFilters();
         return new MetaKeyList(filterList);*/
-        return new MetaKeyList(new ArrayList<>());
+        return new MetaKeyList(Arrays.asList("category", "tag"));
     }
 
     @Transactional(readOnly = true)
     public MetaKeyValueList findMetaKeyValueList(SearchMetaValues search) {
-        SearchMetaValuesRequest searchKeyValueRequest = new SearchMetaValuesRequest(search.getKey());
+        /*SearchMetaValuesRequest searchKeyValueRequest = new SearchMetaValuesRequest(search.getKey());
         ApiResponse<MetaValuesListResponse> apiResponse = apiService.findMetaValuesList(searchKeyValueRequest);
-        MetaValuesListResponse valuesListResponse = apiResponse.getResult();
-        String filter = valuesListResponse.getFilter();
-        List<String> values = valuesListResponse.getValues();
-//        return new MetaKeyValueList(filter, values);
-        return new MetaKeyValueList();
+        MetaValuesListResponse valuesListResponse = apiResponse.getResult();*/
+        String filter = search.getKey(); //valuesListResponse.getFilter();
+        List<String> values = new ArrayList<>(); //valuesListResponse.getValues();
+
+        Map<Long, String> maps = new HashMap<>();
+        MetaKeyValueList valueList = new MetaKeyValueList(filter);
+
+        if("tag".equals(search.getKey())) {
+            List<TagList> mobigenTagList = tagService.findMobigenTagList();
+            maps = mobigenTagList.stream()
+                    .collect(Collectors.toMap(TagList::getTagUid, TagList::getTagNm));
+            valueList.setMaps(maps);
+
+        } else if("category".equals(search.getKey())) {
+            List<CategoryList> categoryList = categoryService.findDatasetCategoryList(new SearchCategory(UserUtil.getUserWorkplaceUid()));
+            maps = categoryList.stream()
+                    .collect(Collectors.toMap(CategoryList::getCategoryUid, CategoryList::getCategoryNm));
+            valueList.setMaps(maps);
+
+        }
+
+        return valueList;
     }
 }

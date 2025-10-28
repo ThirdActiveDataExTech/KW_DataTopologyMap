@@ -15,24 +15,6 @@
          ORDER BY CDC.CATEGORY_NM
     </select>
 
-    <select id="getDatasetCategoryListWithCount" parameterType="SearchCategory" resultType="CategoryListWithCount">
-        /* cetusDatasetCategory.getDatasetCategoryListgetDatasetCategoryListWithCount */
-        SELECT CDC.UID AS CATEGORY_UID
-              ,CDC.CATEGORY_NM
-              ,COUNT(CDU.APPROVED_DATASET_UID) FILTER (
-                   WHERE CDU.SHOW_AT = 'Y' AND CAD.DELETE_AT = 'N'
-              ) AS CATEGORY_COUNT
-          FROM CETUS_DATASET_CATEGORY CDC
-          LEFT JOIN CETUS_DATASET_UI CDU ON CDU.CATEGORY_UID = CDC.UID
-          LEFT JOIN CETUS_APPROVED_DATASET CAD ON CAD.UID = CDU.APPROVED_DATASET_UID AND CAD.WORKPLACE_UID = CDC.WORKPLACE_UID
-         WHERE CDC.WORKPLACE_UID = #{workplaceUid}
-        <if test="@Ognl@isNotEmpty(categoryNm)">
-           AND CDC.CATEGORY_NM LIKE '%' || #{categoryNm} || '%'
-        </if>
-         GROUP BY CDC.UID, CDC.CATEGORY_NM
-         ORDER BY CDC.CATEGORY_NM;
-    </select>
-
     <insert id="insert" parameterType="CetusDatasetCategory" useGeneratedKeys="true" keyProperty="uid">
         /* cetusDatasetCategory.insert */
         INSERT INTO CETUS_DATASET_CATEGORY (

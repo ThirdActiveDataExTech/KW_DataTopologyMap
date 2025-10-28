@@ -29,19 +29,19 @@ public class PortalController {
 
     @GetMapping("/home")
     public String home(Model model) {
-        menuNavigationManager.renderingPage("/portal/home", "HOME", true, model);
+        menuNavigationManager.renderingPage("/portal/home", "데이터셋홈", true, model);
         return "thirdeye/dataset/home";
     }
 
     @GetMapping("/list")
     public String list(Model model) {
-        menuNavigationManager.renderingPage("/portal/list", "LIST", true, model);
+        menuNavigationManager.renderingPage("/portal/list", "데이터셋 목록", true, model);
         return "thirdeye/dataset/list";
     }
 
     @GetMapping("/detail/{approvedUid}")
     public String openDetail(@PathVariable("approvedUid") Long approvedUid, Model model) {
-        menuNavigationManager.renderingPage("/portal/list", "Detail", false, model);
+        menuNavigationManager.renderingPage("/portal/list", "데이터셋 상세", false, model);
 
         ApprovedDatasetView dataset = datasetService.findApprovedDatasetView(approvedUid);
         model.addAttribute("dataset", dataset);

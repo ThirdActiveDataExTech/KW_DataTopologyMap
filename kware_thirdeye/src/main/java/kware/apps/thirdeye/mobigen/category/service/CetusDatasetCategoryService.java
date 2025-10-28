@@ -4,14 +4,11 @@ package kware.apps.thirdeye.mobigen.category.service;
 import cetus.bean.Page;
 import cetus.bean.Pageable;
 import cetus.user.UserUtil;
-import groovy.lang.Delegate;
-import io.micrometer.core.instrument.search.Search;
 import kware.apps.thirdeye.mobigen.category.domain.CetusDatasetCategory;
 import kware.apps.thirdeye.mobigen.category.domain.CetusDatasetCategoryDao;
 import kware.apps.thirdeye.mobigen.category.dto.request.*;
 import kware.apps.thirdeye.mobigen.category.dto.response.CategoryList;
 import kware.apps.thirdeye.mobigen.category.dto.response.CategoryListPage;
-import kware.apps.thirdeye.mobigen.category.dto.response.CategoryListWithCount;
 import kware.apps.thirdeye.mobigen.datasetui.service.CetusDatasetUiService2;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -30,12 +27,6 @@ public class CetusDatasetCategoryService {
     public List<CategoryList> findDatasetCategoryList(SearchCategory search) {
         search.setWorkplaceUid(UserUtil.getUserWorkplaceUid());
         return dao.getDatasetCategoryList(search);
-    }
-
-    @Transactional(readOnly = true)
-    public List<CategoryListWithCount> findDatasetCategoryListWithCount(SearchCategory search) {
-        search.setWorkplaceUid(UserUtil.getUserWorkplaceUid());
-        return dao.getDatasetCategoryListWithCount(search);
     }
 
     @Transactional(readOnly = true)
