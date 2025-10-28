@@ -465,7 +465,7 @@ public class DatasetService {
         MetaKeysListResponse result = apiResponse.getResult();
         List<String> filterList = result.getFilters();
         return new MetaKeyList(filterList);*/
-        return new MetaKeyList(Arrays.asList("category", "tag"));
+        return new MetaKeyList(Arrays.asList("category", "tag", "date"));
     }
 
     @Transactional(readOnly = true)

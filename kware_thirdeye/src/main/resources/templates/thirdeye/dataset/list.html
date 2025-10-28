@@ -57,31 +57,31 @@
 
                 <!-- col-lg-9 //-->
                 <div class="col-lg-9">
+
                     <div class="page-topbar-wrapper mb-40">
                         <div class="page-topbar-left">
                             <div class="showing-item">
-                                <span id="showing-card">
-                                    <!-- Showing 1–12 of 60 results -->
-                                </span>
-                                <span id="showing-list">
-                                    <!-- Showing 1–12 of 60 results -->
-                                </span>
+                                <span id="showing-card"> <!-- Showing 1–12 of 60 results --> </span>
+                                <span id="showing-list"> <!-- Showing 1–12 of 60 results --> </span>
                             </div>
                         </div>
                         <div class="page-topbar-right">
                             <div class="page-view-mode nav" role="tablist">
-                                <a class="active" href="#shop-1" data-bs-toggle="tab" aria-selected="true" tabindex="-1" role="tab" onclick="listJS.fnTab('card')">
+                                <a class="active" href="#shop-1" data-bs-toggle="tab" aria-selected="true"
+                                   tabindex="-1" role="tab" onclick="listJS.fnTab('card')">
                                     <i class=" ti-layout-grid3 "></i>
                                 </a>
-                                <a href="#shop-2" data-bs-toggle="tab" aria-selected="false" role="tab" onclick="listJS.fnTab('list')">
+                                <a href="#shop-2" data-bs-toggle="tab" aria-selected="false"
+                                   role="tab" onclick="listJS.fnTab('list')">
                                     <i class=" ti-view-list-alt "></i>
                                 </a>
                             </div>
                         </div>
                     </div>
+
                     <div class="page-bottom-area">
                         <div class="tab-content jump">
-                            <div id="shop-1" class="tab-pane active" role="tabpanel">
+                            <div id="shop-1" class="tab-pane aos-init aos-animate active" data-aos="fade-up" data-aos-delay="200" role="tabpanel">
                                 <div class="row">
                                     <!-- card view -->
                                 </div>
@@ -89,7 +89,7 @@
                                     <!-- card pagination -->
                                 </div>
                             </div>
-                            <div id="shop-2" class="tab-pane" role="tabpanel">
+                            <div id="shop-2" class="tab-pane aos-init aos-animate" data-aos="fade-up" data-aos-delay="200" role="tabpanel">
                                 <!-- list view -->
                                 <!-- list pagination -->
                             </div>
@@ -113,15 +113,17 @@
                         </div>
                     </div>
 
-                    <div class="sidebar-wrapper mb-40">
+                    <div class="sidebar-wrapper mb-40" id="sidebar-wrapper-div">
+
                         <div id="sidebar-widgets-container1">
-                            <div class="sidebar-widget sidebar-widget-border mb-40 pb-35" data-aos="fade-up" data-aos-delay="200">
+                            <div class="sidebar-widget sidebar-widget-border mb-40 pb-35" data-aos="fade-up" data-aos-delay="400">
                                 <div class="sidebar-widget-title mb-25">
                                     <h3>카테고리</h3>
                                 </div>
                                 <div id="categories" class="sidebar-widget-color sidebar-list-style"></div>
                             </div>
                         </div>
+
                         <div id="sidebar-widgets-container2">
                             <div class="sidebar-widget sidebar-widget-border mb-40 pb-35" data-aos="fade-up" data-aos-delay="200">
                                 <div class="sidebar-widget-title mb-25">
@@ -132,6 +134,7 @@
                                 </div>
                             </div>
                         </div>
+
                         <div id="sidebar-widgets-container3">
                             <div class="sidebar-widget sidebar-widget-border mb-40 pb-35" data-aos="fade-up" data-aos-delay="600">
                                 <div class="sidebar-widget-title mb-30">
@@ -152,6 +155,7 @@
                                 </div>
                             </div>
                         </div>
+
                     </div>
                 </div>
                 <!--// col-lg-3 -->
@@ -179,39 +183,7 @@
                 window.history.replaceState({}, document.title, '/portal/list');
             }
 
-            // 2. 등록일 slider init
-            listJS.dom.sliderRange.slider({
-                range: true,
-                min: 0,
-                max: 365,
-                values: [0, 365],
-                slide: function (event, ui) {
-                    $('#amount1').val(DateUtil.dateFormat(ui.values[0]))
-                    $('#amount2').val(DateUtil.dateFormat(ui.values[1]))
-                }
-            });
-            const _startDate = DateUtil.dateFormat(listJS.dom.sliderRange.slider("values", 0))
-            const _endDate = DateUtil.dateFormat(listJS.dom.sliderRange.slider("values", 1))
-            $('#amount1').val(_startDate)
-            $('#amount2').val(_endDate)
-            listJS.param['date'][0] = _startDate
-            listJS.param['date'][1] = _endDate
-            $('#amount1, #amount2').on('blur', function () {
-                const val1 = new Date($('#amount1').val())
-                const val2 = new Date($('#amount2').val())
-                if (!isNaN(val1) && !isNaN(val2) && val1 <= val2) {
-                    listJS.dom.sliderRange.slider('values', [listJS.parseDate(val1), listJS.parseDate(val2)]);
-                }
-            });
-
-            // 4. 등록일 버튼 -> 검색
-            $("#date-btn").click(function () {
-                listJS.param['date'][0] = DateUtil.dateFormat(listJS.dom.sliderRange.slider("values", 0));
-                listJS.param['date'][1] = DateUtil.dateFormat(listJS.dom.sliderRange.slider("values", 1));
-                listJS.fnPage(1, false);
-            });
-
-            // 5. 검색어 검색
+            // 1. 검색어 검색
             $('#searchForm').on('keypress', function (event) {
                 if (event.key === 'Enter') {
                     event.preventDefault(); // 기본 동작(폼 제출) 막기
@@ -225,18 +197,18 @@
                 listJS.fnPage(1, false);
             });
 
-            // 6. 뷰 버튼 클릭
+            // 2. 뷰 버튼 클릭
             $(document).on('click', '.detail-btn', function () {
                 const uid = $(this).data('id');
                 window.location.href = `/portal/detail/${uid}`;
             });
 
-            // 7. 좋아요 버튼 클릭
+            // 3. 좋아요 버튼 클릭
             $(document).on('click', '.like-content-btn', function (e) {
                 Common.likeClickEvent(this);
             });
 
-            // 8. 초기화 버튼
+            // 4. 초기화 버튼
             $("#resetBtn").on('click', function () {
                 listJS.resetAll();
             });
