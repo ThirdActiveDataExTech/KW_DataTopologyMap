@@ -1,11 +1,129 @@
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <script th:inline="javascript">
 
+    var template03FilterJS = {
+
+        type: null,
+
+        initDom: function () {
+            const $wrapper = $("#sidebar-wrapper-div")
+            $wrapper.empty();
+        },
+
+        init(type, filter_param, values, title) {
+            this.type = type;
+            if(type === 'checkbox') {
+                template03FilterJS.checkbox.initCheckbox(filter_param, values, title);
+            } else if(type === 'select2') {
+                template03FilterJS.select2.initSelect2(filter_param, values, title);
+            }
+        },
+
+        checkbox: {
+
+            initCheckbox(filter_param, values, title = '카테고리') {
+
+                const $wrapper = $("#sidebar-wrapper-div");
+                const uniqueId = 'categories-' + Date.now(); // 고유 id 생성
+                const categoryContainer = $(`
+                <div id="sidebar-widgets-container1">
+                    <div class="sidebar-widget sidebar-widget-border mb-40 pb-35" data-aos="fade-up" data-aos-delay="400">
+                        <div class="sidebar-widget-title mb-25"><h3>${title}</h3></div>
+                        <div data-unique-id="${uniqueId}" class="sidebar-widget-color sidebar-list-style"></div>
+                    </div>
+                </div>
+            `);
+                $wrapper.append(categoryContainer);
+
+                const $dom = categoryContainer.find(`div[data-unique-id="${uniqueId}"]`);
+                $dom.empty();
+                let $ul = $("<ul></ul>");
+
+                // 전체 선택
+                const category_ALL = 'categories-all-' + uniqueId; // 고유 id 생성
+                $ul.append(`
+                <li>
+                    <a href="javascript:void(0);">
+                        <input type="checkbox" class="category-all" value="ALL" id="${category_ALL}">
+                        <label for="${category_ALL}" style="font-weight:bold;">전체 선택</label>
+                    </a>
+                </li>
+            `);
+
+                // 개별 선택
+                for (const [key, name] of Object.entries(values)) {
+                    const _category = `categories-${key}-` + uniqueId; // 고유 id 생성
+                    $ul.append(`
+                    <li>
+                        <a href="javascript:void(0);">
+                            <input type="checkbox" class="category-item" value="${key}" id="${_category}">
+                            <label for="${_category}">${name}</label>
+                        </a>
+                    </li>
+                `);
+                }
+                $dom.append($ul);
+
+                // 이벤트 바인딩: container 기준으로 범위 한정
+                $(document)
+                    .off('change.checkbox.' + uniqueId)
+                    .on('change.checkbox.' + uniqueId, `div[data-unique-id="${uniqueId}"] input[type="checkbox"]`,
+                        async function() {
+
+                            const $this = $(this);
+                            const $items = $dom.find('.category-item');
+                            const $all = $dom.find('.category-all');
+
+                            if ($this.hasClass('category-all')) {
+                                $items.prop('checked', $this.is(':checked'));
+                            } else {
+                                $all.prop('checked', $items.length === $items.filter(':checked').length);
+                            }
+
+                            template03JS.param[filter_param] = $items.filter(':checked').map((i, el) => el.value).get();
+                            await template03JS.fnPage(1, false);
+                        });
+            },
+        },
+
+        select2: {
+            initSelect2(filter_param, values, title) {
+
+                const $wrapper = $("#sidebar-wrapper-div");
+                const uniqueId = 'tags-' + Date.now();
+                const tagContainer = $(`
+                <div id="sidebar-widgets-container2">
+                    <div class="sidebar-widget sidebar-widget-border mb-40 pb-35" data-aos="fade-up" data-aos-delay="200">
+                        <div class="sidebar-widget-title mb-25"><h3>${title}</h3></div>
+                        <div id="tags" class="sidebar-widget-color sidebar-list-style">
+                            <select class="select2 round border_line" data-unique-id="${uniqueId}" multiple></select>
+                        </div>
+                    </div>
+                </div>
+            `);
+                $wrapper.append(tagContainer);
+
+                const $dom = tagContainer.find(`select[data-unique-id="${uniqueId}"]`);
+                for (const [key, name] of Object.entries(values)) {
+                    $dom.append(`<option value="${key}">${name}</option>`);
+                }
+
+                $dom.select2({ placeholder: `${title} 검색` })
+                    .on('select2:select select2:unselect', async function() {
+                        template03JS.param[filter_param] = $dom.val() || [];
+                        await template03JS.fnPage(1, false);
+                    });
+            },
+        },
+
+    }
+
+
     var template03JS = {
 
         page: 1,
         keyword: '',
-        param : { tag: [] }, // 검색 파라미터
+        param : { }, // 검색 파라미터
 
         dom: {
             showList: $("#showing-list"),
@@ -43,13 +161,17 @@
             $(".pagination-style-1").empty();
         },
 
-        createSidebar: function () {
-            $("#tags-select").empty();          // 기존 내용 삭제
-            Http.get('/api/portal/mobigen-tag/list').then(tags => {
-                tags.forEach(item => {
-                    $("#tags-select").append(`<option value="${item['tagUid']}">${item['tagNm']}</option>`)
-                });
-            });
+        createSidebar: async function () {
+            template03FilterJS.initDom();
+            const response = await Http.get('/api/admin/integration-dataset/metakey-list')
+            const filters = response['filters']
+            for (const filter of filters) {
+                const values = await Http.get('/api/admin/integration-dataset/metakey-value-list', { key: filter })
+                if (values['filter'] === 'tag' && values['maps'] !== null) {
+                    template03JS.param['tag'] = []
+                    template03FilterJS.init("select2", values['filter'], values['maps'], values['filter']);
+                }
+            }
         },
 
         getPageData: async function (size) {
@@ -235,6 +357,7 @@
         },
 
         fnPage: function(selectPage, clearSidebar) {
+            template03JS.getSearchData();
             template03JS.page = selectPage;
             template03JS.pageList(clearSidebar);
         },
@@ -243,6 +366,11 @@
             template03JS.fnPage(1, false);
             if(selectTab === "card") { template03JS.dom.showCard.show(); template03JS.dom.showList.hide(); }
             else if(selectTab === "list") { template03JS.dom.showList.show(); template03JS.dom.showCard.hide(); }
+        },
+
+        getSearchData: function () {
+            // 검색어
+            template03JS.keyword = $('#keyword').val() || null;
         },
     }
 
@@ -256,36 +384,10 @@
                 template03JS.fnPage(1, false);
             }
         });
-
-        // 검색조건 검색
-        $(document).on('change', 'input[type="checkbox"]', function() {
-            const type = $(this).attr('id').split('_')[0];
-            const value = $(this).attr('value');
-            if ($(this).is(':checked')) template03JS.param[type].push(value);
-            else {
-                template03JS.param[type] = template03JS.param[type].filter(item => item !== value);
-            }
-            template03JS.fnPage(1, false);
-        });
-
-        // 태그 > select2 > 검색
-        $("#tags-select").select2({
-            placeholder: '태그 검색',
-            language: {
-                noResults: function() {
-                    return "검색 결과가 없습니다.";
-                }
-            }
-        });
-        $('#tags-select').on('select2:select select2:unselect', function (e) {
-            template03JS.param['tag'] = [];
-            const data = $(this).val();
-            if (data && data.length) {
-                data.forEach(uid => {
-                    template03JS.param['tag'].push(uid);
-                });
-            }
-            template03JS.fnPage(1, false);
+        $("#search-button").on('click', function (event) {
+           event.preventDefault();
+           template03JS.keyword = $('#keyword').val();
+           template03JS.fnPage(1, false);
         });
 
     });
