@@ -66,12 +66,12 @@
              TITLE
             ,REG_DT
             ,DELETE_AT
-            ,METADATA
+            ,EXTDATA
         ) VALUES (
              #{title}
             ,NOW()
             ,'N'
-            ,#{metadata}::jsonb
+            ,#{extdata}::jsonb
         )
     </insert>
 
@@ -87,7 +87,7 @@
         SELECT CMD.UID AS DATASET_ID
               ,CMD.TITLE
               ,TO_CHAR(CMD.REG_DT, 'YYYY-MM-DD HH:MM') AS REG_DT
-              ,CMD.METADATA
+              ,CMD.EXTDATA
           FROM CETUS_MOBIGEN_DATASET CMD
          WHERE CMD.UID = #{uid}
     </select>
@@ -96,7 +96,7 @@
         /* cetusMobigenDataset.update */
         UPDATE CETUS_MOBIGEN_DATASET
            SET TITLE = #{title}
-              ,METADATA = #{metadata}::jsonb
+              ,EXTDATA = #{extdata}::jsonb
          WHERE UID = #{uid}
     </update>
 

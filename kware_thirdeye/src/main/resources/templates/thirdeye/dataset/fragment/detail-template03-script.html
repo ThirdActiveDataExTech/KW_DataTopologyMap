@@ -234,9 +234,9 @@
                         )
                     );*/
 
-                    // e. metadata 영역
-                    /*const metadata = JSON.parse(content['relationMetadata']['metadata']); // JSON string → 객체
-                    Object.entries(metadata).forEach(([key, value]) => {
+                    // e. extdata 영역
+                    /*const extdata = JSON.parse(content['relationMetadata']['extdata']); // JSON string → 객체
+                    Object.entries(extdata).forEach(([key, value]) => {
                         $shopListContent.append(
                             $('<p>').text(`${key} : ${typeof value === 'object' ? JSON.stringify(value) : value}`)
                         );

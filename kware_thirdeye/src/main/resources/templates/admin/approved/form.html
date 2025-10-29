@@ -79,12 +79,12 @@
       margin-bottom: 20px;
       line-height: 1.6;
     }
-    .dataset-metadata h4 {
+    .dataset-extdata h4 {
       font-size: 1.1rem;
       margin-bottom: 10px;
       font-weight: 600;
     }
-    .metadata-textarea {
+    .extdata-textarea {
       width: 100%;
       min-height: 200px;
       font-size: 0.9rem;
@@ -173,9 +173,9 @@
                 <div class="dataset-description" id="dataset-description"></div>
 
                 <!-- 메타데이터 -->
-                <div class="dataset-metadata">
+                <div class="dataset-extdata">
                   <h4>메타데이터</h4>
-                  <textarea id="metadata-view" class="metadata-textarea" readonly></textarea>
+                  <textarea id="extdata-view" class="extdata-textarea" readonly></textarea>
                 </div>
 
               </div>
@@ -326,7 +326,7 @@
       $("#summary").val(json?.['summary'] || '')
       approvedDatasetJS.initEditor(json?.['description']);
       approvedDatasetJS.initUpload(view['uiView']?.['thumbUid']);
-      approvedDatasetJS.settingFormMetaDataSection(view['metadataView']?.['metadata'])
+      approvedDatasetJS.settingFormExtDataSection(view['metadataView']?.['extdata'])
       approvedDatasetJS.settingRowInfoTable(json?.['addInfo'] || [])
 
       // ===============================

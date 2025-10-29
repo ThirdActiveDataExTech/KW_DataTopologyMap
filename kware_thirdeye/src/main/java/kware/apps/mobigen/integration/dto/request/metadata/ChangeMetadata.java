@@ -19,7 +19,7 @@ import java.util.List;
 public class ChangeMetadata {
     private Long datasetId;
     private String title;
-    private String metadata;
+    private String extdata;
     private CetusDatasetFile realFile;
     private List<SaveTag> tags;
 }

@@ -30,5 +30,5 @@ public class MetadataView {
     private Long datasetId;                     // 데이터셋 ID
     private String title;                       // 데이터셋 제목
     private String regDt;                       // 등록일
-    private String metadata;                    // 메타데이터
+    private String extdata;                     // 메타데이터
 }

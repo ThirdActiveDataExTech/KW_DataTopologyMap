@@ -11,22 +11,22 @@ public class CetusMobigenDataset {
 
     private Long uid;
     private String title;
-    private String metadata;
+    private String extdata;
 
-    public CetusMobigenDataset(String title, String metadata) {
+    public CetusMobigenDataset(String title, String extdata) {
         this.title = title;
-        this.metadata = metadata;
+        this.extdata = extdata;
     }
 
     public CetusMobigenDataset(SaveMetadata request) {
         this.title = request.getTitle();
-        this.metadata = request.getMetadata();
+        this.extdata = request.getExtdata();
     }
 
     public CetusMobigenDataset(Long uid, ChangeMetadata request) {
         this.uid = uid;
         this.title = request.getTitle();
-        this.metadata = request.getMetadata();
+        this.extdata = request.getExtdata();
     }
 
     public CetusMobigenDataset(Long uid) {

@@ -63,7 +63,7 @@
         },
 
         drawExtraMetadata: function (dataset) {
-            const metadataStr = dataset?.['metadataView']?.['metadata'] || "{}"
+            const metadataStr = dataset?.['metadataView']?.['extdata'] || "{}"
             const metadataObj = JSON.parse(metadataStr)
 
             const container = document.getElementById("jsoneditor");
