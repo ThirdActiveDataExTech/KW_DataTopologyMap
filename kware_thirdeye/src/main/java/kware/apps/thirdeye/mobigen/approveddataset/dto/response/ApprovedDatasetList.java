@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 public class ApprovedDatasetList {
 
     private Long approvedUid;       // cetus_approved_dataset.uid (pk)
-    private Long datasetId;         // 데이터셋 ID
+    private Long metadataId;        // 데이터셋 ID
     private String approvedDt;      // 승인 일시
     private String approverNm;      // 데이터 승인자 이름
     private String targetTpCd;      // 원본 데이터셋 저장 위치

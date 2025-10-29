@@ -5,16 +5,16 @@
     <delete id="deleteAll" parameterType="Long">
         /* cetusMobigenDatasetTag.deleteAll */
         DELETE FROM CETUS_MOBIGEN_DATASET_TAG
-              WHERE DATASET_UID = #{datasetUid}
+              WHERE METADATA_ID = #{metadataId}
     </delete>
 
     <insert id="insert" parameterType="CetusMobigenDatasetTag">
         /* cetusMobigenDatasetTag.insert */
         INSERT INTO CETUS_MOBIGEN_DATASET_TAG (
-             DATASET_UID
+             METADATA_ID
             ,TAG_UID
         ) VALUES (
-             #{datasetUid}
+             #{metadataId}
             ,#{tagUid}
         )
     </insert>
@@ -30,13 +30,13 @@
         </if>
     </select>
 
-    <select id="getMobigenDatasetTagListByDatasetId" resultType="TagList" parameterType="Long">
-        /* cetusMobigenDatasetTag.getMobigenDatasetTagListByDatasetId */
+    <select id="getMobigenDatasetTagListByMetadataId" resultType="TagList" parameterType="Long">
+        /* cetusMobigenDatasetTag.getMobigenDatasetTagListByMetadataId */
         SELECT CMDT.TAG_UID
               ,CMT.TAG_NM AS TAG_NM
           FROM CETUS_MOBIGEN_DATASET_TAG CMDT
          INNER JOIN CETUS_MOBIGEN_TAG CMT ON CMT.UID = CMDT.TAG_UID
-         WHERE CMDT.DATASET_UID = #{datasetUid}
+         WHERE CMDT.METADATA_ID = #{metadataId}
     </select>
 
 </mapper>

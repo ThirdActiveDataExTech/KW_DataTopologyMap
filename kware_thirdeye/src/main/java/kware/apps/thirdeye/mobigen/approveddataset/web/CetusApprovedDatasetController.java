@@ -44,7 +44,7 @@ public class CetusApprovedDatasetController {
 
         // 2. 이미 진열등록/관리 중인 데이터셋 ID 목록
         // => 중복 진열등록 방지
-        List<Long> ids = service.findApprovedDatasetIdList();
+        List<Long> ids = service.findApprovedMetadataIdList();
         model.addAttribute("approvedIds", ids);
 
         return "admin/approved/save";

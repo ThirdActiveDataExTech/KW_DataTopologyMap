@@ -33,8 +33,8 @@ public class CetusMobigenDatasetService {
     }
 
     @Transactional
-    public void ifExistDeleteApprovedDataset(Long datasetId) {
-        dao.ifExistDeleteApprovedDataset(datasetId);
+    public void ifExistDeleteApprovedDataset(Long metadataId) {
+        dao.ifExistDeleteApprovedDataset(metadataId);
     }
 
     @Transactional
@@ -43,8 +43,8 @@ public class CetusMobigenDatasetService {
     }
 
     @Transactional(readOnly = true)
-    public MetadataView findMobigenDatasetByDatasetId(Long datasetId) {
-        return dao.getMobigenDatasetByDatasetId(datasetId);
+    public MetadataView findMobigenDatasetByMetadataId(Long metadataId) {
+        return dao.getMobigenDatasetByMetadataId(metadataId);
     }
 
 

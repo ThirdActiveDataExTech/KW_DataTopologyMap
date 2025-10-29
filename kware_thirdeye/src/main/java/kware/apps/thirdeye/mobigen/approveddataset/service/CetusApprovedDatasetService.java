@@ -43,7 +43,7 @@ public class CetusApprovedDatasetService {
      * @author      dahyeon
      * @date        2025-10-01
      * @deacription [KWARE] 승인된 데이터셋 목록 조회 + 페이징
-     *                  => 각 승인된 datasetId 값을 가지고 모비젠 측의 API를 통해 데이터셋 상세 정보 조회
+     *                  => 각 승인된 metadataId 값을 가지고 모비젠 측의 API를 통해 데이터셋 상세 정보 조회
     **/
     @Transactional(readOnly = true)
     public Page<ApprovedDatasetList> findDatasetPage( ApprovedDatasetSearch search, Pageable pageable ) {
@@ -53,8 +53,8 @@ public class CetusApprovedDatasetService {
         if(page.getList() != null && !page.getList().isEmpty()) {
             page.getList().forEach(dataset -> {
                 // (1) 데이터셋 > 모비젠 측을 통한 상세 정보 조회
-                Long datasetId = dataset.getDatasetId();
-                MetadataView metadataView = datasetService.viewMetadata(new SearchMetadataView(Long.toString(datasetId)));
+                Long metadataId = dataset.getMetadataId();
+                MetadataView metadataView = datasetService.viewMetadata(new SearchMetadataView(Long.toString(metadataId)));
                 if (metadataView != null) {
                     dataset.setMetadataView(metadataView);
                 }
@@ -97,22 +97,22 @@ public class CetusApprovedDatasetService {
         
         // 4. 데이터셋에 대한 필터링 데이터 조회 + 저장
         // => todo 추후 수정
-        MetadataView metadataView = datasetService.viewMetadata(new SearchMetadataView(Long.toString(request.getDatasetId())));
+        MetadataView metadataView = datasetService.viewMetadata(new SearchMetadataView(Long.toString(request.getMetadataId())));
         String title = metadataView.getTitle();
         List<TagList> tags = metadataView.getTags();
-        approvedDatasetService2.updateDatasetSearchData(request.getDatasetId(), title, tags);
+        approvedDatasetService2.updateDatasetSearchData(request.getMetadataId(), title, tags);
     }
 
     /**
-     * @method      findApprovedDatasetIdList
+     * @method      findApprovedMetadataIdList
      * @author      dahyeon
      * @date        2025-10-01
      * @deacription [KWARE] 모비젠 저장소에서 kware 포탈 시스템으로 진열등록된 데이터셋 ID 목록 조회
      *              => 중복되는 데이터셋 진열 등록을 방지하기 위함
     **/
     @Transactional(readOnly = true)
-    public List<Long> findApprovedDatasetIdList() {
-        return dao.getApprovedDatasetIdList(UserUtil.getUserWorkplaceUid());
+    public List<Long> findApprovedMetadataIdList() {
+        return dao.getApprovedMetadataIdList(UserUtil.getUserWorkplaceUid());
     }
     
     /**
@@ -137,7 +137,7 @@ public class CetusApprovedDatasetService {
             approvedDatasetView.setUiView(uiView);
 
             // 3. 진열 등록된 데이터셋 UI => 모비젠에 저장된 데이터셋의 디테일 정보
-            MetadataView metadataView = datasetService.viewMetadata(new SearchMetadataView(Long.toString(approvedDatasetView.getDatasetId())));
+            MetadataView metadataView = datasetService.viewMetadata(new SearchMetadataView(Long.toString(approvedDatasetView.getMetadataId())));
             approvedDatasetView.setMetadataView(metadataView);
 
             // 4. 원본 데이터셋 저장 위치 정보
@@ -177,8 +177,8 @@ public class CetusApprovedDatasetService {
         List<HomeDatasetList> homeDatasetList = dao.getHomeDatasetList(search);
         homeDatasetList.forEach(home -> {
             // 1. 진열관리 중인 데이터셋에 대한 상세 정보 > 모비젠 측을 통한 조회
-            Long datasetId = home.getDatasetId();
-            MetadataView metadataView = datasetService.viewMetadata(new SearchMetadataView(Long.toString(datasetId)));
+            Long metadataId = home.getMetadataId();
+            MetadataView metadataView = datasetService.viewMetadata(new SearchMetadataView(Long.toString(metadataId)));
             home.setMetadataView(metadataView);
             
             // 2. 진열관리 중인 데이터셋에 대한 > 화면 UI 정보 조회

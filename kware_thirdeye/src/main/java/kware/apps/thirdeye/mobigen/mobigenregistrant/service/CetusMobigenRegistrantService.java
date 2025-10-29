@@ -25,8 +25,8 @@ public class CetusMobigenRegistrantService {
      *              => 해당 데이터셋들은 승인 이전 시점이어도 정보를 저장한다.
     **/
     @Transactional
-    public void saveMobigenRegistrant(Long datasetId) {
-        CetusMobigenRegistrant bean = new CetusMobigenRegistrant(datasetId, UserUtil.getUser().getUid());
+    public void saveMobigenRegistrant(Long metadataId) {
+        CetusMobigenRegistrant bean = new CetusMobigenRegistrant(metadataId, UserUtil.getUser().getUid());
         dao.insert(bean);
     }
 
@@ -37,7 +37,7 @@ public class CetusMobigenRegistrantService {
      * @deacription 모비젠 데이터셋 저장소에 데이터셋을 등록한 사용자 정보를 조회
     **/
     @Transactional(readOnly = true)
-    public MobigenRegistrantView findMobigenRegistrant(Long datasetId) {
-        return dao.getMobigenRegistrant(datasetId);
+    public MobigenRegistrantView findMobigenRegistrant(Long metadataId) {
+        return dao.getMobigenRegistrant(metadataId);
     }
 }

@@ -27,7 +27,7 @@ public class MetadataView {
     private List<TagList> tags;
 
     // todo 추후 삭제, mobigen에서 주는 정보로이용
-    private Long datasetId;                     // 데이터셋 ID
+    private Long metadataId;                    // 데이터셋 ID
     private String title;                       // 데이터셋 제목
     private String regDt;                       // 등록일
     private String extdata;                     // 메타데이터

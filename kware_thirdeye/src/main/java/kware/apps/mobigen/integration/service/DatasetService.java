@@ -107,19 +107,18 @@ public class DatasetService {
         String title = "random package title_" + StringUtil.random(3);
         CetusMobigenDataset bean = new CetusMobigenDataset(title, "{}");
         mobigenDatasetService.insert(bean);
-        Long datasetId = bean.getUid();
-        log.info(">>>> [savePackageDataset] datasetId : {} ", datasetId);
+        Long metadataId = bean.getUid(); //apiResponse.getResult().getMetadata().getMetadata_id();
+        log.info(">>>> [savePackageDataset] metadataId : {} ", metadataId);
 
-        String metadataId = Long.toString(datasetId); //apiResponse.getResult().getMetadata().getMetadata_id();
-        String rawdataId = "raw_" + datasetId + "_" + StringUtil.random(3); //apiResponse.getResult().getRawdata().getRawdata_id();
+        String rawdataId = "raw_" + metadataId + "_" + StringUtil.random(3); //apiResponse.getResult().getRawdata().getRawdata_id();
 
         // 1. save [PACKAGE] data file
         CetusDatasetFile metaFile = request.getPackageFile();
-        metaFile.setPackageDto(metadataId, rawdataId, DataFileTpCd.PACKAGE);
+        metaFile.setPackageDto(Long.toString(metadataId), rawdataId, DataFileTpCd.PACKAGE);
         datasetFileService.processAddFile(metaFile);
 
         // 3. 모비젠 등록자 정보 저장
-        registrantService.saveMobigenRegistrant(datasetId); //apiResponse.getResult().getMetadata().getMetadata_id();
+        registrantService.saveMobigenRegistrant(metadataId); //apiResponse.getResult().getMetadata().getMetadata_id();
     }
 
     @Transactional(readOnly = true)
@@ -141,65 +140,64 @@ public class DatasetService {
         // todo 삭제..
         CetusMobigenDataset bean = new CetusMobigenDataset(request);
         mobigenDatasetService.insert(bean);
-        Long datasetId = bean.getUid();
-        log.info(">>>> [createMetadata] datasetId : {} ", datasetId);
+        Long metadataId = bean.getUid();    //apiResponse.getResult().getMetadata().getMetadata_id();
+        log.info(">>>> [createMetadata] metadataId : {} ", metadataId);
 
-        String metadataId = Long.toString(datasetId); //apiResponse.getResult().getMetadata().getMetadata_id();
-        String rawdataId = "raw_" + datasetId + "_" + StringUtil.random(3); //apiResponse.getResult().getRawdata().getRawdata_id();
+        String rawdataId = "raw_" + metadataId + "_" + StringUtil.random(3); //apiResponse.getResult().getRawdata().getRawdata_id();
 
         // 1. save metadata file
         CetusDatasetFile metaFile = request.getMetaFile();
-        metaFile.setMetadataDto(metadataId, DataFileTpCd.METADATA);
+        metaFile.setMetadataDto(Long.toString(metadataId), DataFileTpCd.METADATA);
         datasetFileService.processAddFile(metaFile);
 
         if( realFileData != null && !realFileData.isEmpty() ) {
             // 2. save realdata file
             CetusDatasetFile realFile = request.getRealFile();
-            realFile.setRawdataDto(metadataId, rawdataId, DataFileTpCd.RAWDATA);
+            realFile.setRawdataDto(Long.toString(metadataId), rawdataId, DataFileTpCd.RAWDATA);
             datasetFileService.processAddFile(realFile);
         }
 
         // 3. save tag
-        datasetTagService.saveDatasetTag(request.getTags(), datasetId);
+        datasetTagService.saveDatasetTag(request.getTags(), metadataId);
 
         // 4. 모비젠 등록자 정보 저장
-        registrantService.saveMobigenRegistrant(datasetId);
+        registrantService.saveMobigenRegistrant(metadataId);
     }
 
     @Transactional
     public void updateMetadata( ChangeMetadata request, MultipartFile realFileData ) throws IOException {
 
-        Long datasetId = request.getDatasetId();
+        Long metadataId = request.getMetadataId();
 
         /*ChangeMetadataRequest changeRequest = new ChangeMetadataRequest(
-                Long.toString(datasetId), new ChangeMetadataRequest.ChangeMetadataFieldRequest(request.getTitle())
+                Long.toString(metadataId), new ChangeMetadataRequest.ChangeMetadataFieldRequest(request.getTitle())
         );
         ApiResponse<ChangeMetadataResponse> apiResponse1 = apiService.changeMetadata(changeRequest);*/
 
         // >> update mobigen data
-        CetusMobigenDataset bean = new CetusMobigenDataset(datasetId, request);
+        CetusMobigenDataset bean = new CetusMobigenDataset(metadataId, request);
         mobigenDatasetService.update(bean);
 
         // >> save tag
-        datasetTagService.saveDatasetTag(request.getTags(), datasetId);
+        datasetTagService.saveDatasetTag(request.getTags(), metadataId);
 
 
         // 2. if not empty upload real-file-data
         if( realFileData != null && !realFileData.isEmpty() ) {
-            /*UploadRawdataRequest uploadRequest = new UploadRawdataRequest(Long.toString(datasetId), realFileData.getContentType());
+            /*UploadRawdataRequest uploadRequest = new UploadRawdataRequest(Long.toString(metadataId), realFileData.getContentType());
             Path realFilePath = this.convertToPath(realFileData);
             ApiResponse<UploadRawdataResponse> apiResponse2 = apiService.uploadRawdata(uploadRequest, realFilePath);*/
-            String rawdataId = "raw_" + datasetId + "_" + StringUtil.random(3); //apiResponse2.getResult().getRawdata_id();
+            String rawdataId = "raw_" + metadataId + "_" + StringUtil.random(3); //apiResponse2.getResult().getRawdata_id();
 
             CetusDatasetFile realFile = request.getRealFile();
-            realFile.setMetadataId(Long.toString(datasetId));
+            realFile.setMetadataId(Long.toString(metadataId));
             realFile.setDataTpCd(DataFileTpCd.RAWDATA.name());
             realFile.setRawdataId(rawdataId);
             datasetFileService.processAddFile(realFile);
         }
 
-        MetadataView metadataView = this.viewMetadata(new SearchMetadataView(Long.toString(datasetId)));
-        approvedDatasetService2.updateDatasetSearchData(datasetId, metadataView.getTitle(), metadataView.getTags());
+        MetadataView metadataView = this.viewMetadata(new SearchMetadataView(Long.toString(metadataId)));
+        approvedDatasetService2.updateDatasetSearchData(metadataId, metadataView.getTitle(), metadataView.getTags());
     }
 
     @Transactional
@@ -214,7 +212,7 @@ public class DatasetService {
             CetusMobigenDataset bean = new CetusMobigenDataset(Long.parseLong(metadataId));
             mobigenDatasetService.deleteMobigenDataset(bean);
 
-            // {datasetId} 데이터셋이 kware 포탈 시스템에서 관리중인 값이라면 포탈 시스템에서도 삭제 (논리삭제)
+            // {metadataId} 데이터셋이 kware 포탈 시스템에서 관리중인 값이라면 포탈 시스템에서도 삭제 (논리삭제)
             mobigenDatasetService.ifExistDeleteApprovedDataset(Long.parseLong(metadataId));
 
             // 해당 파일 정보도 삭제
@@ -250,7 +248,7 @@ public class DatasetService {
         ViewMetadataResponse result = apiResponse.getResult();*/
 
         // 0. 우선은 데이터 원본 정보들을 kware 포탈 시스템에서 가져오기
-        MetadataView metadataView = mobigenDatasetService.findMobigenDatasetByDatasetId(Long.parseLong(metadataId));
+        MetadataView metadataView = mobigenDatasetService.findMobigenDatasetByMetadataId(Long.parseLong(metadataId));
 
         // 1. 모비젠으로부터 얻어온 데이터 정보들로 세팅
         metadataView.setMetadataResponse(null);
@@ -270,7 +268,7 @@ public class DatasetService {
         metadataView.setRawdataFiles(rawdataFiles);
 
         // 4. 데이터에 대한 태그 정보 (추후 삭제할 예정)
-        List<TagList> tags = datasetTagService.findMobigenDatasetTagListByDatasetUid(Long.parseLong(metadataId));
+        List<TagList> tags = datasetTagService.findMobigenDatasetTagListByMetadataId(Long.parseLong(metadataId));
         metadataView.setTags(tags);
 
         return metadataView;

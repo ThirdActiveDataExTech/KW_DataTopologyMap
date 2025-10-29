@@ -5,11 +5,11 @@
     <insert id="insert" parameterType="CetusMobigenRegistrant">
         /* cetusMobigenRegistrant.insert */
         INSERT INTO CETUS_MOBIGEN_REGISTRANT (
-             DATASET_ID
+             METADATA_ID
             ,REGISTRANT_UID
             ,REG_DT
         ) VALUES (
-             #{datasetId}
+             #{metadataId}
             ,#{registrantUid}
             ,NOW()
         )
@@ -22,6 +22,6 @@
               ,CASE WHEN CU.USER_ID IS NULL THEN 'FALSE' ELSE 'TRUE' END AS IS_REGISTERED
           FROM CETUS_MOBIGEN_REGISTRANT CMR
           LEFT JOIN CETUS_USER CU ON CU.UID = CMR.REGISTRANT_UID
-         WHERE CMR.DATASET_ID = #{datasetId}
+         WHERE CMR.METADATA_ID = #{metadataId}
     </select>
 </mapper>

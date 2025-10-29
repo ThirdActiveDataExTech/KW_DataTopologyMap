@@ -28,11 +28,11 @@ public class CetusMobigenDatasetTagService {
      * @deacription [Mobigen] 태그 & 데이터셋 매핑 정보 저장
     **/
     @Transactional
-    public void saveDatasetTag(List<SaveTag> requests, Long datasetId) {
-        dao.deleteAll(datasetId);
+    public void saveDatasetTag(List<SaveTag> requests, Long metadataId) {
+        dao.deleteAll(metadataId);
         for (SaveTag request: requests) {
             Long tagUid = (request.getUid() == null) ? tagService.saveMobigenTag(request.getTagNm()) : request.getUid();
-            CetusMobigenDatasetTag bean = new CetusMobigenDatasetTag(datasetId, tagUid);
+            CetusMobigenDatasetTag bean = new CetusMobigenDatasetTag(metadataId, tagUid);
             dao.insert(bean);
         }
     }
@@ -49,13 +49,13 @@ public class CetusMobigenDatasetTagService {
     }
 
     /**
-     * @method      findMobigenDatasetTagListByDatasetUid
+     * @method      findMobigenDatasetTagListByMetadataId
      * @author      dahyeon
      * @date        2025-10-13
      * @deacription [Mobigen] 태그 & 데이터셋 매핑 -> 데이터셋 기준 단건 조회
     **/
     @Transactional(readOnly = true)
-    public List<TagList> findMobigenDatasetTagListByDatasetUid(Long datasetUid) {
-        return dao.getMobigenDatasetTagListByDatasetId(datasetUid);
+    public List<TagList> findMobigenDatasetTagListByMetadataId(Long metadataId) {
+        return dao.getMobigenDatasetTagListByMetadataId(metadataId);
     }
 }

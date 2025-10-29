@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 public class ApprovedDatasetView {
 
     private Long approvedUid;
-    private Long datasetId;
+    private Long metadataId;
     private Long workplaceUid;
     private String approvedDt;
     private Long approverUid;

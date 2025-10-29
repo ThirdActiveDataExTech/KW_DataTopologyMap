@@ -82,14 +82,14 @@
          WHERE UID = #{uid}
     </update>
 
-    <select id="getMobigenDatasetByDatasetId" parameterType="Long" resultType="MetadataView">
-        /* cetusMobigenDataset.getMobigenDatasetByDatasetId */
-        SELECT CMD.UID AS DATASET_ID
+    <select id="getMobigenDatasetByMetadataId" parameterType="Long" resultType="MetadataView">
+        /* cetusMobigenDataset.getMobigenDatasetByMetadataId */
+        SELECT CMD.UID AS METADATA_ID
               ,CMD.TITLE
               ,TO_CHAR(CMD.REG_DT, 'YYYY-MM-DD HH:MM') AS REG_DT
               ,CMD.EXTDATA
           FROM CETUS_MOBIGEN_DATASET CMD
-         WHERE CMD.UID = #{uid}
+         WHERE CMD.UID = #{metadataId}
     </select>
 
     <update id="update" parameterType="CetusMobigenDataset">
@@ -104,7 +104,7 @@
         /* cetusApprovedDataset.ifExistDeleteApprovedDataset */
         UPDATE CETUS_APPROVED_DATASET
            SET DELETE_AT = 'Y'
-         WHERE DATASET_ID = #{datasetId}
+         WHERE METADATA_ID = #{metadataId}
     </update>
 
 </mapper>

@@ -17,12 +17,12 @@ import lombok.NoArgsConstructor;
 public class CetusMobigenRegistrant {
 
     private Long uid;
-    private Long datasetId;
+    private Long metadataId;
     private Long registrantUid;
     private String regDt;
 
-    public CetusMobigenRegistrant(Long datasetId, Long registrantUid) {
-        this.datasetId = datasetId;
+    public CetusMobigenRegistrant(Long metadataId, Long registrantUid) {
+        this.metadataId = metadataId;
         this.registrantUid = registrantUid;
     }
 }

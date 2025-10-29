@@ -5,7 +5,7 @@
     <select id="getDatasetPage" parameterType="ApprovedDatasetSearch" resultType="ApprovedDatasetList">
         /* cetusApprovedDataset.getDatasetPage */
         SELECT CAD.UID AS APPROVED_UID
-              ,CAD.DATASET_ID
+              ,CAD.METADATA_ID
               ,TO_CHAR(CAD.APPROVED_DT, 'YYYY-MM-DD HH:MM') AS APPROVED_DT
               ,CU_APP.USER_NM AS APPROVER_NM
               ,CAD.TARGET_TP_CD
@@ -111,9 +111,9 @@
         </if>
     </select>
 
-    <select id="getApprovedDatasetIdList" resultType="Long" parameterType="Long">
-        /* cetusApprovedDataset.getApprovedDatasetIdList */
-        SELECT CAD.DATASET_ID
+    <select id="getApprovedMetadataIdList" resultType="Long" parameterType="Long">
+        /* cetusApprovedDataset.getApprovedMetadataIdList */
+        SELECT CAD.METADATA_ID
           FROM CETUS_APPROVED_DATASET CAD
          WHERE WORKPLACE_UID = #{workplaceUid}
            AND DELETE_AT = 'N'
@@ -122,14 +122,14 @@
     <insert id="insert" parameterType="CetusApprovedDataset" keyProperty="uid" useGeneratedKeys="true">
         /* cetusApprovedDataset.insert */
         INSERT INTO CETUS_APPROVED_DATASET (
-             DATASET_ID
+             METADATA_ID
             ,WORKPLACE_UID
             ,APPROVED_DT
             ,APPROVER_UID
             ,TARGET_TP_CD
             ,DELETE_AT
         ) VALUES (
-             #{datasetId}
+             #{metadataId}
             ,#{workplaceUid}
             ,NOW()
             ,#{approverUid}
@@ -141,7 +141,7 @@
     <select id="getApprovedDatasetView" parameterType="SearchApprovedDatasetView" resultType="ApprovedDatasetView">
         /* cetusApprovedDataset.getApprovedDatasetView */
         SELECT CAD.UID AS APPROVED_UID
-              ,CAD.DATASET_ID
+              ,CAD.METADATA_ID
               ,CAD.WORKPLACE_UID
               ,CAD.APPROVED_DT
               ,CAD.APPROVER_UID
@@ -181,7 +181,7 @@
     <select id="getHomeDatasetList" parameterType="HomeDatasetSearch" resultType="HomeDatasetList">
         /* cetusApprovedDataset.getHomeDatasetList */
         SELECT CAD.UID AS APPROVED_UID
-              ,CAD.DATASET_ID AS DATASET_ID
+              ,CAD.METADATA_ID AS METADATA_ID
               ,CDU.CATEGORY_UID AS CATEGORY_UID
               ,CDC.CATEGORY_NM AS CATEGORY_NM
               ,CDU.THUMB_UID AS THUMB_UID
@@ -220,7 +220,7 @@
         /* cetusApprovedDataset.updateApprovedDatasetSearchData */
         UPDATE CETUS_APPROVED_DATASET
            SET SEARCH_DATA = #{searchData}::jsonb
-         WHERE DATASET_ID = #{datasetId}
+         WHERE METADATA_ID = #{metadataId}
     </update>
 
 </mapper>

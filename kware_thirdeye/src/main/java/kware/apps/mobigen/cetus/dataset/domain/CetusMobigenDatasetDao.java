@@ -49,11 +49,11 @@ public class CetusMobigenDatasetDao extends SuperDao<CetusMobigenDataset> {
         update("deleteMobigenDataset", bean);
     }
 
-    public MetadataView getMobigenDatasetByDatasetId(Long datasetUid) {
-        return selectOne("getMobigenDatasetByDatasetId", datasetUid);
+    public MetadataView getMobigenDatasetByMetadataId(Long metadataId) {
+        return selectOne("getMobigenDatasetByMetadataId", metadataId);
     }
 
-    public void ifExistDeleteApprovedDataset(Long datasetId) {
-        update("ifExistDeleteApprovedDataset", datasetId);
+    public void ifExistDeleteApprovedDataset(Long metadataId) {
+        update("ifExistDeleteApprovedDataset", metadataId);
     }
 }

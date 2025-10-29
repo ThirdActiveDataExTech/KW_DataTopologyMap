@@ -22,7 +22,7 @@ public class CetusApprovedDatasetService2 {
     private final CetusApprovedDatasetDao dao;
 
     @Transactional
-    public void updateDatasetSearchData(Long datasetId, String title, List<TagList> tags) {
+    public void updateDatasetSearchData(Long metadataId, String title, List<TagList> tags) {
 
         List<Long> tagUids = tags.stream().map(TagList::getTagUid).collect(Collectors.toList());
 
@@ -36,6 +36,6 @@ public class CetusApprovedDatasetService2 {
         } catch (Exception e) {
             log.error("err: ", e);
         }
-        dao.updateApprovedDatasetSearchData(new CetusApprovedDataset(datasetId, searchDataJson));
+        dao.updateApprovedDatasetSearchData(new CetusApprovedDataset(metadataId, searchDataJson));
     }
 }

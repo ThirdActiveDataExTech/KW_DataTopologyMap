@@ -1,7 +1,6 @@
 package kware.apps.mobigen.cetus.tag.domain;
 
 import cetus.dao.SuperDao;
-import io.micrometer.core.instrument.search.Search;
 import kware.apps.mobigen.cetus.tag.dto.request.SearchTag;
 import kware.apps.mobigen.cetus.tag.dto.response.TagList;
 import org.springframework.stereotype.Component;
@@ -19,11 +18,11 @@ public class CetusMobigenDatasetTagDao extends SuperDao<CetusMobigenDatasetTag> 
         return selectList("getMobigenDatasetTagList", search);
     }
 
-    public List<TagList> getMobigenDatasetTagListByDatasetId(Long datasetUid) {
-        return selectList("getMobigenDatasetTagListByDatasetId", datasetUid);
+    public List<TagList> getMobigenDatasetTagListByMetadataId(Long metadataId) {
+        return selectList("getMobigenDatasetTagListByMetadataId", metadataId);
     }
 
-    public void deleteAll(Long uid) {
-        delete("deleteAll", uid);
+    public void deleteAll(Long metadataId) {
+        delete("deleteAll", metadataId);
     }
 }

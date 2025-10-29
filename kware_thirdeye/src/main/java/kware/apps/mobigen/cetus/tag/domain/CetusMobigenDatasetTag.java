@@ -9,11 +9,11 @@ import lombok.NoArgsConstructor;
 public class CetusMobigenDatasetTag {
 
     private Long uid;
-    private Long datasetUid;
+    private Long metadataId;
     private Long tagUid;
 
-    public CetusMobigenDatasetTag(Long datasetUid, Long tagUid) {
-        this.datasetUid = datasetUid;
+    public CetusMobigenDatasetTag(Long metadataId, Long tagUid) {
+        this.metadataId = metadataId;
         this.tagUid = tagUid;
     }
 }

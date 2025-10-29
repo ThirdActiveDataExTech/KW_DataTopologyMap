@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 public class HomeDatasetList {
 
     private Long approvedUid;
-    private Long datasetId;
+    private Long metadataId;
 
     private Long categoryUid;
     private String categoryNm;

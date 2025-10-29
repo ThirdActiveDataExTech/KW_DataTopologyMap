@@ -16,8 +16,8 @@ public class CetusApprovedDatasetDao extends SuperDao<CetusApprovedDataset> {
         super("cetusApprovedDataset");
     }
 
-    public List<Long> getApprovedDatasetIdList(Long workplaceUid) {
-        return selectList("getApprovedDatasetIdList", workplaceUid);
+    public List<Long> getApprovedMetadataIdList(Long workplaceUid) {
+        return selectList("getApprovedMetadataIdList", workplaceUid);
     }
 
     public ApprovedDatasetView getApprovedDatasetView(SearchApprovedDatasetView search) {

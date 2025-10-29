@@ -167,9 +167,9 @@
             });
         },
 
-        packageDownloadBtnClickEvent: async function (datasetId, rawdataIds = []) {
+        packageDownloadBtnClickEvent: async function (metadataId, rawdataIds = []) {
             // todo[mobigen] download package
-            const obj = { metadataId: datasetId, rawdataIds: rawdataIds }
+            const obj = { metadataId: metadataId, rawdataIds: rawdataIds }
             const res = await Http.post('/api/admin/integration-dataset/download-package', obj, true)
             console.log(">> res : ", res);
         }

@@ -11,9 +11,9 @@ public class UserBookMarkList {
 
     private Long userUid;                    // 유저 uid
     private Long approvedUid;                // cetus_dataset_bookmark.uid (pk)
-    private Long datasetId;                  // 데이터셋 id
+    private Long metadataId;                 // 데이터셋 id
 
-    private ApprovedDatasetView datasetView;      // {datasetId} 값을 통해 모비젠에서 가져온 정보들
+    private ApprovedDatasetView datasetView;      // {metadataId} 값을 통해 모비젠에서 가져온 정보들
 
     public void setDatasetView(ApprovedDatasetView datasetView) {
         this.datasetView = datasetView;
