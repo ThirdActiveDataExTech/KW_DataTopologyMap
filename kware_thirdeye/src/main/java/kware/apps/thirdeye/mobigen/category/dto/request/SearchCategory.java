@@ -4,8 +4,9 @@ package kware.apps.thirdeye.mobigen.category.dto.request;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-@Getter @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Getter @NoArgsConstructor(access = AccessLevel.PROTECTED) @Setter
 public class SearchCategory {
 
     private String categoryNm;

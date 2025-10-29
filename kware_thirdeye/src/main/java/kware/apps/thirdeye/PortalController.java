@@ -4,7 +4,6 @@ package kware.apps.thirdeye;
 import cetus.user.UserUtil;
 import kware.apps.system.user.dto.response.UserFullInfo;
 import kware.apps.system.user.service.CetusUserService;
-import kware.apps.thirdeye.bbsctt.service.CetusBbscttService;
 import kware.apps.thirdeye.mobigen.approveddataset.dto.response.ApprovedDatasetView;
 import kware.apps.thirdeye.mobigen.approveddataset.service.CetusApprovedDatasetService;
 import kware.common.config.auth.dto.SessionUserInfo;
@@ -25,7 +24,6 @@ public class PortalController {
     private final CetusUserService cetusUserService;
     private final MenuNavigationManager menuNavigationManager;
     private final CetusApprovedDatasetService datasetService;
-    private final CetusBbscttService bbscttService;
 
     @GetMapping("/home")
     public String home(Model model) {

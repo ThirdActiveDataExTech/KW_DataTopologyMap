@@ -357,13 +357,18 @@
               url: '/api/admin/dataset-category/list',
               dataType: 'json',
               delay: 250,
+              data: function (params) {
+                return {
+                  categoryNm: params.term, // search term
+                };
+              },
               processResults: function (data, params) {
-                  return {
-                      results: data.map(item => ({
-                          id: item['categoryUid'],
-                          text: item['categoryNm']
-                      })),
-                  };
+                return {
+                  results: data.map(item => ({
+                    id: item['categoryUid'],
+                    text: item['categoryNm']
+                  })),
+                };
               },
           },
           createTag: function (params) {
