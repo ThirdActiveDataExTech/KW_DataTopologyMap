@@ -102,18 +102,6 @@ public class CetusApprovedDatasetService {
         List<TagList> tags = metadataView.getTags();
         approvedDatasetService2.updateDatasetSearchData(request.getMetadataId(), title, tags);
     }
-
-    /**
-     * @method      findApprovedMetadataIdList
-     * @author      dahyeon
-     * @date        2025-10-01
-     * @deacription [KWARE] 모비젠 저장소에서 kware 포탈 시스템으로 진열등록된 데이터셋 ID 목록 조회
-     *              => 중복되는 데이터셋 진열 등록을 방지하기 위함
-    **/
-    @Transactional(readOnly = true)
-    public List<Long> findApprovedMetadataIdList() {
-        return dao.getApprovedMetadataIdList(UserUtil.getUserWorkplaceUid());
-    }
     
     /**
      * @method      findApprovedDatasetView

@@ -142,7 +142,7 @@ public class CetusDatasetFileService {
 
     @Transactional
     public void processDelFile(DeleteDatasetFile request) {
-        fileDao.deleteFile(request);
+        fileDao.deleteDatasetFile(request);
     }
 
     /* =================== */

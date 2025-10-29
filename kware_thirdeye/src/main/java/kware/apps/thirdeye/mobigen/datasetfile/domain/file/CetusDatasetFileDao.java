@@ -51,7 +51,7 @@ public class CetusDatasetFileDao extends SuperDao<CetusDatasetFile> {
         return selectOne("getRawdataFileView", search);
     }
 
-    public void deleteFile(DeleteDatasetFile request) {
-        update("deleteFile", request);
+    public void deleteDatasetFile(DeleteDatasetFile request) {
+        update("deleteDatasetFile", request);
     }
 }

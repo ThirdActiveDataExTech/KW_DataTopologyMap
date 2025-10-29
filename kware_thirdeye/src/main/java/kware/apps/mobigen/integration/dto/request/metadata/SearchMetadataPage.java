@@ -20,5 +20,4 @@ public class SearchMetadataPage {
 
     private String sortOrder;
 
-    private Long[] approvedIds;
 }

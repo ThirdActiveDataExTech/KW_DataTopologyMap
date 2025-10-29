@@ -192,8 +192,8 @@
         )
     </insert>
 
-    <delete id="deleteFile" parameterType="DeleteDatasetFile">
-        /* cetusDatasetFile.deleteFile */
+    <delete id="deleteDatasetFile" parameterType="DeleteDatasetFile">
+        /* cetusDatasetFile.deleteDatasetFile */
         UPDATE CETUS_DATASET_FILE
            SET USE_AT = 'N'
               ,UPDT_DT = NOW()

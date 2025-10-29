@@ -111,12 +111,15 @@
         </if>
     </select>
 
-    <select id="getApprovedMetadataIdList" resultType="Long" parameterType="Long">
+    <select id="getMetadataIsApproved" resultType="Boolean" parameterType="SearchMetadataApproved">
         /* cetusApprovedDataset.getApprovedMetadataIdList */
-        SELECT CAD.METADATA_ID
-          FROM CETUS_APPROVED_DATASET CAD
-         WHERE WORKPLACE_UID = #{workplaceUid}
-           AND DELETE_AT = 'N'
+        SELECT EXISTS (
+            SELECT 1
+              FROM CETUS_APPROVED_DATASET
+             WHERE DELETE_AT = 'N'
+               AND WORKPLACE_UID = #{workplaceUid}
+               AND METADATA_ID = #{metadataId}
+        )
     </select>
 
     <insert id="insert" parameterType="CetusApprovedDataset" keyProperty="uid" useGeneratedKeys="true">

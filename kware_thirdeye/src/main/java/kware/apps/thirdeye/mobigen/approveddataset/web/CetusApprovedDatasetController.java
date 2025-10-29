@@ -38,14 +38,9 @@ public class CetusApprovedDatasetController {
     public String save(Model model) {
         menuNavigationManager.renderingPage("/admin/approved/dataset", "데이터 진열 관리 등록", false, model);
 
-        // 1. 화면 UI 유형
+        // 화면 UI 유형
         List<MainUiList> mainUiList = mainUiService.findDatasetMainUiList();
         model.addAttribute("mainUiList", mainUiList);
-
-        // 2. 이미 진열등록/관리 중인 데이터셋 ID 목록
-        // => 중복 진열등록 방지
-        List<Long> ids = service.findApprovedMetadataIdList();
-        model.addAttribute("approvedIds", ids);
 
         return "admin/approved/save";
     }

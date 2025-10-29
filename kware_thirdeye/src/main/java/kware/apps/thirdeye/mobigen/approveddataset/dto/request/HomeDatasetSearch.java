@@ -11,6 +11,8 @@ import lombok.NoArgsConstructor;
 * @version      1.0.0
 * @date         2025-10-14
 * @summary      메인 홈 화면 데이터셋 리스트(목록) 조회를 위한 요청 dto
+ *
+ *              => {userUid} 값을 통해 각 데이터셋에 대해서 현재 로그인한 사용자의 북마크 여부 체크
 **/
 
 @Getter @NoArgsConstructor(access = AccessLevel.PROTECTED)

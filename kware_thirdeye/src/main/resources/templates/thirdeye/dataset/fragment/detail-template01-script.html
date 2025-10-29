@@ -95,9 +95,7 @@
 
             if(addInfo.length === 0) {
                 $tableBody.append(`<tr class="text-center"><td colSpan="2" class="text-center py-2">정보가 없습니다.</td></tr>`)
-                $("#downloadPackage").prop('disabled', true).prop('readonly', true)
-            }
-            else {
+            } else {
                 const itemsPerRow = 2
                 const totalItems = addInfo.length;
                 const totalRows = Math.ceil(totalItems / itemsPerRow);
@@ -108,9 +106,9 @@
                         if (index < totalItems) {
                             const item = addInfo[index];
                             row.append(`
-                            <td class="col-2 width1">${item.label}</td>
-                            <td class="col-4">${item.value}</td>
-                        `);
+                                <td class="col-2 width1">${item.label}</td>
+                                <td class="col-4">${item.value}</td>
+                            `);
                         }
                     }
                     $tableBody.append(row);

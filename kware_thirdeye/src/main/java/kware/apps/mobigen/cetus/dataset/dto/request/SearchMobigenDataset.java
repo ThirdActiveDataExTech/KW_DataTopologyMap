@@ -7,7 +7,6 @@ import lombok.Setter;
 @Getter @Setter
 public class SearchMobigenDataset {
 
-    private Long[] approvedIds;
     private int offset;
     private int limit;
 
