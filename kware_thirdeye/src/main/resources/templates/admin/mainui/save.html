@@ -108,28 +108,29 @@
                             <div class="col-lg-3">
                                 <div class="single-input-item">
                                     <label for="maxCount" class="custom-label">최대 노출 개수</label>
-                                    <input class="form-control custom-input" type="number" id="maxCount" name="maxCount" placeholder="최대 노출 개수를 입력하세요.">
+                                    <input class="form-control custom-input" type="number" id="maxCount"
+                                           name="maxCount" placeholder="최대 노출 개수를 입력하세요.">
                                 </div>
                             </div>
-
                             <div class="col-lg-3">
                                 <div class="single-input-item">
                                     <label for="titleLineClamp" class="custom-label">제목 최대 라인 수</label>
-                                    <input class="form-control custom-input" type="number" id="titleLineClamp" name="titleLineClamp" placeholder="제목 최대 라인 수를 입력하세요.">
+                                    <input class="form-control custom-input" type="number" id="titleLineClamp"
+                                           name="titleLineClamp" placeholder="제목 최대 라인 수를 입력하세요.">
                                 </div>
                             </div>
-
                             <div class="col-lg-3">
                                 <div class="single-input-item">
                                     <label for="descLineClamp" class="custom-label">설명 최대 라인 수</label>
-                                    <input class="form-control custom-input" type="number" id="descLineClamp" name="descLineClamp" placeholder="설명 최대 라인 수를 입력하세요.">
+                                    <input class="form-control custom-input" type="number" id="descLineClamp"
+                                           name="descLineClamp" placeholder="설명 최대 라인 수를 입력하세요.">
                                 </div>
                             </div>
-
                             <div class="col-lg-3">
                                 <div class="single-input-item">
                                     <label for="sortNo" class="custom-label">정렬 순서</label>
-                                    <input class="form-control custom-input" type="number" value="1" id="sortNo" name="sortNo" placeholder="메인UI 정렬 순서를 입력해주세요." required>
+                                    <input class="form-control custom-input" type="number" id="sortNo"
+                                           name="sortNo" placeholder="메인UI 정렬 순서를 입력해주세요." required>
                                 </div>
                             </div>
                         </div>
@@ -147,9 +148,6 @@
 <th:block layout:fragment="script">
     <script th:src="@{'/assets/js/page/admin/mainui/mainui-list-form.js'}"></script>
     <script th:inline="javascript">
-
-        const uiType = [[${uiType}]]
-        console.log(">> uiType : ", uiType)
 
         $(document).ready(function() {
 

@@ -4,6 +4,7 @@ package kware.apps.thirdeye;
 import cetus.user.UserUtil;
 import kware.apps.system.user.dto.response.UserFullInfo;
 import kware.apps.system.user.service.CetusUserService;
+import kware.apps.thirdeye.enumstatus.UserAuthorCd;
 import kware.apps.thirdeye.mobigen.approveddataset.dto.response.ApprovedDatasetView;
 import kware.apps.thirdeye.mobigen.approveddataset.service.CetusApprovedDatasetService;
 import kware.common.config.auth.dto.SessionUserInfo;
@@ -28,6 +29,7 @@ public class PortalController {
     @GetMapping("/home")
     public String home(Model model) {
         menuNavigationManager.renderingPage("/portal/home", "데이터셋홈", true, model);
+        model.addAttribute("isUser", UserAuthorCd.ROLE_USER.name().equals(UserUtil.getUser().getRole()));
         return "thirdeye/dataset/home";
     }
 

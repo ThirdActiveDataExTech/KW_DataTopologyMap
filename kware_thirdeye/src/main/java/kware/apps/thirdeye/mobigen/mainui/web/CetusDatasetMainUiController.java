@@ -39,7 +39,7 @@ public class CetusDatasetMainUiController {
     public String form(@PathVariable("uid") Long uid, Model model) {
         menuNavigationManager.renderingPage("/admin/main-ui", "데이터셋 메인UI 수정", false, model);
 
-        // 1. 해당 {화면 UI}를 사용하는 데이터셋이 있는지 체크
+        // 해당 {화면 UI}를 사용하는 데이터셋이 있는지 체크
         // => 있다면 해당 {화면 UI}는 삭제가 불가능
         Integer datasetMainUiUse = datasetUiService.countDatasetMainUiUse(uid);
         model.addAttribute("datasetMainUiUse", datasetMainUiUse);

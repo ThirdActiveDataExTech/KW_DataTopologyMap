@@ -63,15 +63,9 @@
         INSERT INTO CETUS_DATASET_MAIN_UI (
              CODE
             ,NAME
-            <if test="@Ognl@isNotEmpty(maxCount)">
             ,MAX_COUNT
-            </if>
-            <if test="@Ognl@isNotEmpty(descLineClamp)">
             ,DESC_LINE_CLAMP
-            </if>
-            <if test="@Ognl@isNotEmpty(titleLineClamp)">
             ,TITLE_LINE_CLAMP
-            </if>
             ,THUMB_USE_AT
             ,TYPE_CD
             ,SORT_NO
@@ -85,18 +79,12 @@
         ) VALUES (
              #{code}
             ,#{name}
-            <if test="@Ognl@isNotEmpty(maxCount)">
-            ,#{maxCount}
-            </if>
-            <if test="@Ognl@isNotEmpty(descLineClamp)">
-            ,#{descLineClamp}
-            </if>
-            <if test="@Ognl@isNotEmpty(titleLineClamp)">
-            ,#{titleLineClamp}
-            </if>
+            ,#{maxCount}::int
+            ,#{descLineClamp}::int
+            ,#{titleLineClamp}::int
             ,#{thumbUseAt}
             ,#{typeCd}
-            ,#{sortNo}
+            ,#{sortNo}::int
             ,#{workplaceUid}
             ,#{useAt}
             ,'N'
@@ -141,21 +129,11 @@
         /* cetusDatasetMainUi.update */
         UPDATE CETUS_DATASET_MAIN_UI
            SET NAME = #{name}
-         <if test="@Ognl@isNotEmpty(maxCount)">
-              ,MAX_COUNT = #{maxCount}
-         </if>
-         <if test="@Ognl@isNotEmpty(descLineClamp)">
-              ,DESC_LINE_CLAMP = #{descLineClamp}
-         </if>
-         <if test="@Ognl@isNotEmpty(titleLineClamp)">
-              ,TITLE_LINE_CLAMP = #{titleLineClamp}
-         </if>
-        <if test="@Ognl@isNotEmpty(thumbUseAt)">
+              ,MAX_COUNT = #{maxCount}::int
+              ,DESC_LINE_CLAMP = #{descLineClamp}::int
+              ,TITLE_LINE_CLAMP = #{titleLineClamp}::int
               ,THUMB_USE_AT = #{thumbUseAt}
-        </if>
-        <if test="@Ognl@isNotEmpty(sortNo)">
-              ,SORT_NO = #{sortNo}
-        </if>
+              ,SORT_NO = #{sortNo}::int
               ,UPDT_UID = #{updtUid}
               ,UPDT_DT = NOW()
               ,USE_AT = #{useAt}

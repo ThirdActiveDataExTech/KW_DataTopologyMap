@@ -124,6 +124,17 @@
       text-shadow: 1px 1px 1px #eaeaea;
     }
   </style>
+  <style>
+    .btn-edit-mainui {
+      border: none;
+      background: none;
+      cursor: pointer;
+      transition: color 0.2s;
+    }
+    .btn-edit-mainui:hover {
+      color: #e97730;
+    }
+  </style>
 </th:block>
 
 <th:block layout:fragment="content">
@@ -137,6 +148,8 @@
   <script th:src="@{'/assets/js/page/thirdeye/main/home.js'}"></script>
   <script th:src="@{'/assets/js/page/thirdeye/main/draw-home-type.js'}"></script>
   <script th:inline="javascript">
+
+    const isUser = [[${isUser}]]
 
     $(async function(e) {
       const res = await Http.get(`/api/portal/dataset-ui/grouping`)
