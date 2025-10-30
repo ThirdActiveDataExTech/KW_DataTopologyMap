@@ -12,12 +12,7 @@
               ,( SELECT COALESCE(ROUND(SUM(CDM.RATINGS) / COUNT(*)), 0)
                    FROM CETUS_DATASET_COMMENT CDM
                   WHERE CDM.APPROVED_DATASET_UID = CAD.UID ) AS RATINGS
-              ,CASE WHEN EXISTS (
-                        SELECT 1
-                          FROM CETUS_DATASET_BOOKMARK B
-                         WHERE B.APPROVED_DATASET_UID = CAD.UID
-                           AND B.USER_UID = #{userUid}
-              ) THEN 'Y' ELSE 'N' END AS BOOKMARK_YN
+              ,CASE WHEN CDB.APPROVED_DATASET_UID IS NOT NULL THEN 'Y' ELSE 'N' END AS BOOKMARK_YN
               ,CDU.CATEGORY_UID AS CATEGORY_UID
               ,CDC.CATEGORY_NM AS CATEGORY_NM
               ,CDMU.UID AS MAIN_UI_UID
@@ -32,6 +27,7 @@
           LEFT JOIN CETUS_USER CU_APP ON CU_APP.UID = CAD.APPROVER_UID -- 모비젠의 데이터셋을 진열등록한 유저
           LEFT JOIN CETUS_DATASET_MAIN_UI CDMU ON CDMU.UID = CDU.MAIN_UI_UID -- KWARE 포탈 시스템의 메인 UI
           LEFT JOIN CETUS_DATASET_CATEGORY CDC ON CDC.UID = CDU.CATEGORY_UID -- 진열관리 중인 데이터셋의 카테고리
+          LEFT JOIN CETUS_DATASET_BOOKMARK CDB ON CDB.APPROVED_DATASET_UID = CAD.UID AND CDB.USER_UID = #{userUid} -- 진열관리 중인 데이터셋에 대해 로그인 사용자의 북마크 여부
          WHERE CAD.WORKPLACE_UID = #{workplaceUid}
            AND CAD.DELETE_AT = 'N'
         <if test="@Ognl@isNotEmpty(showAt)">
@@ -78,6 +74,7 @@
           LEFT JOIN CETUS_USER CU_APP ON CU_APP.UID = CAD.APPROVER_UID -- 모비젠의 데이터셋을 진열등록한 유저
           LEFT JOIN CETUS_DATASET_MAIN_UI CDMU ON CDMU.UID = CDU.MAIN_UI_UID -- KWARE 포탈 시스템의 메인 UI
           LEFT JOIN CETUS_DATASET_CATEGORY CDC ON CDC.UID = CDU.CATEGORY_UID -- 진열관리 중인 데이터셋의 카테고리
+          LEFT JOIN CETUS_DATASET_BOOKMARK CDB ON CDB.APPROVED_DATASET_UID = CAD.UID AND CDB.USER_UID = #{userUid} -- 진열관리 중인 데이터셋에 대해 로그인 사용자의 북마크 여부
          WHERE CAD.WORKPLACE_UID = #{workplaceUid}
            AND CAD.DELETE_AT = 'N'
         <if test="@Ognl@isNotEmpty(showAt)">
@@ -156,21 +153,14 @@
                    FROM CETUS_DATASET_COMMENT CDM
                   WHERE CDM.APPROVED_DATASET_UID = CAD.UID
               ) AS RATINGS
-              ,CASE
-                   WHEN EXISTS (
-                       SELECT 1
-                         FROM CETUS_DATASET_BOOKMARK B
-                        WHERE B.APPROVED_DATASET_UID = CAD.UID
-                          AND B.USER_UID = #{userUid}
-                   ) THEN 'Y'
-                   ELSE 'N'
-                END AS BOOKMARK_YN
+              ,CASE WHEN CDB.APPROVED_DATASET_UID IS NOT NULL THEN 'Y' ELSE 'N' END AS BOOKMARK_YN
               ,CDU.EXTRA_JSON
               ,CAD.DELETE_AT
           FROM CETUS_APPROVED_DATASET CAD -- 진열관리 중인 데이터셋
           LEFT JOIN CETUS_DATASET_UI CDU ON CDU.APPROVED_DATASET_UID = CAD.UID -- 진열관리 중인 데이터셋의 UI
           LEFT JOIN CETUS_DATASET_CATEGORY CDC ON CDC.UID = CDU.CATEGORY_UID -- 진열관리 중인 데이터셋의 카테고리
           LEFT JOIN CETUS_FILE CF ON CF.FILE_UID = CDU.THUMB_UID AND CF.USE_AT = 'Y' AND CF.SAVED = 'Y' -- 진열관리 중인 데이터셋의 썸네일 이미지
+          LEFT JOIN CETUS_DATASET_BOOKMARK CDB ON CDB.APPROVED_DATASET_UID = CAD.UID AND CDB.USER_UID = #{userUid} -- 진열관리 중인 데이터셋에 대해 로그인 사용자의 북마크 여부
          WHERE CAD.UID = #{approvedUid}
     </select>
 
@@ -190,17 +180,7 @@
               ,CDU.THUMB_UID AS THUMB_UID
               ,CF.FILE_ID AS THUMB_ID
               ,CAD.TARGET_TP_CD
-              ,( SELECT COALESCE(ROUND(SUM(CDM.RATINGS) / COUNT(*)), 0)
-                   FROM CETUS_DATASET_COMMENT CDM
-                  WHERE CDM.APPROVED_DATASET_UID = CAD.UID
-              ) AS RATINGS
-              ,CASE
-                   WHEN EXISTS (
-                       SELECT 1
-                         FROM CETUS_DATASET_BOOKMARK B
-                        WHERE B.APPROVED_DATASET_UID = CAD.UID
-                          AND B.USER_UID = #{userUid}
-              ) THEN 'Y' ELSE 'N' END AS BOOKMARK_YN
+              ,CASE WHEN CDB.APPROVED_DATASET_UID IS NOT NULL THEN 'Y' ELSE 'N' END AS BOOKMARK_YN
              ,TO_CHAR(CAD.APPROVED_DT, 'YYYY-MM-DD HH:MM') AS APPROVED_DT
              ,CU.USER_NM AS APPROVER_NM
           FROM CETUS_APPROVED_DATASET CAD -- 진열관리 중인 데이터셋
@@ -208,6 +188,7 @@
           LEFT JOIN CETUS_USER CU ON CU.UID = CAD.APPROVER_UID -- 모비젠의 데이터셋을 진열등록한 유저
           LEFT JOIN CETUS_DATASET_CATEGORY CDC ON CDC.UID = CDU.CATEGORY_UID -- 진열관리 중인 데이터셋의 카테고리
           LEFT JOIN CETUS_FILE CF ON CF.FILE_UID = CDU.THUMB_UID AND CF.USE_AT = 'Y' -- 진열관리 중인 데이터셋의 썸네일 이미지
+          LEFT JOIN CETUS_DATASET_BOOKMARK CDB ON CDB.APPROVED_DATASET_UID = CAD.UID AND CDB.USER_UID = #{userUid} -- 진열관리 중인 데이터셋에 대해 로그인 사용자의 북마크 여부
          WHERE CAD.WORKPLACE_UID = #{workplaceUid}
            AND CDU.MAIN_UI_UID = #{mainUiUid}
         <if test="@Ognl@isNotEmpty(selectedCategory)">

@@ -242,7 +242,9 @@ public class DatasetService {
 
         // 3. 만일 수정된 메타데이터 정보가 진열관리 중이라면, search_data 업데이트
         // todo 추후 체크 필요 
-        MetadataView metadataView = this.viewMetadata(new SearchMetadataView(Long.toString(metadataId)));
+        MetadataView metadataView = this.viewMetadata(
+                new SearchMetadataView(Long.toString(metadataId)), false, false, true
+        );
         approvedDatasetService2.updateDatasetSearchData(metadataId, metadataView.getTitle(), metadataView.getTags());
         log.info("======================= [4-3] Update Search Data : {} ===========================", metadataId);
     }
@@ -325,7 +327,7 @@ public class DatasetService {
      * @param search 메타데이터 ID
     **/
     @Transactional(readOnly = true)
-    public MetadataView viewMetadata( SearchMetadataView search ) {
+    public MetadataView viewMetadata( SearchMetadataView search, boolean useRegistrant, boolean useFile, boolean useTag ) {
 
         log.info("======================= [8] View Metadata : {} ===========================", search.getMetadataId());
         String metadataId = search.getMetadataId();
@@ -342,23 +344,29 @@ public class DatasetService {
         metadataView.setMetadataResponse(null);
 
         // 2. 데이터 등록자가 있다면 세팅
-        MobigenRegistrantView registrantView = registrantService.findMobigenRegistrant(Long.parseLong(metadataId));
-        metadataView.setRegistrantId((registrantView != null) ? registrantView.getRegistrantId() : null);
+        if(useRegistrant) {
+            MobigenRegistrantView registrantView = registrantService.findMobigenRegistrant(Long.parseLong(metadataId));
+            metadataView.setRegistrantId((registrantView != null) ? registrantView.getRegistrantId() : null);
+        }
 
         // 3. 데이터에 대한 파일 등록 정보가 KWARE 포탈 시스템에 있다면 세팅
-        List<CetusDatasetFileView> packagedataFiles = datasetFileService.findDataFileList(new SearchDatasetFile(metadataId, null, DataFileTpCd.PACKAGE.name()));
-        metadataView.setPackagedataFile((packagedataFiles != null && !packagedataFiles.isEmpty()) ? packagedataFiles.get(0) : null);
+        if(useFile) {
+            List<CetusDatasetFileView> packagedataFiles = datasetFileService.findDataFileList(new SearchDatasetFile(metadataId, null, DataFileTpCd.PACKAGE.name()));
+            metadataView.setPackagedataFile((packagedataFiles != null && !packagedataFiles.isEmpty()) ? packagedataFiles.get(0) : null);
 
-        List<CetusDatasetFileView> metadataFiles = datasetFileService.findDataFileList(new SearchDatasetFile(metadataId, null, DataFileTpCd.METADATA.name()));
-        metadataView.setMetadataFile((metadataFiles != null && !metadataFiles.isEmpty()) ? metadataFiles.get(0) : null);
+            List<CetusDatasetFileView> metadataFiles = datasetFileService.findDataFileList(new SearchDatasetFile(metadataId, null, DataFileTpCd.METADATA.name()));
+            metadataView.setMetadataFile((metadataFiles != null && !metadataFiles.isEmpty()) ? metadataFiles.get(0) : null);
 
-        List<CetusDatasetFileView> rawdataFiles = datasetFileService.findDataFileList(new SearchDatasetFile(metadataId, null, DataFileTpCd.RAWDATA.name()));
-        metadataView.setRawdataFiles(rawdataFiles);
+            List<CetusDatasetFileView> rawdataFiles = datasetFileService.findDataFileList(new SearchDatasetFile(metadataId, null, DataFileTpCd.RAWDATA.name()));
+            metadataView.setRawdataFiles(rawdataFiles);
+        }
 
         // 4. 데이터에 대한 태그 정보 (추후 삭제할 예정)
         // todo 추후 연결후 삭제..
-        List<TagList> tags = datasetTagService.findMobigenDatasetTagListByMetadataId(Long.parseLong(metadataId));
-        metadataView.setTags(tags);
+        if(useTag) {
+            List<TagList> tags = datasetTagService.findMobigenDatasetTagListByMetadataId(Long.parseLong(metadataId));
+            metadataView.setTags(tags);
+        }
 
         return metadataView;
     }

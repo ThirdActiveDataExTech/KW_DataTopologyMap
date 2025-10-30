@@ -3,7 +3,6 @@ package kware.apps.thirdeye.mobigen.approveddataset.service;
 import cetus.bean.Page;
 import cetus.bean.Pageable;
 import cetus.user.UserUtil;
-import kware.apps.mobigen.cetus.tag.dto.response.TagList;
 import kware.apps.mobigen.integration.dto.request.metadata.SearchMetadataView;
 import kware.apps.mobigen.integration.dto.response.metadata.MetadataView;
 import kware.apps.mobigen.integration.service.DatasetService;
@@ -54,7 +53,9 @@ public class CetusApprovedDatasetService {
             page.getList().forEach(dataset -> {
                 // (1) 데이터셋 > 모비젠 측을 통한 상세 정보 조회
                 Long metadataId = dataset.getMetadataId();
-                MetadataView metadataView = datasetService.viewMetadata(new SearchMetadataView(Long.toString(metadataId)));
+                MetadataView metadataView = datasetService.viewMetadata(
+                        new SearchMetadataView(Long.toString(metadataId)), false, false, true
+                );
                 if (metadataView != null) {
                     dataset.setMetadataView(metadataView);
                 }
@@ -97,10 +98,10 @@ public class CetusApprovedDatasetService {
         
         // 4. 데이터셋에 대한 필터링 데이터 조회 + 저장
         // => todo 추후 수정
-        MetadataView metadataView = datasetService.viewMetadata(new SearchMetadataView(Long.toString(request.getMetadataId())));
-        String title = metadataView.getTitle();
-        List<TagList> tags = metadataView.getTags();
-        approvedDatasetService2.updateDatasetSearchData(request.getMetadataId(), title, tags);
+        MetadataView metadataView = datasetService.viewMetadata(
+                new SearchMetadataView(Long.toString(request.getMetadataId())), false, false, true
+        );
+        approvedDatasetService2.updateDatasetSearchData(request.getMetadataId(), metadataView.getTitle(), metadataView.getTags());
     }
     
     /**
@@ -115,7 +116,7 @@ public class CetusApprovedDatasetService {
      * @param approvedUid : kware 포탈 시스템에 진열 등록되면서 얻게 되는 uid(pk)
     **/
     @Transactional(readOnly = true)
-    public ApprovedDatasetView findApprovedDatasetView(Long approvedUid) {
+    public ApprovedDatasetView findApprovedDatasetView( Long approvedUid, boolean useRegistrant, boolean useFile, boolean useTag  ) {
         // 1. 진열 등록된 데이터셋 정보
         ApprovedDatasetView approvedDatasetView = dao.getApprovedDatasetView(new SearchApprovedDatasetView(approvedUid, UserUtil.getUser().getUid()));
         if(approvedDatasetView != null) {
@@ -125,7 +126,9 @@ public class CetusApprovedDatasetService {
             approvedDatasetView.setUiView(uiView);
 
             // 3. 진열 등록된 데이터셋 UI => 모비젠에 저장된 데이터셋의 디테일 정보
-            MetadataView metadataView = datasetService.viewMetadata(new SearchMetadataView(Long.toString(approvedDatasetView.getMetadataId())));
+            MetadataView metadataView = datasetService.viewMetadata(
+                    new SearchMetadataView(Long.toString(approvedDatasetView.getMetadataId())), useRegistrant, useFile, useTag
+            );
             approvedDatasetView.setMetadataView(metadataView);
 
             // 4. 원본 데이터셋 저장 위치 정보
@@ -166,7 +169,9 @@ public class CetusApprovedDatasetService {
         homeDatasetList.forEach(home -> {
             // 1. 진열관리 중인 데이터셋에 대한 상세 정보 > 모비젠 측을 통한 조회
             Long metadataId = home.getMetadataId();
-            MetadataView metadataView = datasetService.viewMetadata(new SearchMetadataView(Long.toString(metadataId)));
+            MetadataView metadataView = datasetService.viewMetadata(
+                    new SearchMetadataView(Long.toString(metadataId)), false, false, false
+            );
             home.setMetadataView(metadataView);
             
             // 2. 진열관리 중인 데이터셋에 대한 > 화면 UI 정보 조회

@@ -30,7 +30,7 @@ public class CetusBookMarkService {
         List<UserBookMarkList> userBookMarkList = dao.getUserBookMarkList(search);
         for ( UserBookMarkList userBookMark : userBookMarkList ) {
             Long approvedUid = userBookMark.getApprovedUid();
-            ApprovedDatasetView datasetView = approvedDatasetService.findApprovedDatasetView(approvedUid);
+            ApprovedDatasetView datasetView = approvedDatasetService.findApprovedDatasetView(approvedUid, false, false, false);
             userBookMark.setDatasetView(datasetView);
         }
         return userBookMarkList;

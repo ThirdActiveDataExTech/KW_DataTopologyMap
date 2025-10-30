@@ -43,7 +43,7 @@ public class PortalController {
     public String openDetail(@PathVariable("approvedUid") Long approvedUid, Model model) {
         menuNavigationManager.renderingPage("/portal/list", "데이터셋 상세", false, model);
 
-        ApprovedDatasetView dataset = datasetService.findApprovedDatasetView(approvedUid);
+        ApprovedDatasetView dataset = datasetService.findApprovedDatasetView(approvedUid, false, true, true);
         model.addAttribute("dataset", dataset);
 
         if(dataset == null) return "error/404";

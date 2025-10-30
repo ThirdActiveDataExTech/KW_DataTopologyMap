@@ -10,6 +10,7 @@ import kware.apps.thirdeye.bbsctt.dto.request.BbscttTpSearch;
 import kware.apps.thirdeye.bbsctt.dto.response.BbscttView;
 import kware.apps.thirdeye.bbsctt.service.CetusBbscttService;
 import kware.apps.thirdeye.enumstatus.BbsTpCd;
+import kware.apps.thirdeye.enumstatus.UserAuthorCd;
 import kware.common.config.auth.menu.MenuNavigationManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -37,6 +38,7 @@ public class CetusBbscttController {
         CetusBbs bbs = bbsService.findBbsByTpCd(new BbscttTpSearch(BbsTpCd.fromSubcode(bbsTpCd).name(), UserUtil.getUserWorkplaceUid()));
         model.addAttribute("bbsUid", bbs.getBbsUid());
         model.addAttribute("bbs", bbs);
+        model.addAttribute("isUser", UserAuthorCd.ROLE_USER.name().equals(UserUtil.getUser().getRole()));
         menuNavigationManager.renderingPage("/portal/bbs/"+bbsTpCd, bbs.getBbsNm(), true, model);
         return "thirdeye/bbsctt/index";
     }

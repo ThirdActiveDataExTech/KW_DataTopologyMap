@@ -24,7 +24,6 @@ public class HomeDatasetList {
     private DatasetUiView uiView;
     private MetadataView metadataView;
 
-    private Integer ratings;
     private String bookmarkYn;
 
     private String approvedDt;

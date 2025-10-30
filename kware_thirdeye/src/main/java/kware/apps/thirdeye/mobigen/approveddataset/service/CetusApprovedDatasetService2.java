@@ -1,5 +1,6 @@
 package kware.apps.thirdeye.mobigen.approveddataset.service;
 
+import cetus.util.ObjectUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import kware.apps.mobigen.cetus.tag.dto.response.TagList;
 import kware.apps.thirdeye.mobigen.approveddataset.domain.CetusApprovedDataset;
@@ -24,19 +25,11 @@ public class CetusApprovedDatasetService2 {
 
     @Transactional
     public void updateDatasetSearchData(Long metadataId, String title, List<TagList> tags) {
-
         List<Long> tagUids = tags.stream().map(TagList::getTagUid).collect(Collectors.toList());
-
         Map<String, Object> searchDataMap = new HashMap<>();
-        searchDataMap.put("title", title); // datasetTitle 변수에 데이터셋 제목
+        searchDataMap.put("title", title);
         searchDataMap.put("tags", tagUids);
-        String searchDataJson = "{}";
-        try {
-            ObjectMapper objectMapper = new ObjectMapper();
-            searchDataJson = objectMapper.writeValueAsString(searchDataMap);
-        } catch (Exception e) {
-            log.error("err: ", e);
-        }
+        String searchDataJson = ObjectUtil.makeJsonString(searchDataMap);
         dao.updateApprovedDatasetSearchData(new CetusApprovedDataset(metadataId, searchDataJson));
     }
 

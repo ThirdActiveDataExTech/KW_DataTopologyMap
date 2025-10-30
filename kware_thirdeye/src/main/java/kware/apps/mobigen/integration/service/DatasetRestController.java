@@ -31,8 +31,8 @@ import java.io.IOException;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/admin/integration-dataset")
-public class DatasetAdminRestController {
+@RequestMapping("/api/portal/integration-dataset")
+public class DatasetRestController {
 
     private final DatasetService service;
 
@@ -40,7 +40,7 @@ public class DatasetAdminRestController {
      *
      * [PACKAGE_02] 패키지 데이터셋 업로드
      *
-     * @api         [POST] /api/admin/integration-dataset/import-package
+     * @api         [POST] /api/portal/integration-dataset/import-package
      * @author      dahyeon
      * @date        2025-10-23
     **/
@@ -58,7 +58,7 @@ public class DatasetAdminRestController {
      *
      * [METADATA_07] 특정 메타데이터 파일 정보 미리보기
      *
-     * @api         [POST] /api/admin/integration-dataset/metadata-preview
+     * @api         [POST] /api/portal/integration-dataset/metadata-preview
      * @author      dahyeon
      * @date        2025-10-23
     **/
@@ -78,7 +78,7 @@ public class DatasetAdminRestController {
      * (+) 원본데이터 파일 업로드  [선택]
      *
      *
-     * @api         [POST] /api/admin/integration-dataset/create-metadata
+     * @api         [POST] /api/portal/integration-dataset/create-metadata
      * @author      dahyeon
      * @date        2025-10-23
     **/
@@ -94,7 +94,7 @@ public class DatasetAdminRestController {
      * [METADATA_05] 메타데이터 정보 수정
      * (+) [RAWDATA_02] 원본데이터 파일 추가 업로드 [선택]
      *
-     * @api         [POST] /api/admin/integration-dataset/update-metadata
+     * @api         [POST] /api/portal/integration-dataset/update-metadata
      * @author      dahyeon
      * @date        2025-10-23
     **/
@@ -111,7 +111,7 @@ public class DatasetAdminRestController {
      *  => 만일 해당 메타데이터가 KWARE 포탈 시스템에서 진열관리중인 메타데이터라면,
      *     KWARE 포탈 시스템에서도 삭제한다 (논리 삭제)
      *
-     * @api         [POST] /api/admin/integration-dataset/delete-metadatas
+     * @api         [POST] /api/portal/integration-dataset/delete-metadatas
      * @author      dahyeon
      * @date        2025-10-23
     **/
@@ -126,7 +126,7 @@ public class DatasetAdminRestController {
      * [RAWDATA_03] 여러건의 원본데이터 삭제
      * => 해당 원본데이터파일에 대해서 kware 포탈 시스템에서도 삭제
      * 
-     * @api         [POST] /api/admin/integration-dataset/delete-rawdatas
+     * @api         [POST] /api/portal/integration-dataset/delete-rawdatas
      * @author      dahyeon
      * @date        2025-10-23
     **/
@@ -140,7 +140,7 @@ public class DatasetAdminRestController {
      *
      * [RAWDATA_05] 원본데이터 단건 수정
      *
-     * @api         [POST] /api/admin/integration-dataset/update-rawdata
+     * @api         [POST] /api/portal/integration-dataset/update-rawdata
      * @author      dahyeon
      * @date        2025-10-23
     **/
@@ -154,13 +154,13 @@ public class DatasetAdminRestController {
      *
      * [METADATA_04] 메타데이터 상세 조회
      *
-     * @api         [POST] /api/admin/integration-dataset/view-metadata
+     * @api         [POST] /api/portal/integration-dataset/view-metadata
      * @author      dahyeon
      * @date        2025-10-24
     **/
     @PostMapping("/view-metadata")
     public ResponseEntity viewMetadata(@RequestBody SearchMetadataView search) {
-        MetadataView view = service.viewMetadata(search);
+        MetadataView view = service.viewMetadata(search, true, true, true);
         return ResponseEntity.ok(view);
     }
 
@@ -168,7 +168,7 @@ public class DatasetAdminRestController {
      *
      * [RAWDATA_04] 원본데이터 파일 정보 상세 조회
      *
-     * @api         [POST] /api/admin/integration-dataset/view-rawdata
+     * @api         [POST] /api/portal/integration-dataset/view-rawdata
      * @author      dahyeon
      * @date        2025-10-24
     **/
@@ -182,7 +182,7 @@ public class DatasetAdminRestController {
      *
      * [METADATA_01] 메타데이터 목록 조회 (+) 페이징
      *
-     * @api         [GET] /api/admin/integration-dataset/metadata-page
+     * @api         [GET] /api/portal/integration-dataset/metadata-page
      * @author      dahyeon
      * @date        2025-10-24
     **/
@@ -197,7 +197,7 @@ public class DatasetAdminRestController {
      *
      * [RAWDATA_01] 원본데이터 목록 조회 (+) 페이징
      *
-     * @api         [GET] /api/admin/integration-dataset/rawdata-page
+     * @api         [GET] /api/portal/integration-dataset/rawdata-page
      * @author      dahyeon
      * @date        2025-10-24
     **/
@@ -211,7 +211,7 @@ public class DatasetAdminRestController {
      * 
      * [RELATION_01] 연관 메타데이터 목록 조회 (+) 페이징
      * 
-     * @api         [GET] /api/admin/integration-dataset/relations-page
+     * @api         [GET] /api/portal/integration-dataset/relations-page
      * @author      dahyeon
      * @date        2025-10-24
     **/
@@ -225,7 +225,7 @@ public class DatasetAdminRestController {
      *
      * [RECOMMENDATION_01] 추천 메타데이터 목록 조회 (+) 페이징
      *
-     * @api         [GET] /api/admin/integration-dataset/recommendation-page
+     * @api         [GET] /api/portal/integration-dataset/recommendation-page
      * @author      dahyeon
      * @date        2025-10-27
     **/
@@ -240,7 +240,7 @@ public class DatasetAdminRestController {
      * [PACKAGE_01] 패키지 파일 다운로드
      * => todo : API 확인하고 추가 로직 구현,,
      *
-     * @api         [POST] /api/admin/integration-dataset/download-package
+     * @api         [POST] /api/portal/integration-dataset/download-package
      * @author      dahyeon
      * @date        2025-10-24
     **/
@@ -254,7 +254,7 @@ public class DatasetAdminRestController {
      *  [METADATA_08] 메타데이터 파일 다운로드
      * => todo : API 확인하고 추가 로직 구현,,
      *
-     * @api         [GET] /api/admin/integration-dataset/download-metadata
+     * @api         [GET] /api/portal/integration-dataset/download-metadata
      * @author      dahyeon
      * @date        2025-10-24
     **/
@@ -268,7 +268,7 @@ public class DatasetAdminRestController {
      * [RAWDATA_07] 원본데이터 파일 다운로드
      * => todo : API 확인하고 추가 로직 구현,,
      *
-     * @api         [GET] /api/admin/integration-dataset/download-rawdata
+     * @api         [GET] /api/portal/integration-dataset/download-rawdata
      * @author      dahyeon
      * @date        2025-10-24
     **/
@@ -281,7 +281,7 @@ public class DatasetAdminRestController {
      *
      * [META_01] 메타데이터로 사용되는 필터 KEY 값의 목록 정보 조회
      *
-     * @api         [GET] /api/admin/integration-dataset/metakey-list
+     * @api         [GET] /api/portal/integration-dataset/metakey-list
      * @author      dahyeon
      * @date        2025-10-27
     **/
@@ -295,7 +295,7 @@ public class DatasetAdminRestController {
      * 
      * [META_02] 메타데이터로 사용되는 필터 KEY 값의 VALUE 목록 정보 조회
      *
-     * @api         [GET] /api/admin/integration-dataset/metakey-value-list
+     * @api         [GET] /api/portal/integration-dataset/metakey-value-list
      * @author      dahyeon
      * @date        2025-10-27
     **/

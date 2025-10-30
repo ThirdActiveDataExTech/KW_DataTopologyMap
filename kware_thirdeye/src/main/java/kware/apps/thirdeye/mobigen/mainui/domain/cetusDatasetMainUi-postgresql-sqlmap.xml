@@ -28,7 +28,7 @@
         <if test="@Ognl@isNotEmpty(useAt)">
            AND CDMU.USE_AT = #{useAt}
         </if>
-         ORDER BY CDMU.REG_DT DESC
+         ORDER BY CDMU.SORT_NO DESC
         <if test="@Ognl@isNotEmpty(startNumber) and  @Ognl@isNotEmpty(endNumber)">
         OFFSET ${startNumber} LIMIT ${endNumber}
         </if>

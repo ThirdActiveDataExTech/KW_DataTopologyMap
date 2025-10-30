@@ -56,7 +56,7 @@ public class CetusApprovedDatasetController {
         // 2. 진열등록/관리 중인 데이터셋 정보
         // => 데이터셋의 상세 정보 (by. 모비젠)
         // => 데이터셋의 화면 UI 정보
-        ApprovedDatasetView approvedDatasetView = service.findApprovedDatasetView(approvedUid);
+        ApprovedDatasetView approvedDatasetView = service.findApprovedDatasetView(approvedUid, false, false, true);
         model.addAttribute("view", approvedDatasetView);
 
         return "admin/approved/form";

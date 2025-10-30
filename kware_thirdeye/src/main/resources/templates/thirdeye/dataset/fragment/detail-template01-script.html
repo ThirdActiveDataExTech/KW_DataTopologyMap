@@ -120,7 +120,7 @@
 
             $("#metadata-file-info").empty();
             const obj = { metadataId: metaId, rawdataId: rawId }
-            Http.post(`/api/admin/integration-dataset/view-rawdata`, obj, true).then((res) => {
+            Http.post(`/api/portal/integration-dataset/view-rawdata`, obj, true).then((res) => {
                 if (!res) {
                     Util.alert("데이터를 찾을 수 없습니다.");
                     return;
@@ -168,7 +168,7 @@
         packageDownloadBtnClickEvent: async function (metadataId, rawdataIds = []) {
             // todo[mobigen] download package
             const obj = { metadataId: metadataId, rawdataIds: rawdataIds }
-            const res = await Http.post('/api/admin/integration-dataset/download-package', obj, true)
+            const res = await Http.post('/api/portal/integration-dataset/download-package', obj, true)
             console.log(">> res : ", res);
         }
     }
@@ -183,7 +183,7 @@
             else {
                 const obj = {metadataId, metadataFileId}
                 const query = new URLSearchParams(obj).toString();
-                window.location.href = `/api/admin/integration-dataset/download-metadata?${query}`
+                window.location.href = `/api/portal/integration-dataset/download-metadata?${query}`
             }
         });
 
@@ -203,7 +203,7 @@
             else {
                 const obj = { metadataId, rawdataId, rawdataFileId }
                 const query = new URLSearchParams(obj).toString();
-                window.location.href = `/api/admin/integration-dataset/download-rawdata?${query}`
+                window.location.href = `/api/portal/integration-dataset/download-rawdata?${query}`
             }
         })
 

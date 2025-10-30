@@ -163,10 +163,10 @@
 
         createSidebar: async function () {
             template03FilterJS.initDom();
-            const response = await Http.get('/api/admin/integration-dataset/metakey-list')
+            const response = await Http.get('/api/portal/integration-dataset/metakey-list')
             const filters = response['filters']
             for (const filter of filters) {
-                const values = await Http.get('/api/admin/integration-dataset/metakey-value-list', { key: filter })
+                const values = await Http.get('/api/portal/integration-dataset/metakey-value-list', { key: filter })
                 if (values['filter'] === 'tag' && values['maps'] !== null) {
                     template03JS.param['tag'] = []
                     template03FilterJS.init("select2", values['filter'], values['maps'], values['filter']);
@@ -181,7 +181,7 @@
                 publisher: template03JS.keyword,
                 theme: template03JS.param.tag
             }
-            return await Http.get('/api/admin/integration-dataset/relations-page', obj);
+            return await Http.get('/api/portal/integration-dataset/relations-page', obj);
         },
 
         createList: function (response) {

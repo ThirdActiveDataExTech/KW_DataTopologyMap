@@ -44,7 +44,9 @@ public class CetusMobigenDatasetController {
     @GetMapping("/{uid}")
     public String form(@PathVariable("uid") Long uid, Model model) {
         menuNavigationManager.renderingPage("/admin/metadata/dataset", "메타 데이터 수정", false, model);
-        MetadataView metadataView = datasetService.viewMetadata(new SearchMetadataView(Long.toString(uid)));
+        MetadataView metadataView = datasetService.viewMetadata(
+                new SearchMetadataView(Long.toString(uid)), false, true, true
+        );
         model.addAttribute("metadataView", metadataView);
         return "admin/metadata/mobigen/form";
     }

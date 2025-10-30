@@ -117,6 +117,22 @@
       margin-top: 2px !important;
     }
   </style>
+  <style>
+    .right-buttons {
+      display: flex;
+      gap: 8px; /* 버튼 사이 간격 */
+    }
+    .right-buttons .custom-button {
+      flex: 1; /* 모든 버튼이 같은 너비, 높이 자동 맞춤 */
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 40px; /* 원하는 최소 높이 */
+      padding: 0.5rem 1rem;
+      white-space: normal; /* 줄바꿈 허용 (상세페이지 버튼) */
+      text-align: center;
+    }
+  </style>
   <link rel="stylesheet" th:href="@{'/assets/css/page/system/user-list.css'}"/>
 </th:block>
 
@@ -151,7 +167,7 @@
         <div class="col-lg-5">
           <div class="card">
             <div class="card-body">
-              <h5 class="card-title">모비젠 데이터셋 정보</h5>
+              <h5 class="card-title" th:text="|${view?.targetTpCdNm} 데이터셋 정보|"></h5>
               <div class="dataset-card">
 
                 <!-- 제목 -->

@@ -62,15 +62,14 @@
 
                         <div class="row custom-row">
                             <div class="col-lg-4">
-                                <label for="typeCd">유형 선택</label>
+                                <label for="typeCd">유형 선택<span style="color: firebrick">*</span></label>
                                 <select class="form-control form-select" id="typeCd" name="typeCd" required>
                                     <option value="" disabled selected>-- 유형 선택 --</option>
                                     <option th:each="entry : ${uiType}"
-                                            th:value="${entry.key}"
-                                            th:text="${entry.value?.description}"
+                                            th:value="${entry.key}" th:text="${entry.value?.description}"
                                             th:data-thumbnail="${entry.value?.useThumbNail}"
-                                            th:data-title="${entry.value?.useTitle}"
-                                            th:data-summary="${entry.value?.useSummary}">
+                                            th:data-title="${entry.value?.useTitle}" th:data-summary="${entry.value?.useSummary}"
+                                            th:data-min="${entry.value?.minCount}" th:data-max="${entry.value?.maxCount}">
                                     </option>
                                 </select>
                             </div>
@@ -107,7 +106,7 @@
                         <div class="row custom-row">
                             <div class="col-lg-3">
                                 <div class="single-input-item">
-                                    <label for="maxCount" class="custom-label">최대 노출 개수</label>
+                                    <label for="maxCount" class="custom-label">최대 노출 개수<span style="color: firebrick">*</span></label>
                                     <input class="form-control custom-input" type="number" id="maxCount"
                                            name="maxCount" placeholder="최대 노출 개수를 입력하세요.">
                                 </div>
@@ -128,7 +127,7 @@
                             </div>
                             <div class="col-lg-3">
                                 <div class="single-input-item">
-                                    <label for="sortNo" class="custom-label">정렬 순서</label>
+                                    <label for="sortNo" class="custom-label">정렬 순서<span style="color: firebrick">*</span></label>
                                     <input class="form-control custom-input" type="number" id="sortNo"
                                            name="sortNo" placeholder="메인UI 정렬 순서를 입력해주세요." required>
                                 </div>
@@ -166,19 +165,7 @@
                 }
             });
 
-            $('#typeCd').on('change', function() {
-                const selectedOption = $(this).find('option:selected');
-                // thumbnail
-                const useThumb = selectedOption.data('thumbnail') === true || selectedOption.data('thumbnail') === 'true';
-                $('#thumbUseAt_Y').prop('checked', useThumb);
-                $('#thumbUseAt_N').prop('checked', !useThumb);
-                // title
-                const useTitle = selectedOption.data('title')  === true || selectedOption.data('title') === 'true';
-                $("#titleLineClamp").prop('disabled', !useTitle);
-                // summary, description
-                const useSummary = selectedOption.data('summary')  === true || selectedOption.data('summary') === 'true';
-                $("#descLineClamp").prop('disabled', !useSummary);
-            });
+            $('#typeCd').on('change', mainuiJS.updateTypeDependentFields);
         });
 
     </script>
