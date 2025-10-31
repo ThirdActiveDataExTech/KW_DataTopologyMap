@@ -35,8 +35,8 @@
 			,#{regUid}
 			,NOW()
 			,#{updtUid}
-			,#{workplaceUid}
 			,NOW()
+			,#{workplaceUid}
 		)
 	</insert>
 

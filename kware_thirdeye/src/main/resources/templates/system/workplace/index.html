@@ -16,6 +16,11 @@
       cursor: pointer; /* 선택적으로 커서도 포인터로 */
     }
   </style>
+  <style>
+    .hidden {
+      display: none !important;
+    }
+  </style>
   <link rel="stylesheet" th:href="@{'/assets/css/page/system/user-list.css'}"/>
 </th:block>
 
@@ -49,7 +54,7 @@
             </div>
             <div class="topbar-right">
               <div class="btn-wrapper">
-                <button type="button" class="custom-button m-2" id="new-btn">워크플레이스<br>추가</button>
+                <!--<button type="button" class="custom-button m-2" id="new-btn">워크플레이스<br>추가</button>-->
               </div>
             </div>
           </div>
@@ -101,8 +106,7 @@
       }
     });
 
-    $(document).ready(function() {
-
+    $(document).ready(function () {
       workplaceJS.initTable();
 
       $("#new-btn").on('click', function () {
@@ -116,26 +120,15 @@
           workplaceJS.searchTable();
         }
       });
+    });
 
+    /* [워크플레이스] 관련 이벤트 */
+    $(document).ready(function() {
+
+      // 모달 열기
       $(document).on("click", "#workplace-mng", function () {
         const uid = $(this).data("uid");
         workplaceJS.workplaceModalOpen(uid);
-      });
-
-      $(document).on("click", "#dept-mng", function () {
-        workplaceJS.dept.workplaceUid = $(this).data("uid");
-        workplaceJS.dept.openDeptModal();
-      });
-
-      // 직급 수정
-      $(document).on("click", "#position-mng", function () {
-        workplaceJS.position.workplaceUid = $(this).data("uid");
-        workplaceJS.position.positionModalOpen();
-      });
-
-      $(document).on("click", "#group-mng", function () {
-        workplaceJS.group.workplaceUid = $(this).data("uid");
-        workplaceJS.group.groupModalOpen();
       });
 
       // 모달 닫기
@@ -155,7 +148,15 @@
 
     });
 
+
+    /* [직급] 관련 이벤트 */
     $(document).ready(function() {
+
+      // 모달 열기
+      $(document).on("click", "#position-mng", function () {
+        workplaceJS.position.workplaceUid = $(this).data("uid");
+        workplaceJS.position.positionModalOpen();
+      });
 
       // 직급 추가
       $('#add-position').on('click', function(e) {
@@ -205,7 +206,15 @@
 
     });
 
+
+    /* [소속] 관련 이벤트 */
     $(document).ready(function() {
+
+      // 모달 열기
+      $(document).on("click", "#group-mng", function () {
+        workplaceJS.group.workplaceUid = $(this).data("uid");
+        workplaceJS.group.groupModalOpen();
+      });
 
       // 소속 추가
       $('#add-group').on('click', function(e) {
@@ -255,7 +264,15 @@
 
     });
 
+
+    /* [부서] 관련 이벤트 */
     $(document).ready(function() {
+
+      // 모달 열기
+      $(document).on("click", "#dept-mng", function () {
+        workplaceJS.dept.workplaceUid = $(this).data("uid");
+        workplaceJS.dept.openDeptModal();
+      });
 
       // 모달 닫기
       $('#deptSaveModal').on('hidden.bs.modal', function () {
@@ -272,8 +289,14 @@
         workplaceJS.dept.deleteDept();
       });
 
+      // 저장
       $("#dept-save-btn").on('click', function () {
         workplaceJS.dept.saveDept();
+      });
+
+      // 부서 루트 추가
+      $("#add-root").on('click', function () {
+        workplaceJS.dept.addRootDept();
       });
 
     });

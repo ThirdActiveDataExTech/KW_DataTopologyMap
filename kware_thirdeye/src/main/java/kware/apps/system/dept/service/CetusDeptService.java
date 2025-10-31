@@ -28,16 +28,25 @@ public class CetusDeptService {
         return dao.findDeptTreeList(workplaceUid);
     }
 
+    @Transactional
     public void saveDeptTree(DeptTreeSave request) {
         CetusDept bean = new CetusDept(request);
         dao.insert(bean);
     }
 
+    @Transactional
+    public void saveDeptTreeRoot() {
+        CetusDept bean = new CetusDept("ROOT", UserUtil.getUserWorkplaceUid());
+        dao.insert(bean);
+    }
+
+    @Transactional
     public void changeDeptTree(Long uid, DeptTreeChange request) {
         CetusDept bean = new CetusDept(uid, request);
         dao.update(bean);
     }
 
+    @Transactional
     public void deleteDeptTree(Long uid) {
         CetusDept bean = new CetusDept(uid);
         dao.updateUseAtToN(bean);

@@ -46,4 +46,10 @@ public class CetusDeptRestController {
         service.deleteDeptTree(uid);
         return ResponseEntity.ok().build();
     }
+
+    @PostMapping("/root")
+    public ResponseEntity saveDeptTreeRoot() {
+        service.saveDeptTreeRoot();
+        return ResponseEntity.ok().build();
+    }
 }

@@ -20,6 +20,13 @@ public class CetusDept extends AuditBean {
     private Long workplaceUid;
     private Long upperUid;
 
+    public CetusDept(String name, Long workplaceUid) {
+        this.name = name;
+        this.sortOrder = 1L;
+        this.upperUid = null;
+        this.workplaceUid = workplaceUid;
+    }
+
     public CetusDept(DeptTreeSave request) {
         this.name = request.getDeptNm();
         this.sortOrder = request.getSortNo();

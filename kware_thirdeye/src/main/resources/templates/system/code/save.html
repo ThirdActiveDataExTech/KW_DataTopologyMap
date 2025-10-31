@@ -53,24 +53,23 @@
             <div class="section-title-2 st-border-center text-center mb-35">
                 <h2>코드 등록</h2>
             </div>
+
             <hr>
+
             <!-- s:buttons -->
             <div>
                 <div class="d-flex justify-content-end pe-4">
                     <div class="btn-container" style="margin-top: 0px !important;">
-                        <!-- 왼쪽 버튼 -->
-                        <!-- 오른쪽 버튼들 -->
                         <div class="right-buttons mb-2">
                             <button type="button" class="custom-button" id="save-btn">저장</button>
-                            <button type="button" class="custom-button" onclick="location.href='/system/code'">
-                                목록
-                            </button>
+                            <button type="button" class="custom-button" id="goto-list">목록</button>
                         </div>
                         <div class="error-message" id="formGroup-error"></div>
                     </div>
                 </div>
             </div>
             <!-- e:buttons -->
+
             <form id="save-form">
                 <div class="card">
                     <div class="pb-3 border-bottom" style="padding: 20px;">
@@ -82,44 +81,35 @@
                     </div>
                     <div class="card-body">
                         <div class="row">
-                            <div class="col-md-6 col-12">
+                            <div class="col-md-6 col-12 mb-3">
                                 <div class="mb-1">
-                                    <label class="custom-label" for="codeNm">그룹코드명<span
-                                            class="text-primary ms-50">*</span></label>
-                                    <input type="text" id="codeNm" class="form-control custom-input" placeholder="그룹코드명 정보를 입력해주세요."
-                                           name="codeNm"/>
+                                    <label class="custom-label" for="codeNm">그룹코드명<span class="text-primary ms-50">*</span></label>
+                                    <input type="text" id="codeNm" class="form-control custom-input" placeholder="그룹코드명 정보를 입력해주세요." name="codeNm"/>
                                 </div>
                             </div>
-                            <div class="col-md-6 col-12">
+                            <div class="col-md-6 col-12 mb-3">
                                 <div class="mb-1">
                                     <label class="custom-label">그룹코드 사용여부<span class="text-primary ms-50">*</span></label>
-
                                     <div class="form-check form-switch align-items-center" style="margin-bottom: 10px;">
-                                        <input class="form-check-input swtich-chk " type="checkbox" role="switch"
-                                               style="width: 3em; height: 1.5em"
-                                               id="useAt" name="useAt" checked/>
+                                        <input class="form-check-input swtich-chk " type="checkbox" role="switch" style="width: 3em; height: 1.5em" id="useAt" name="useAt" checked/>
                                     </div>
                                     <span class="validation-error-message" id="useAt-error"></span>
                                 </div>
                             </div>
-                            <div class="col-md-6 col-12">
+                            <div class="col-md-6 col-12 mb-3">
                                 <div class="mb-1">
                                     <label class="custom-label" for="code">그룹코드ID<span class="text-primary ms-50">*</span></label>
                                     <div class="input-group">
-                                        <input type="text" id="code" class="form-control custom-input"
-                                               placeholder="그룹코드ID 정보를 입력해주세요." name="code"/>
-                                        <button class="custom-button" id="idChk-btn"
-                                                type="button">중복 확인
-                                        </button>
+                                        <input type="text" id="code" class="form-control custom-input" placeholder="그룹코드ID 정보를 입력해주세요." name="code"/>
+                                        <button class="custom-button" id="idChk-btn" type="button">중복 확인</button>
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-md-6 col-12">
+                            <div class="col-md-6 col-12 mb-3">
                                 <div class="mb-1">
                                     <div class="mb-1">
                                         <label class="custom-label" for="codeDc">그룹코드설명</label>
-                                        <input type="text" id="codeDc" class="form-control custom-input"
-                                               placeholder="그룹코드설명 정보를 입력해주세요." name="codeDc"/>
+                                        <input type="text" id="codeDc" class="form-control custom-input" placeholder="그룹코드설명 정보를 입력해주세요." name="codeDc"/>
                                     </div>
                                 </div>
                             </div>
@@ -141,9 +131,16 @@
 
         $(function () {
 
+            $("#goto-list").on('click', async function () {
+                const isOk = await Util.confirm("작성중이신 정보는 저장되지 않습니다. <br> 목록으로 돌아가시겠습니까?")
+                if (isOk) {
+                    window.location.href = '/system/code'
+                }
+            });
+
             chkBtn.on("click", function (e) {
                 if (codeInput.val() == "") {
-                    Util.alert([[#{alert.no.input('그룹코드ID')}]])
+                    Util.alert("그룹코드ID 정보가 입력되지 않았습니다.")
                     return false
                 }
                 Http.get('/api/system/code/duplicate-check', {code: codeInput.val()}).then((res) => {
@@ -162,17 +159,17 @@
                     Util.alert("그룹코드 중복을 확인해주세요.");
                     return false
                 }
-                Util.confirm([[#{confirm.insert}]]).then((isOk) => {
+                Util.confirm("정말 등록하시겠습니까?").then((isOk) => {
                     if (isOk) {
                         FormDataToObj.getParameter("save-form").then((obj) => {
                             obj['useAt'] = $('#useAt').prop('checked') ? 'Y' : 'N'
                             Http.post('/api/system/code', obj, true).then((res) => {
-                                Util.alert([[#{alert.insert('코드')}]]).then(() => window.location.href = '/system/code')
+                                Util.alert("코드 등록이 완료되었습니다.").then(() => window.location.href = '/system/code')
                             }).fail((e) => {
                                 if (e.status === 400) {
                                     if (e.hasOwnProperty('responseJSON')) {
                                         const response = e['responseJSON'];
-                                        validationError.setValidationMssg('save-form', response)
+                                        ValidationError.setValidationMssg('save-form', response)
                                     }
                                 }
                                 if (e.status === 409) {
@@ -186,6 +183,7 @@
                 });
             })
         });
+
     </script>
 </th:block>
 </html>

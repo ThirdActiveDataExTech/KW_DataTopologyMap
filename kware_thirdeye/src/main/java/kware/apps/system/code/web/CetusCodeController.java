@@ -33,15 +33,14 @@ public class CetusCodeController {
     }
 
     @RequestMapping(value = "/form", method = {RequestMethod.GET, RequestMethod.POST})
-    public String form(@RequestParam(value = "code", required = false, defaultValue = "") String code,
-                       @RequestParam(value = "uid", required = false, defaultValue = "") Long uid, Model model) {
-
+    public String form( @RequestParam(value = "code", required = false, defaultValue = "") String code,
+                        @RequestParam(value = "uid", required = false, defaultValue = "") Long uid,
+                        Model model ) {
         model.addAttribute("view", service.code(uid));
         model.addAttribute("childList", service.getChildCodes(code, ""));
         model.addAttribute("code", code);
         model.addAttribute("uid", uid);
         menuNavigationManager.renderingPage("/system/code", "코드 수정", false, model);
-
         return "system/code/form";
     }
 }

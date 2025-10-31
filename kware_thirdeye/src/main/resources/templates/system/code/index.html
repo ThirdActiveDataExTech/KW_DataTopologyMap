@@ -127,7 +127,8 @@
                 .delUnUseParams()
                 .get("/api/system/code")
                 .switchDiv()
-                .add(new Column("uid"))
+                .delUnUseParams()
+                .add(new Column("uid").center().render((data, full) => full.listIndex))
                 .add(new Column("codeNm").center())
                 .add(new Column("code").center())
                 .add(new Column("codeDc").center())
@@ -138,8 +139,7 @@
                 .selectable()
                 .select(function (data) {
                     const form = $('<form>', {
-                        action: '/system/code/form',
-                        method: 'POST'
+                        action: '/system/code/form', method: 'POST'
                     }).append(
                         $('<input>', {type: 'hidden', name: 'code', value: data.code}),
                         $('<input>', {type: 'hidden', name: 'uid', value: data.uid})
@@ -180,7 +180,7 @@
             event.stopPropagation()
             const useAt = checked ? 'Y' : 'N';
             Http.put(`/api/system/code/change-useAt`, {uid, useAt}).then(() => {
-                Util.alert([[#{alert.update('코드 사용여부')}]]).then(() => table.submit());
+                Util.alert("코드 사용여부 수정이 완료되었습니다.").then(() => table.submit());
             });
         }
 
