@@ -19,7 +19,8 @@
                                     <img src="/assets/images/logo/logo.png" alt="logo">
                                 </th:block>
                                 <th:block th:unless="${user == null}">
-                                    <img th:src="|/api/portal/files/view?fileId=${user.brandingInfo.rootLogo}|" onerror="this.src='/assets/images/logo/logo.png'" alt="logo">
+                                    <img th:src="|/api/portal/files/view?fileId=${user?.brandingInfo?.rootLogo}|"
+                                         onerror="this.src='/assets/images/logo/logo.png'" alt="logo">
                                 </th:block>
                             </a>
                         </div>
@@ -54,6 +55,7 @@
                                 <div class="dropdown-menu">
                                     <a href="/portal/myInfo">프로필</a>
                                     <a href="#" onclick="logout()">로그아웃</a>
+                                    <a href="/super/workplace" th:if="${user != null and user?.isSuper}">워크플레이스 추가</a>
                                 </div>
                             </div>
                             <!--<div class="header-action-style header-action-download" id="download-csv-div">

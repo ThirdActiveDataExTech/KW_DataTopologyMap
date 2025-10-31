@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>thirdeye</title>
+    <th:block th:replace="~{fragments/head}"></th:block>
+    <link rel="stylesheet" th:href="@{'/assets/css/style.css'}" />
+</head>
+<body>
+<!-- 워크플레이스 선택 모달 -->
+<div class="modal fade" id="workplaceModal" tabindex="-1" aria-labelledby="workplaceModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="workplaceModalLabel">워크플레이스 선택</h5>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <label for="workplaceSelect" class="form-label">워크플레이스</label>
+                    <select class="form-select" id="workplaceSelect">
+                        <option value="" disabled selected>-- 선택하세요 --</option>
+                        <option th:each="workplace : ${workplaceList}" th:value="${workplace?.uid}" th:text="${workplace?.name}"></option>
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="confirm-btn" class="custom-button">선택</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<th:block th:replace="~{fragments/script :: script}"></th:block>
+<script>
+
+    /** 모달 닫을때 생기는 warning 해결 **/
+    $(document).on('hide.bs.modal', function () {
+        if (document.activeElement) {
+            $(document.activeElement).blur();
+        }
+    });
+
+    $(document).ready(function() {
+
+        // 모달 띄우기
+        $("#workplaceModal").modal('show');
+
+        // 선택 버튼 클릭 이벤트
+        $("#confirm-btn").on('click', function () {
+            const selectedOption = $('#workplaceSelect option:selected');
+            const workplaceUid = selectedOption.val();   // value 속성
+            const workplaceNm = selectedOption.text();   // 화면에 보이는 이름
+
+            if (!workplaceUid) {
+                Util.alert('워크플레이스를 선택해주세요.');
+                return;
+            }
+
+            const obj = { workplaceUid, workplaceNm }
+            Http.post('/api/super/workplace-choose', obj, true).then(() => {
+               Util.alert('워크플레이스가 세팅되었습니다.').then(() => {
+                   window.location.href = '/portal/home'
+               })
+            });
+        });
+
+    });
+
+</script>
+</body>
+</html>

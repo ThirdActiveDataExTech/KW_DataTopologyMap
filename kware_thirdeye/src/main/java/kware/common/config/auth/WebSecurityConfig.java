@@ -97,9 +97,11 @@ public class WebSecurityConfig {
     private void authorizeRequests(ExpressionUrlAuthorizationConfigurer<HttpSecurity>.ExpressionInterceptUrlRegistry urlRegistry) {
         urlRegistry
             .antMatchers(SecurityRoles.PERMIT_ALL_URLS).permitAll()
-            .antMatchers(SecurityRoles.SYSTEM_URLS).hasAnyAuthority("ROLE_SYSTEM")
-            .antMatchers(SecurityRoles.ADMIN_URLS).hasAnyAuthority("ROLE_ADMIN", "ROLE_SYSTEM")
-            .antMatchers(SecurityRoles.USER_URLS).hasAnyAuthority("ROLE_USER", "ROLE_ADMIN", "ROLE_SYSTEM")
+            .antMatchers(SecurityRoles.SUPER_SYSTEM_URLS).hasAnyAuthority("ROLE_SYSTEM", "ROLE_SUPER")
+            .antMatchers(SecurityRoles.SUPER_URLS).hasAuthority("ROLE_SUPER")
+            .antMatchers(SecurityRoles.SYSTEM_URLS).hasAnyAuthority("ROLE_SYSTEM", "ROLE_SUPER")
+            .antMatchers(SecurityRoles.ADMIN_URLS).hasAnyAuthority("ROLE_ADMIN", "ROLE_SYSTEM", "ROLE_SUPER")
+            .antMatchers(SecurityRoles.USER_URLS).hasAnyAuthority("ROLE_USER", "ROLE_ADMIN", "ROLE_SYSTEM", "ROLE_SUPER")
             .anyRequest().authenticated();
     }
 

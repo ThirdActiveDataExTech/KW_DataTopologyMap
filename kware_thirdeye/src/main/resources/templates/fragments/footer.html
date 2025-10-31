@@ -30,7 +30,7 @@
                                             <img src="/assets/images/logo/logo.png" alt="logo">
                                         </th:block>
                                         <th:block th:unless="${user == null}">
-                                            <img th:src="|/api/portal/files/view?fileId=${user.brandingInfo.footerLogo}|" onerror="this.src='/assets/images/logo/logo.png'" alt="logo">
+                                            <img th:src="|/api/portal/files/view?fileId=${user?.brandingInfo?.footerLogo}|" onerror="this.src='/assets/images/logo/logo.png'" alt="logo">
                                         </th:block>
                                     </a>
                                 </div>
@@ -43,9 +43,9 @@
                                     <div style="font-size:13px;">SW 컴퓨팅 산업원천기술 개발사업</div>
                                 </th:block>
                                 <th:block th:unless="${user == null}">
-                                    <div style="font-size: 13px; letter-spacing: -0.5px; margin-bottom: 4px;" th:text="${user.brandingInfo.title1}"></div>
-                                    <div style="font-size: 30px; line-height: normal; font-weight: 600; margin-bottom: 4px;" th:text="${user.brandingInfo.title2}" ></div>
-                                    <div style="font-size:13px;" th:text="${user.brandingInfo.title3}"></div>
+                                    <div style="font-size: 13px; letter-spacing: -0.5px; margin-bottom: 4px;" th:text="${user?.brandingInfo?.title1}"></div>
+                                    <div style="font-size: 30px; line-height: normal; font-weight: 600; margin-bottom: 4px;" th:text="${user?.brandingInfo?.title2}" ></div>
+                                    <div style="font-size:13px;" th:text="${user?.brandingInfo?.title3}"></div>
                                 </th:block>
 
                                 <p id="systemNm"></p>
@@ -57,7 +57,7 @@
                                                 <img src="/assets/images/icon-img/company.png" alt="logo">
                                             </th:block>
                                             <th:block th:unless="${user == null}">
-                                                <img th:src="|/api/portal/files/view?fileId=${user.brandingInfo.companyLogo}|" onerror="this.src='/assets/images/icon-img/company.png'" alt="logo">
+                                                <img th:src="|/api/portal/files/view?fileId=${user?.brandingInfo?.companyLogo}|" onerror="this.src='/assets/images/icon-img/company.png'" alt="logo">
                                             </th:block>
                                         </a>
                                     </div>

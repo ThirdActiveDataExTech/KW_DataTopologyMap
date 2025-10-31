@@ -80,4 +80,20 @@
          WHERE UID = #{uid}
     </update>
 
+    <select id="getWorkplaceList" parameterType="SearchWorkplace" resultType="WorkplaceList">
+        /* cetusWorkplace.getWorkplaceList */
+        SELECT CW.UID
+              ,CW.NAME
+              ,( SELECT COUNT(*)
+                   FROM CETUS_WORKPLACE_USER CWU
+                  WHERE CWU.WORKPLACE_UID = CW.UID
+              ) AS USER_CNT
+              ,CW.REG_UID
+              ,CU.USER_NM AS REG_NM
+              ,TO_CHAR(CW.REG_DT, 'YYYY-MM-DD') AS REG_DT
+          FROM CETUS_WORKPLACE CW
+          LEFT JOIN CETUS_USER CU ON CU.UID = CW.REG_UID
+         ORDER BY CW.REG_DT DESC
+    </select>
+
 </mapper>

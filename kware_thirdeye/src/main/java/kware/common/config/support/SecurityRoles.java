@@ -21,14 +21,23 @@ public class SecurityRoles {
             "/api/portal/**"
     };
 
+    public static final String[] ADMIN_URLS = {
+            "/admin/**",
+            "/api/admin/**"
+    };
+
     public static final String[] SYSTEM_URLS = {
             "/system/**",
             "/api/system/**"
     };
 
-    public static final String[] ADMIN_URLS = {
-            "/admin/**",
-            "/api/admin/**"
+    public static final String[] SUPER_SYSTEM_URLS = {
+            "/super/workplace"
+    };
+
+    public static final String[] SUPER_URLS = {
+            "/super/**",
+            "/api/super/**"
     };
 }
 

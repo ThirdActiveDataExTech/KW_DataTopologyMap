@@ -56,7 +56,7 @@
     <select id="userStatusHistExcelList" parameterType="UserStatusHistExcelSearch" resultType="UserStatusHistExcelList">
         /* cetusUserStatusHist.userStatusHistExcelList */
         SELECT CU.USER_ID || ' (' || CU.USER_NM || ')' AS USER_INFO
-              ,CW.NAME AS WORKPLACE_NM
+              ,COALESCE(CW.NAME, '워크플레이스 없음') AS WORKPLACE_NM
               ,CUSH.REASON
               ,CUSH.STATUS
               ,CASE WHEN CUSH.STATUS = 'APPROVED' THEN '사용중'
@@ -67,8 +67,8 @@
               ,CU_REG.USER_ID || ' (' || CU_REG.USER_NM || ')' AS REG_INFO
           FROM CETUS_USER_STATUS_HIST CUSH
          INNER JOIN CETUS_USER CU ON CU.UID = CUSH.USER_UID
-         INNER JOIN CETUS_WORKPLACE_USER CWU ON CWU.USER_UID = CUSH.USER_UID
-         INNER JOIN CETUS_WORKPLACE CW ON CW.UID = CWU.WORKPLACE_UID
+          LEFT JOIN CETUS_WORKPLACE_USER CWU ON CWU.USER_UID = CUSH.USER_UID
+          LEFT JOIN CETUS_WORKPLACE CW ON CW.UID = CWU.WORKPLACE_UID
           LEFT JOIN CETUS_USER CU_REG ON CU_REG.UID = CUSH.REG_UID
          WHERE CUSH.USER_UID = #{userUid}
          ORDER BY CUSH.REG_DT DESC

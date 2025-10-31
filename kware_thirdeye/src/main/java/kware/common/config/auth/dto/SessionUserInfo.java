@@ -3,6 +3,7 @@ package kware.common.config.auth.dto;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import kware.apps.system.menu.domain.CetusMenu;
 import kware.apps.system.user.dto.response.UserFullInfo;
+import kware.apps.thirdeye.enumstatus.UserAuthorCd;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
@@ -20,6 +21,7 @@ public class SessionUserInfo implements Serializable {
     private String userNm;
     private String userEmail;
     private String role;
+    private Boolean isSuper;
     private String status;
     private Integer failCnt;
     private Long profileUid;
@@ -52,6 +54,7 @@ public class SessionUserInfo implements Serializable {
         this.userNm = user.getUserNm();
         this.userEmail = user.getUserEmail();
         this.role = user.getRole();
+        this.isSuper = UserAuthorCd.ROLE_SUPER.name().equals(user.getRole());
         this.status = user.getStatus();
         this.failCnt = user.getFailCnt();
         this.profileUid = user.getProfileUid();
@@ -78,6 +81,12 @@ public class SessionUserInfo implements Serializable {
 
     public void addBrandingInfo(CetusBrandingInfo brandingInfo) {
         this.brandingInfo = brandingInfo;
+    }
+
+    public void setSuperRoleInfo(Long workplaceUid, String workplaceNm) {
+        this.workplaceUid = workplaceUid;
+        this.workplaceNm = workplaceNm;
+        this.role = UserAuthorCd.ROLE_SYSTEM.name();
     }
 
 }

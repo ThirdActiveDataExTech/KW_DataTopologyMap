@@ -34,10 +34,12 @@ public class CetusWorkplaceService {
     private final CetusMenuInfoService menuInfoService;
     private final CetusUserService userService;
 
+    @Transactional(readOnly = true)
     public Page<WorkplaceList> findWorkplacePage(SearchWorkplace search, Pageable pageable) {
         return dao.page("getWorkplacePage", "getWorkplacePageCount", search, pageable);
     }
 
+    @Transactional(readOnly = true)
     public CetusWorkplace findWorkplaceByUid(Long uid) {
         return dao.view(uid);
     }
@@ -121,5 +123,10 @@ public class CetusWorkplaceService {
     public void changeWorkplace(Long uid, WorkplaceSave request) {
         CetusWorkplace bean = new CetusWorkplace(uid, request);
         dao.update(bean);
+    }
+
+    @Transactional(readOnly = true)
+    public List<WorkplaceList> findWorkplaceList() {
+        return dao.getWorkplaceList();
     }
 }
