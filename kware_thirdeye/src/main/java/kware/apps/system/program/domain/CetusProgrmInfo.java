@@ -2,6 +2,7 @@ package kware.apps.system.program.domain;
 
 
 import cetus.bean.AuditBean;
+import kware.apps.superrole.dto.request.createworkplace.CreateProgram;
 import kware.apps.system.program.dto.request.ProgramChange;
 import kware.apps.system.program.dto.request.ProgramSave;
 import lombok.AccessLevel;
@@ -26,6 +27,14 @@ public class CetusProgrmInfo extends AuditBean {
     private String title2;
     private String title3;
     private String isRootUrl;
+
+    public CetusProgrmInfo(CreateProgram request, Long workplaceUid) {
+        this.workplaceUid = workplaceUid;
+        this.progrmNm = request.getProgramNm();
+        this.url = request.getProgramUrl();
+        this.useAt = "Y";
+        this.isRootUrl = request.getIsRootUrl();
+    }
 
     public CetusProgrmInfo(ProgramSave request, Long workplaceUid) {
         this.progrmNm = request.getProgrmNm();

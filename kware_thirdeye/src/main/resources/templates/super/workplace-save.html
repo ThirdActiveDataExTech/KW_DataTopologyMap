@@ -66,9 +66,8 @@
 
                               <!-- 권한별 유저 입력 한 줄(row) -->
                               <div style="margin-top: 20px;">
-                                <h4>해당 워크플레이스 유저 정보</h4>
+                                <h3>해당 워크플레이스 유저 정보</h3>
                                 <div class="col-12 d-flex gap-3">
-
                                   <!-- SYSTEM -->
                                   <div class="role-section p-2 border" style="flex:1">
                                     <h4>SYSTEM 유저</h4>
@@ -76,7 +75,7 @@
                                       <label for="systemId" class="custom-label">아이디<span class="req">*</span></label>
                                       <div class="input-group">
                                         <input type="text" id="systemId" name="systemId" class="form-control custom-input" required>
-                                        <button class="custom-button" id="systemId-check" type="button">중복 체크</button>
+                                        <button class="custom-button id-check-btn" id="systemId-check" type="button" data-role="system">중복 체크</button>
                                       </div>
                                       <span class="validation-error-message" id="systemId-error"></span>
                                     </div>
@@ -84,7 +83,7 @@
                                       <label for="systemEmail" class="custom-label">이메일<span class="req">*</span></label>
                                       <div class="input-group">
                                         <input type="text" id="systemEmail" name="systemEmail" class="form-control custom-input" required>
-                                        <button class="custom-button" id="systemEmail-check" type="button">중복 체크</button>
+                                        <button class="custom-button email-check-btn" id="systemEmail-check" type="button" data-role="system">중복 체크</button>
                                       </div>
                                       <span class="validation-error-message" id="systemEmail-error"></span>
                                     </div>
@@ -95,16 +94,15 @@
                                     </div>
                                     <div class="form-group">
                                       <label for="systemPwd" class="custom-label required">비밀번호<span class="req">*</span></label>
-                                      <input class="form-control custom-input" type="password" id="systemPwd" name="systemPwd" required>
+                                      <input class="form-control custom-input" data-role="system" type="password" id="systemPwd" name="systemPwd" required>
                                       <span class="validation-error-message" id="systemPwd-error"></span>
                                     </div>
                                     <div class="form-group">
                                       <label for="systemPwdChk" class="custom-label required">비밀번호 확인<span class="req">*</span></label>
-                                      <input class="form-control custom-input" type="password" id="systemPwdChk" required>
+                                      <input class="form-control custom-input" data-role="system" type="password" id="systemPwdChk" required>
                                       <span class="validation-error-message" id="systemPwdChk-error"></span>
                                     </div>
                                   </div>
-
                                   <!-- ADMIN -->
                                   <div class="role-section p-2 border" style="flex:1">
                                     <h4>ADMIN 유저</h4>
@@ -112,7 +110,7 @@
                                       <label for="adminId" class="custom-label">아이디<span class="req">*</span></label>
                                       <div class="input-group">
                                         <input type="text" id="adminId" name="adminId" class="form-control custom-input" required>
-                                        <button class="custom-button" id="adminId-check" type="button">중복 체크</button>
+                                        <button class="custom-button id-check-btn" id="adminId-check" type="button" data-role="admin">중복 체크</button>
                                       </div>
                                       <span class="validation-error-message" id="adminId-error"></span>
                                     </div>
@@ -120,7 +118,7 @@
                                       <label for="adminEmail" class="custom-label">이메일<span class="req">*</span></label>
                                       <div class="input-group">
                                         <input type="text" id="adminEmail" name="adminEmail" class="form-control custom-input" required>
-                                        <button class="custom-button" id="adminEmail-check" type="button">중복 체크</button>
+                                        <button class="custom-button email-check-btn" id="adminEmail-check" type="button" data-role="admin">중복 체크</button>
                                       </div>
                                       <span class="validation-error-message" id="adminEmail-error"></span>
                                     </div>
@@ -131,16 +129,15 @@
                                     </div>
                                     <div class="form-group">
                                       <label for="adminPwd" class="custom-label required">비밀번호<span class="req">*</span></label>
-                                      <input class="form-control custom-input" type="password" id="adminPwd" name="adminPwd" required>
+                                      <input class="form-control custom-input" data-role="admin" type="password" id="adminPwd" name="adminPwd" required>
                                       <span class="validation-error-message" id="adminPwd-error"></span>
                                     </div>
                                     <div class="form-group">
                                       <label for="adminPwdChk" class="custom-label required">비밀번호 확인<span class="req">*</span></label>
-                                      <input class="form-control custom-input" type="password" id="adminPwdChk" required>
+                                      <input class="form-control custom-input" data-role="admin" type="password" id="adminPwdChk" required>
                                       <span class="validation-error-message" id="adminPwdChk-error"></span>
                                     </div>
                                   </div>
-
                                   <!-- USER -->
                                   <div class="role-section p-2 border" style="flex:1">
                                     <h4>USER 유저</h4>
@@ -148,7 +145,7 @@
                                       <label for="userId" class="custom-label">아이디<span class="req">*</span></label>
                                       <div class="input-group">
                                         <input type="text" id="userId" name="userId" class="form-control custom-input" required>
-                                        <button class="custom-button" id="userId-check" type="button">중복 체크</button>
+                                        <button class="custom-button id-check-btn" id="userId-check" type="button" data-role="user">중복 체크</button>
                                       </div>
                                       <span class="validation-error-message" id="userId-error"></span>
                                     </div>
@@ -156,7 +153,7 @@
                                       <label for="userEmail" class="custom-label">이메일<span class="req">*</span></label>
                                       <div class="input-group">
                                         <input type="text" id="userEmail" name="userEmail" class="form-control custom-input" required>
-                                        <button class="custom-button" id="userEmail-check" type="button">중복 체크</button>
+                                        <button class="custom-button email-check-btn" id="userEmail-check" type="button" data-role="user">중복 체크</button>
                                       </div>
                                       <span class="validation-error-message" id="userEmail-error"></span>
                                     </div>
@@ -167,12 +164,12 @@
                                     </div>
                                     <div class="form-group">
                                       <label for="userPwd" class="custom-label required">비밀번호<span class="req">*</span></label>
-                                      <input class="form-control custom-input" type="password" id="userPwd" name="userPwd" required>
+                                      <input class="form-control custom-input" data-role="user" type="password" id="userPwd" name="userPwd" required>
                                       <span class="validation-error-message" id="userPwd-error"></span>
                                     </div>
                                     <div class="form-group">
                                       <label for="userPwdChk" class="custom-label required">비밀번호 확인<span class="req">*</span></label>
-                                      <input class="form-control custom-input" type="password" id="userPwdChk" required>
+                                      <input class="form-control custom-input" data-role="user" type="password" id="userPwdChk" required>
                                       <span class="validation-error-message" id="userPwdChk-error"></span>
                                     </div>
                                   </div>
@@ -181,84 +178,88 @@
                             </div>
 
                             <div class="row" style="margin-top: 30px !important;">
-                                <!-- 프로그램 & 메뉴 -->
-                                <div class="col-6">
-                                  <div style="margin-top: 10px;">
-                                    <h4 class="d-flex align-items-center justify-content-between">
-                                      프로그램 정보 등록
-                                      <button type="button" class="custom-button" id="addProgramBtn">추가</button>
-                                    </h4>
-                                    <div class="role-section">
-                                      <div id="programList" class="d-flex flex-column gap-2">
-                                        <div class="program-item d-flex gap-2 align-items-center" data-id="1">
-                                          <input type="text" class="form-control custom-input program-name" placeholder="프로그램명" value="root" disabled readonly required>
-                                          <input type="text" class="form-control custom-input program-url" placeholder="프로그램 URL" value="/" disabled readonly required>
-                                          <button type="button" class="custom-button removeProgramBtn" disabled readonly>삭제</button>
-                                        </div>
-                                        <div class="program-item d-flex gap-2 align-items-center" data-id="2">
-                                          <input type="text" class="form-control custom-input program-name" placeholder="프로그램명" value="footer_root" disabled readonly required>
-                                          <input type="text" class="form-control custom-input program-url" placeholder="프로그램 URL" value="/" disabled readonly required>
-                                          <button type="button" class="custom-button removeProgramBtn"  disabled readonly>삭제</button>
-                                        </div>
+                              <!-- 프로그램 -->
+                              <div class="col-6">
+                                <div style="margin-top: 10px;">
+                                  <h4 class="d-flex align-items-center justify-content-between">
+                                    프로그램 정보 등록
+                                    <button type="button" class="custom-button" id="addProgramBtn">추가</button>
+                                  </h4>
+                                  <div class="role-section">
+                                    <div id="programList" class="d-flex flex-column gap-2">
+                                      <div class="program-item d-flex gap-2 align-items-center" data-id="1" data-root="Y">
+                                        <input type="text" class="form-control custom-input program-name" placeholder="프로그램명" value="root" disabled readonly required>
+                                        <input type="text" class="form-control custom-input program-url" placeholder="프로그램 URL" value="/" disabled readonly required>
+                                      </div>
+                                      <div class="program-item d-flex gap-2 align-items-center" data-id="2" data-root="Y">
+                                        <input type="text" class="form-control custom-input program-name" placeholder="프로그램명" value="footer_root" disabled readonly required>
+                                        <input type="text" class="form-control custom-input program-url" placeholder="프로그램 URL" value="/" disabled readonly required>
+                                      </div>
+                                      <div class="program-item d-flex gap-2 align-items-center" data-id="3" data-root="N">
+                                        <input type="text" class="form-control custom-input program-name" placeholder="프로그램명" value="데이터 검색" disabled readonly required>
+                                        <input type="text" class="form-control custom-input program-url" placeholder="프로그램 URL" value="/portal/list" disabled readonly required>
+                                      </div>
+                                      <div class="program-item d-flex gap-2 align-items-center" data-id="4" data-root="N">
+                                        <input type="text" class="form-control custom-input program-name" placeholder="프로그램명" value="컨텐츠 메인 (홈)" disabled readonly required>
+                                        <input type="text" class="form-control custom-input program-url" placeholder="프로그램 URL" value="/portal/home" disabled readonly required>
                                       </div>
                                     </div>
                                   </div>
                                 </div>
-
-                                <div class="col-6">
-                                  <div style="margin-top: 10px;">
-                                    <h4 class="d-flex align-items-center justify-content-between">
-                                      메뉴 정보 등록
-                                    </h4>
-                                    <div class="row mt-3 role-section">
-                                      <!-- 왼쪽: 메뉴 트리 -->
-                                      <div class="col-6 pe-3">
-                                        <div class="">
-                                          <h5>메뉴 트리</h5>
-                                          <div id="menu-tree"></div>
-                                        </div>
+                              </div>
+                              <!-- 메뉴 -->
+                              <div class="col-6">
+                                <div style="margin-top: 10px;">
+                                  <h4 class="d-flex align-items-center justify-content-between">
+                                    메뉴 정보 등록
+                                  </h4>
+                                  <div class="row mt-3 role-section">
+                                    <!-- 왼쪽: 메뉴 트리 -->
+                                    <div class="col-6 pe-3">
+                                      <div class="">
+                                        <h5>메뉴 트리</h5>
+                                        <div id="menu-tree"></div>
                                       </div>
-
-                                      <div class="col-auto">
-                                        <div style="width:1px; background-color:#ccc; height:100%;"></div>
+                                    </div>
+                                    <!-- 중간: 선 -->
+                                    <div class="col-auto">
+                                      <div style="width:1px; background-color:#ccc; height:100%;"></div>
+                                    </div>
+                                    <!-- 오른쪽: 메뉴 정보 입력 폼 -->
+                                    <div class="col-5 ps-3">
+                                      <div>
+                                        <h5 style="padding-bottom: 5px;">메뉴 정보 입력</h5>
+                                        <form id="menuForm">
+                                          <input type="hidden" id="menuId">
+                                          <div class="form-group">
+                                            <label for="menuNm" class="custom-label required">메뉴명<span class="req">*</span></label>
+                                            <input class="form-control custom-input" type="text" id="menuNm" name="menuNm">
+                                          </div>
+                                          <div class="form-group">
+                                            <label for="menuUrl" class="custom-label required">URL<span class="req">*</span></label>
+                                            <select id="menuUrl" name="menuUrl" class="form-control">
+                                              <option value="">선택하세요</option>
+                                            </select>
+                                          </div>
+                                          <div class="form-group">
+                                            <label for="sortNo" class="custom-label required">순서<span class="req">*</span></label>
+                                            <input class="form-control custom-input" type="number" id="sortNo" name="sortNo">
+                                          </div>
+                                          <div class="d-flex justify-content-between mt-3">
+                                            <div>
+                                              <button type="button" class="custom-button" id="deleteMenuBtn" disabled>삭제하기</button>
+                                            </div>
+                                            <div>
+                                              <button type="button" class="custom-button" id="applyMenuBtn">반영하기</button>
+                                            </div>
+                                          </div>
+                                        </form>
                                       </div>
-
-                                      <!-- 오른쪽: 메뉴 정보 입력 폼 -->
-                                      <div class="col-5 ps-3">
-                                        <div>
-                                          <h5 style="padding-bottom: 5px;">메뉴 정보 입력</h5>
-                                          <form id="menuForm">
-                                            <input type="hidden" id="menuId">
-                                            <div class="form-group">
-                                              <label for="menuNm" class="custom-label required">메뉴명<span class="req">*</span></label>
-                                              <input class="form-control custom-input" type="text" id="menuNm" name="menuNm" required>
-                                            </div>
-                                            <div class="form-group">
-                                              <label for="menuUrl" class="custom-label required">URL<span class="req">*</span></label>
-                                              <select id="menuUrl" name="menuUrl" class="form-control" required>
-                                                <option value="">선택하세요</option>
-                                              </select>
-                                            </div>
-                                            <div class="form-group">
-                                              <label for="sortNo" class="custom-label required">순서<span class="req">*</span></label>
-                                              <input class="form-control custom-input" type="number" id="sortNo" name="sortNo" required>
-                                            </div>
-                                            <div class="d-flex justify-content-between mt-3">
-                                              <div>
-                                                <button type="button" class="custom-button" id="deleteMenuBtn" disabled>삭제하기</button>
-                                              </div>
-                                              <div>
-                                                <button type="button" class="custom-button" id="applyMenuBtn">반영하기</button>
-                                              </div>
-                                            </div>
-                                          </form>
-                                        </div>
-                                      </div>
+                                    </div>
                                   </div>
                                 </div>
                               </div>
-
-                              <!-- 3️⃣ 제출 버튼 -->
+                              <!-- 제출 버튼 -->
                               <div class="d-flex justify-content-end">
                                 <div class="btn-container" style="margin-top: 0 !important;">
                                   <div class="right-buttons">
@@ -291,11 +292,42 @@
   <script th:src="@{'/assets/js/page/super/workplace-save.js'}"></script>
   <script th:inline="javascript">
 
-
     $(document).ready(function() {
 
       workplaceSaveJS.initPage();
 
+      // 최종 생성 버튼
+      $("#save-btn").on('click', function () {
+        workplaceSaveJS.saveForm();
+      });
+
+    });
+
+
+    $(document).ready(function() {
+
+      // id 중복 확인
+      $(document).on('click', '.id-check-btn', function() {
+        const role = $(this).data('role'); // system, admin, user
+        workplaceSaveJS.user.checkIdDuplicate(role);
+      });
+
+      // 이메일 중복 확인
+      $(document).on('click', '.email-check-btn', function() {
+        const role = $(this).data('role'); // system, admin, user
+        workplaceSaveJS.user.checkEmailDuplicate(role);
+      });
+
+      // 비번 입력 잡기
+      $(document).on('input', 'input[type="password"]', function () {
+        const role = $(this).data('role');
+        workplaceSaveJS.user.validatePassword(role);
+      });
+
+    });
+
+
+    $(document).ready(function() {
       // [프로그램 정보 등록] > [추가] 버튼 클릭 이벤트
       $('#addProgramBtn').on('click', function() {
         workplaceSaveJS.program.addProgramBtnClickEvent();
@@ -312,10 +344,29 @@
         workplaceSaveJS.program.updateMenuSelect();
         workplaceSaveJS.program.updateProgramDeleteButton();
       });
+    });
 
+
+    $(document).ready(function() {
       // [메뉴 정보 등록] > [반영하기] 버튼 클릭 이벤트
       $("#applyMenuBtn").on("click", function () {
         workplaceSaveJS.menu.applyMenuForm();
+      });
+
+      // [메뉴 정보 등록] > [메뉴명] 엔터
+      $('#menuNm').keypress(function (e) {
+        if (e.keyCode === 13 || e.keyCode === 10 || e.key === 'Enter') {
+          e.preventDefault();
+          workplaceSaveJS.menu.applyMenuForm();
+        }
+      });
+
+      // [메뉴 정보 등록] > [순서] 엔터
+      $('#sortNo').keypress(function (e) {
+        if (e.keyCode === 13 || e.keyCode === 10 || e.key === 'Enter') {
+          e.preventDefault();
+          workplaceSaveJS.menu.applyMenuForm();
+        }
       });
 
       // [메뉴 정보 등록] > [삭제하기] 버튼 클릭 이벤트
@@ -328,12 +379,6 @@
         const selectedUid = $(this).val();
         workplaceSaveJS.menu.changeMenuProgramInfo(selectedUid);
       });
-
-      // 최종 생성 버튼
-      $("#save-btn").on('click', function () {
-
-      });
-
     });
 
   </script>

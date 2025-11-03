@@ -13,8 +13,8 @@ public class CetusWorkplace extends AuditBean {
     private Long uid;
     private String name;
 
-    public CetusWorkplace(WorkplaceSave request) {
-        this.name = request.getWorkplaceNm();
+    public CetusWorkplace(String name) {
+        this.name = name;
     }
 
     public CetusWorkplace(Long uid, WorkplaceSave request) {

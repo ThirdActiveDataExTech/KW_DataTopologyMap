@@ -58,7 +58,9 @@
 
             const obj = { workplaceUid, workplaceNm }
             Http.post('/api/super/workplace-choose', obj, true).then(() => {
-               Util.alert('워크플레이스가 세팅되었습니다.').then(() => {
+                $("#workplaceSelect").attr('disabled', true).attr('readonly', true);
+                $("#confirm-btn").attr('disabled', true).attr('readonly', true);
+                Util.alert('워크플레이스가 세팅되었습니다.').then(() => {
                    window.location.href = '/portal/home'
                })
             });

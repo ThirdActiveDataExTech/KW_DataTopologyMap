@@ -32,12 +32,6 @@ public class CetusWorkplaceRestController {
         return ResponseEntity.ok(bean);
     }
 
-    @PostMapping
-    public ResponseEntity saveWorkplace(@RequestBody WorkplaceSave request) {
-        service.saveWorkplace(request);
-        return ResponseEntity.ok().build();
-    }
-
     @PutMapping("/{uid}")
     public ResponseEntity changeWorkplace(@PathVariable("uid") Long uid, @RequestBody WorkplaceSave request) {
         service.changeWorkplace(uid, request);

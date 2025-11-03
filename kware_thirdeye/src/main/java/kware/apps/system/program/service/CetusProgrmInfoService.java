@@ -4,6 +4,7 @@ package kware.apps.system.program.service;
 import cetus.bean.Page;
 import cetus.bean.Pageable;
 import cetus.user.UserUtil;
+import kware.apps.superrole.dto.request.createworkplace.CreateProgram;
 import kware.apps.system.program.domain.CetusProgrmInfo;
 import kware.apps.system.program.domain.CetusProgrmInfoDao;
 import kware.apps.system.program.dto.request.*;
@@ -68,7 +69,7 @@ public class CetusProgrmInfoService {
     }
 
     @Transactional
-    public Long saveWorkplaceProgram(ProgramSave request, Long workplaceUid) {
+    public Long saveWorkplaceProgram(CreateProgram request, Long workplaceUid) {
         CetusProgrmInfo bean = new CetusProgrmInfo(request, workplaceUid);
         dao.insert(bean);
         return bean.getUid();

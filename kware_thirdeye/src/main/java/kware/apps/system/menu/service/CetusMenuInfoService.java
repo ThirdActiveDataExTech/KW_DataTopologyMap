@@ -1,25 +1,23 @@
 package kware.apps.system.menu.service;
 
-import java.util.List;
-
 import cetus.user.UserUtil;
+import kware.apps.superrole.dto.request.createworkplace.CreateMenu;
 import kware.apps.system.menu.domain.CetusMenuInfo;
 import kware.apps.system.menu.domain.CetusMenuInfoDao;
 import kware.apps.system.menu.dto.request.*;
 import kware.apps.system.menu.dto.response.MenuTreeList;
 import kware.apps.system.menu.dto.response.SessionMenuList;
-import kware.common.config.auth.menu.MenuManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class CetusMenuInfoService {
 
     private final CetusMenuInfoDao dao;
-    private final MenuManager menuManager;
 
     /*
     * 로그인 시점 > 세션에 담기 위한 메뉴 조회
@@ -52,8 +50,8 @@ public class CetusMenuInfoService {
     }
 
     @Transactional
-    public Long saveWorkplaceMenu(WorkplaceMenuSave request) {
-        CetusMenuInfo bean = new CetusMenuInfo(request);
+    public Long saveWorkplaceMenu( CreateMenu request, Long workplaceUid, Long programUid, Long upperMenuNo, String authorCd ) {
+        CetusMenuInfo bean = new CetusMenuInfo(request, workplaceUid, programUid, upperMenuNo, authorCd);
         dao.insert(bean);
         return bean.getMenuNo();
     }
