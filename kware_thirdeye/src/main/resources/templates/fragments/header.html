@@ -56,6 +56,7 @@
                                     <a href="/portal/myInfo">프로필</a>
                                     <a href="#" onclick="logout()">로그아웃</a>
                                     <a href="/super/workplace" th:if="${user != null and user?.isSuper}">워크플레이스 추가</a>
+                                    <a href="/super/code" th:if="${user != null and user?.isSuper}">코드관리</a>
                                 </div>
                             </div>
                             <!--<div class="header-action-style header-action-download" id="download-csv-div">

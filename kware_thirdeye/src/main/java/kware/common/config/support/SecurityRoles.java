@@ -33,7 +33,10 @@ public class SecurityRoles {
 
     public static final String[] SUPER_SYSTEM_URLS = {
             "/super/workplace",
-            "/api/super/create-workplace**"
+            "/api/super/workplace/**",
+            "/super/code/**",
+            "/api/super/code/**"
+
     };
 
     public static final String[] SUPER_URLS = {

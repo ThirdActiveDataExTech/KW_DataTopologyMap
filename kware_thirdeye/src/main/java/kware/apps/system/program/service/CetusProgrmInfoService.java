@@ -4,7 +4,7 @@ package kware.apps.system.program.service;
 import cetus.bean.Page;
 import cetus.bean.Pageable;
 import cetus.user.UserUtil;
-import kware.apps.superrole.dto.request.createworkplace.CreateProgram;
+import kware.apps.superrole.workplace.dto.request.createworkplace.CreateProgram;
 import kware.apps.system.program.domain.CetusProgrmInfo;
 import kware.apps.system.program.domain.CetusProgrmInfoDao;
 import kware.apps.system.program.dto.request.*;

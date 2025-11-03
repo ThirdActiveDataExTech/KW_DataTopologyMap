@@ -1,7 +1,7 @@
 package kware.apps.system.menu.service;
 
 import cetus.user.UserUtil;
-import kware.apps.superrole.dto.request.createworkplace.CreateMenu;
+import kware.apps.superrole.workplace.dto.request.createworkplace.CreateMenu;
 import kware.apps.system.menu.domain.CetusMenuInfo;
 import kware.apps.system.menu.domain.CetusMenuInfoDao;
 import kware.apps.system.menu.dto.request.*;

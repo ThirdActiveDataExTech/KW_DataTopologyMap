@@ -2,7 +2,7 @@ package kware.apps.system.menu.domain;
 
 import cetus.annotation.Key;
 import cetus.bean.AuditBean;
-import kware.apps.superrole.dto.request.createworkplace.CreateMenu;
+import kware.apps.superrole.workplace.dto.request.createworkplace.CreateMenu;
 import kware.apps.system.menu.dto.request.MenuChange;
 import kware.apps.system.menu.dto.request.MenuSave;
 import lombok.AccessLevel;

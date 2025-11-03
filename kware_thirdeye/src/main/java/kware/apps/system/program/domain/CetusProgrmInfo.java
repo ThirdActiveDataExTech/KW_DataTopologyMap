@@ -2,7 +2,7 @@ package kware.apps.system.program.domain;
 
 
 import cetus.bean.AuditBean;
-import kware.apps.superrole.dto.request.createworkplace.CreateProgram;
+import kware.apps.superrole.workplace.dto.request.createworkplace.CreateProgram;
 import kware.apps.system.program.dto.request.ProgramChange;
 import kware.apps.system.program.dto.request.ProgramSave;
 import lombok.AccessLevel;
