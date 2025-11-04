@@ -5,7 +5,7 @@ import cetus.bean.Page;
 import cetus.bean.Pageable;
 import cetus.user.UserUtil;
 import cetus.util.CookieUtil;
-import kware.apps.system.bbs.domain.CetusBbs;
+import kware.apps.system.bbs.dto.response.BbsView;
 import kware.apps.system.bbs.service.CetusBbsService;
 import kware.apps.thirdeye.bbsctt.domain.CetusBbsctt;
 import kware.apps.thirdeye.bbsctt.domain.CetusBbscttDao;
@@ -13,7 +13,6 @@ import kware.apps.thirdeye.bbsctt.dto.request.*;
 import kware.apps.thirdeye.bbsctt.dto.response.BbscttExcelList;
 import kware.apps.thirdeye.bbsctt.dto.response.BbscttList;
 import kware.apps.thirdeye.bbsctt.dto.response.BbscttView;
-import kware.apps.thirdeye.enumstatus.BbsTpCd;
 import kware.apps.thirdeye.enumstatus.DownloadTargetCd;
 import kware.common.excel.ExcelCreate;
 import kware.common.file.service.CommonFileService;
@@ -25,8 +24,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -42,11 +39,7 @@ public class CetusBbscttService {
 
     @Transactional(readOnly = true)
     public Page<BbscttList> findAllBbscttPage(BbscttSearch search, Pageable pageable) {
-        Page<BbscttList> page = dao.page("bbscttPageList", "bbscttPageListCount", search, pageable);
-        page.getList().forEach(dto -> {
-            dto.setBbs(BbsTpCd.getSubCodeByCode(dto.getBbsTpCd()));
-        });
-        return page;
+        return dao.page("bbscttPageList", "bbscttPageListCount", search, pageable);
     }
 
     @Transactional
@@ -104,20 +97,11 @@ public class CetusBbscttService {
 
     @Async
     public void renderEXCEL(BbscttExcelSearch search) {
-        CetusBbs bbs = bbsService.view(search.getBbsUid());
-        String subCode = BbsTpCd.getSubCodeByCode(bbs.getBbsTpCd());
-        search.setBaseUrl(baseUrl, subCode);
+        BbsView bbsView = bbsService.findBbsByUid(search.getBbsUid());
+        search.setBaseUrl(baseUrl, bbsView.getBbsTpSubCd());
         excelCreate.createExcelFile(
                 BbscttExcelList.class,
-                p -> {
-                    Page<BbscttExcelList> excelPage = dao.bbscttExcelPage(search, p);
-                    List<BbscttExcelList> list = excelPage.getList().stream().map(dto -> {
-                        dto.setBbsTpCdNm(BbsTpCd.getSubNameByCode(dto.getBbsTpCd()));
-                        return dto;
-                    }).collect(Collectors.toList());
-                    excelPage.setList(list);
-                    return excelPage;
-                },
+                p -> dao.bbscttExcelPage(search, p),
                 DownloadTargetCd.USER_BBSCTT
         );
     }

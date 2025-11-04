@@ -1,10 +1,9 @@
 package kware.apps.system.bbs.domain;
 
-import cetus.bean.Page;
-import cetus.bean.Pageable;
 import cetus.dao.SuperDao;
-import kware.apps.system.bbs.dto.request.BbsSearch;
 import kware.apps.system.bbs.dto.response.BbsList;
+import kware.apps.system.bbs.dto.response.BbsTpCdCount;
+import kware.apps.system.bbs.dto.response.BbsView;
 import kware.apps.thirdeye.bbsctt.dto.request.BbscttTpSearch;
 import org.springframework.stereotype.Component;
 
@@ -21,8 +20,8 @@ public class CetusBbsDao extends SuperDao<CetusBbs> {
         return selectOne("getBbsByTpCd", search);
     }
 
-    public Page<BbsList> getAllBbsPage(BbsSearch search, Pageable pageable) {
-        return page("bbsList", "bbsCount", search, pageable);
+    public BbsView getBbsByUid(Long uid) {
+        return selectOne("getBbsByUid", uid);
     }
 
     public List<BbsList> getAllWorkplaceBbs(Long workplaceUid) {
@@ -31,5 +30,9 @@ public class CetusBbsDao extends SuperDao<CetusBbs> {
 
     public int getBbscttCountByBbsUid(Long bbsUid) {
         return selectOne("getBbscttCountByBbsUid", bbsUid);
+    }
+
+    public List<BbsTpCdCount> getBbsCountByBbsTpCd(Long workplaceUid) {
+        return selectList("getBbsCountByBbsTpCd", workplaceUid);
     }
 }

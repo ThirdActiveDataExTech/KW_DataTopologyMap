@@ -3,13 +3,14 @@ package kware.apps.thirdeye.answer.service;
 
 import cetus.bean.Page;
 import cetus.bean.Pageable;
+import kware.apps.system.bbs.dto.response.BbsView;
+import kware.apps.system.bbs.service.CetusBbsService;
 import kware.apps.thirdeye.answer.domain.CetusBbscttAnswer;
 import kware.apps.thirdeye.answer.domain.CetusBbscttAnswerDao;
+import kware.apps.thirdeye.answer.dto.request.*;
 import kware.apps.thirdeye.answer.dto.response.AnswerExcelList;
 import kware.apps.thirdeye.answer.dto.response.AnswerList;
-import kware.apps.thirdeye.enumstatus.BbsTpCd;
 import kware.apps.thirdeye.enumstatus.DownloadTargetCd;
-import kware.apps.thirdeye.answer.dto.request.*;
 import kware.common.excel.ExcelCreate;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -24,6 +25,7 @@ import java.util.List;
 public class CetusBbscttAnswerService {
 
     private final CetusBbscttAnswerDao dao;
+    private final CetusBbsService bbsService;
     private final ExcelCreate excelCreate;
 
     @Value("${cetus.base-url}")
@@ -51,11 +53,7 @@ public class CetusBbscttAnswerService {
 
     @Transactional
     public Page<AnswerList> findAllAnswerPage(AnswerSearch search, Pageable pageable) {
-        Page<AnswerList> page = dao.page("answerBbsRegPageList", "answerBbsRegPageListCount", search, pageable);
-        page.getList().forEach(dto -> {
-            dto.setBbsTpSubCd(BbsTpCd.getSubCodeByCode(dto.getBbsTpCd()));
-        });
-        return page;
+        return dao.page("answerBbsRegPageList", "answerBbsRegPageListCount", search, pageable);
     }
 
     @Transactional
@@ -67,7 +65,8 @@ public class CetusBbscttAnswerService {
 
     @Async
     public void renderEXCEL(AnswerExcelSearch search) {
-        search.setBaseUrl(baseUrl);
+        BbsView bbsView = bbsService.findBbsByUid(search.getBbsUid());
+        search.setBaseUrl(baseUrl, bbsView.getBbsTpSubCd());
         excelCreate.createExcelFileHtmlCustom(
                 AnswerExcelList.class,
                 p -> dao.answerExcelPage(search, p),

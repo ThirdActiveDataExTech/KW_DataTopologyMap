@@ -12,7 +12,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -43,12 +42,6 @@ public class CetusBbsRestController {
     public ResponseEntity deleteBbs(@PathVariable("uid") Long uid) {
         service.deleteBbs(uid);
         return ResponseEntity.ok().build();
-    }
-
-    @GetMapping("/list")
-    public ResponseEntity findAllWorkplaceBbs() {
-        List<BbsList> allWorkplaceBbs = service.findAllWorkplaceBbs();
-        return ResponseEntity.ok(allWorkplaceBbs);
     }
 
     @GetMapping("/{uid}/child")

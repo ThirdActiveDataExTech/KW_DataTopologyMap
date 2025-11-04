@@ -78,4 +78,14 @@ public class CetusCodeService {
 	public void changeCodeUseAt(CodeChangeUseAt request) {
 		dao.updateCodeUseAt(new CetusCode(request));
 	}
+
+	@Transactional(readOnly = true)
+	public CodeView findCodeByItem1ValAndUpperCode(String upperCode, String item1Val) {
+		return dao.getCodeByItem1ValAndUpperCode(upperCode, item1Val);
+	}
+
+	@Transactional(readOnly = true)
+	public CodeView findCodeByCodeAndUpperCode(String code, String upperCode) {
+		return dao.getCodeByCodeAndUpperCode(code, upperCode);
+	}
 }

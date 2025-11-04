@@ -133,7 +133,7 @@
                 .add(new Column("code").center())
                 .add(new Column("codeDc").center())
                 .add(new Column("checkChild").center())
-                .add(new Column("useAt").center().switchToggle(true))
+                .add(new Column("useAt").center().flagNameColor({text:'사용', color: 'green'}, {text:'미사용', color: 'red'}))
                 .add(new Column("regDt").center())
                 .add(new Column("regNm").center())
                 .selectable()

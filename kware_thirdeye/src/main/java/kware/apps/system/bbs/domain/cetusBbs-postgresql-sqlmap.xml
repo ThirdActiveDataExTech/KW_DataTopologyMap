@@ -32,6 +32,8 @@
         SELECT CB.BBS_UID
               ,CB.BBS_NM
               ,CB.BBS_TP_CD
+              ,CSC.CODE_NM AS BBS_TP_CD_NM
+              ,CSC.ITEM1_VAL AS BBS_TP_SUB_CD
               ,CB.USE_AT
               ,CB.REG_UID
               ,TO_CHAR(CB.REG_DT, 'YYYY-MM-DD') AS REG_DT
@@ -48,6 +50,7 @@
                   WHERE CBBSCTT.BBS_UID = CB.BBS_UID
                     AND CBBSCTT.DELETE_AT = 'N' ) AS BBSCTT_CNT
           FROM CETUS_BBS CB
+          LEFT JOIN CETUS_SYS_CODE CSC ON CSC.CODE = CB.BBS_TP_CD AND CSC.UPPER_CODE = 'BBS_TP_CD'
           LEFT JOIN CETUS_USER CU ON CU.UID = CB.REG_UID
          INNER JOIN CETUS_WORKPLACE CW ON CW.UID = CB.WORKPLACE_UID
          WHERE CB.DELETE_AT = 'N'
@@ -68,6 +71,7 @@
         /* cetusBbs.bbsCount */
         SELECT COUNT(*)
           FROM CETUS_BBS CB
+          LEFT JOIN CETUS_SYS_CODE CSC ON CSC.CODE = CB.BBS_TP_CD AND CSC.UPPER_CODE = 'BBS_TP_CD'
           LEFT JOIN CETUS_USER CU ON CU.UID = CB.REG_UID
          INNER JOIN CETUS_WORKPLACE CW ON CW.UID = CB.WORKPLACE_UID
          WHERE CB.DELETE_AT = 'N'
@@ -93,6 +97,25 @@
               ,ANSWER_USE_AT
           FROM CETUS_BBS
          WHERE BBS_UID = #{bbsUid}
+    </select>
+
+    <select id="getBbsByUid" resultType="BbsView" parameterType="Long">
+        /* cetusBbs.getBbsByUid */
+        SELECT CB.BBS_UID
+              ,CB.BBS_NM
+              ,CB.BBS_TP_CD
+              ,CSC.CODE_NM AS BBS_TP_CD_NM
+              ,CSC.ITEM1_VAL AS BBS_TP_SUB_CD
+              ,CB.USE_AT
+              ,CB.DELETE_AT
+              ,CB.BBS_CL_USE_AT
+              ,CB.ATCH_AT
+              ,CB.ATCH_NUM
+              ,CB.UPLOAD_CPCTY
+              ,CB.ANSWER_USE_AT
+          FROM CETUS_BBS CB
+          LEFT JOIN CETUS_SYS_CODE CSC ON CSC.CODE = CB.BBS_TP_CD AND CSC.UPPER_CODE = 'BBS_TP_CD'
+         WHERE CB.BBS_UID = #{bbsUid}
     </select>
 
     <select id="getBbsByTpCd" resultType="CetusBbs" parameterType="BbscttTpSearch">
@@ -137,6 +160,8 @@
         SELECT CB.BBS_UID
               ,CB.BBS_NM
               ,CB.BBS_TP_CD
+              ,CSC.CODE_NM AS BBS_TP_CD_NM
+              ,CSC.ITEM1_VAL AS BBS_TP_SUB_CD
               ,CB.USE_AT
               ,CB.REG_UID
               ,TO_CHAR(CB.REG_DT, 'YYYY-MM-DD') AS REG_DT
@@ -153,6 +178,7 @@
                   WHERE CBBSCTT.BBS_UID = CB.BBS_UID
                     AND CBBSCTT.DELETE_AT = 'N' ) AS BBSCTT_CNT
           FROM CETUS_BBS CB
+          LEFT JOIN CETUS_SYS_CODE CSC ON CSC.CODE = CB.BBS_TP_CD AND CSC.UPPER_CODE = 'BBS_TP_CD'
           LEFT JOIN CETUS_USER CU ON CU.UID = CB.REG_UID
          INNER JOIN CETUS_WORKPLACE CW ON CW.UID = CB.WORKPLACE_UID
          WHERE CB.DELETE_AT = 'N'
@@ -165,5 +191,23 @@
           FROM CETUS_BBSCTT CB
          WHERE CB.BBS_UID = #{bbsUid}
            AND CB.DELETE_AT = 'N'
+    </select>
+
+    <select id="getBbsCountByBbsTpCd" parameterType="Long" resultType="BbsTpCdCount">
+        /* cetusBbs.getBbsCountByBbsTpCd */
+        SELECT CSC.CODE AS BBS_TP_CD
+              ,CSC.CODE_NM AS BBS_TP_CD_NM
+              ,COALESCE(B.BBS_COUNT, 0) AS BBS_CNT
+          FROM CETUS_SYS_CODE CSC
+          LEFT JOIN (
+              SELECT BBS_TP_CD
+                    ,COUNT(*) AS BBS_COUNT
+                FROM CETUS_BBS CB
+               WHERE CB.WORKPLACE_UID = #{workplaceUid}
+                 AND CB.USE_AT = 'Y'
+                 AND CB.DELETE_AT = 'N'
+               GROUP BY CB.BBS_TP_CD
+          ) B ON CSC.CODE = B.BBS_TP_CD
+        WHERE CSC.UPPER_CODE = 'BBS_TP_CD'
     </select>
 </mapper>

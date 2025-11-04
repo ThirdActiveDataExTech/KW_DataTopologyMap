@@ -220,4 +220,38 @@
 		 WHERE UID =#{uid}
 	</update>
 
+	<select id="getCodeByItem1ValAndUpperCode" resultType="CodeView" parameterType="map">
+		/* cetusCode.getCodeByItem1ValAndUpperCode */
+		SELECT CSC.UID
+			  ,CSC.CODE
+			  ,CSC.UPPER_CODE
+			  ,CSC.CODE_NM
+			  ,CSC.CODE_DC
+			  ,CSC.USE_AT
+			  ,CSC.RM_DC
+			  ,CSC.ITEM1_VAL
+			  ,CSC.ITEM2_VAL
+			  ,CSC.SORT_NO
+		  FROM CETUS_SYS_CODE CSC
+		 WHERE CSC.ITEM1_VAL = #{item1Val}
+		   AND CSC.UPPER_CODE = #{upperCode}
+	</select>
+
+	<select id="getCodeByCodeAndUpperCode" resultType="CodeView" parameterType="map">
+		/* cetusCode.getCodeByCodeAndUpperCode */
+		SELECT CSC.UID
+			  ,CSC.CODE
+			  ,CSC.UPPER_CODE
+			  ,CSC.CODE_NM
+			  ,CSC.CODE_DC
+			  ,CSC.USE_AT
+			  ,CSC.RM_DC
+			  ,CSC.ITEM1_VAL
+			  ,CSC.ITEM2_VAL
+			  ,CSC.SORT_NO
+		  FROM CETUS_SYS_CODE CSC
+		 WHERE CSC.CODE = #{code}
+		   AND CSC.UPPER_CODE = #{upperCode}
+	</select>
+
 </mapper>

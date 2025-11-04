@@ -15,7 +15,7 @@ public class AnswerExcelSearch {
         this.bbscttUrlPrefix = bbscttUrlPrefix;
     }
 
-    public void setBaseUrl(String baseUrl) {
-        this.bbscttUrlPrefix = baseUrl.replaceAll("/+$", "") + "/portal/cetus/bbsctt/view/";
+    public void setBaseUrl(String baseUrl, String subCode) {
+        this.bbscttUrlPrefix = baseUrl.replaceAll("/+$", "") + "/portal/bbs/" + subCode + "/";
     }
 }

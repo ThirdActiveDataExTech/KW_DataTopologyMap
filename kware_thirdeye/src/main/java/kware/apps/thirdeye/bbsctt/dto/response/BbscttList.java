@@ -30,8 +30,4 @@ public class BbscttList {
     private String regProfileId;
     private String thumbnailSrc;
     private Integer likeCnt;
-
-    public void setBbs(String bbsTpSubCd) {
-        this.bbsTpSubCd = bbsTpSubCd;
-    }
 }

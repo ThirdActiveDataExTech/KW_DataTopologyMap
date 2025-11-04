@@ -11,6 +11,8 @@ public class BbscttView {
     private Long bbscttUid;
     private Long bbsUid;
     private Long clUid;
+    private String bbsTpCd;
+    private String bbsTpCdNm;
     private String bbscttNm;
     private int rdCnt;
     private String bbscttCnt;

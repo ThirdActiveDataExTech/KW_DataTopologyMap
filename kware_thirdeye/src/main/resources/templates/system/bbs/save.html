@@ -56,9 +56,11 @@
                                     <div for="bbsTpCd" class="required">타입</div>
                                     <select class="nice-select nice-select-style-1 wide" id="bbsTpCd" name="bbsTpCd" required>
                                         <option value="" disabled selected>-- Select Type --</option>
-                                        <option th:each="bbsTp : ${bbsTpCds}"
-                                                th:value="${bbsTp?.code}"
-                                                th:text="${bbsTp?.name}"></option>
+                                        <option th:each="bbsCnt : ${bbsCounts}"
+                                                th:value="${bbsCnt?.bbsTpCd}"
+                                                th:text="${bbsCnt?.bbsTpCdNm}"
+                                                th:disabled="${bbsCnt?.bbsCnt != 0}">
+                                        </option>
                                     </select>
                                     <span class="validation-error-message" id="bbsTpCd-error"></span>
                                 </div>

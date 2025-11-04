@@ -1,15 +1,14 @@
 package kware.apps.thirdeye.bbsctt.web;
 
 import cetus.user.UserUtil;
-import kware.apps.thirdeye.answer.dto.response.AnswerList;
-import kware.apps.thirdeye.answer.service.CetusBbscttAnswerService;
+import kware.apps.superrole.code.dto.response.CodeView;
+import kware.apps.superrole.code.service.CetusCodeService;
 import kware.apps.system.bbs.domain.CetusBbs;
 import kware.apps.system.bbs.service.CetusBbsService;
 import kware.apps.thirdeye.bbsctt.domain.CetusBbsctt;
 import kware.apps.thirdeye.bbsctt.dto.request.BbscttTpSearch;
 import kware.apps.thirdeye.bbsctt.dto.response.BbscttView;
 import kware.apps.thirdeye.bbsctt.service.CetusBbscttService;
-import kware.apps.thirdeye.enumstatus.BbsTpCd;
 import kware.apps.thirdeye.enumstatus.UserAuthorCd;
 import kware.common.config.auth.menu.MenuNavigationManager;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +20,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
@@ -30,12 +28,13 @@ public class CetusBbscttController {
 
     private final CetusBbscttService bbscttService;
     private final CetusBbsService bbsService;
-    private final CetusBbscttAnswerService answerService;
     private final MenuNavigationManager menuNavigationManager;
+    private final CetusCodeService codeService;
 
     @GetMapping("/{bbsTpCd}")
-    public String index(@PathVariable("bbsTpCd") String bbsTpCd, final Model model) {
-        CetusBbs bbs = bbsService.findBbsByTpCd(new BbscttTpSearch(BbsTpCd.fromSubcode(bbsTpCd).name(), UserUtil.getUserWorkplaceUid()));
+    public String index( @PathVariable("bbsTpCd") String bbsTpCd, final Model model ) {
+        CodeView codeView = codeService.findCodeByItem1ValAndUpperCode("BBS_TP_CD", bbsTpCd);
+        CetusBbs bbs = bbsService.findBbsByTpCd(new BbscttTpSearch(codeView.getCode(), UserUtil.getUserWorkplaceUid()));
         model.addAttribute("bbsUid", bbs.getBbsUid());
         model.addAttribute("bbs", bbs);
         model.addAttribute("isUser", UserAuthorCd.ROLE_USER.name().equals(UserUtil.getUser().getRole()));
@@ -45,7 +44,8 @@ public class CetusBbscttController {
 
     @GetMapping("/{bbsTpCd}/save")
     public String save(@PathVariable("bbsTpCd") String bbsTpCd, final Model model) {
-        CetusBbs bbs = bbsService.findBbsByTpCd(new BbscttTpSearch(BbsTpCd.fromSubcode(bbsTpCd).name(), UserUtil.getUserWorkplaceUid()));
+        CodeView codeView = codeService.findCodeByItem1ValAndUpperCode("BBS_TP_CD", bbsTpCd);
+        CetusBbs bbs = bbsService.findBbsByTpCd(new BbscttTpSearch(codeView.getCode(), UserUtil.getUserWorkplaceUid()));
         model.addAttribute("bbsUid", bbs.getBbsUid());
         model.addAttribute("bbs", bbs);
         menuNavigationManager.renderingPage("/portal/bbs/"+bbsTpCd, "게시글 등록", false, model);

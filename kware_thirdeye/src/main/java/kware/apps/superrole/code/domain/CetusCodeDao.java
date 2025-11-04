@@ -47,4 +47,20 @@ public class CetusCodeDao extends SuperDao<CetusCode> {
     public int updateCodeUseAt(CetusCode bean) {
         return update("updateCodeUseAt", bean);
     }
+
+    public CodeView getCodeByItem1ValAndUpperCode(String upperCode, String item1Val) {
+        Map<String, Object> params = new HashMap<String, Object>() {{
+            put("upperCode", upperCode);
+            put("item1Val", item1Val);
+        }};
+        return selectOne("getCodeByItem1ValAndUpperCode", params);
+    }
+
+    public CodeView getCodeByCodeAndUpperCode(String code, String upperCode) {
+        Map<String, Object> params = new HashMap<String, Object>() {{
+            put("code", code);
+            put("upperCode", upperCode);
+        }};
+        return selectOne("getCodeByCodeAndUpperCode", params);
+    }
 }

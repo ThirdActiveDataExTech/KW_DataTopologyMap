@@ -11,7 +11,6 @@ public class BbscttExcelList {
 
     @ExcelColumn(headerName = "게시판명")
     private String bbsNm;
-    private String bbsTpCd;
     @ExcelColumn(headerName = "게시판 분류")
     private String bbsTpCdNm;
     @ExcelColumn(headerName = "게시글 제목")
@@ -32,8 +31,4 @@ public class BbscttExcelList {
     private String regInfo;
     @ExcelColumn(headerName = "게시글URL")
     private String bbscttUrl;
-
-    public void setBbsTpCdNm(String bbsTpCdNm) {
-        this.bbsTpCdNm = bbsTpCdNm;
-    }
 }

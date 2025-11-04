@@ -6,7 +6,6 @@ import lombok.NoArgsConstructor;
 
 @Getter @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class AnswerList {
-
     private Long answerUid;
     private Long bbscttUid;
     private String bbsTpCd;
@@ -17,8 +16,4 @@ public class AnswerList {
     private String regNm;
     private String regId;
     private String regDt;
-
-    public void setBbsTpSubCd(String bbsTpSubCd) {
-        this.bbsTpSubCd = bbsTpSubCd;
-    }
 }
