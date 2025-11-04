@@ -98,10 +98,9 @@ public class CetusWorkplaceSuperService {
         }
 
         // 4. save menu
-        for( EnumCodeDto enumCodeDto : UserAuthorCd.toList() ) {
-            String authorCd = enumCodeDto.getCode();
-            this.saveMenuRecursive( request.getMenus(), workplaceUid, authorCd, programUidMap,  new HashMap<>());
-        }
+        this.saveMenuRecursive( request.getSystemMenus(), workplaceUid, UserAuthorCd.ROLE_SYSTEM.name(), programUidMap,  new HashMap<>());
+        this.saveMenuRecursive( request.getAdminMenus(), workplaceUid, UserAuthorCd.ROLE_ADMIN.name(), programUidMap,  new HashMap<>());
+        this.saveMenuRecursive( request.getUserMenus(), workplaceUid, UserAuthorCd.ROLE_USER.name(), programUidMap,  new HashMap<>());
     }
 
     private void saveMenuRecursive( List<CreateMenu> menus, Long workplaceUid, String authorCd,

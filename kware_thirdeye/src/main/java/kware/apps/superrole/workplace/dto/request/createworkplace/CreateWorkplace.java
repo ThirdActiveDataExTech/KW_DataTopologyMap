@@ -12,5 +12,7 @@ public class CreateWorkplace {
     private String workplaceNm;
     private List<CreateUser> users;
     private List<CreateProgram> programs;
-    private List<CreateMenu> menus;
+    private List<CreateMenu> systemMenus;
+    private List<CreateMenu> adminMenus;
+    private List<CreateMenu> userMenus;
 }

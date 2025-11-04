@@ -63,14 +63,14 @@
                                                             <div class="col-lg-6">
                                                                 <div class="single-input-item">
                                                                     <label for="password" class="custom-label required">비밀번호<span class="req">*</span></label>
-                                                                    <input class="form-control custom-input" type="password" id="password" name="password" placeholder="8~20자" pattern=".{8,20}" required="">
+                                                                    <input class="form-control custom-input" type="password" id="password" name="password" placeholder="4자이상" required="">
                                                                     <span class="validation-error-message" id="password-error"></span>
                                                                 </div>
                                                             </div>
                                                             <div class="col-lg-6">
                                                                 <div class="single-input-item">
                                                                     <label for="confirmPassword" class="custom-label">비밀번호 확인</label>
-                                                                    <input class="form-control custom-input" type="password" id="confirmPassword" placeholder="8~20자" required="">
+                                                                    <input class="form-control custom-input" type="password" id="confirmPassword" placeholder="4자이상" required="">
                                                                     <label class="error-message" id="passwordChk-error"></label>
                                                                 </div>
                                                             </div>
@@ -216,6 +216,10 @@
             $("#change-dept-cancel-btn").on('click', function () {
                 userSave.cancelChooseDept();
             });
+
+            /* 비밀번호 & 비밀번호 체크 validation 체크 */
+            $("#password").on('input', userSave.validatePassword);
+            $("#confirmPassword").on('input', userSave.validatePassword);
         });
     </script>
 </th:block>

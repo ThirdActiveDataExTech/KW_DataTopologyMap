@@ -8,6 +8,7 @@ import kware.apps.superrole.code.dto.response.CodeView;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -18,6 +19,7 @@ import java.util.Map;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping(value = "/api/super/code")
+@PreAuthorize("isAuthenticated() and principal.super")
 public class CetusCodeRestController {
 
     private final CetusCodeService service;
