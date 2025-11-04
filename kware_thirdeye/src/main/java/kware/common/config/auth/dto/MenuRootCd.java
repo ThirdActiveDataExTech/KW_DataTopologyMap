@@ -1,6 +1,7 @@
-package kware.apps.thirdeye.enumstatus;
+package kware.common.config.auth.dto;
 
 
+import kware.apps.thirdeye.enumstatus.EnumCodeDto;
 import lombok.Getter;
 
 import java.util.Arrays;

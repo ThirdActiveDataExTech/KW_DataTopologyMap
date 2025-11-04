@@ -1,5 +1,5 @@
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
-<th:block th:fragment="template04">
+<th:block th:fragment="template04(commentCodes)">
   <div class="row" style="margin-bottom: 25px;">
     <div class="container">
       <div id="detailRating" class="ratting-form-wrapper" data-aos="fade-up" data-aos-delay="200">
@@ -15,22 +15,13 @@
             <div class="grand-total-content" style="padding: 0px; background: transparent;">
               <div class="grand-shipping" style="padding: 0px; display: flex; justify-content: space-between; align-items: center;">
                 <ul style="display: flex; gap: 30px; align-items: center; padding: 0px;">
-                  <li style="margin: 0px;">
+                  <li style="margin: 0px;" th:each="comment : ${commentCodes}">
                     <label>
-                      <input type="radio" name="detail-ratting-group" id="OPINION" value="OPINION" checked="checked">
-                      의견
-                    </label>
-                  </li>
-                  <li style="margin: 0px;">
-                    <label>
-                      <input type="radio" name="detail-ratting-group" id="QUESTION" value="QUESTION">
-                      문의
-                    </label>
-                  </li>
-                  <li style="margin: 0px;">
-                    <label>
-                      <input type="radio" name="detail-ratting-group" id="REPORT" value="REPORT">
-                      오류신고
+                      <input type="radio" name="detail-ratting-group"
+                             th:id="${comment?.code}"
+                             th:value="${comment?.code}"
+                             checked="checked">
+                      <span th:text="${comment?.codeNm}"></span>
                     </label>
                   </li>
                 </ul>
@@ -73,10 +64,18 @@
           </div>
           <div class="sidebar-list-style-2">
               <ul>
-                  <li><a href="javascript:void(0);" class="tab-title active">전체 (<span id="ALL_CNT">0</span>)</a></li>
-                  <li><a href="javascript:void(0);" class="tab-title">의견 (<span id="OPINION_CNT">0</span>)</a></li>
-                  <li><a href="javascript:void(0);" class="tab-title">문의 (<span id="QUESTION_CNT">0</span>)</a></li>
-                  <li><a href="javascript:void(0);" class="tab-title">오류신고 (<span id="REPORT_CNT">0</span>)</a></li>
+                  <li>
+                    <a href="javascript:void(0);" class="tab-title active">
+                      <span>전체</span>
+                      (<span id="COMMENT_ALL_CNT">0</span>)
+                    </a>
+                  </li>
+                  <li th:each="comment : ${commentCodes}">
+                    <a href="javascript:void(0);" class="tab-title" th:data-id="${comment?.code}">
+                      <span th:text="${comment?.codeNm}"></span>
+                      (<span th:id="|${comment?.code}_CNT|">0</span>)
+                    </a>
+                  </li>
               </ul>
           </div>
         </div>

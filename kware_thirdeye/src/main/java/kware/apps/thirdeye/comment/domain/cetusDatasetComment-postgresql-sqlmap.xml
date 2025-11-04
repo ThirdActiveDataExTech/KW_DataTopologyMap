@@ -7,6 +7,7 @@
         SELECT CDM.UID AS COMMENT_UID
               ,CDM.APPROVED_DATASET_UID AS APPROVED_UID
               ,CDM.TYPE_CD
+              ,CSC.CODE_NM AS TYPE_STR
               ,CDM.RATINGS
               ,CDM.COMMENT
               ,CDM.REG_UID
@@ -16,6 +17,7 @@
           FROM CETUS_DATASET_COMMENT CDM
           LEFT JOIN CETUS_USER CU ON CU.UID = CDM.REG_UID
           LEFT JOIN CETUS_FILE CF ON CF.FILE_UID = CU.PROFILE_UID AND CF.USE_AT = 'Y' AND CF.SAVED = 'Y'
+          LEFT JOIN CETUS_SYS_CODE CSC ON CSC.CODE = CDM.TYPE_CD AND CSC.UPPER_CODE = 'DATASET_COMMENT'
          WHERE CDM.APPROVED_DATASET_UID = #{approvedUid}
         <if test="@Ognl@isNotEmpty(typeCd)">
            AND CDM.TYPE_CD = #{typeCd}
@@ -32,18 +34,29 @@
           FROM CETUS_DATASET_COMMENT CDM
           LEFT JOIN CETUS_USER CU ON CU.UID = CDM.REG_UID
           LEFT JOIN CETUS_FILE CF ON CF.FILE_UID = CU.PROFILE_UID AND CF.USE_AT = 'Y' AND CF.SAVED = 'Y'
+          LEFT JOIN CETUS_SYS_CODE CSC ON CSC.CODE = CDM.TYPE_CD AND CSC.UPPER_CODE = 'DATASET_COMMENT'
          WHERE CDM.APPROVED_DATASET_UID = #{approvedUid}
         <if test="@Ognl@isNotEmpty(typeCd)">
            AND CDM.TYPE_CD = #{typeCd}
         </if>
     </select>
 
-    <select id="getDatasetCommentCntByType" parameterType="DatasetCommentSearch" resultType="int">
+    <select id="getDatasetCommentCntByType" parameterType="Long" resultType="DatasetCommentCount">
         /* cetusDatasetComment.getDatasetCommentCntByType */
-        SELECT COUNT(*)
-          FROM CETUS_DATASET_COMMENT CDM
-         WHERE CDM.TYPE_CD = #{typeCd}
-           AND CDM.APPROVED_DATASET_UID = #{approvedUid}
+        SELECT CSC.CODE AS TYPE_CD
+              ,CSC.CODE_NM AS TYPE_CD_NM
+              ,COALESCE(CM.TYPE_COUNT, 0) AS TYPE_CNT
+          FROM CETUS_SYS_CODE CSC
+          LEFT JOIN (
+              SELECT CDC.TYPE_CD
+                    ,COUNT(*) AS TYPE_COUNT
+                FROM CETUS_DATASET_COMMENT CDC
+               WHERE CDC.APPROVED_DATASET_UID = #{approvedDatasetUid}
+               GROUP BY CDC.TYPE_CD
+          ) CM ON CSC.CODE = CM.TYPE_CD
+         WHERE CSC.UPPER_CODE = 'DATASET_COMMENT'
+           AND CSC.USE_AT = 'Y'
+         ORDER BY CSC.SORT_NO
     </select>
 
     <insert id="insert" parameterType="CetusDatasetComment">
@@ -68,4 +81,6 @@
             ,NOW()
         )
     </insert>
+
+
 </mapper>

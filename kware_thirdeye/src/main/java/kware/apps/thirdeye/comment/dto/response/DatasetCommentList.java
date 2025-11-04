@@ -7,7 +7,6 @@ import lombok.NoArgsConstructor;
 
 @Getter @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class DatasetCommentList {
-
     private Long commentUid;
     private Long approvedUid;
     private String typeCd;
@@ -18,8 +17,4 @@ public class DatasetCommentList {
     private String regNm;
     private String regDt;
     private String regProfileId;
-
-    public void setTypeStr(String typeStr) {
-        this.typeStr = typeStr;
-    }
 }

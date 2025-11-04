@@ -2,6 +2,7 @@ package kware.apps.controller;
 
 
 import cetus.user.UserUtil;
+import kware.apps.superrole.code.service.CetusCodeService;
 import kware.apps.system.user.dto.response.UserFullInfo;
 import kware.apps.system.user.service.CetusUserService;
 import kware.apps.thirdeye.enumstatus.UserAuthorCd;
@@ -25,6 +26,7 @@ public class PortalController {
     private final CetusUserService cetusUserService;
     private final MenuNavigationManager menuNavigationManager;
     private final CetusApprovedDatasetService datasetService;
+    private final CetusCodeService codeService;
 
     @GetMapping("/home")
     public String home(Model model) {
@@ -45,6 +47,7 @@ public class PortalController {
 
         ApprovedDatasetView dataset = datasetService.findApprovedDatasetView(approvedUid, false, true, true);
         model.addAttribute("dataset", dataset);
+        model.addAttribute("commentCodes", codeService.getCodesByParentCode("DATASET_COMMENT"));
 
         if(dataset == null) return "error/404";
         if("Y".equals(dataset.getDeleteAt())) return "error/error";
