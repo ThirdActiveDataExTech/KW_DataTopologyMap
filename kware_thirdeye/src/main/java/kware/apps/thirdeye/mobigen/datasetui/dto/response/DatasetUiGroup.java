@@ -14,6 +14,7 @@ public class DatasetUiGroup {
     private String typeCd;
     private String typeCdDescription;
     private Integer maxCount;
+    private Integer categoryCnt;
     private Integer titleLineClamp;
     private Integer descLineClamp;
     private String thumbUseAt;

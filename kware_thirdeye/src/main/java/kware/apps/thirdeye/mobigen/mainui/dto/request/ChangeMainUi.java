@@ -10,6 +10,7 @@ public class ChangeMainUi {
 
     private String name;
     private Integer maxCount;
+    private Integer categoryCnt;
     private Integer descLineClamp;
     private Integer titleLineClamp;
     private String thumbUseAt;

@@ -73,6 +73,7 @@
               ,CDMU.CODE as MAIN_UI_CODE
               ,CDMU.TYPE_CD
               ,CDMU.MAX_COUNT
+              ,CDMU.CATEGORY_CNT
               ,CDMU.TITLE_LINE_CLAMP
               ,CDMU.DESC_LINE_CLAMP
               ,CDMU.THUMB_USE_AT

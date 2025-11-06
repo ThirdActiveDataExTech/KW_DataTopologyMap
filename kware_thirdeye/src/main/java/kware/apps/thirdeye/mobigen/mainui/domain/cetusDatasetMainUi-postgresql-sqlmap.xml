@@ -8,6 +8,7 @@
               ,CDMU.CODE
               ,CDMU.NAME
               ,CDMU.MAX_COUNT
+              ,CDMU.CATEGORY_CNT
               ,CDMU.DESC_LINE_CLAMP
               ,CDMU.TITLE_LINE_CLAMP
               ,CDMU.THUMB_USE_AT
@@ -64,6 +65,7 @@
              CODE
             ,NAME
             ,MAX_COUNT
+            ,CATEGORY_CNT
             ,DESC_LINE_CLAMP
             ,TITLE_LINE_CLAMP
             ,THUMB_USE_AT
@@ -80,6 +82,7 @@
              #{code}
             ,#{name}
             ,#{maxCount}::int
+            ,#{categoryCnt}::int
             ,#{descLineClamp}::int
             ,#{titleLineClamp}::int
             ,#{thumbUseAt}
@@ -101,6 +104,7 @@
               ,CDMU.CODE
               ,CDMU.NAME
               ,CDMU.MAX_COUNT
+              ,CDMU.CATEGORY_CNT
               ,CDMU.DESC_LINE_CLAMP
               ,CDMU.TITLE_LINE_CLAMP
               ,CDMU.THUMB_USE_AT
@@ -130,6 +134,7 @@
         UPDATE CETUS_DATASET_MAIN_UI
            SET NAME = #{name}
               ,MAX_COUNT = #{maxCount}::int
+              ,CATEGORY_CNT = #{categoryCnt}::int
               ,DESC_LINE_CLAMP = #{descLineClamp}::int
               ,TITLE_LINE_CLAMP = #{titleLineClamp}::int
               ,THUMB_USE_AT = #{thumbUseAt}
@@ -146,6 +151,7 @@
               ,CDMU.CODE
               ,CDMU.NAME
               ,CDMU.MAX_COUNT
+              ,CDMU.CATEGORY_CNT
               ,CDMU.DESC_LINE_CLAMP
               ,CDMU.TITLE_LINE_CLAMP
               ,CDMU.THUMB_USE_AT

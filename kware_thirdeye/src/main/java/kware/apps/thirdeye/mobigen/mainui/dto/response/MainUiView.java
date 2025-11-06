@@ -10,6 +10,7 @@ public class MainUiView {
     private String code;
     private String name;
     private Integer maxCount;
+    private Integer categoryCnt;
     private Integer descLineClamp;
     private Integer titleLineClamp;
     private String thumbUseAt;

@@ -71,7 +71,7 @@
                                     <option th:each="entry : ${uiType}"
                                             th:selected="${entry.key == view?.typeCd}"
                                             th:value="${entry.key}" th:text="${entry.value?.description}"
-                                            th:data-thumbnail="${entry.value?.useThumbNail}"
+                                            th:data-thumbnail="${entry.value?.useThumbNail}" th:data-category="${entry?.value?.useCategory}"
                                             th:data-title="${entry.value?.useTitle}" th:data-summary="${entry.value?.useSummary}"
                                             th:data-min="${entry.value?.minCount}" th:data-max="${entry.value?.maxCount}">
                                     </option>
@@ -110,7 +110,7 @@
                         </div>
 
                         <div class="row custom-row">
-                            <div class="col-lg-3">
+                            <div class="col-lg-6">
                                 <div class="single-input-item">
                                     <label for="maxCount" class="custom-label">최대 노출 개수<span style="color: firebrick">*</span></label>
                                     <input class="form-control custom-input" type="number"
@@ -118,7 +118,18 @@
                                            id="maxCount" name="maxCount" placeholder="최대 노출 개수를 입력하세요.">
                                 </div>
                             </div>
-                            <div class="col-lg-3">
+                            <div class="col-lg-6">
+                                <div class="single-input-item">
+                                    <label for="categoryCnt" class="custom-label">카테고리 최대 개수</label>
+                                    <input class="form-control custom-input" type="number" id="categoryCnt" min="4"
+                                           th:value="${view?.categoryCnt}"
+                                           name="categoryCnt" placeholder="카테고리 최대 개수를 입력하세요.(최소4)">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row custom-row">
+                            <div class="col-lg-4">
                                 <div class="single-input-item">
                                     <label for="titleLineClamp" class="custom-label">제목 최대 라인 수</label>
                                     <input class="form-control custom-input" type="number"
@@ -126,7 +137,7 @@
                                            id="titleLineClamp" name="titleLineClamp" placeholder="제목 최대 라인 수를 입력하세요.">
                                 </div>
                             </div>
-                            <div class="col-lg-3">
+                            <div class="col-lg-4">
                                 <div class="single-input-item">
                                     <label for="descLineClamp" class="custom-label">설명 최대 라인 수</label>
                                     <input class="form-control custom-input" type="number"
@@ -134,7 +145,7 @@
                                            id="descLineClamp" name="descLineClamp" placeholder="설명 최대 라인 수를 입력하세요.">
                                 </div>
                             </div>
-                            <div class="col-lg-3">
+                            <div class="col-lg-4">
                                 <div class="single-input-item">
                                     <label for="sortNo" class="custom-label">정렬 순서<span style="color: firebrick">*</span></label>
                                     <input class="form-control custom-input" type="number"

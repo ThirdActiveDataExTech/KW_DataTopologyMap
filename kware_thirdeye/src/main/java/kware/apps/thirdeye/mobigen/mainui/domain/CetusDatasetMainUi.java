@@ -15,6 +15,7 @@ public class CetusDatasetMainUi extends AuditBean {
     private String code;
     private String name;
     private Integer maxCount;
+    private Integer categoryCnt;
     private Integer descLineClamp;
     private Integer titleLineClamp;
     private String thumbUseAt;
@@ -28,6 +29,7 @@ public class CetusDatasetMainUi extends AuditBean {
         this.code = request.getCode();
         this.name = request.getName();
         this.maxCount = request.getMaxCount();
+        this.categoryCnt = request.getCategoryCnt();
         this.descLineClamp = request.getDescLineClamp();
         this.titleLineClamp = request.getTitleLineClamp();
         this.thumbUseAt = request.getThumbUseAt();
@@ -44,6 +46,7 @@ public class CetusDatasetMainUi extends AuditBean {
     public CetusDatasetMainUi(Long uid, ChangeMainUi request) {
         this.name = request.getName();
         this.maxCount = request.getMaxCount();
+        this.categoryCnt = request.getCategoryCnt();
         this.descLineClamp = request.getDescLineClamp();
         this.titleLineClamp = request.getTitleLineClamp();
         this.thumbUseAt = request.getThumbUseAt();
