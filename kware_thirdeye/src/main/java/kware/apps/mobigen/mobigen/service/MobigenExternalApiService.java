@@ -33,6 +33,7 @@ import org.springframework.http.client.reactive.ReactorClientHttpConnector;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.reactive.function.client.WebClientRequestException;
 import reactor.core.publisher.Mono;
 import reactor.netty.http.client.HttpClient;
 
@@ -47,7 +48,7 @@ import java.util.concurrent.TimeUnit;
 @Service
 public class MobigenExternalApiService {
 
-    private final String BASE_URL = "https://api.example.com";
+    private final String BASE_URL = "http://192.168.107.27:8000/docs";
 
     private static final int CONNECT_TIMEOUT_MILLIS = 5000;   // 서버와의 TCP 연결 시도 시간. 5초 안에 서버 연결 안 되면 실패 처리
     private static final int READ_WRITE_TIMEOUT_MILLIS = 10000; // 연결 후 읽기/쓰기가 이 시간 안에 안 되면 실패
@@ -86,20 +87,37 @@ public class MobigenExternalApiService {
     }
 
     private <T> ApiResponse<T> post(String uri, Object body, ParameterizedTypeReference<ApiResponse<T>> typeRef) {
-        return WEB_CLIENT
-                .post()
-                .uri(uri)
-                .body(BodyInserters.fromValue(body))
-                .retrieve()
-                .onStatus(HttpStatus::isError, response ->
-                        response.bodyToMono(String.class)
-                                .doOnNext(bodyStr ->
-                                        log.error("[POST] API 오류: status={} body={}", response.statusCode(), bodyStr)
-                                )
-                                .then(Mono.empty())
-                )
-                .bodyToMono(typeRef)
-                .block();
+        try {
+            return WEB_CLIENT
+                    .post()
+                    .uri(uri)
+                    .body(BodyInserters.fromValue(body))
+                    .retrieve()
+                    .onStatus(HttpStatus::isError, response ->
+                            response.bodyToMono(String.class)
+                                    .doOnNext(bodyStr ->
+                                            log.error("[POST] API 오류: status={} body={}", response.statusCode(), bodyStr)
+                                    )
+                                    .then(Mono.error(new RuntimeException("API 서버 오류")))
+                    )
+                    .bodyToMono(typeRef)
+                    .block();
+        } catch (Exception e) {
+
+            String errorCode = "9999";
+            String errorMessage;
+            if (e.getCause() instanceof io.netty.channel.ConnectTimeoutException) errorMessage = "서버 연결(Connection Timeout) 실패";
+            else if (e.getCause() instanceof java.util.concurrent.TimeoutException) errorMessage = "응답(Response Timeout) 지연 발생";
+            else if (e instanceof WebClientRequestException) errorMessage = "요청(Request) 실패 - 서버 접근 불가";
+            else errorMessage = "알 수 없는 오류 발생";
+            log.error("[POST] API 통신 실패: uri={} / message={}", uri, errorMessage, e);
+
+            ApiResponse<T> fail = new ApiResponse<>();
+            fail.setCode(errorCode);
+            fail.setMessage(errorMessage);
+            fail.setResult(null);
+            return fail;
+        }
     }
 
     public ApiResponse<?> uploadWithFile(String uri, MultipartBodyBuilder builder) {

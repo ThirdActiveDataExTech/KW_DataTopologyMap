@@ -25,10 +25,12 @@ import kware.apps.mobigen.integration.dto.response.rawdata.RawdataList;
 import kware.apps.mobigen.integration.dto.response.rawdata.RawdataView;
 import kware.apps.mobigen.integration.dto.response.recommendation.RecommendationList;
 import kware.apps.mobigen.integration.dto.response.relation.RelationsList;
+import kware.apps.mobigen.mobigen.dto.request.metadata.SearchMetadataListRequest;
 import kware.apps.mobigen.mobigen.dto.request.recommendation.SearchRecommendationListRequest;
 import kware.apps.mobigen.mobigen.dto.response.ApiResponse;
 import kware.apps.mobigen.mobigen.dto.response.common.MetadataResultResponse;
 import kware.apps.mobigen.mobigen.dto.response.metadata.MetadataFilePreviewResponse;
+import kware.apps.mobigen.mobigen.dto.response.metadata.MetadataListResponse;
 import kware.apps.mobigen.mobigen.dto.response.rawdata.RawdataListItemResponse;
 import kware.apps.mobigen.mobigen.dto.response.recommendation.RecommendationListResponse;
 import kware.apps.mobigen.mobigen.dto.response.recommendation.RecommendationsResponse;
@@ -420,7 +422,10 @@ public class DatasetService {
                 search.getDateRangeStart(), search.getDateRangeEnd(), search.getSortOrder()
         );
         ApiResponse<MetadataListResponse> apiResponse = apiService.findMetadataList(pageSearchRequest);
-        MetadataListResponse metadataListResponse = apiResponse.getResult();*/
+        MetadataListResponse metadataListResponse = apiResponse.getResult();
+        log.info(">> apiResponse.getCode() : {} ", apiResponse.getCode());
+        log.info(">> apiResponse.getMessage() : {} ", apiResponse.getMessage());
+        log.info(">> apiResponse.getResult() : {} ", apiResponse.getResult());*/
 
         int totalCount = mobigenDatasetService.findAllMobigenDatasetListCount(); // totalCount = metadataListResponse.getTotal_count();
         int page = search.getPageNumber(); // page  = metadataListResponse.getPage();

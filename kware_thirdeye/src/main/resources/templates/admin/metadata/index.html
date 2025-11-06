@@ -12,6 +12,24 @@
 <th:block layout:fragment="head">
   <link rel="stylesheet" th:href="@{'/assets/css/page/admin/mobigen-metadata.css'}" />
   <link rel="stylesheet" th:href="@{'/assets/css/page/system/user-list.css'}"/>
+  <style>
+    .table-blur {
+      filter: blur(2px);
+      pointer-events: none;
+      transition: filter 0.3s ease;
+    }
+    .dataTables_processing {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 200px;
+      margin-left: -100px;
+      margin-top: -26px;
+      text-align: center;
+      z-index: 9999;
+      padding: 1em 0;
+    }
+  </style>
 </th:block>
 
 <th:block layout:fragment="content">
