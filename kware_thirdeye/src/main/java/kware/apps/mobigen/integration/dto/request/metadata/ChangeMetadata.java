@@ -17,7 +17,7 @@ import java.util.List;
 
 @Getter @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ChangeMetadata {
-    private Long metadataId;
+    private String metadataId;
     private String title;
     private String extdata;
     private CetusDatasetFile realFile;

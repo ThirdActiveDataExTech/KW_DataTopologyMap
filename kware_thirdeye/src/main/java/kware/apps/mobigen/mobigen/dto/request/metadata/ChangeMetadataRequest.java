@@ -32,7 +32,7 @@ public class ChangeMetadataRequest {
         private String modified;
         private String identifier;
         private String publisher;
-        private String keyword;
+        private String keywords;
         private String landing_page;
         private String theme;
         private String access_url;

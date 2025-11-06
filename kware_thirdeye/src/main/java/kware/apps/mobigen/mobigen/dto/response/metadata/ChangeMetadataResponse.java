@@ -4,6 +4,8 @@ package kware.apps.mobigen.mobigen.dto.response.metadata;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.List;
+
 /**
 * @fileName     ChangeMetadataResponse
 * @author       dahyeon
@@ -14,6 +16,6 @@ import lombok.Setter;
 
 @Getter @Setter
 public class ChangeMetadataResponse {
-    private String metadata_id;
-    private String updated_at;
+    private String description;
+    private List<String> tags;
 }

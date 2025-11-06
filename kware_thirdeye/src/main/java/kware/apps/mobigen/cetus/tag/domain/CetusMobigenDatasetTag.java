@@ -9,10 +9,10 @@ import lombok.NoArgsConstructor;
 public class CetusMobigenDatasetTag {
 
     private Long uid;
-    private Long metadataId;
+    private String metadataId;
     private Long tagUid;
 
-    public CetusMobigenDatasetTag(Long metadataId, Long tagUid) {
+    public CetusMobigenDatasetTag(String metadataId, Long tagUid) {
         this.metadataId = metadataId;
         this.tagUid = tagUid;
     }

@@ -17,11 +17,11 @@ import lombok.NoArgsConstructor;
 public class CetusMobigenRegistrant {
 
     private Long uid;
-    private Long metadataId;
+    private String metadataId;
     private Long registrantUid;
     private String regDt;
 
-    public CetusMobigenRegistrant(Long metadataId, Long registrantUid) {
+    public CetusMobigenRegistrant(String metadataId, Long registrantUid) {
         this.metadataId = metadataId;
         this.registrantUid = registrantUid;
     }

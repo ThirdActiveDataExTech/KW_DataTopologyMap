@@ -18,11 +18,11 @@ public class CetusMobigenDatasetTagDao extends SuperDao<CetusMobigenDatasetTag> 
         return selectList("getMobigenDatasetTagList", search);
     }
 
-    public List<TagList> getMobigenDatasetTagListByMetadataId(Long metadataId) {
+    public List<TagList> getMobigenDatasetTagListByMetadataId(String metadataId) {
         return selectList("getMobigenDatasetTagListByMetadataId", metadataId);
     }
 
-    public void deleteAll(Long metadataId) {
+    public void deleteAll(String metadataId) {
         delete("deleteAll", metadataId);
     }
 }

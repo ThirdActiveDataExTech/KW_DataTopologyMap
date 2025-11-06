@@ -12,7 +12,7 @@ public class CetusMobigenRegistrantDao extends SuperDao<CetusMobigenRegistrant> 
         super("cetusMobigenRegistrant");
     }
 
-    public MobigenRegistrantView getMobigenRegistrant(Long metadataId) {
+    public MobigenRegistrantView getMobigenRegistrant(String metadataId) {
         return selectOne("getMobigenRegistrant", metadataId);
     }
 }

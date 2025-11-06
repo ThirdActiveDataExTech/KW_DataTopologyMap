@@ -24,7 +24,7 @@ public class CetusApprovedDatasetService2 {
     private final CetusApprovedDatasetDao dao;
 
     @Transactional
-    public void updateDatasetSearchData(Long metadataId, String title, List<TagList> tags) {
+    public void updateDatasetSearchData(String metadataId, String title, List<TagList> tags) {
         List<Long> tagUids = tags.stream().map(TagList::getTagUid).collect(Collectors.toList());
         Map<String, Object> searchDataMap = new HashMap<>();
         searchDataMap.put("title", title);

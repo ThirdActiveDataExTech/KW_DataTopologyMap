@@ -16,6 +16,6 @@ import java.util.List;
 
 @Getter @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class DeleteRawdatas {
-    private Long metadataId;
+    private String metadataId;
     private List<String> rawdataIds;
 }

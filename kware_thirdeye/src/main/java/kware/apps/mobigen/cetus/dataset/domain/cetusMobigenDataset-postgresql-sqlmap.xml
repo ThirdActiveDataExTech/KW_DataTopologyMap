@@ -100,7 +100,7 @@
          WHERE UID = #{uid}
     </update>
 
-    <update id="ifExistDeleteApprovedDataset" parameterType="Long">
+    <update id="ifExistDeleteApprovedDataset" parameterType="String">
         /* cetusApprovedDataset.ifExistDeleteApprovedDataset */
         UPDATE CETUS_APPROVED_DATASET
            SET DELETE_AT = 'Y'

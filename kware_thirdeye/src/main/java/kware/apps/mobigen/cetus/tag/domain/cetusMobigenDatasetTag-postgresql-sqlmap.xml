@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="cetusMobigenDatasetTag">
 
-    <delete id="deleteAll" parameterType="Long">
+    <delete id="deleteAll" parameterType="String">
         /* cetusMobigenDatasetTag.deleteAll */
         DELETE FROM CETUS_MOBIGEN_DATASET_TAG
               WHERE METADATA_ID = #{metadataId}
@@ -30,7 +30,7 @@
         </if>
     </select>
 
-    <select id="getMobigenDatasetTagListByMetadataId" resultType="TagList" parameterType="Long">
+    <select id="getMobigenDatasetTagListByMetadataId" resultType="TagList" parameterType="String">
         /* cetusMobigenDatasetTag.getMobigenDatasetTagListByMetadataId */
         SELECT CMDT.TAG_UID
               ,CMT.TAG_NM AS TAG_NM

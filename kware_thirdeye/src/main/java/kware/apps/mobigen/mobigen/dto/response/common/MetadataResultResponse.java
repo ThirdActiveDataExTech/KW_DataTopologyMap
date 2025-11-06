@@ -17,8 +17,8 @@ import java.util.List;
 @Getter @Setter
 public class MetadataResultResponse {
 
-    private Long uid;        // 추후 삭제
-    private String regDt;    // 추후 삭제
+    private String uid;        // 추후 삭제
+    private String regDt;      // 추후 삭제
 
     private String metadata_id;
     private String title;
@@ -30,8 +30,6 @@ public class MetadataResultResponse {
     private String landing_page;
     private String theme;
     private String access_url;
-    private String value_a;
-    private String domain;
     private String ingested_at;
     private String updated_at;
 

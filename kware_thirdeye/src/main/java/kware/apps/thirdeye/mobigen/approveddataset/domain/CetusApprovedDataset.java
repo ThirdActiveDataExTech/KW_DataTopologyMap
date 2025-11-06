@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 public class CetusApprovedDataset {
 
     private Long uid;
-    private Long metadataId;        // 데이터셋 id
+    private String metadataId;      // 데이터셋 id
     private Long workplaceUid;      // 워크플레이스 uid
     private String approvedDt;      // 승인일시
     private Long approverUid;       // 승인자 uid
@@ -25,7 +25,7 @@ public class CetusApprovedDataset {
         this.targetTpCd = request.getTargetTpCd();
     }
 
-    public CetusApprovedDataset(Long metadataId, String searchData) {
+    public CetusApprovedDataset(String metadataId, String searchData) {
         this.metadataId = metadataId;
         this.searchData = searchData;
     }

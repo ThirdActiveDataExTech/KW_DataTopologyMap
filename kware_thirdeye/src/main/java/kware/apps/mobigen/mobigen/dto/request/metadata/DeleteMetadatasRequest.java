@@ -17,7 +17,7 @@ import java.util.List;
 public class DeleteMetadatasRequest {
 
     private String action;                  // "delete"
-    private List<String> metadata_ids;
+    private List<String> metadata_ids;      // ["1", "2", ... ]
 
     public DeleteMetadatasRequest(List<String> metadata_ids) {
         this.metadata_ids = metadata_ids;

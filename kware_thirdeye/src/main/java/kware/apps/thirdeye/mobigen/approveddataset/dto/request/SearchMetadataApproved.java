@@ -15,10 +15,10 @@ import lombok.NoArgsConstructor;
 @Getter @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class SearchMetadataApproved {
 
-    private Long metadataId;
+    private String metadataId;
     private Long workplaceUid;
 
-    public SearchMetadataApproved(Long metadataId, Long workplaceUid) {
+    public SearchMetadataApproved(String metadataId, Long workplaceUid) {
         this.metadataId = metadataId;
         this.workplaceUid = workplaceUid;
     }

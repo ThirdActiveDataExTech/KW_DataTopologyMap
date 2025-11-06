@@ -15,7 +15,7 @@
         )
     </insert>
 
-    <select id="getMobigenRegistrant" resultType="MobigenRegistrantView" parameterType="Long">
+    <select id="getMobigenRegistrant" resultType="MobigenRegistrantView" parameterType="String">
         /* cetusMobigenRegistrant.getMobigenRegistrant */
         SELECT CMR.REGISTRANT_UID
               ,CU.USER_ID AS REGISTRANT_Id

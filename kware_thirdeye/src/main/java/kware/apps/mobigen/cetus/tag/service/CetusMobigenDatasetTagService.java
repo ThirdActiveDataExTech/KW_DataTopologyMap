@@ -28,7 +28,7 @@ public class CetusMobigenDatasetTagService {
      * @deacription [Mobigen] 태그 & 데이터셋 매핑 정보 저장
     **/
     @Transactional
-    public void saveDatasetTag(List<SaveTag> requests, Long metadataId) {
+    public void saveDatasetTag(List<SaveTag> requests, String metadataId) {
         dao.deleteAll(metadataId);
         for (SaveTag request: requests) {
             Long tagUid = (request.getUid() == null) ? tagService.saveMobigenTag(request.getTagNm()) : request.getUid();
@@ -55,7 +55,7 @@ public class CetusMobigenDatasetTagService {
      * @deacription [Mobigen] 태그 & 데이터셋 매핑 -> 데이터셋 기준 단건 조회
     **/
     @Transactional(readOnly = true)
-    public List<TagList> findMobigenDatasetTagListByMetadataId(Long metadataId) {
+    public List<TagList> findMobigenDatasetTagListByMetadataId(String metadataId) {
         return dao.getMobigenDatasetTagListByMetadataId(metadataId);
     }
 }

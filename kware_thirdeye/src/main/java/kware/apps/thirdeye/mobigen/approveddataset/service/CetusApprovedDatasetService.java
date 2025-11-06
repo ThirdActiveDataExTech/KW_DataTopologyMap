@@ -99,7 +99,7 @@ public class CetusApprovedDatasetService {
         // 4. 데이터셋에 대한 필터링 데이터 조회 + 저장
         // => todo 추후 수정
         MetadataView metadataView = datasetService.viewMetadata(
-                new SearchMetadataView(Long.toString(request.getMetadataId())), false, false, true
+                new SearchMetadataView(request.getMetadataId()), false, false, true
         );
         approvedDatasetService2.updateDatasetSearchData(request.getMetadataId(), metadataView.getTitle(), metadataView.getTags());
     }

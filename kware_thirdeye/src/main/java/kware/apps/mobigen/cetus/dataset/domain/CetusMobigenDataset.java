@@ -23,8 +23,8 @@ public class CetusMobigenDataset {
         this.extdata = request.getExtdata();
     }
 
-    public CetusMobigenDataset(Long uid, ChangeMetadata request) {
-        this.uid = uid;
+    public CetusMobigenDataset(String metadataId, ChangeMetadata request) {
+        this.uid = Long.parseLong(metadataId);
         this.title = request.getTitle();
         this.extdata = request.getExtdata();
     }

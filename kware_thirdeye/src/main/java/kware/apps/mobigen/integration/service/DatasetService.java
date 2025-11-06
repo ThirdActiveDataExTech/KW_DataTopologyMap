@@ -130,7 +130,7 @@ public class DatasetService {
         datasetFileService.processAddFile(metaFile);
 
         // 2. 모비젠 등록자 정보 저장
-        registrantService.saveMobigenRegistrant(metadataId); // metadataId = apiResponse.getResult().getMetadata().getMetadata_id();
+        registrantService.saveMobigenRegistrant(Long.toString(metadataId)); // metadataId = apiResponse.getResult().getMetadata().getMetadata_id();
     }
 
     /**
@@ -190,10 +190,10 @@ public class DatasetService {
 
         // ## save tag
         // todo 추후 연결후 삭제..
-        datasetTagService.saveDatasetTag(request.getTags(), metadataId);
+        datasetTagService.saveDatasetTag(request.getTags(), Long.toString(metadataId));
 
         // 3. 모비젠 등록자 정보 저장
-        registrantService.saveMobigenRegistrant(metadataId);
+        registrantService.saveMobigenRegistrant(Long.toString(metadataId));
     }
 
     /**
@@ -208,7 +208,7 @@ public class DatasetService {
     @Transactional
     public void updateMetadata( ChangeMetadata request, MultipartFile realFileData ) throws IOException {
 
-        Long metadataId = request.getMetadataId();
+        String metadataId = request.getMetadataId();
 
         // 1. 메타데이터 정보 수정
         /*ChangeMetadataRequest changeRequest = new ChangeMetadataRequest(
@@ -235,7 +235,7 @@ public class DatasetService {
             
             String rawdataId = "raw_" + metadataId + "_" + StringUtil.random(3); //apiResponse2.getResult().getRawdata_id();
             CetusDatasetFile realFile = request.getRealFile();
-            realFile.setMetadataId(Long.toString(metadataId));
+            realFile.setMetadataId(metadataId);
             realFile.setDataTpCd(DataFileTpCd.RAWDATA.name());
             realFile.setRawdataId(rawdataId);
             datasetFileService.processAddFile(realFile);
@@ -245,7 +245,7 @@ public class DatasetService {
         // 3. 만일 수정된 메타데이터 정보가 진열관리 중이라면, search_data 업데이트
         // todo 추후 체크 필요 
         MetadataView metadataView = this.viewMetadata(
-                new SearchMetadataView(Long.toString(metadataId)), false, false, true
+                new SearchMetadataView(metadataId), false, false, true
         );
         approvedDatasetService2.updateDatasetSearchData(metadataId, metadataView.getTitle(), metadataView.getTags());
         log.info("======================= [4-3] Update Search Data : {} ===========================", metadataId);
@@ -275,7 +275,7 @@ public class DatasetService {
             mobigenDatasetService.deleteMobigenDataset(bean);
 
             // 2. {metadataId} 데이터셋이 kware 포탈 시스템에서 관리중인 값이라면 포탈 시스템에서도 삭제 (논리삭제)
-            mobigenDatasetService.ifExistDeleteApprovedDataset(Long.parseLong(metadataId));
+            mobigenDatasetService.ifExistDeleteApprovedDataset(metadataId);
 
             // 3. 해당 파일 정보도 삭제
             datasetFileService.processDelFile(DeleteDatasetFile.deleteMetadata(metadataId));
@@ -340,14 +340,14 @@ public class DatasetService {
 
         // ## 우선은 데이터 원본 정보들을 kware 포탈 시스템에서 가져오기
         // todo 추후 연결후 삭제..
-        MetadataView metadataView = mobigenDatasetService.findMobigenDatasetByMetadataId(Long.parseLong(metadataId));
+        MetadataView metadataView = mobigenDatasetService.findMobigenDatasetByMetadataId(metadataId);
 
         // 1. 모비젠으로부터 얻어온 데이터 정보들로 세팅
         metadataView.setMetadataResponse(null);
 
         // 2. 데이터 등록자가 있다면 세팅
         if(useRegistrant) {
-            MobigenRegistrantView registrantView = registrantService.findMobigenRegistrant(Long.parseLong(metadataId));
+            MobigenRegistrantView registrantView = registrantService.findMobigenRegistrant(metadataId);
             metadataView.setRegistrantId((registrantView != null) ? registrantView.getRegistrantId() : null);
         }
 
@@ -366,7 +366,7 @@ public class DatasetService {
         // 4. 데이터에 대한 태그 정보 (추후 삭제할 예정)
         // todo 추후 연결후 삭제..
         if(useTag) {
-            List<TagList> tags = datasetTagService.findMobigenDatasetTagListByMetadataId(Long.parseLong(metadataId));
+            List<TagList> tags = datasetTagService.findMobigenDatasetTagListByMetadataId(metadataId);
             metadataView.setTags(tags);
         }
 
@@ -438,8 +438,8 @@ public class DatasetService {
         List<MetadataList> metadataList = new ArrayList<>();
         items.forEach(data -> {
 
-            Long metadataId = data.getUid();
-            MetadataList metadataDto = new MetadataList(Long.toString(metadataId));
+            String metadataId = data.getUid();
+            MetadataList metadataDto = new MetadataList(metadataId);
             metadataDto.setMetadataView(data);
 
             // 등록자 정보
