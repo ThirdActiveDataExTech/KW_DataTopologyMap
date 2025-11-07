@@ -18,11 +18,13 @@ import java.util.List;
 public class ChangeRawdataRequest {
 
     private String action;                      // "update"
+    private String metadata_id;
     private String rawdata_id;
     private ChangeRawdataFieldRequest field;
 
-    public ChangeRawdataRequest(String rawdata_id, ChangeRawdataFieldRequest field) {
+    public ChangeRawdataRequest(String rawdata_id, String metadata_id, ChangeRawdataFieldRequest field) {
         this.action = "update";
+        this.metadata_id = metadata_id;
         this.rawdata_id = rawdata_id;
         this.field = field;
     }

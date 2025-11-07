@@ -25,12 +25,10 @@ import kware.apps.mobigen.integration.dto.response.rawdata.RawdataList;
 import kware.apps.mobigen.integration.dto.response.rawdata.RawdataView;
 import kware.apps.mobigen.integration.dto.response.recommendation.RecommendationList;
 import kware.apps.mobigen.integration.dto.response.relation.RelationsList;
-import kware.apps.mobigen.mobigen.dto.request.metadata.SearchMetadataListRequest;
 import kware.apps.mobigen.mobigen.dto.request.recommendation.SearchRecommendationListRequest;
 import kware.apps.mobigen.mobigen.dto.response.ApiResponse;
 import kware.apps.mobigen.mobigen.dto.response.common.MetadataResultResponse;
 import kware.apps.mobigen.mobigen.dto.response.metadata.MetadataFilePreviewResponse;
-import kware.apps.mobigen.mobigen.dto.response.metadata.MetadataListResponse;
 import kware.apps.mobigen.mobigen.dto.response.rawdata.RawdataListItemResponse;
 import kware.apps.mobigen.mobigen.dto.response.recommendation.RecommendationListResponse;
 import kware.apps.mobigen.mobigen.dto.response.recommendation.RecommendationsResponse;
@@ -316,7 +314,11 @@ public class DatasetService {
     @Transactional
     public void updateRawdata(ChangeRawdata request) {
         log.info("======================= [7] Update Rawdata : {} ===========================", request.getRawdataId());
-        /*ChangeRawdataRequest updateRequest = new ChangeRawdataRequest(request.getRawdataId(), new ChangeRawdataRequest.ChangeRawdataFieldRequest(request.getDescription(), request.getTags()));
+        /*ChangeRawdataRequest updateRequest = new ChangeRawdataRequest(
+                request.getRawdataId(),
+                request.getMetadataId(),
+                new ChangeRawdataRequest.ChangeRawdataFieldRequest(request.getDescription(), request.getTags())
+        );
         ApiResponse<ChangeRawdataResponse> apiResponse = apiService.changeRawdata(updateRequest);*/
     }
 

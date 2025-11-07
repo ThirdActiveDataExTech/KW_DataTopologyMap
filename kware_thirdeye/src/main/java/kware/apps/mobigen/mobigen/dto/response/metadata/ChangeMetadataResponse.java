@@ -16,6 +16,6 @@ import java.util.List;
 
 @Getter @Setter
 public class ChangeMetadataResponse {
-    private String description;
-    private List<String> tags;
+    private String metadata_id;
+    private String updated_at;
 }

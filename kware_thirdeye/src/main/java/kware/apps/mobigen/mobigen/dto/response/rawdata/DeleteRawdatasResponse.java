@@ -4,6 +4,8 @@ package kware.apps.mobigen.mobigen.dto.response.rawdata;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.List;
+
 /**
 * @fileName     DeleteRawdatasResponse
 * @author       dahyeon
@@ -15,4 +17,5 @@ import lombok.Setter;
 @Getter @Setter
 public class DeleteRawdatasResponse {
     private int deleted_count;
+    private List<String> deleted_ids;
 }

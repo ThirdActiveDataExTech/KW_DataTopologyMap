@@ -18,4 +18,5 @@ public class UploadRawdataResponse {
     private String filename;
     private int file_size;
     private String updated_at;
+    private String metadata_id;
 }

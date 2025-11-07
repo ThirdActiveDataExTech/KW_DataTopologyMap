@@ -3,6 +3,8 @@ package kware.apps.mobigen.mobigen.dto.response.rawdata;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.List;
+
 /**
 * @fileName     ChangeRawdataResponse
 * @author       dahyeon
@@ -13,4 +15,6 @@ import lombok.Setter;
 
 @Getter @Setter
 public class ChangeRawdataResponse {
+    private String description;
+    private List<String> tags;
 }

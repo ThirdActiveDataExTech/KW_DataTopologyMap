@@ -94,9 +94,9 @@
                     </div>
                 </div>
 
-                <!-- 실데이터 업로드 -->
+                <!-- 원본데이터 업로드 -->
                 <div class="file-row">
-                    <label>실 데이터</label>
+                    <label>원본 데이터</label>
                     <div class="file-display">
                         <div class="file-row" style="position: relative;">
                             <input type="text" id="period-data-filename" class="file-text" placeholder="선택된 파일 없음" readonly>
@@ -104,7 +104,7 @@
                         </div>
                         <span style="font-size: 11px;color: #393838;">* xml, csv, pdf 형태만 업로드 가능합니다.</span>
                     </div>
-                    <button type="button" class="file-btn" id="period-data-upload-btn">실데이터 업로드</button>
+                    <button type="button" class="file-btn" id="period-data-upload-btn">원본데이터 업로드</button>
                     <div id="period-data-uploader" style="display: none;"></div>
                 </div>
 
@@ -193,7 +193,7 @@
             mobigenDatasetFormJS.initExtdataJson(extdataJSON);
 
             // ===============================
-            // 주기성 데이터 등록 > 실데이터 파일 > 업로드, 삭제
+            // 주기성 데이터 등록 > 원본데이터 파일 > 업로드, 삭제
             // ===============================
             $("#period-data-upload-btn").on('click', function () {
                 mobigenDatasetFormJS.realdataFileUpload();

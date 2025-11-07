@@ -126,14 +126,14 @@
                     return;
                 }
                 const infoList = [
-                    { key: '실데이터 파일Id', value: res['rawdataFile']['fileId'] },
-                    { key: '실데이터 파일경로', value: res['rawdataFile']['filePath'] },
-                    { key: '실데이터 파일크기', value: res['rawdataFile']['fileSize'] },
-                    { key: '실데이터 파일유형', value: res['rawdataFile']['fileType'] },
-                    { key: '실데이터 파일이름', value: res['rawdataFile']['orgFileNm'] },
-                    { key: '실데이터 다운로드횟수', value: res['rawdataFile']['downCnt'] },
-                    { key: '실데이터 파일 등록일', value: res['rawdataFile']['regDt'] },
-                    { key: '실데이터 파일 수정일', value: res['rawdataFile']['regDt'] }
+                    { key: '원본데이터 파일Id', value: res['rawdataFile']['fileId'] },
+                    { key: '원본데이터 파일경로', value: res['rawdataFile']['filePath'] },
+                    { key: '원본데이터 파일크기', value: res['rawdataFile']['fileSize'] },
+                    { key: '원본데이터 파일유형', value: res['rawdataFile']['fileType'] },
+                    { key: '원본데이터 파일이름', value: res['rawdataFile']['orgFileNm'] },
+                    { key: '원본데이터 다운로드횟수', value: res['rawdataFile']['downCnt'] },
+                    { key: '원본데이터 파일 등록일', value: res['rawdataFile']['regDt'] },
+                    { key: '원본데이터 파일 수정일', value: res['rawdataFile']['regDt'] }
                 ]
                 let tableHtml = `<table style="width:100%; border-collapse: collapse; border: 1px solid #ccc;">`;
                 for (let i = 0; i < infoList.length; i += 2) {
@@ -148,7 +148,7 @@
                     tableHtml += `</tr>`;
                 }
                 tableHtml += `<tr>
-                                  <td style="background-color: #2b292a24;">실데이터 파일 다운로드</td>
+                                  <td style="background-color: #2b292a24;">원본데이터 파일 다운로드</td>
                                   <td style="vertical-align: middle;">
                                     <button class="custom-button realdata-file-download"
                                     data-file="${res['rawdataFile']['fileId']}"

@@ -16,8 +16,6 @@ import java.util.List;
 
 @Getter @Setter
 public class PackageExportResponse {
-
     private String metadata_id;
     private List<String> rawdata_ids;
-
 }

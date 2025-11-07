@@ -16,8 +16,8 @@ import java.util.List;
 
 @Getter @Setter
 public class ViewRawdataResponse {
-    private String rawdata_id;
     private String metadata_id;
+    private String rawdata_id;
     private String filename;
     private int file_size;
     private String format;
