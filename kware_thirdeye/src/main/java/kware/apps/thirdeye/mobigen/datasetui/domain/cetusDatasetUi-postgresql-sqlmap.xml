@@ -48,6 +48,7 @@
               ,CDU.THUMB_UID
               ,CF.FILE_ID AS THUMB_ID
               ,CDU.EXTRA_JSON
+              ,CDU.CATEGORY_UID
           FROM CETUS_DATASET_UI CDU
           LEFT JOIN CETUS_FILE CF ON CF.FILE_UID = CDU.THUMB_UID AND CF.USE_AT = 'Y' AND CF.SAVED = 'Y'
          WHERE CDU.APPROVED_DATASET_UID = #{approvedDatasetUid}

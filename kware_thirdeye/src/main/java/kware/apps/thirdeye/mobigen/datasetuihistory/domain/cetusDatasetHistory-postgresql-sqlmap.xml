@@ -16,4 +16,38 @@
             ,#{chngUid}
         )
     </insert>
+
+    <select id="getHistoryPageByApprovedUidPage" parameterType="SearchCetusDatasetHistory" resultType="CetusDatasetHistoryList">
+        /* cetusDatasetHistory.getHistoryPageByApprovedUidPage */
+        SELECT CDH.HISTORY_UID
+              ,CDH.APPROVED_DATASET_UID
+              ,CDH.CHNG_CNT
+              ,COALESCE(CDMU.NAME, '삭제됨')  AS MAIN_UI_NM
+              ,CDMU.UID AS MAIN_UI_UID
+              ,COALESCE(CDC.CATEGORY_NM, '삭제됨') AS CATEGORY_NM
+              ,CDC.UID AS CATEGORY_UID
+              ,TO_CHAR(CDH.CHNG_DT, 'YYYY-MM-DD') AS CHNG_DT
+              ,CDH.CHNG_UID
+              ,CU.USER_NM AS CHNG_NM
+          FROM CETUS_DATASET_HISTORY CDH
+          LEFT JOIN CETUS_USER CU ON CU.UID = CDH.CHNG_UID
+          LEFT JOIN CETUS_DATASET_MAIN_UI CDMU ON CDMU.UID = (CDH.CHNG_CNT -> 'mainUiUid')::bigint
+          LEFT JOIN CETUS_DATASET_CATEGORY CDC ON CDC.UID = (CDH.CHNG_CNT -> 'categoryUid')::bigint
+         WHERE CDH.APPROVED_DATASET_UID = #{approvedDatasetUid}
+         ORDER BY CDH.CHNG_DT DESC
+        <if test="@Ognl@isNotEmpty(startNumber) and  @Ognl@isNotEmpty(endNumber)">
+        OFFSET ${startNumber} LIMIT ${endNumber}
+        </if>
+    </select>
+
+    <select id="getHistoryPageByApprovedUidCount" parameterType="SearchCetusDatasetHistory" resultType="int">
+        /* cetusDatasetHistory.getHistoryPageByApprovedUidCount */
+        SELECT COUNT(*)
+          FROM CETUS_DATASET_HISTORY CDH
+          LEFT JOIN CETUS_USER CU ON CU.UID = CDH.CHNG_UID
+          LEFT JOIN CETUS_DATASET_MAIN_UI CDMU ON CDMU.UID = (CDH.CHNG_CNT -> 'mainUiUid')::bigint
+          LEFT JOIN CETUS_DATASET_CATEGORY CDC ON CDC.UID = (CDH.CHNG_CNT -> 'categoryUid')::bigint
+         WHERE CDH.APPROVED_DATASET_UID = #{approvedDatasetUid}
+    </select>
+
 </mapper>

@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/default}">
+
+<th:block layout:fragment="center-image">
+    <th:block th:with="title1=${currentPageName}, title2=${navigation}, leftImg=${centerLeftImage}, rightImg=${centerRightImage}">
+        <th:block th:replace="fragments/center-image :: main-image-title(${title1}, ${title2}, ${leftImg}, ${rightImg})"></th:block>
+    </th:block>
+</th:block>
+
+<th:block layout:fragment="head">
+    <link rel="stylesheet" type="text/css" th:href="@{'/assets/css/plugins/datatables/select.dataTables.min.css'}" />
+    <style>
+        .dataTable tr.odd:hover,
+        .dataTable tr.even:hover {
+            cursor: pointer; /* 선택적으로 커서도 포인터로 */
+        }
+        .dataTable tr.unselectable {
+            opacity: 0.5;
+        }
+        .description .ck-editor__editable{ min-height: 300px; }
+        .description .ck-editor__editable_inline { border: none !important; outline: none !important; }
+        .description .ck-editor__top { display: none; }
+    </style>
+    <style>
+        /* 이미지 영역 */
+        .thumbnail-wrapper {
+            width: 200px;          /* 원하는 크기 */
+            height: 200px;
+            overflow: hidden;
+            border-radius: 20px;   /* 모서리 둥글게 */
+            background-color: #f5f5f5;
+        }
+        .thumbnail-wrapper img.profile-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;     /* 배경사진처럼 꽉 차게 */
+            border-radius: 20px;
+        }
+        /* 버튼 영역 */
+        .button-group-left {
+            display: flex;
+            gap: 10px;             /* 버튼 간격 */
+            margin-top: 10px;
+            justify-content: flex-start; /* 좌측 정렬 */
+        }
+    </style>
+    <style>
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+        .add-btn {
+            padding: 6px 12px;
+            cursor: pointer;
+        }
+    </style>
+    <style>
+        .select2-container--default .select2-selection--single .select2-selection__arrow b {
+            border-color: #335480 transparent transparent transparent !important;
+            border-width: 8px 6px 0 6px !important;
+            margin-left: -10px !important;
+            margin-top: 2px !important;
+        }
+    </style>
+    <link rel="stylesheet" th:href="@{'/assets/css/page/system/user-list.css'}"/>
+</th:block>
+
+<th:block layout:fragment="content">
+    <div class="related-product-area pb-100 pt-80" data-aos="fade-up" data-aos-delay="200">
+        <div class="container">
+
+            <div class="section-title-2 st-border-center text-center mb-35">
+                <h2>메인UI 변경 이력</h2>
+            </div>
+            <hr>
+
+            <!-- s:buttons -->
+            <div>
+                <div class="d-flex justify-content-end pe-4">
+                    <div class="btn-container" style="margin-top: 0px !important;">
+                        <!-- 왼쪽 버튼 -->
+                        <!-- 오른쪽 버튼들 -->
+                        <div class="right-buttons">
+                            <button type="button" class="custom-button" id="goto-edit-page">뒤로가기</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- e:buttons -->
+
+            <!-- s: 데이터 진열 관리 등록 -->
+            <div class="row" style="margin-top: 10px">
+
+                <!-- 왼쪽: 데이터셋 목록 -->
+                <div class="col-lg-6">
+                    <div class="card">
+                        <div class="description-review-area pb-85">
+                            <div class="card-body">
+                                <div class="">
+                                    <h4 style="margin-bottom: 30px;">수정 이력</h4>
+                                    <div class="table-responsive text-nowrap">
+                                        <table class="table table-bordered" id="mainui-history-table">
+                                            <thead>
+                                                <tr>
+                                                    <th>번호</th>
+                                                    <th>수정자</th>
+                                                    <th>수정일</th>
+                                                </tr>
+                                            </thead>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- 왼쪽: 데이터셋 목록 -->
+
+                <!-- 오른쪽: 데이터셋 UI 상세 정보 -->
+                <div class="col-lg-6">
+                    <div class="card">
+                        <form class="needs-validation" id="save-mainui" novalidate="">
+
+                            <div class="card-body" style="padding: 30px;">
+                                <h4 style="margin-bottom: 30px;">수정 정보</h4>
+                                <div class="row custom-row">
+                                    <div class="col-lg-6">
+                                        <div class="single-input-item">
+                                            <div for="mainUiUid" class="required">메인UI 유형 고르기</div>
+                                            <select class="form-control form-select" id="mainUiUid" name="mainUiUid" disabled>
+                                                <option value="" disabled selected>-- 메인UI 유형 고르기 --</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <label for="showAt-form" class="custom-label">노출 여부<span style="color: firebrick">*</span></label>
+                                        <div id="showAt-form" class="custom-check-form-flex">
+                                            <div class="form-check">
+                                                <input type="radio" id="showAt_Y" name="showAt" class="form-check-input" value="Y" checked="" disabled>
+                                                <label class="form-check-label" for="showAt_Y">사용</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input type="radio" id="showAt_N" name="showAt" class="form-check-input" value="N" disabled>
+                                                <label class="form-check-label" for="showAt_N">미사용</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row custom-row">
+                                    <div class="col-lg-6">
+                                        <div class="single-input-item">
+                                            <label for="sortNo" class="custom-label">정렬순서<span style="color: firebrick">*</span></label>
+                                            <input class="form-control custom-input" type="number" id="sortNo" name="sortNo"
+                                                   placeholder="정렬순서를 입력하세요." disabled>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <label for="category">카테고리<span style="color: firebrick">*</span></label>
+                                        <div class="mt-2">
+                                            <select class="select2 round border_line" id="category" disabled>
+                                                <option value="">카테고리를 선택하세요.</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row custom-row">
+                                    <div class="col-lg-6">
+                                        <div class="single-input-item">
+                                            <label class="custom-label">썸네일
+                                                <span style="color: firebrick; display: none" id="thumbnail-required">*</span></label>
+                                            <div class="thumbnail-wrapper">
+                                                <img src="/assets/images/profile/profile_noimage.png"
+                                                     alt="Profile" id="thumbnail-id" class="profile-img" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <label for="summary">요약 설명</label>
+                                        <textarea id="summary" class="form-control" style="height:200px;" disabled></textarea>
+                                    </div>
+                                </div>
+
+                                <div class="row custom-row">
+                                    <div class="col-lg-12 description">
+                                        <label for="description">추가 설명</label>
+                                        <div id="description-empty">정보가 없습니다.</div>
+                                        <div id="description"></div>
+                                    </div>
+                                </div>
+
+                                <div class="row custom-row">
+                                    <div class="col-lg-12">
+                                        <div class="header">
+                                            <label for="description">추가 정보</label>
+                                        </div>
+                                        <table class="table table-bordered text-center">
+                                            <colgroup>
+                                                <col style="width: 5%">
+                                                <col style="width: 20%">
+                                                <col style="width: 20%">
+                                            </colgroup>
+                                            <thead>
+                                            <tr>
+                                                <th class="text-center">번호</th>
+                                                <th class="text-center">라벨KO</th>
+                                                <th class="text-center">정보</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody id="dataset_table_body">
+                                                <tr class="empty-tr">
+                                                    <td colspan="4" class="text-center py-2">정보가 없습니다.</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <!-- 오른쪽: 데이터셋 UI 상세 정보 -->
+
+            </div>
+            <!-- e: 데이터 진열 관리 등록 -->
+
+        </div>
+    </div>
+
+</th:block>
+
+<th:block layout:fragment="script">
+    <script th:src="@{'/assets/js/page/admin/mainuihistory/mainuihistory-view.js'}"></script>
+    <script th:inline="javascript">
+
+        const approvedUid = [[${approvedUid}]]
+        $(function () {
+
+            mainuihistoryView.initTable();
+            $("#goto-edit-page").on('click', function () {
+               window.location.href =  `/admin/approved/dataset/form/${approvedUid}`
+            });
+
+            $("#category").empty()
+                .select2({
+                    placeholder: "카테고리 선택",
+                    language: {
+                        searching: function () {
+                            return "검색 중..."; // 검색 중 텍스트 변경
+                        },
+                        noResults: function () {
+                            return "결과가 없습니다"; // 결과 없음 텍스트 변경
+                        },
+                        inputTooLong: function (n) {
+                            return "너무 깁니다. " + (n.input.length - n.maximum) + " 글자 지워주세요."
+                        }
+                    },
+                    tags: true,
+                    allowClear: false
+                });
+
+        });
+
+    </script>
+</th:block>
+</html>
