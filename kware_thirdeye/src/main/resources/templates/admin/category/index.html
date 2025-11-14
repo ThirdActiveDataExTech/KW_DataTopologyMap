@@ -77,6 +77,7 @@
                     <th></th>
                     <th>번호</th>
                     <th>카테고리명</th>
+                    <th>정렬순서</th>
                     <th>해당 카테고리<br>사용개수</th>
                     <th>등록자</th>
                     <th>등록일</th>
@@ -110,10 +111,6 @@
     $(function () {
 
       categoryJS.initTable();
-
-      $("#new-btn").on('click', function () {
-        console.log("new category add?")
-      });
 
       $('#useAt').on('change', function () {
         categoryJS.searchTable();

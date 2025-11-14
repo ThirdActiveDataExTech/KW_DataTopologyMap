@@ -135,12 +135,40 @@
       color: #e97730;
     }
   </style>
+  <style>
+    .category-edit {
+      border: none;
+      background: none;
+      cursor: pointer;
+      padding: 5px 0 0 0 !important;
+    }
+    .category-edit:hover {
+      color: #e97730 !important;
+      background: none !important;
+    }
+    .category-edit::before,
+    .category-edit::after {
+      display: none !important;
+      content: none !important;
+    }
+    .page-more-update {
+      display: flex;
+      flex-direction: column; /* 위에서 아래로 */
+      gap: 4px;               /* (선택) 버튼과 링크 간 spacing */
+    }
+  </style>
+  <style>
+    .modal-td,
+    .modal-th {
+      padding: 8px 12px;
+    }
+  </style>
 </th:block>
 
 <th:block layout:fragment="content">
 
-  <div class="checkout-main-area pt-80">
-  </div>
+  <div class="checkout-main-area pt-80"></div>
+  <th:block th:replace="thirdeye/dataset/modal/home-category"></th:block>
 
 </th:block>
 
@@ -170,6 +198,27 @@
     // 좋아요 버튼 클릭
     $(document).on('click', '.like-btn', function(e) {
       Common.likeClickEvent(this);
+    });
+
+    // 카테고리 순서 변경 모달 열기
+    $(document).on('click', '.category-edit', async function (e) {
+      const mainUiUid = $(this).data('type')
+      await homeJS.drawHomeCategoryModal(mainUiUid);
+    });
+
+    // 카테고리 순서 변경 모달 닫기
+    $(document).on('click', '#close-btn', async function (e) {
+      const isOk = await Util.confirm('변경사항이 저장되지 않습니다.')
+      if (isOk) {
+        const $form = $("#save-sortno");
+        $form.removeClass('was-validated')
+        $("#homeCategoryModal").modal('hide');
+      }
+    });
+
+    // 카테고리 순서 변경 정보 저장
+    $(document).on('click', '#save-btn', function (e) {
+      homeJS.saveHomeCategoryModal();
     });
 
   </script>

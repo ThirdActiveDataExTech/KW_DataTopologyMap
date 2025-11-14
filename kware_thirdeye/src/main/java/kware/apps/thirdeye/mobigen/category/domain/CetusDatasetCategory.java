@@ -20,6 +20,7 @@ public class CetusDatasetCategory extends AuditBean {
     private Long uid;
     private Long workplaceUid;
     private String categoryNm;
+    private Integer sortNo;
 
     public CetusDatasetCategory(SaveCategory request, Long workplaceUid) {
         this.workplaceUid = workplaceUid;
@@ -28,5 +29,10 @@ public class CetusDatasetCategory extends AuditBean {
 
     public CetusDatasetCategory(Long uid) {
         this.uid = uid;
+    }
+
+    public CetusDatasetCategory(Long uid, Integer sortNo) {
+        this.uid = uid;
+        this.sortNo = sortNo;
     }
 }

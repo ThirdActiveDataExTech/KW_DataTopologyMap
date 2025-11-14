@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<div class="modal modal-primary fade text-start" id="homeCategoryModal"
+     data-bs-keyboard="false" tabindex="-1" aria-hidden="true" data-bs-backdrop="static" data-keyboard="false"
+     aria-labelledby="homeCategoryModalTitle">
+  <div class="modal-dialog modal-dialog-centered modal-sm">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title" id="homeCategoryModalTitle">카테고리 순서 변경</h4>
+      </div>
+      <div class="modal-body">
+        <form class="needs-validation" id="save-sortno" novalidate="">
+          <table class="sort-table">
+            <thead>
+              <tr>
+                <th class="modal-th">카테고리명</th>
+                <th class="modal-th">정렬 번호</th>
+              </tr>
+            </thead>
+            <tbody id="sortModalBody"></tbody>
+          </table>
+        </form>
+      </div>
+      <div class="modal-footer" style="justify-content: center">
+        <button type="button" class="custom-button" id="close-btn">닫기</button>
+        <button type="button" class="custom-button" id="save-btn">변경</button>
+      </div>
+    </div>
+  </div>
+</div>
+</html>

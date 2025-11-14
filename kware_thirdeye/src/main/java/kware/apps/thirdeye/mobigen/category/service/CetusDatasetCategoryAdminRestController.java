@@ -3,12 +3,11 @@ package kware.apps.thirdeye.mobigen.category.service;
 
 import cetus.bean.Page;
 import cetus.bean.Pageable;
-import kware.apps.thirdeye.mobigen.category.dto.request.CloneCategory;
-import kware.apps.thirdeye.mobigen.category.dto.request.DeleteCategories;
-import kware.apps.thirdeye.mobigen.category.dto.request.SearchCategory;
-import kware.apps.thirdeye.mobigen.category.dto.request.SearchPageCategory;
+import kware.apps.thirdeye.mobigen.category.dto.request.*;
+import kware.apps.thirdeye.mobigen.category.dto.request.changesortno.ChangeCategorySortNoList;
 import kware.apps.thirdeye.mobigen.category.dto.response.CategoryList;
 import kware.apps.thirdeye.mobigen.category.dto.response.CategoryListPage;
+import kware.apps.thirdeye.mobigen.category.dto.response.ListCategoryByMainUi;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -83,6 +82,34 @@ public class CetusDatasetCategoryAdminRestController {
     @PutMapping("/clone")
     public ResponseEntity cloneDatasetCategory(@RequestBody CloneCategory request) {
         service.cloneDatasetCategory(request);
+        return ResponseEntity.ok().build();
+    }
+
+    /**
+     *
+     * main_ui_uid 값을 통해 해당 하위 카테고리 목록 조회
+     *
+     * @api         [GET] /api/admin/dataset-category/main-ui
+     * @author      dahyeon
+     * @date        2025-11-14
+    **/
+    @GetMapping("/main-ui")
+    public ResponseEntity findCategoryByMainUi(SearchCategoryByMainUi search) {
+        List<ListCategoryByMainUi> list = service.findCategoryByMainUi(search);
+        return ResponseEntity.ok(list);
+    }
+
+    /**
+     *
+     * main_ui_uid 값을 통해 해당 하위 카테고리 목록에 대해 정렬 순서 변경
+     *
+     * @api         [PUT] /api/admin/dataset-category/change/main-ui
+     * @author      dahyeon
+     * @date        2025-11-14
+    **/
+    @PutMapping("/change/main-ui")
+    public ResponseEntity changeCategorySortNo(@RequestBody ChangeCategorySortNoList request) {
+        service.changeCategorySortNo(request);
         return ResponseEntity.ok().build();
     }
 }

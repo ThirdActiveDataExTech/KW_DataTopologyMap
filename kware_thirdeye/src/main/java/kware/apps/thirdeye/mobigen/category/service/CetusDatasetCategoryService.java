@@ -7,8 +7,11 @@ import cetus.user.UserUtil;
 import kware.apps.thirdeye.mobigen.category.domain.CetusDatasetCategory;
 import kware.apps.thirdeye.mobigen.category.domain.CetusDatasetCategoryDao;
 import kware.apps.thirdeye.mobigen.category.dto.request.*;
+import kware.apps.thirdeye.mobigen.category.dto.request.changesortno.ChangeCategorySortNo;
+import kware.apps.thirdeye.mobigen.category.dto.request.changesortno.ChangeCategorySortNoList;
 import kware.apps.thirdeye.mobigen.category.dto.response.CategoryList;
 import kware.apps.thirdeye.mobigen.category.dto.response.CategoryListPage;
+import kware.apps.thirdeye.mobigen.category.dto.response.ListCategoryByMainUi;
 import kware.apps.thirdeye.mobigen.datasetui.service.CetusDatasetUiService2;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -75,6 +78,19 @@ public class CetusDatasetCategoryService {
         // 3. 1번 데이터셋 목록 2번 카테고리로 업데이트
         for (Long datasetUiUid : datasetUis) {
             uiService2.changeDatasetCategory(datasetUiUid, categoryUid);
+        }
+    }
+
+    @Transactional(readOnly = true)
+    public List<ListCategoryByMainUi> findCategoryByMainUi(SearchCategoryByMainUi search) {
+        return dao.getCategoryByMainUi(search);
+    }
+
+    @Transactional
+    public void changeCategorySortNo(ChangeCategorySortNoList request) {
+        for (ChangeCategorySortNo category : request.getCategories()) {
+            CetusDatasetCategory bean = new CetusDatasetCategory(category.getCategoryUid(), category.getSortNo());
+            dao.updateCategorySortNo(bean);
         }
     }
 }

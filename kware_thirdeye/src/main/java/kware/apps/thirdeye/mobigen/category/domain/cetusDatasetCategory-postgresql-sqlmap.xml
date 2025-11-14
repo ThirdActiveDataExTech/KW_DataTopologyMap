@@ -20,6 +20,7 @@
         INSERT INTO CETUS_DATASET_CATEGORY (
              WORKPLACE_UID
             ,CATEGORY_NM
+            ,SORT_NO
             ,REG_UID
             ,REG_DT
             ,UPDT_UID
@@ -27,6 +28,9 @@
         ) VALUES (
              #{workplaceUid}
             ,#{categoryNm}
+            ,( SELECT COALESCE(MAX(SORT_NO), 0) + 1
+                 FROM CETUS_DATASET_CATEGORY
+                WHERE WORKPLACE_UID = #{workplaceUid} )
             ,#{regUid}
             ,NOW()
             ,#{updtUid}
@@ -50,7 +54,7 @@
                  AND CAD.DELETE_AT = 'N'
                  AND CDU.SHOW_AT = 'Y'
          )
-         ORDER BY CDC.CATEGORY_NM DESC
+         ORDER BY CDC.SORT_NO
          LIMIT #{limit}
     </select>
 
@@ -62,6 +66,7 @@
               ,CDC.REG_UID
               ,CU.USER_NM AS REG_NM
               ,COUNT(CDU.CATEGORY_UID) AS USE_CNT
+              ,CDC.SORT_NO
           FROM CETUS_DATASET_CATEGORY CDC
           LEFT JOIN CETUS_USER CU ON CU.UID = CDC.REG_UID
           LEFT JOIN CETUS_DATASET_UI CDU ON CDU.CATEGORY_UID = CDC.UID
@@ -90,8 +95,8 @@
                 </when>
             </choose>
         </if>
-          GROUP BY CDC.UID, CDC.CATEGORY_NM, CDC.REG_DT, CDC.REG_UID, CU.USER_NM
-          ORDER BY CDC.UID DESC
+          GROUP BY CDC.UID, CDC.CATEGORY_NM, CDC.REG_DT, CDC.REG_UID, CU.USER_NM, CDC.SORT_NO
+          ORDER BY CDC.SORT_NO
         <if test="@Ognl@isNotEmpty(startNumber) and  @Ognl@isNotEmpty(endNumber)">
         OFFSET ${startNumber} LIMIT ${endNumber}
         </if>
@@ -146,4 +151,27 @@
             #{uid}
         </foreach>
     </select>
+
+    <select id="getCategoryByMainUi" parameterType="SearchCategoryByMainUi" resultType="ListCategoryByMainUi">
+        /* cetusDatasetCategory.getCategoryByMainUi */
+        SELECT CDC.UID AS CATEGORY_UID
+              ,CDC.CATEGORY_NM AS CATEGORY_NM
+              ,CDC.SORT_NO AS SORT_NO
+          FROM CETUS_DATASET_UI CDU
+          LEFT JOIN CETUS_DATASET_CATEGORY CDC ON CDC.UID = CDU.CATEGORY_UID
+         WHERE CDU.SHOW_AT = 'Y'
+           AND CDU.MAIN_UI_UID = #{mainUiUid}
+         GROUP BY CDC.UID, CDC.CATEGORY_NM, CDC.SORT_NO
+         ORDER BY CDC.SORT_NO
+    </select>
+
+    <update id="updateCategorySortNo" parameterType="CetusDatasetCategory">
+        /* cetusDatasetCategory.updateCategorySortNo */
+        UPDATE CETUS_DATASET_CATEGORY
+           SET SORT_NO = #{sortNo}
+              ,UPDT_UID = #{updtUid}
+              ,UPDT_DT = NOW()
+         WHERE UID = #{uid}
+    </update>
+
 </mapper>
