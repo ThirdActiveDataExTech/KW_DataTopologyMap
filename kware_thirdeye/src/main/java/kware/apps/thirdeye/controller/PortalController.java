@@ -1,4 +1,4 @@
-package kware.apps.controller;
+package kware.apps.thirdeye.controller;
 
 
 import cetus.user.UserUtil;

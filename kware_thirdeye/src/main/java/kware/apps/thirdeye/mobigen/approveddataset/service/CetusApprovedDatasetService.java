@@ -6,6 +6,7 @@ import cetus.user.UserUtil;
 import kware.apps.mobigen.integration.dto.request.metadata.SearchMetadataView;
 import kware.apps.mobigen.integration.dto.response.metadata.MetadataView;
 import kware.apps.mobigen.integration.service.DatasetService;
+import kware.apps.thirdeye.bookmark.service.CetusBookMarkService2;
 import kware.apps.thirdeye.mobigen.approveddataset.domain.ApprovedDatasetTargetTpCd;
 import kware.apps.thirdeye.mobigen.approveddataset.domain.CetusApprovedDataset;
 import kware.apps.thirdeye.mobigen.approveddataset.domain.CetusApprovedDatasetDao;
@@ -34,6 +35,7 @@ public class CetusApprovedDatasetService {
     private final CetusDatasetUiService datasetUiService;
 
     private final CetusDatasetCategoryService datasetCategoryService;
+    private final CetusBookMarkService2 bookMarkService2;
 
     private final DatasetService datasetService;
 
@@ -152,6 +154,7 @@ public class CetusApprovedDatasetService {
         for (Long uid: request.getUids()) {
             CetusApprovedDataset bean = new CetusApprovedDataset(uid);
             dao.deleteApprovedDataset(bean);
+            bookMarkService2.deleteBookMarkByApprovedUid(uid);
         }
     }
 

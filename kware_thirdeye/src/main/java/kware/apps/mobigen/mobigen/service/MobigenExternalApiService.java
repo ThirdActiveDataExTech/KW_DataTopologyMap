@@ -2,10 +2,12 @@ package kware.apps.mobigen.mobigen.service;
 
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.netty.channel.ChannelOption;
 import io.netty.handler.timeout.ReadTimeoutHandler;
 import io.netty.handler.timeout.WriteTimeoutHandler;
+import kware.apps.mobigen.mobigen.ApiException;
 import kware.apps.mobigen.mobigen.dto.request.meta.SearchMetaValuesRequest;
 import kware.apps.mobigen.mobigen.dto.request.metadata.*;
 import kware.apps.mobigen.mobigen.dto.request.pckge.PackageExportRequest;
@@ -24,7 +26,6 @@ import kware.apps.mobigen.mobigen.dto.response.relation.RelationListResponse;
 import kware.apps.mobigen.mobigen.dto.url.ExternalUrl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -38,17 +39,16 @@ import reactor.core.publisher.Mono;
 import reactor.netty.http.client.HttpClient;
 
 import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.time.Duration;
+import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
 
 @Slf4j
 @Service
 public class MobigenExternalApiService {
 
-    private final String BASE_URL = "http://192.168.107.27:8000/docs";
+    private final String BASE_URL = "http://192.168.107.27:8000/v1";
 
     private static final int CONNECT_TIMEOUT_MILLIS = 5000;   // 서버와의 TCP 연결 시도 시간. 5초 안에 서버 연결 안 되면 실패 처리
     private static final int READ_WRITE_TIMEOUT_MILLIS = 10000; // 연결 후 읽기/쓰기가 이 시간 안에 안 되면 실패
@@ -58,6 +58,7 @@ public class MobigenExternalApiService {
             .baseUrl(BASE_URL)
             .clientConnector(new ReactorClientHttpConnector(    //  {WebClient}의 비동기 HTTP 클라이언트(Netty) 설정
                     HttpClient.create()
+                            .followRedirect(true)
                             .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, CONNECT_TIMEOUT_MILLIS)   // TCP 연결 자체가 몇 초 안에 안 되면 연결 실패 처리
                             .responseTimeout(RESPONSE_TIMEOUT)                                      // 서버와 연결은 됐지만, 서버가 느려서 응답이 10초 안에 안넘어오면 실패
                             .doOnConnected(conn ->
@@ -68,40 +69,50 @@ public class MobigenExternalApiService {
             ))
             .build();
 
-    private <T> ApiResponse<T> upload(String uri, MultipartBodyBuilder builder, ParameterizedTypeReference<ApiResponse<T>> typeRef) {
-        return WEB_CLIENT
-                .post()
-                .uri(uri)
-                .contentType(MediaType.MULTIPART_FORM_DATA)
-                .body(BodyInserters.fromMultipartData(builder.build()))
-                .retrieve()
-                .onStatus(HttpStatus::isError, response ->
-                        response.bodyToMono(String.class)
-                                .doOnNext(bodyStr ->
-                                        log.error("[UPLOAD] API 오류: status={} body={}", response.statusCode(), bodyStr)
-                                )
-                                .then(Mono.empty())
-                )
-                .bodyToMono(typeRef)
-                .block();
+    private String extractDetail(String bodyStr) {
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            JsonNode root = mapper.readTree(bodyStr);
+            if (root.has("detail")) return root.get("detail").asText();
+            else if (root.has("message")) return root.get("message").asText();
+            else return bodyStr; // detail도 message도 없으면 그냥 전체 body 반환
+        } catch (Exception e) {
+            return bodyStr; // JSON 파싱 실패 시 전체 body 반환
+        }
     }
 
-    private <T> ApiResponse<T> post(String uri, Object body, ParameterizedTypeReference<ApiResponse<T>> typeRef) {
+    private <T> ApiResponse<T> upload(String uri, MultipartBodyBuilder builder, ParameterizedTypeReference<ApiResponse<T>> typeRef) {
         try {
-            return WEB_CLIENT
+            ApiResponse<T> response = WEB_CLIENT
                     .post()
                     .uri(uri)
-                    .body(BodyInserters.fromValue(body))
+                    .contentType(MediaType.MULTIPART_FORM_DATA)
+                    .body(BodyInserters.fromMultipartData(builder.build()))
                     .retrieve()
-                    .onStatus(HttpStatus::isError, response ->
-                            response.bodyToMono(String.class)
-                                    .doOnNext(bodyStr ->
-                                            log.error("[POST] API 오류: status={} body={}", response.statusCode(), bodyStr)
-                                    )
-                                    .then(Mono.error(new RuntimeException("API 서버 오류")))
+                    .onStatus(HttpStatus::isError, res ->
+                            res.bodyToMono(String.class)
+                                    .flatMap(body -> {
+                                        log.error("[UPLOAD ERROR] status={} body={}", res.statusCode(), body);
+                                        ApiResponse<T> fail = new ApiResponse<>();
+                                        fail.setCode(String.valueOf(res.rawStatusCode()));
+                                        fail.setMessage(extractDetail(body));
+                                        fail.setResult(null);
+                                        return Mono.error(new ApiException(fail));
+                                    })
                     )
                     .bodyToMono(typeRef)
                     .block();
+
+            if (response == null) { // body가 null일 때 대비
+                ApiResponse<T> fail = new ApiResponse<>();
+                fail.setCode("9999");
+                fail.setMessage("서버 응답이 비어있습니다.");
+                fail.setResult(null);
+                return fail;
+            }
+
+            return response;
+
         } catch (Exception e) {
 
             String errorCode = "9999";
@@ -109,8 +120,9 @@ public class MobigenExternalApiService {
             if (e.getCause() instanceof io.netty.channel.ConnectTimeoutException) errorMessage = "서버 연결(Connection Timeout) 실패";
             else if (e.getCause() instanceof java.util.concurrent.TimeoutException) errorMessage = "응답(Response Timeout) 지연 발생";
             else if (e instanceof WebClientRequestException) errorMessage = "요청(Request) 실패 - 서버 접근 불가";
-            else errorMessage = "알 수 없는 오류 발생";
-            log.error("[POST] API 통신 실패: uri={} / message={}", uri, errorMessage, e);
+            else errorMessage = "알 수 없는 오류 발생 (API 서버 오류)";
+
+            log.error("[UPLOAD] API 통신 실패: uri={} / message={}", uri, errorMessage, e);
 
             ApiResponse<T> fail = new ApiResponse<>();
             fail.setCode(errorCode);
@@ -120,31 +132,53 @@ public class MobigenExternalApiService {
         }
     }
 
-    public ApiResponse<?> uploadWithFile(String uri, MultipartBodyBuilder builder) {
-        return WEB_CLIENT.post()
-                .uri(uri)
-                .contentType(MediaType.MULTIPART_FORM_DATA)
-                .body(BodyInserters.fromMultipartData(builder.build()))
-                .retrieve()
-                .bodyToMono(new ParameterizedTypeReference<ApiResponse<?>>() {})
-                .block();
-    }
+    private <T> ApiResponse<T> post(String uri, Object bodyValue, ParameterizedTypeReference<ApiResponse<T>> typeRef) {
+        try {
+            ApiResponse<T> response = WEB_CLIENT
+                    .post()
+                    .uri(uri)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .body(BodyInserters.fromValue(bodyValue))
+                    .retrieve()
+                    .onStatus(HttpStatus::isError, res ->
+                            res.bodyToMono(String.class).flatMap(body -> {
+                                log.error("[UPLOAD ERROR] status={} body={}", res.statusCode(), body);
+                                ApiResponse<T> fail = new ApiResponse<>();
+                                fail.setCode(String.valueOf(res.rawStatusCode()));
+                                fail.setMessage(extractDetail(body));
+                                fail.setResult(null);
+                                return Mono.error(new ApiException(fail));
+                            })
+                    )
+                    .bodyToMono(typeRef)
+                    .block();
 
-    private byte[] download(String uri, Object body) {
-        return WEB_CLIENT
-                .post()
-                .uri(uri)
-                .body(BodyInserters.fromValue(body))
-                .retrieve()
-                .onStatus(HttpStatus::isError, response ->
-                        response.bodyToMono(String.class)
-                                .doOnNext(bodyStr ->
-                                        log.error("[DOWNLOAD] API 오류: status={} body={}", response.statusCode(), bodyStr)
-                                )
-                                .then(Mono.empty())
-                )
-                .bodyToMono(byte[].class)
-                .block();
+            if (response == null) { // body가 null일 때 대비
+                ApiResponse<T> fail = new ApiResponse<>();
+                fail.setCode("9999");
+                fail.setMessage("서버 응답이 비어있습니다.");
+                fail.setResult(null);
+                return fail;
+            }
+
+            return response;
+
+        } catch (Exception e) {
+
+            String errorCode = "9999";
+            String errorMessage;
+            if (e.getCause() instanceof io.netty.channel.ConnectTimeoutException) errorMessage = "서버 연결(Connection Timeout) 실패";
+            else if (e.getCause() instanceof java.util.concurrent.TimeoutException) errorMessage = "응답(Response Timeout) 지연 발생";
+            else if (e instanceof WebClientRequestException) errorMessage = "요청(Request) 실패 - 서버 접근 불가";
+            else errorMessage = "알 수 없는 오류 발생 (API 서버 오류)";
+            log.error("[POST] API 통신 실패: uri={} / message={}", uri, errorMessage, e);
+
+            ApiResponse<T> fail = new ApiResponse<>();
+            fail.setCode(errorCode);
+            fail.setMessage(errorMessage);
+            fail.setResult(null);
+            return fail;
+        }
     }
 
     /**
@@ -202,19 +236,22 @@ public class MobigenExternalApiService {
      * @deacription 메타데이터 생성
     **/
     public ApiResponse<CreateMetadataResponse> createMetadata(CreateMetadataRequest request, Path filePath) {
+
         MultipartBodyBuilder builder = new MultipartBodyBuilder();
 
-        // ✅ 1. JSON 형태 필드 추가
+        // 1. action 필드
+        builder.part("action", request.getAction()).contentType(MediaType.TEXT_PLAIN);
+
+        // 2. field(JSON) 필드
         try {
             ObjectMapper mapper = new ObjectMapper();
-            String metadataJson = mapper.writeValueAsString(request);
-            builder.part("metadata", metadataJson)
-                    .contentType(MediaType.APPLICATION_JSON);
-        } catch (JsonProcessingException e) {
+            String fieldJson = mapper.writeValueAsString(request.getField());
+            builder.part("field", fieldJson).contentType(MediaType.APPLICATION_JSON);
+        } catch ( JsonProcessingException e ) {
             throw new RuntimeException("메타데이터 직렬화 실패", e);
         }
 
-        // ✅ 2. 파일이 존재할 경우에만 multipart에 추가
+        // 3. 파일
         if (filePath != null) {
             builder.part("file", new FileSystemResource(filePath.toFile()))
                     .filename(filePath.getFileName().toString())
@@ -262,9 +299,8 @@ public class MobigenExternalApiService {
      * @date        2025-10-15
      * @deacription 특정 메타데이터 파일 다운로드
     **/
-    public void downloadMetadataFile(DownloadMetadataFileRequest request) throws IOException {
-        byte[] fileData = download(ExternalUrl.METADATA_08, request);
-        Files.write(Paths.get("downloaded.zip"), fileData);
+    public ApiResponse<DownloadMetadataResponse> downloadMetadataFile(DownloadMetadataFileRequest request) throws IOException {
+        return post(ExternalUrl.METADATA_08, request, new ParameterizedTypeReference<ApiResponse<DownloadMetadataResponse>>() {});
     }
 
 
@@ -331,9 +367,8 @@ public class MobigenExternalApiService {
      * @date        2025-09-23
      * @deacription 메타데이터 하위 원본데이터 파일 다운로드
     **/
-    public void downloadRawdata(DownloadRawdataRequest request) throws IOException {
-        byte[] fileData = download(ExternalUrl.RAWDATA_07, request);
-        Files.write(Paths.get("downloaded.zip"), fileData);
+    public ApiResponse<DownloadRawdataResponse> downloadRawdata(DownloadRawdataRequest request) throws IOException {
+        return post(ExternalUrl.RAWDATA_07, request, new ParameterizedTypeReference<ApiResponse<DownloadRawdataResponse>>() {});
     }
 
 
@@ -364,7 +399,7 @@ public class MobigenExternalApiService {
      * @deacription 메타데이터로 사용되는 key 값의 목록 정보 조회
     **/
     public ApiResponse<MetaKeysListResponse> findMetaKeysList() {
-        return post(ExternalUrl.META_01, null, new ParameterizedTypeReference<ApiResponse<MetaKeysListResponse>>() {});
+        return post(ExternalUrl.META_01, new HashMap<>(), new ParameterizedTypeReference<ApiResponse<MetaKeysListResponse>>() {});
     }
 
     /**

@@ -2,8 +2,9 @@ package kware.apps.mobigen.mobigen.dto.response.rawdata;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
-@Getter @Setter
+@Getter @Setter @ToString
 public class RawdataListItemResponse {
     private String rawdataId;
     private String rawdata_id;

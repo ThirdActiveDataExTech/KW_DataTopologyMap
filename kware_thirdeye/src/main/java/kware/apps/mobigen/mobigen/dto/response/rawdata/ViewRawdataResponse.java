@@ -3,6 +3,7 @@ package kware.apps.mobigen.mobigen.dto.response.rawdata;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.util.List;
 
@@ -14,7 +15,7 @@ import java.util.List;
 * @summary      [RAWDATA_04] 특정 원본데이터 상세 정보 조회 응답 DTO
 **/
 
-@Getter @Setter
+@Getter @Setter @ToString
 public class ViewRawdataResponse {
     private String metadata_id;
     private String rawdata_id;

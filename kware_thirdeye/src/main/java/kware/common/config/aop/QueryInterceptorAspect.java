@@ -18,16 +18,18 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class QueryInterceptorAspect {
 
-    @Around("execution(* cetus.dao.SuperDao.*(..)) || execution(* cetus.dao.CetusDao.*(..)) || execution(* kware.apps..*Dao.*(..)))")
+    @Around("" +
+            "execution(* cetus.dao.SuperDao.*(..)) || " +
+            "execution(* cetus.dao.CetusDao.*(..)) || " +
+            "execution(* kware.apps..*Dao.*(..)))"
+    )
     public Object daoMethods(ProceedingJoinPoint joinPoint) throws Throwable {
-
-        Object target = joinPoint.getTarget();
 
         String methodName = joinPoint.getSignature().getName();
 
         // {insert, update} method check
-        if(methodName.length() != 0 &&
-                (methodName.contains("insert") || methodName.contains("update"))
+        if(   methodName.length() != 0 &&
+            ( methodName.contains("insert") || methodName.contains("update") )
         ) {
             // {authentication} check
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();

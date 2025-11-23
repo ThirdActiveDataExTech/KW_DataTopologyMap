@@ -1,6 +1,10 @@
 package kware.apps.thirdeye.mobigen.datasetfile.service;
 
 
+import cetus.bean.Page;
+import cetus.bean.Pageable;
+import kware.apps.thirdeye.mobigen.datasetfile.dto.request.SearchFilePage;
+import kware.apps.thirdeye.mobigen.datasetfile.dto.response.CetusDatasetFileList;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,5 +24,11 @@ public class CetusDatasetFileRestController {
     @GetMapping("/check-file")
     public ResponseEntity<Boolean> checkFile(final HttpServletRequest req, final HttpServletResponse res) {
         return ResponseEntity.ok(service.checkFile(req));
+    }
+
+    @GetMapping("/page")
+    public ResponseEntity findMetadataFilePage(SearchFilePage search, Pageable pageable) {
+        Page<CetusDatasetFileList> page = service.findMetadataFilePage(search, pageable);
+        return ResponseEntity.ok(page);
     }
 }

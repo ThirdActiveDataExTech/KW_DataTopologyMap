@@ -24,7 +24,7 @@
             <div>
                 <div style="display: flex; justify-content: right; margin-right: 15px; margin-bottom: 15px;">
                     <button type="button" class="custom-button"
-                            th:if="${bbs?.bbsTpCd != 'NOTICE' or !isUser}"
+                            th:if="${bbs?.bbsTpCd != 'NOTICE' and bbs?.bbsTpCd != 'MANUAL' or !isUser}"
                             id="new-btn">게시글 등록
                     </button>
                 </div>

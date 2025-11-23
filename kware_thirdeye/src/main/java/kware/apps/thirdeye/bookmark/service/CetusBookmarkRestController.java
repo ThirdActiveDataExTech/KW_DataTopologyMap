@@ -32,7 +32,7 @@ public class CetusBookMarkRestController {
 
     @DeleteMapping("/{approvedUid}")
     public ResponseEntity delete( @PathVariable Long approvedUid ) {
-        service.deleteBookMark(approvedUid);
+        service.deleteBookMarkByApprovedUidAndUser(approvedUid);
         return ResponseEntity.ok().build();
     }
 }

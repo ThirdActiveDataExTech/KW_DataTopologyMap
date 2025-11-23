@@ -4,6 +4,7 @@ package kware.apps.mobigen.mobigen.dto.response.metadata;
 import kware.apps.mobigen.mobigen.dto.response.common.MetadataResultResponse;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.util.List;
 
@@ -15,7 +16,7 @@ import java.util.List;
 * @summary      [METADATA_01] 필터링된 메타데이터 목록 응답 DTO
 **/
 
-@Getter @Setter
+@Getter @Setter @ToString
 public class MetadataListResponse {
     private int total_count;
     private int page;

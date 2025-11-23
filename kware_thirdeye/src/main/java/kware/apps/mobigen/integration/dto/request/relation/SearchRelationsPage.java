@@ -14,9 +14,9 @@ public class SearchRelationsPage {
 
     private String publisher;
     private List<String> theme;
-    private Long scoreMin;
-    private Long scoreMax;
+    private float scoreMin = 0.0F;
+    private float scoreMax = 1.0F;
 
-    private String sortOrder;
-    private String sortField;
+    private String sortOrder = "desc";
+    private String sortField = "similarity_score";
 }

@@ -45,11 +45,25 @@
         )
     </insert>
 
-    <delete id="deleteBookMark" parameterType="CetusBookMark">
-        /* cetusBookMark.deleteBookMark */
+    <delete id="deleteBookMarkByApprovedUidAndUser" parameterType="CetusBookMark">
+        /* cetusBookMark.deleteBookMarkByApprovedUidAndUser */
         DELETE FROM CETUS_DATASET_BOOKMARK
          WHERE USER_UID = #{userUid}
            AND APPROVED_DATASET_UID = #{approvedUid}
+    </delete>
+
+    <delete id="deleteBookMarkByMetadataId" parameterType="String">
+        /* cetusBookMark.deleteBookMarkByMetadataId */
+        DELETE FROM CETUS_DATASET_BOOKMARK AS CDB
+         USING CETUS_APPROVED_DATASET AS CAD
+         WHERE CAD.METADATA_ID = #{metadataId}
+           AND CAD.UID = CDB.APPROVED_DATASET_UID
+    </delete>
+
+    <delete id="deleteBookMarkByApprovedUid" parameterType="Long">
+        /* cetusBookMark.deleteBookMarkByApprovedUid */
+        DELETE FROM CETUS_DATASET_BOOKMARK
+         WHERE APPROVED_DATASET_UID = #{approvedUid}
     </delete>
 
 </mapper>

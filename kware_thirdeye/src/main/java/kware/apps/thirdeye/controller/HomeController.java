@@ -1,4 +1,4 @@
-package kware.apps.controller;
+package kware.apps.thirdeye.controller;
 
 import cetus.Response;
 import kware.apps.system.user.dto.response.UserFullInfo;

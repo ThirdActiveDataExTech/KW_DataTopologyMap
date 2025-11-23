@@ -1,6 +1,7 @@
 package kware.apps.mobigen.mobigen.dto.request.metadata;
 
 
+import cetus.user.UserUtil;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -37,10 +38,11 @@ public class CreateMetadataRequest {
         private String landing_page;
         private List<String> theme;
         private String access_url;
-        private Map<String, Object> custom_meta;
+//        private Map<String, Object> custom_meta;
 
         public CreateMetadataFieldRequest(String title) {
             this.title = title;
+            this.publisher = UserUtil.getUser().getUserId();
         }
     }
 }

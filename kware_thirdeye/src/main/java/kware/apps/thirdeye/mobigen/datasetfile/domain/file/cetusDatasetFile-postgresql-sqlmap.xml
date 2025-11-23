@@ -206,4 +206,45 @@
         </if>
     </delete>
 
+    <select id="getMetadataFilePage" parameterType="SearchFilePage" resultType="CetusDatasetFileList">
+        /* cetusDatasetFile.getMetadataFilePage */
+        SELECT CDF.FILE_UID
+              ,CDF.FILE_ID
+              ,CDF.FILE_NM
+              ,CDF.ORG_FILE_NM
+              ,CDF.FILE_PATH
+              ,CDF.FILE_URL
+              ,CDF.FILE_SIZE
+              ,CDF.FILE_TYPE
+              ,CDF.EXTENSION
+              ,CDF.DOWN_CNT
+              ,CDF.USE_AT
+              ,TO_CHAR(CDF.REG_DT, 'YYYY-MM-DD HH:MM') AS REG_DT
+              ,CDF.UPDT_DT
+              ,CDF.SAVED
+              ,CDF.REG_ID
+              ,CDF.METADATA_ID
+              ,CDF.RAWDATA_ID
+              ,CDF.DATA_TP_CD
+          FROM CETUS_DATASET_FILE CDF
+         WHERE CDF.USE_AT = 'Y'
+           AND CDF.SAVED = 'Y'
+           AND CDF.METADATA_ID = #{metadataId}
+           AND CDF.DATA_TP_CD = #{dataTpCd}
+         ORDER BY CDF.REG_DT DESC
+        <if test="@Ognl@isNotEmpty(startNumber) and  @Ognl@isNotEmpty(endNumber)">
+        OFFSET ${startNumber} LIMIT ${endNumber}
+        </if>
+    </select>
+
+    <select id="getMetadataFilePageCount" parameterType="SearchFilePage" resultType="int">
+        /* cetusDatasetFile.getMetadataFilePageCount */
+        SELECT COUNT(*)
+          FROM CETUS_DATASET_FILE CDF
+         WHERE CDF.USE_AT = 'Y'
+           AND CDF.SAVED = 'Y'
+           AND CDF.METADATA_ID = #{metadataId}
+           AND CDF.DATA_TP_CD = #{dataTpCd}
+    </select>
+
 </mapper>

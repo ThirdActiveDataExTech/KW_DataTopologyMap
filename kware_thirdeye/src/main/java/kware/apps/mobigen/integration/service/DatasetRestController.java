@@ -68,8 +68,7 @@ public class DatasetRestController {
             return ResponseEntity.badRequest().body("no file founded");
         }
         ApiResponse<MetadataFilePreviewResponse> apiResponse = service.previewMetadata(file);
-        /*return ResponseEntity.ok(apiResponse);*/
-        return ResponseEntity.ok("todo mobigen [METADATA_07 API] connect ...");
+        return ResponseEntity.ok(apiResponse);
     }
 
     /**
@@ -238,7 +237,6 @@ public class DatasetRestController {
     /**
      *
      * [PACKAGE_01] 패키지 파일 다운로드
-     * => todo : API 확인하고 추가 로직 구현,,
      *
      * @api         [POST] /api/portal/integration-dataset/download-package
      * @author      dahyeon
@@ -252,7 +250,6 @@ public class DatasetRestController {
     /**
      *
      *  [METADATA_08] 메타데이터 파일 다운로드
-     * => todo : API 확인하고 추가 로직 구현,,
      *
      * @api         [GET] /api/portal/integration-dataset/download-metadata
      * @author      dahyeon
@@ -266,7 +263,6 @@ public class DatasetRestController {
     /**
      *
      * [RAWDATA_07] 원본데이터 파일 다운로드
-     * => todo : API 확인하고 추가 로직 구현,,
      *
      * @api         [GET] /api/portal/integration-dataset/download-rawdata
      * @author      dahyeon

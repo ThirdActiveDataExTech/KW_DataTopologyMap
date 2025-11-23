@@ -44,7 +44,7 @@ public class CetusBookMarkService {
         Boolean wishExists = dao.isBookMarkExists(search);
         CetusBookMark bean = new CetusBookMark(userUid, request.getApprovedUid());
         if( wishExists ) {
-            dao.deleteBookMark(bean);
+            dao.deleteBookMarkByApprovedUidAndUser(bean);
              return false;
         } else {
              dao.insert(bean);
@@ -53,9 +53,9 @@ public class CetusBookMarkService {
     }
 
     @Transactional
-    public void deleteBookMark( Long approvedUid ) {
+    public void deleteBookMarkByApprovedUidAndUser( Long approvedUid ) {
         CetusBookMark bean = new CetusBookMark( UserUtil.getUser().getUid(), approvedUid );
-        dao.deleteBookMark(bean);
+        dao.deleteBookMarkByApprovedUidAndUser(bean);
     }
 
 }

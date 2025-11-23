@@ -23,7 +23,15 @@ public class CetusBookMarkDao extends SuperDao<CetusBookMark> {
         return selectOne("isBookMarkExists", search);
     }
 
-    public void deleteBookMark( CetusBookMark bean ) {
-        delete("deleteBookMark", bean);
+    public void deleteBookMarkByApprovedUidAndUser(CetusBookMark bean ) {
+        delete("deleteBookMarkByApprovedUidAndUser", bean);
+    }
+
+    public void deleteBookMarkByApprovedUid(Long approvedUid) {
+        delete("deleteBookMarkByApprovedUid", approvedUid);
+    }
+
+    public void deleteBookMarkByMetadataId( String metadataId ) {
+        delete("deleteBookMarkByMetadataId", metadataId);
     }
 }

@@ -1,5 +1,7 @@
 package kware.apps.thirdeye.mobigen.datasetfile.service;
 
+import cetus.bean.Page;
+import cetus.bean.Pageable;
 import cetus.user.UserUtil;
 import cetus.util.WebUtil;
 import kware.apps.mobigen.mobigen.dto.response.rawdata.RawdataListItemResponse;
@@ -7,10 +9,7 @@ import kware.apps.thirdeye.mobigen.datasetfile.domain.file.CetusDatasetFile;
 import kware.apps.thirdeye.mobigen.datasetfile.domain.file.CetusDatasetFileDao;
 import kware.apps.thirdeye.mobigen.datasetfile.domain.log.CetusDatasetFileLog;
 import kware.apps.thirdeye.mobigen.datasetfile.domain.log.CetusDatasetFileLogDao;
-import kware.apps.thirdeye.mobigen.datasetfile.dto.request.DeleteDatasetFile;
-import kware.apps.thirdeye.mobigen.datasetfile.dto.request.SearchDatasetFile;
-import kware.apps.thirdeye.mobigen.datasetfile.dto.request.SearchDatasetFilePage;
-import kware.apps.thirdeye.mobigen.datasetfile.dto.request.SearchDatasetFileView;
+import kware.apps.thirdeye.mobigen.datasetfile.dto.request.*;
 import kware.apps.thirdeye.mobigen.datasetfile.dto.response.CetusDatasetFileList;
 import kware.apps.thirdeye.mobigen.datasetfile.dto.response.CetusDatasetFileView;
 import kware.common.config.auth.dto.SessionUserInfo;
@@ -154,5 +153,12 @@ public class CetusDatasetFileService {
     @Transactional(readOnly = true)
     public int findDataFilePageCount(SearchDatasetFilePage search) {
         return fileDao.getDataFilePageCount(search);
+    }
+
+    /* =================== */
+
+    @Transactional(readOnly = true)
+    public Page<CetusDatasetFileList> findMetadataFilePage(SearchFilePage search, Pageable pageable) {
+        return fileDao.page("getMetadataFilePage", "getMetadataFilePageCount", search, pageable);
     }
 }

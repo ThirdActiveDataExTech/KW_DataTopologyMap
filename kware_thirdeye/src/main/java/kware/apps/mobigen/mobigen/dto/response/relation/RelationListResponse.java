@@ -3,6 +3,7 @@ package kware.apps.mobigen.mobigen.dto.response.relation;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.util.List;
 
@@ -14,7 +15,7 @@ import java.util.List;
 * @summary      [RELATION_01] 연관 메타데이터 목록 조회 응답 DTO
 **/
 
-@Getter @Setter
+@Getter @Setter @ToString
 public class RelationListResponse {
     private String metadata_id;
     private Integer total_count;

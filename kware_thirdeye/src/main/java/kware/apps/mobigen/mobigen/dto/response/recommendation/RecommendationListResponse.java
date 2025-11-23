@@ -3,6 +3,7 @@ package kware.apps.mobigen.mobigen.dto.response.recommendation;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.util.List;
 
@@ -14,12 +15,12 @@ import java.util.List;
 * @summary      [RECOMMENDATION_01] 추천 메타데이터 목록 조회 응답 DTO
 **/
 
-@Getter @Setter
+@Getter @Setter @ToString
 public class RecommendationListResponse {
 
     private String metadata_id;
     private int total_count;
     private int page;
     private int limit;
-    private List<RecommendationsResponse> recommendations;
+    private List<RecommendationsResponse> items;
 }

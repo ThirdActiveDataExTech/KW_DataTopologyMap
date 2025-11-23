@@ -3,6 +3,7 @@ package kware.apps.mobigen.mobigen.dto.response.metadata;
 import kware.apps.mobigen.mobigen.dto.response.common.MetadataResultResponse;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.util.List;
 
@@ -14,7 +15,7 @@ import java.util.List;
 * @summary      [METADATA_07] 메타데이터 파일 정보 미리보기 응답 DTO
 **/
 
-@Getter @Setter
+@Getter @Setter @ToString
 public class MetadataFilePreviewResponse {
     private MetadataResultResponse metadata;
 }

@@ -2,10 +2,11 @@ package kware.apps.mobigen.mobigen.dto.response.relation;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.util.List;
 
-@Getter @Setter
+@Getter @Setter @ToString
 public class RelatedMetadataResponse {
 
     private Long uid;       // 추후 삭제

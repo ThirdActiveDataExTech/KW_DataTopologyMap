@@ -3,6 +3,7 @@ package kware.apps.mobigen.mobigen.dto.response.common;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 /**
 * @fileName     RawdataResultResponse
@@ -12,7 +13,7 @@ import lombok.Setter;
 * @summary      [COMMON] 실(원본)데이터에 대한 공통 응답 DTO
 **/
 
-@Getter @Setter
+@Getter @Setter @ToString
 public class RawdataResultResponse {
     private String rawdata_id;
     private String filename;

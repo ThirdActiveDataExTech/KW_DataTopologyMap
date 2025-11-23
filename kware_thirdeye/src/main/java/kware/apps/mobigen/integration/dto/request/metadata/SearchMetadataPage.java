@@ -18,6 +18,6 @@ public class SearchMetadataPage {
     private int pageNumber;
     private int size;
 
-    private String sortOrder;
+    private String sortOrder = "desc";
 
 }

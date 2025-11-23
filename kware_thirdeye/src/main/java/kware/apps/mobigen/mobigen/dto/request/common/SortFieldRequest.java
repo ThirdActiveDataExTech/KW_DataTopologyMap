@@ -13,10 +13,12 @@ import lombok.Setter;
 **/
 
 @Getter @Setter @NoArgsConstructor
-public class SortRequest {
+public class SortFieldRequest {
     private String order;
+    private String field;
 
-    public SortRequest(String order) {
+    public SortFieldRequest(String order, String field) {
         this.order = order;
+        this.field = field;
     }
 }

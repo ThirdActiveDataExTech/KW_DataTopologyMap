@@ -25,15 +25,15 @@ import kware.apps.mobigen.integration.dto.response.rawdata.RawdataList;
 import kware.apps.mobigen.integration.dto.response.rawdata.RawdataView;
 import kware.apps.mobigen.integration.dto.response.recommendation.RecommendationList;
 import kware.apps.mobigen.integration.dto.response.relation.RelationsList;
-import kware.apps.mobigen.mobigen.dto.request.recommendation.SearchRecommendationListRequest;
 import kware.apps.mobigen.mobigen.dto.response.ApiResponse;
 import kware.apps.mobigen.mobigen.dto.response.common.MetadataResultResponse;
 import kware.apps.mobigen.mobigen.dto.response.metadata.MetadataFilePreviewResponse;
 import kware.apps.mobigen.mobigen.dto.response.rawdata.RawdataListItemResponse;
-import kware.apps.mobigen.mobigen.dto.response.recommendation.RecommendationListResponse;
 import kware.apps.mobigen.mobigen.dto.response.recommendation.RecommendationsResponse;
 import kware.apps.mobigen.mobigen.dto.response.relation.RelatedMetadataResponse;
 import kware.apps.mobigen.mobigen.service.MobigenExternalApiService;
+import kware.apps.thirdeye.bookmark.service.CetusBookMarkService;
+import kware.apps.thirdeye.bookmark.service.CetusBookMarkService2;
 import kware.apps.thirdeye.mobigen.approveddataset.dto.request.SearchMetadataApproved;
 import kware.apps.thirdeye.mobigen.approveddataset.service.CetusApprovedDatasetService2;
 import kware.apps.thirdeye.mobigen.category.dto.request.SearchCategory;
@@ -80,6 +80,7 @@ public class DatasetService {
     private final CetusDatasetFileService datasetFileService;
     private final CetusMobigenRegistrantService registrantService;
     private final CetusApprovedDatasetService2 approvedDatasetService2;
+    private final CetusBookMarkService2 bookMarkService2;
 
     // 추후 삭제
     private final CetusMobigenDatasetService mobigenDatasetService;
@@ -110,8 +111,12 @@ public class DatasetService {
     @Transactional
     public void savePackageDataset( SavePackageDataset request, MultipartFile packageFileData ) throws IOException {
 
+        log.info("======================= [PACKAGE_02][1] Save Package Metadata ===========================");
         /*Path path = this.convertToPath(packageFileData);
-        ApiResponse<PackageImportResponse> apiResponse = apiService.packageImport(path);*/
+        ApiResponse<PackageImportResponse> apiResponse = apiService.packageImport(path);
+        log.info("apiResponse.getCode() : {} ", apiResponse.getCode());
+        log.info("apiResponse.getMessage() : {} ", apiResponse.getMessage());
+        log.info("apiResponse.getResult() : {} ", apiResponse.getResult());*/
 
         // ## save mobigen data
         // todo 추후 연결후 삭제..
@@ -119,7 +124,6 @@ public class DatasetService {
         CetusMobigenDataset bean = new CetusMobigenDataset(title, "{}");
         mobigenDatasetService.insert(bean);
         Long metadataId = bean.getUid(); // metadataId = apiResponse.getResult().getMetadata().getMetadata_id();
-        log.info("======================= [1] Save Package Metadata : {} ===========================", metadataId);
 
         // 1. save [PACKAGE] data file
         String rawdataId = "raw_" + metadataId + "_" + StringUtil.random(3); // rawdataId = apiResponse.getResult().getRawdata().getRawdata_id();
@@ -142,10 +146,14 @@ public class DatasetService {
     **/
     @Transactional(readOnly = true)
     public ApiResponse<MetadataFilePreviewResponse> previewMetadata(MultipartFile file) throws IOException {
-        log.info("======================= [2] Preview Read Metadata : {} ===========================", file.getOriginalFilename());
-        Path path = this.convertToPath(file);
-        /*ApiResponse<MetadataFilePreviewResponse> apiResponse = apiService.previewMetadataFile(path);*/
-        return null;
+        log.info("======================= [METADATA_07][2] Preview Read Metadata : {} ===========================", file.getOriginalFilename());
+        /*Path path = this.convertToPath(file);
+        ApiResponse<MetadataFilePreviewResponse> apiResponse = apiService.previewMetadataFile(path);
+        log.info(">> apiResponse.getCode() : {} ", apiResponse.getCode());
+        log.info(">> apiResponse.getMessage() : {} ", apiResponse.getMessage());
+        log.info(">> apiResponse.getResult() : {} ", apiResponse.getResult());
+        return apiResponse;*/
+        return  null;
     }
 
     /**
@@ -161,16 +169,20 @@ public class DatasetService {
     @Transactional
     public void createMetadata( SaveMetadata request, MultipartFile realFileData ) throws IOException {
 
+        log.info("======================= [METADATA_03][3-1] Create Metadata ===========================");
+
         /*CreateMetadataRequest metadataRequest = new CreateMetadataRequest(new CreateMetadataRequest.CreateMetadataFieldRequest(request.getTitle()));
         Path realFilePath = this.convertToPath(realFileData);
-        ApiResponse<CreateMetadataResponse> apiResponse = apiService.createMetadata(metadataRequest, realFilePath);*/
+        ApiResponse<CreateMetadataResponse> apiResponse = apiService.createMetadata(metadataRequest, realFilePath);
+        log.info(">> apiResponse.getCode() : {} ", apiResponse.getCode());
+        log.info(">> apiResponse.getMessage() : {} ", apiResponse.getMessage());
+        log.info(">> apiResponse.getResult() : {} ", apiResponse.getResult());*/
 
         // ## save mobigen data
         // todo 추후 연결후 삭제..
         CetusMobigenDataset bean = new CetusMobigenDataset(request);
         mobigenDatasetService.insert(bean);
         Long metadataId = bean.getUid();    // metadataId = apiResponse.getResult().getMetadata().getMetadata_id();
-        log.info("======================= [3-1] Create Metadata : {} ===========================", metadataId);
 
         // 1. save metadata file
         CetusDatasetFile metaFile = request.getMetaFile();
@@ -209,16 +221,18 @@ public class DatasetService {
         String metadataId = request.getMetadataId();
 
         // 1. 메타데이터 정보 수정
-        /*ChangeMetadataRequest changeRequest = new ChangeMetadataRequest(
-                Long.toString(metadataId), new ChangeMetadataRequest.ChangeMetadataFieldRequest(request.getTitle())
-        );
-        ApiResponse<ChangeMetadataResponse> apiResponse1 = apiService.changeMetadata(changeRequest);*/
+        log.info("======================= [METADATA_05][4-1] Update Metadata : {} ===========================", metadataId);
+
+        /*ChangeMetadataRequest changeRequest = new ChangeMetadataRequest(metadataId, new ChangeMetadataRequest.ChangeMetadataFieldRequest(request.getTitle()));
+        ApiResponse<ChangeMetadataResponse> apiResponse1 = apiService.changeMetadata(changeRequest);
+        log.info(">> apiResponse1.getCode() : {} ", apiResponse1.getCode());
+        log.info(">> apiResponse1.getMessage() : {} ", apiResponse1.getMessage());
+        log.info(">> apiResponse1.getResult() : {} ", apiResponse1.getResult());*/
 
         // ## update mobigen data
         // todo 추후 연결후 삭제..
         CetusMobigenDataset bean = new CetusMobigenDataset(metadataId, request);
         mobigenDatasetService.update(bean);
-        log.info("======================= [4-1] Update Metadata : {} ===========================", metadataId);
 
         // ## update data tag
         // todo 추후 연결후 삭제..
@@ -226,18 +240,22 @@ public class DatasetService {
 
         // 2. 원본데이터 파일 업로드
         if( realFileData != null && !realFileData.isEmpty() ) {
-            
-            /*UploadRawdataRequest uploadRequest = new UploadRawdataRequest(Long.toString(metadataId), realFileData.getContentType());
+
+            log.info("======================= [RAWDATA_02][4-2] Upload Realdata ===========================");
+
+            /*UploadRawdataRequest uploadRequest = new UploadRawdataRequest(metadataId, realFileData.getContentType());
             Path realFilePath = this.convertToPath(realFileData);
-            ApiResponse<UploadRawdataResponse> apiResponse2 = apiService.uploadRawdata(uploadRequest, realFilePath);*/
-            
+            ApiResponse<UploadRawdataResponse> apiResponse2 = apiService.uploadRawdata(uploadRequest, realFilePath);
+            log.info(">> apiResponse2.getCode() : {} ", apiResponse2.getCode());
+            log.info(">> apiResponse2.getMessage() : {} ", apiResponse2.getMessage());
+            log.info(">> apiResponse2.getResult() : {} ", apiResponse2.getResult());*/
+
             String rawdataId = "raw_" + metadataId + "_" + StringUtil.random(3); //apiResponse2.getResult().getRawdata_id();
             CetusDatasetFile realFile = request.getRealFile();
             realFile.setMetadataId(metadataId);
             realFile.setDataTpCd(DataFileTpCd.RAWDATA.name());
             realFile.setRawdataId(rawdataId);
             datasetFileService.processAddFile(realFile);
-            log.info("======================= [4-2] Upload Realdata : {} ===========================", rawdataId);
         }
 
         // 3. 만일 수정된 메타데이터 정보가 진열관리 중이라면, search_data 업데이트
@@ -262,15 +280,22 @@ public class DatasetService {
 
         // 1. 메타데이터 여러건 삭제
         List<String> uidList = request.getUids().stream().map(String::valueOf).collect(Collectors.toList());
-        log.info("======================= [5] Delete Metadata's : {} ===========================", uidList);
-       /*DeleteMetadatasRequest deleteRequest = new DeleteMetadatasRequest(uidList);
-        ApiResponse<DeleteMetadataResponse> apiResponse = apiService.deleteSeveralMetadata(deleteRequest);*/
+        log.info("======================= [METADATA_02][5] Delete Metadata's : {} ===========================", uidList);
+
+        /*DeleteMetadatasRequest deleteRequest = new DeleteMetadatasRequest(uidList);
+        ApiResponse<DeleteMetadataResponse> apiResponse = apiService.deleteSeveralMetadata(deleteRequest);
+        log.info(">> apiResponse.getCode() : {} ", apiResponse.getCode());
+        log.info(">> apiResponse.getMessage() : {} ", apiResponse.getMessage());
+        log.info(">> apiResponse.getResult() : {} ", apiResponse.getResult());*/
 
         for (String metadataId: uidList) {
 
             // todo 추후 삭제
             CetusMobigenDataset bean = new CetusMobigenDataset(Long.parseLong(metadataId));
             mobigenDatasetService.deleteMobigenDataset(bean);
+
+            // 1.{metadataId} 데이터셋이 북마크 등록됐다면 삭제
+            bookMarkService2.deleteBookMarkByMetadataId(metadataId);
 
             // 2. {metadataId} 데이터셋이 kware 포탈 시스템에서 관리중인 값이라면 포탈 시스템에서도 삭제 (논리삭제)
             mobigenDatasetService.ifExistDeleteApprovedDataset(metadataId);
@@ -292,10 +317,13 @@ public class DatasetService {
     public void deleteRawdatas(DeleteRawdatas request) {
 
         // 1. 원본데이터 여러건 삭제
-        log.info("======================= [6] Delete Rawdata's : {} ===========================", request.getRawdataIds());
-        /*DeleteRawdatasRequest deleteRequest = new DeleteRawdatasRequest(Long.toString(request.getMetadataId()), request.getRawdataIds());
+        log.info("======================= [RAWDATA_03][6] Delete Rawdata's : {} ===========================", request.getRawdataIds());
+
+        /*DeleteRawdatasRequest deleteRequest = new DeleteRawdatasRequest(request.getMetadataId(), request.getRawdataIds());
         ApiResponse<DeleteRawdatasResponse> apiResponse = apiService.deleteSeveralRawdata(deleteRequest);
-        int deletedCount = apiResponse.getResult().getDeleted_count();*/
+        log.info(">> apiResponse.getCode() : {} ", apiResponse.getCode());
+        log.info(">> apiResponse.getMessage() : {} ", apiResponse.getMessage());
+        log.info(">> apiResponse.getResult() : {} ", apiResponse.getResult());*/
 
         // 2. 원본데이터 파일 정보도 삭제
         for (String rawdataId: request.getRawdataIds()) {
@@ -313,13 +341,16 @@ public class DatasetService {
     **/
     @Transactional
     public void updateRawdata(ChangeRawdata request) {
-        log.info("======================= [7] Update Rawdata : {} ===========================", request.getRawdataId());
+        log.info("======================= [RAWDATA_05][7] Update Rawdata : {} ===========================", request.getRawdataId());
         /*ChangeRawdataRequest updateRequest = new ChangeRawdataRequest(
                 request.getRawdataId(),
                 request.getMetadataId(),
                 new ChangeRawdataRequest.ChangeRawdataFieldRequest(request.getDescription(), request.getTags())
         );
-        ApiResponse<ChangeRawdataResponse> apiResponse = apiService.changeRawdata(updateRequest);*/
+        ApiResponse<ChangeRawdataResponse> apiResponse = apiService.changeRawdata(updateRequest);
+        log.info(">> apiResponse.getCode() : {} ", apiResponse.getCode());
+        log.info(">> apiResponse.getMessage() : {} ", apiResponse.getMessage());
+        log.info(">> apiResponse.getResult() : {} ", apiResponse.getResult());*/
     }
 
     /**
@@ -333,12 +364,15 @@ public class DatasetService {
     @Transactional(readOnly = true)
     public MetadataView viewMetadata( SearchMetadataView search, boolean useRegistrant, boolean useFile, boolean useTag ) {
 
-        log.info("======================= [8] View Metadata : {} ===========================", search.getMetadataId());
+        log.info("======================= [METADATA_04][8] View Metadata : {} ===========================", search.getMetadataId());
         String metadataId = search.getMetadataId();
 
         /*SearchMetadataViewRequest searchRequest = new SearchMetadataViewRequest(metadataId);
         ApiResponse<ViewMetadataResponse> apiResponse = apiService.findMetadataById(searchRequest);
-        ViewMetadataResponse result = apiResponse.getResult();*/
+        ViewMetadataResponse result = apiResponse.getResult();
+        log.info(">> apiResponse.getCode() : {} ", apiResponse.getCode());
+        log.info(">> apiResponse.getMessage() : {} ", apiResponse.getMessage());
+        log.info(">> apiResponse.getResult() : {} ", apiResponse.getResult());*/
 
         // ## 우선은 데이터 원본 정보들을 kware 포탈 시스템에서 가져오기
         // todo 추후 연결후 삭제..
@@ -389,11 +423,13 @@ public class DatasetService {
         String metadataId = search.getMetadataId();
         String rawdataId = search.getRawdataId();
         RawdataView rawdataView = new RawdataView(metadataId, rawdataId);
-        log.info("======================= [9] View Rawdata : {} ===========================", rawdataId);
+        log.info("======================= [RAWDATA_04][9] View Rawdata : {} ===========================", rawdataId);
 
         /*SearchRawdataViewRequest searchRequest = new SearchRawdataViewRequest(metadataId, rawdataId);
         ApiResponse<ViewRawdataResponse> apiResponse = apiService.findRawdataById(searchRequest);
-        ViewRawdataResponse result = apiResponse.getResult();*/
+        log.info(">> apiResponse.getCode() : {} ", apiResponse.getCode());
+        log.info(">> apiResponse.getMessage() : {} ", apiResponse.getMessage());
+        log.info(">> apiResponse.getResult() : {} ", apiResponse.getResult());*/
 
         // mobigen 에서 얻은 정보 세팅
         rawdataView.setRawdataResponse(null);
@@ -417,14 +453,13 @@ public class DatasetService {
     @Transactional
     public Page<MetadataList> pageMetadata(SearchMetadataPage search) {
 
-        log.info("======================= [10] Page Metadata ===========================");
+        log.info("======================= [METADATA_01][10] Page Metadata ===========================");
 
         /*SearchMetadataListRequest pageSearchRequest = new SearchMetadataListRequest(
                 search.getPublisher(), search.getTheme(), search.getPageNumber(), search.getSize(),
                 search.getDateRangeStart(), search.getDateRangeEnd(), search.getSortOrder()
         );
         ApiResponse<MetadataListResponse> apiResponse = apiService.findMetadataList(pageSearchRequest);
-        MetadataListResponse metadataListResponse = apiResponse.getResult();
         log.info(">> apiResponse.getCode() : {} ", apiResponse.getCode());
         log.info(">> apiResponse.getMessage() : {} ", apiResponse.getMessage());
         log.info(">> apiResponse.getResult() : {} ", apiResponse.getResult());*/
@@ -470,11 +505,14 @@ public class DatasetService {
     public Page<RawdataList> pageRawdata(SearchRawdataPage search) {
 
         String metadataId = search.getMetadataId();
-        log.info("======================= [11] Page Rawdata : {} ===========================", metadataId);
+        log.info("======================= [RAWDATA_01][11] Page Rawdata : {} ===========================", metadataId);
 
         /*SearchRawdataListRequest searchRequest = new SearchRawdataListRequest(metadataId, new PaginationRequest(search.getPageNumber(), search.getSize()));
         ApiResponse<RawdataListResponse> apiResponse = apiService.findRawdataList(searchRequest);
-        RawdataListResponse rawdataListResponse = apiResponse.getResult();*/
+        RawdataListResponse rawdataListResponse = apiResponse.getResult();
+        log.info(">> apiResponse.getCode() : {} ", apiResponse.getCode());
+        log.info(">> apiResponse.getMessage() : {} ", apiResponse.getMessage());
+        log.info(">> apiResponse.getResult() : {} ", apiResponse.getResult());*/
 
         SearchDatasetFilePage searchFilePage = new SearchDatasetFilePage(
                 search.getMetadataId(), null, DataFileTpCd.RAWDATA.name(),
@@ -512,14 +550,17 @@ public class DatasetService {
     @Transactional(readOnly = true)
     public Page<RelationsList> pageRelations(SearchRelationsPage search) {
 
-        log.info("======================= [12] Relation Metadata ===========================");
+        log.info("======================= [RELATION_01][12] Relation Metadata ===========================");
 
         /*SearchRelationListRequest listRequest = new SearchRelationListRequest(
                 search.getPublisher(), search.getTheme(), search.getScoreMin(), search.getScoreMax(),
-                search.getPageNumber(), search.getSize(), search.getSortOrder()
+                search.getPageNumber(), search.getSize(), search.getSortOrder(), search.getSortField()
         );
         ApiResponse<RelationListResponse> apiResponse = apiService.findRelationDataList(listRequest);
-        RelationListResponse relationListResponse = apiResponse.getResult();*/
+        RelationListResponse relationListResponse = apiResponse.getResult();
+        log.info(">> apiResponse.getCode() : {} ", apiResponse.getCode());
+        log.info(">> apiResponse.getMessage() : {} ", apiResponse.getMessage());
+        log.info(">> apiResponse.getResult() : {} ", apiResponse.getResult());*/
 
         int totalCount =  mobigenDatasetService.findAllRelationMobigenDatasetListCount(); // totalCount = relationListResponse.getTotal_count();
         int page =  search.getPageNumber(); // page = relationListResponse.getPage();
@@ -550,14 +591,17 @@ public class DatasetService {
     @Transactional(readOnly = true)
     public Page<RecommendationList> pageRecommendation(SearchRecommendationPage search) {
 
-        log.info("======================= [13] Recommendation Metadata ===========================");
+        log.info("======================= [RECOMMENDATION_01][13] Recommendation Metadata ===========================");
 
-        SearchRecommendationListRequest pageRequest = new SearchRecommendationListRequest(
-                search.getRecommendationType(), search.getPublisher(), search.getTheme(),
-                search.getPageNumber(), search.getSize(), search.getSortOrder()
+        /*SearchRecommendationListRequest pageRequest = new SearchRecommendationListRequest(
+                search.getRecommendationType(), "보건복지부"*//*search.getPublisher()*//*, search.getTheme(),
+                search.getPageNumber(), search.getSize(), search.getSortOrder(), search.getSortField()
         );
         ApiResponse<RecommendationListResponse> apiResponse = apiService.findRecommendationDataList(pageRequest);
-        RecommendationListResponse recommendationListResponse = apiResponse.getResult();
+        //RecommendationListResponse recommendationListResponse = apiResponse.getResult();
+        log.info(">> apiResponse.getCode() : {} ", apiResponse.getCode());
+        log.info(">> apiResponse.getMessage() : {} ", apiResponse.getMessage());
+        log.info(">> apiResponse.getResult() : {} ", apiResponse.getResult());*/
 
         int totalCount =  mobigenDatasetService.findAllRecommendationMobigenDatasetListCount(); // totalCount = recommendationListResponse.getTotal_count();
         int page =  search.getPageNumber(); // page = recommendationListResponse.getPage();
@@ -588,12 +632,12 @@ public class DatasetService {
     **/
     @Transactional
     public ResponseEntity downloadPackage(DownloadPackageDataset request) {
-
-        log.info("======================= [14] Download Package Data : {}({}) ===========================", request.getMetadataId(), request.getRawdataIds());
-
-        // todo API 체크해보고 더 로직 구현하기
+        log.info("======================= [PACKAGE_01][14] Download Package Data : {}({}) ===========================", request.getMetadataId(), request.getRawdataIds());
         /*PackageExportRequest exportRequest = new PackageExportRequest(request.getMetadataId(), request.getRawdataIds());
-        ApiResponse<PackageExportResponse> apiResponse = apiService.packageExport(exportRequest);*/
+        ApiResponse<PackageExportResponse> apiResponse = apiService.packageExport(exportRequest);
+        log.info(">> apiResponse.getCode() : {} ", apiResponse.getCode());
+        log.info(">> apiResponse.getMessage() : {} ", apiResponse.getMessage());
+        log.info(">> apiResponse.getResult() : {} ", apiResponse.getResult());*/
         return null;
     }
 
@@ -608,10 +652,14 @@ public class DatasetService {
     @Transactional
     public ResponseEntity downloadMetadata(DownloadMetadata request, HttpServletRequest req) throws IOException {
 
-        log.info("======================= [15] Download Metadata : {}({}) ===========================", request.getMetadataId(), request.getMetadataFileId());
+        log.info("======================= [METADATA_08][15] Download Metadata : {}({}) ===========================", request.getMetadataId(), request.getMetadataFileId());
 
         /*DownloadMetadataFileRequest downloadRequest = new DownloadMetadataFileRequest(request.getMetadataId());
-        apiService.downloadMetadataFile(downloadRequest);*/
+        ApiResponse<DownloadMetadataResponse> apiResponse = apiService.downloadMetadataFile(downloadRequest);
+        log.info(">> apiResponse.getCode() : {} ", apiResponse.getCode());
+        log.info(">> apiResponse.getMessage() : {} ", apiResponse.getMessage());
+        log.info(">> apiResponse.getResult() : {} ", apiResponse.getResult());*/
+
         // todo 추후에는 > 로그insert & down_count++ 만 진행
         return datasetFileService.downloadMetaFile(request.getMetadataFileId(), req);
     }
@@ -627,10 +675,12 @@ public class DatasetService {
     @Transactional
     public ResponseEntity downloadRawdata(DownloadRawdata request, HttpServletRequest req) throws IOException {
 
-        log.info("======================= [16] Download Rawdata : {}({}) ===========================", request.getRawdataId(), request.getRawdataFileId());
-
+        log.info("======================= [RAWDATA_07][16] Download Rawdata : {}({}) ===========================", request.getRawdataId(), request.getRawdataFileId());
         /*DownloadRawdataRequest downloadRequest = new DownloadRawdataRequest(request.getMetadataId(), request.getRawdataId());
-        apiService.downloadRawdata(downloadRequest);*/
+        ApiResponse<DownloadRawdataResponse> apiResponse = apiService.downloadRawdata(downloadRequest);
+        log.info(">> apiResponse.getCode() : {} ", apiResponse.getCode());
+        log.info(">> apiResponse.getMessage() : {} ", apiResponse.getMessage());
+        log.info(">> apiResponse.getResult() : {} ", apiResponse.getResult());*/
         // todo 추후에는 > 로그insert & down_count++ 만 진행
         return datasetFileService.downloadMetaFile(request.getRawdataFileId(), req);
     }
@@ -643,11 +693,12 @@ public class DatasetService {
     **/
     @Transactional(readOnly = true)
     public MetaKeyList findMetaKeyList() {
-        log.info("======================= [17] Search Meta Key List ===========================");
+        log.info("======================= [META_01][17] Search Meta Key List ===========================");
         /*ApiResponse<MetaKeysListResponse> apiResponse = apiService.findMetaKeysList();
         MetaKeysListResponse result = apiResponse.getResult();
-        List<String> filterList = result.getFilters();
-        return new MetaKeyList(filterList);*/
+        log.info(">> apiResponse.getCode() : {} ", apiResponse.getCode());
+        log.info(">> apiResponse.getMessage() : {} ", apiResponse.getMessage());
+        log.info(">> apiResponse.getResult() : {} ", apiResponse.getResult());*/
         return new MetaKeyList(Arrays.asList("category", "tag", "date"));
     }
 
@@ -662,10 +713,13 @@ public class DatasetService {
     **/
     @Transactional(readOnly = true)
     public MetaKeyValueList findMetaKeyValueList(SearchMetaValues search) {
-        log.info("======================= [18] Search Meta Key Value List : {} ===========================", search.getKey());
-        /*SearchMetaValuesRequest searchKeyValueRequest = new SearchMetaValuesRequest(search.getKey());
+        log.info("======================= [META_02][18] Search Meta Key Value List : {} ===========================", search.getKey());
+        /*SearchMetaValuesRequest searchKeyValueRequest = new SearchMetaValuesRequest("publisher");
         ApiResponse<MetaValuesListResponse> apiResponse = apiService.findMetaValuesList(searchKeyValueRequest);
-        MetaValuesListResponse valuesListResponse = apiResponse.getResult();*/
+        log.info(">> apiResponse.getCode() : {} ", apiResponse.getCode());
+        log.info(">> apiResponse.getMessage() : {} ", apiResponse.getMessage());
+        log.info(">> apiResponse.getResult() : {} ", apiResponse.getResult());*/
+
         String filter = search.getKey(); // filter = valuesListResponse.getFilter();
         List<String> values = new ArrayList<>(); // values = valuesListResponse.getValues();
 

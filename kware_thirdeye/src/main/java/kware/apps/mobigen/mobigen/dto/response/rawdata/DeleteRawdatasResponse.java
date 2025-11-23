@@ -3,6 +3,7 @@ package kware.apps.mobigen.mobigen.dto.response.rawdata;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.util.List;
 
@@ -14,8 +15,7 @@ import java.util.List;
 * @summary      [RAWDATA_03] 원본데이터 여러건 삭제 응답 DTO
 **/
 
-@Getter @Setter
+@Getter @Setter @ToString
 public class DeleteRawdatasResponse {
-    private int deleted_count;
     private List<String> deleted_ids;
 }

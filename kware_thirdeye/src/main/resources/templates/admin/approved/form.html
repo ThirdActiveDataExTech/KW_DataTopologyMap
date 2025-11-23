@@ -154,6 +154,7 @@
             <div class="right-buttons">
               <button type="button" class="custom-button" id="list-btn">목록</button>
               <button type="button" id="submit-btn" class="custom-button">수정하기</button>
+              <button type="button" id="metadata-edit-btn" class="custom-button">메타데이터<br>수정하기</button>
               <button type="button" id="goto-view-btn" class="custom-button">상세페이지<br>보러가기</button>
               <button type="button" id="goto-history-btn" class="custom-button">변경이력<br>보러가기</button>
             </div>
@@ -170,10 +171,8 @@
             <div class="card-body">
               <h5 class="card-title" th:text="|${view?.targetTpCdNm} 데이터셋 정보|"></h5>
               <div class="dataset-card">
-
                 <!-- 제목 -->
                 <h2 class="dataset-title" th:text="${view?.metadataView?.title}"></h2>
-
                 <!-- 카테고리/태그 -->
                 <div class="dataset-meta">
                   <div class="categories">
@@ -185,18 +184,31 @@
                     </th:block>
                   </div>
                 </div>
-
                 <!-- 설명 -->
                 <div class="dataset-description" id="dataset-description"></div>
-
                 <!-- 메타데이터 -->
                 <div class="dataset-extdata">
                   <h4>메타데이터</h4>
                   <textarea id="extdata-view" class="extdata-textarea" readonly></textarea>
                 </div>
-
               </div>
-
+            </div>
+          </div>
+          <div class="card" style="margin-top: 30px;">
+            <div class="card-body">
+              <h5 class="card-title">데이터셋 파일정보</h5>
+              <div class="description-review-topbar nav" data-aos="fade-up" data-aos-delay="200">
+                <a class="active" data-bs-toggle="tab" href="#des-details1">메타데이터 파일</a>
+                <a data-bs-toggle="tab" href="#des-details2" class="">원본데이터 파일</a>
+              </div>
+              <div class="tab-content">
+                <div id="des-details1" class="tab-pane active" data-code="METADATA">
+                  <div th:replace="admin/approved/fragment/metadata-section::metadata"></div>
+                </div>
+                <div id="des-details2" class="tab-pane" data-code="RAWDATA">
+                  <div th:replace="admin/approved/fragment/rawdata-section::rawdata"></div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -337,6 +349,11 @@
     $(function () {
 
       // ===============================
+      // 승인된 데이터셋 수정 화면 > 메타데이터, 원본데이터 파일 테이블 초기화
+      // ===============================
+      approvedDatasetJS.initFileTable(view?.metadataId);
+
+      // ===============================
       // 승인된 데이터셋 수정 화면 > 초기화
       // ===============================
       const json = JSON.parse(view['extraJson'])
@@ -400,7 +417,18 @@
       });
 
       // ===============================
-      // 상세페이지 보러가기 버튼
+      // 메타데이터 수정하러가기
+      // ===============================
+      $("#metadata-edit-btn").on('click', async function () {
+        const metadataId = view?.metadataId
+        const isOk = await Util.confirm("수정중이신 정보는 저장되지 않습니다. <br> 메타데이터 수정 화면으로 이동하시겠습니까?")
+        if (isOk) {
+          window.location.href = `/admin/metadata/dataset/${metadataId}`
+        }
+      });
+
+      // ===============================
+      // 변경이력 보러가기
       // ===============================
       $("#goto-history-btn").on('click', async function () {
         const isOk = await Util.confirm("수정중이신 정보는 저장되지 않습니다. <br> 상세페이지 화면으로 이동하시겠습니까?")

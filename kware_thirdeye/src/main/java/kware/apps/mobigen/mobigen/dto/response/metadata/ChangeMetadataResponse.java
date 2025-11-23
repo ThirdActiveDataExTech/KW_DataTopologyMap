@@ -3,6 +3,7 @@ package kware.apps.mobigen.mobigen.dto.response.metadata;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.util.List;
 
@@ -14,7 +15,7 @@ import java.util.List;
 * @summary      [METADATA_05] 메타데이터의 업데이트 응답 DTO
 **/
 
-@Getter @Setter
+@Getter @Setter @ToString
 public class ChangeMetadataResponse {
     private String metadata_id;
     private String updated_at;

@@ -1,22 +1,21 @@
 package kware.apps.mobigen.mobigen.dto.response.metadata;
 
-
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-
 import java.util.Map;
 
 /**
-* @fileName     ViewMetadataResponse
-* @author       dahyeon
-* @version      1.0.0
-* @date         2025-09-23
-* @summary      [METADATA_04] 특정 메타데이터 상세 정보 조회 응답 DTO
-**/
+ * @fileName     DownloadMetadataResponse
+ * @author       dahyeon
+ * @version      1.0.0
+ * @date         2025-09-23
+ * @summary      [METADATA_08] 특정 메타데이터 파일 정보 다운로드
+ **/
 
-@Getter @Setter @ToString
-public class ViewMetadataResponse {
+@Getter @Setter @NoArgsConstructor @ToString
+public class DownloadMetadataResponse {
     private String metadata_id;
     private String title;
     private String issued;

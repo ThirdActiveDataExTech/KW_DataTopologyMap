@@ -3,6 +3,7 @@ package kware.apps.mobigen.mobigen.dto.response.rawdata;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 /**
 * @fileName     UploadRawdataResponse
@@ -12,7 +13,7 @@ import lombok.Setter;
 * @summary      [RAWDATA_02] 메타데이터 하위 원본데이터 추가 응답 DTO
 **/
 
-@Getter @Setter
+@Getter @Setter @ToString
 public class UploadRawdataResponse {
     private String rawdata_id;
     private String filename;

@@ -3,6 +3,7 @@ package kware.apps.mobigen.mobigen.dto.response.pckge;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.util.List;
 
@@ -14,7 +15,7 @@ import java.util.List;
 * @summary      [PACKAGE_01] 데이터셋 다운로드 응답 DTO
 **/
 
-@Getter @Setter
+@Getter @Setter @ToString
 public class PackageExportResponse {
     private String metadata_id;
     private List<String> rawdata_ids;

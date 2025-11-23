@@ -2,7 +2,7 @@ package kware.apps.mobigen.mobigen.dto.request.relation;
 
 
 import kware.apps.mobigen.mobigen.dto.request.common.PaginationRequest;
-import kware.apps.mobigen.mobigen.dto.request.common.SortRequest;
+import kware.apps.mobigen.mobigen.dto.request.common.SortFieldRequest;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -23,16 +23,16 @@ public class SearchRelationListRequest {
     private String action;                          // "search"
     private SearchRelationListFilters filters;
     private PaginationRequest pagination;
-    private SortRequest sort;
+    private SortFieldRequest sort;
 
     public SearchRelationListRequest( String publisher, List<String> theme,
-                                      Long min, Long max,
+                                      float min, float max,
                                       int page, int limit,
-                                      String order ) {
+                                      String sortOrder, String sortField ) {
         this.action = "search";
         this.filters = new SearchRelationListFilters(publisher, theme, new SearchRelationListFilters.SimilarityScore(min, max));
         this.pagination = new PaginationRequest(page, limit);
-        this.sort = new SortRequest(order);
+        this.sort = new SortFieldRequest(sortOrder, sortField);
     }
 
     @Getter @Setter
@@ -49,10 +49,10 @@ public class SearchRelationListRequest {
 
         @Getter @Setter
         public static class SimilarityScore {
-            private Long min;
-            private Long max;
+            private float min;
+            private float max;
 
-            public SimilarityScore(Long min, Long max) {
+            public SimilarityScore(float min, float max) {
                 this.min = min;
                 this.max = max;
             }

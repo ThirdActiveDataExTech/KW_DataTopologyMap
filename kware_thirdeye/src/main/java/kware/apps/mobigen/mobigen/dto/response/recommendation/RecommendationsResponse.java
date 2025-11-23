@@ -2,8 +2,9 @@ package kware.apps.mobigen.mobigen.dto.response.recommendation;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
-@Getter @Setter
+@Getter @Setter @ToString
 public class RecommendationsResponse {
 
     private Long uid;       // 추후 삭제
