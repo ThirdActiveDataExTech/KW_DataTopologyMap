@@ -6,14 +6,12 @@
         /* cetusUserStatusHist.insertUserStatusHist */
         INSERT INTO CETUS_USER_STATUS_HIST (
              USER_UID
-            ,WORKPLACE_UID
             ,REASON
             ,STATUS
             ,REG_UID
             ,REG_DT
         ) VALUES (
              #{userUid}
-            ,#{workplaceUid}
             ,#{reason}
             ,#{status}
             ,#{regUid}
@@ -25,7 +23,6 @@
         /* cetusUserStatusHist.userStatusHistList */
         SELECT CUSH.UID AS HIST_UID
               ,CUSH.USER_UID
-              ,CUSH.WORKPLACE_UID
               ,CUSH.REASON
               ,CUSH.STATUS
               ,CASE WHEN CUSH.STATUS = 'APPROVED' THEN '사용중'

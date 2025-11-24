@@ -10,7 +10,6 @@ public class UserStatusHistList {
 
     private Long histUid;
     private Long userUid;
-    private Long workplaceUid;
     private String reason;
     private String status;
     private String statusNm;
