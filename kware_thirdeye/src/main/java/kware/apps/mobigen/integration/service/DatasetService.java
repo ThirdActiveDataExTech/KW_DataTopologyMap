@@ -32,7 +32,6 @@ import kware.apps.mobigen.mobigen.dto.response.rawdata.RawdataListItemResponse;
 import kware.apps.mobigen.mobigen.dto.response.recommendation.RecommendationsResponse;
 import kware.apps.mobigen.mobigen.dto.response.relation.RelatedMetadataResponse;
 import kware.apps.mobigen.mobigen.service.MobigenExternalApiService;
-import kware.apps.thirdeye.bookmark.service.CetusBookMarkService;
 import kware.apps.thirdeye.bookmark.service.CetusBookMarkService2;
 import kware.apps.thirdeye.mobigen.approveddataset.dto.request.SearchMetadataApproved;
 import kware.apps.thirdeye.mobigen.approveddataset.service.CetusApprovedDatasetService2;
@@ -47,8 +46,8 @@ import kware.apps.thirdeye.mobigen.datasetfile.dto.request.SearchDatasetFileView
 import kware.apps.thirdeye.mobigen.datasetfile.dto.response.CetusDatasetFileView;
 import kware.apps.thirdeye.mobigen.datasetfile.enumcd.DataFileTpCd;
 import kware.apps.thirdeye.mobigen.datasetfile.service.CetusDatasetFileService;
-import kware.apps.thirdeye.mobigen.mobigenregistrant.dto.response.MobigenRegistrantView;
-import kware.apps.thirdeye.mobigen.mobigenregistrant.service.CetusMobigenRegistrantService;
+import kware.apps.thirdeye.mobigen.thirdeyeregistrant.dto.response.ThirdeyeRegistrantView;
+import kware.apps.thirdeye.mobigen.thirdeyeregistrant.service.CetusThirdeyeRegistrantService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -78,7 +77,7 @@ public class DatasetService {
 
     private final MobigenExternalApiService apiService;
     private final CetusDatasetFileService datasetFileService;
-    private final CetusMobigenRegistrantService registrantService;
+    private final CetusThirdeyeRegistrantService registrantService;
     private final CetusApprovedDatasetService2 approvedDatasetService2;
     private final CetusBookMarkService2 bookMarkService2;
 
@@ -132,7 +131,7 @@ public class DatasetService {
         datasetFileService.processAddFile(metaFile);
 
         // 2. 모비젠 등록자 정보 저장
-        registrantService.saveMobigenRegistrant(Long.toString(metadataId)); // metadataId = apiResponse.getResult().getMetadata().getMetadata_id();
+        registrantService.saveThirdeyeRegistrant(Long.toString(metadataId)); // metadataId = apiResponse.getResult().getMetadata().getMetadata_id();
     }
 
     /**
@@ -203,7 +202,7 @@ public class DatasetService {
         datasetTagService.saveDatasetTag(request.getTags(), Long.toString(metadataId));
 
         // 3. 모비젠 등록자 정보 저장
-        registrantService.saveMobigenRegistrant(Long.toString(metadataId));
+        registrantService.saveThirdeyeRegistrant(Long.toString(metadataId));
     }
 
     /**
@@ -383,7 +382,7 @@ public class DatasetService {
 
         // 2. 데이터 등록자가 있다면 세팅
         if(useRegistrant) {
-            MobigenRegistrantView registrantView = registrantService.findMobigenRegistrant(metadataId);
+            ThirdeyeRegistrantView registrantView = registrantService.findThirdeyeRegistrant(metadataId);
             metadataView.setRegistrantId((registrantView != null) ? registrantView.getRegistrantId() : null);
         }
 
@@ -480,7 +479,7 @@ public class DatasetService {
             metadataDto.setMetadataView(data);
 
             // 등록자 정보
-            MobigenRegistrantView registrantView = registrantService.findMobigenRegistrant(metadataId);
+            ThirdeyeRegistrantView registrantView = registrantService.findThirdeyeRegistrant(metadataId);
             if(registrantView != null) metadataDto.setRegistrantInfo(registrantView.isRegistered(), registrantView.getRegistrantId());
             else metadataDto.setRegistrantInfo(false, null);
 

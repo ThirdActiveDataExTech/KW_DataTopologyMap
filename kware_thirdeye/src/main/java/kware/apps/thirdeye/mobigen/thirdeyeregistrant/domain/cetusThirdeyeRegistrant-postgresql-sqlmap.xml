@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="cetusMobigenRegistrant">
+<mapper namespace="cetusThirdeyeRegistrant">
 
-    <insert id="insert" parameterType="CetusMobigenRegistrant">
-        /* cetusMobigenRegistrant.insert */
-        INSERT INTO CETUS_MOBIGEN_REGISTRANT (
+    <insert id="insert" parameterType="CetusThirdeyeRegistrant">
+        /* cetusThirdeyeRegistrant.insert */
+        INSERT INTO CETUS_THIRDEYE_REGISTRANT (
              METADATA_ID
             ,REGISTRANT_UID
             ,REG_DT
@@ -15,12 +15,12 @@
         )
     </insert>
 
-    <select id="getMobigenRegistrant" resultType="MobigenRegistrantView" parameterType="String">
-        /* cetusMobigenRegistrant.getMobigenRegistrant */
+    <select id="getThirdeyeRegistrant" resultType="ThirdeyeRegistrantView" parameterType="String">
+        /* cetusThirdeyeRegistrant.getThirdeyeRegistrant */
         SELECT CMR.REGISTRANT_UID
               ,CU.USER_ID AS REGISTRANT_Id
               ,CASE WHEN CU.USER_ID IS NULL THEN 'FALSE' ELSE 'TRUE' END AS IS_REGISTERED
-          FROM CETUS_MOBIGEN_REGISTRANT CMR
+          FROM CETUS_THIRDEYE_REGISTRANT CMR
           LEFT JOIN CETUS_USER CU ON CU.UID = CMR.REGISTRANT_UID
          WHERE CMR.METADATA_ID = #{metadataId}
     </select>

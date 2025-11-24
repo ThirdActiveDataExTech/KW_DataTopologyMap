@@ -1,4 +1,4 @@
-package kware.apps.thirdeye.mobigen.mobigenregistrant.domain;
+package kware.apps.thirdeye.mobigen.thirdeyeregistrant.domain;
 
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -14,14 +14,14 @@ import lombok.NoArgsConstructor;
 **/
 
 @Getter @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class CetusMobigenRegistrant {
+public class CetusThirdeyeRegistrant {
 
     private Long uid;
     private String metadataId;
     private Long registrantUid;
     private String regDt;
 
-    public CetusMobigenRegistrant(String metadataId, Long registrantUid) {
+    public CetusThirdeyeRegistrant(String metadataId, Long registrantUid) {
         this.metadataId = metadataId;
         this.registrantUid = registrantUid;
     }

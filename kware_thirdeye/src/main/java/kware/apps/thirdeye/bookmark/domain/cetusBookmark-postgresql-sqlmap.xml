@@ -33,14 +33,10 @@
             , APPROVED_DATASET_UID
             , REG_UID
             , REG_DT
-            , UPDT_UID
-            , UPDT_DT
         ) VALUES (
               #{userUid}
             , #{approvedUid}
             , #{regUid}
-            , NOW()
-            , #{updtUid}
             , NOW()
         )
     </insert>
