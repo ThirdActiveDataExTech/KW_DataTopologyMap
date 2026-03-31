@@ -1,4 +1,4 @@
-package kware.apps.mobigen.mobigen.dto.request.rawdata;
+package kware.apps.mobigen.mobigen.dto.request.rawdata.change;
 
 
 import lombok.Getter;
@@ -27,16 +27,5 @@ public class ChangeRawdataRequest {
         this.metadata_id = metadata_id;
         this.rawdata_id = rawdata_id;
         this.field = field;
-    }
-
-    @Getter @Setter
-    public static class ChangeRawdataFieldRequest {
-        private String description;
-        private List<String> tags;
-
-        public ChangeRawdataFieldRequest(String description, List<String> tags) {
-            this.description = description;
-            this.tags = tags;
-        }
     }
 }

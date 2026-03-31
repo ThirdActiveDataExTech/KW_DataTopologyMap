@@ -2,6 +2,7 @@ package kware.common.exception;
 
 import cetus.Response;
 import cetus.exception.CetusValidException;
+import kware.apps.mobigen.mobigen.ApiException;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -40,6 +41,13 @@ public class RestExceptionHandler {
         return ResponseEntity
                 .status(e.getStatus())
                 .body(e.getMessage());
+    }
+
+    @ExceptionHandler(ApiException.class)
+    public ResponseEntity apiException(ApiException e) {
+        return ResponseEntity
+                    .status(e.getHttpStatus())
+                    .body(e.getResponse());
     }
 
     @ExceptionHandler(NoSuchElementException.class)

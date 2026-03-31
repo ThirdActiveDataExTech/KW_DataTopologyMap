@@ -5,6 +5,7 @@ import cetus.bean.Pageable;
 import cetus.user.UserUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import kware.apps.system.dept.deptuser.service.CetusDeptUserService;
+import kware.apps.system.workplace.service.CetusWorkplaceService;
 import kware.apps.thirdeye.enumstatus.DownloadTargetCd;
 import kware.apps.thirdeye.enumstatus.UserAuthorCd;
 import kware.apps.thirdeye.enumstatus.UserStatus;
@@ -47,6 +48,8 @@ public class CetusUserService {
     private final CetusUserDao dao;
     private final CommonFileService commonFileService;
     private final ExcelCreate excelCreate;
+
+    private final CetusWorkplaceService workplaceService;
     private final CetusWorkplaceUserService workplaceUserService;
 
     @Transactional
@@ -61,7 +64,9 @@ public class CetusUserService {
         dao.insert(bean);
 
         // 2. workplace
-        workplaceUserService.saveWorkplaceUser(1L, bean.getUid());
+        Long recentWorkplace = workplaceService.findRecentWorkplace();
+        recentWorkplace = (recentWorkplace != null) ? recentWorkplace : 1L;
+        workplaceUserService.saveWorkplaceUser(recentWorkplace, bean.getUid());
     }
 
     @Transactional

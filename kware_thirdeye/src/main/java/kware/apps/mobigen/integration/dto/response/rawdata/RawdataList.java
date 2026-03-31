@@ -16,9 +16,10 @@ public class RawdataList {
     private RawdataListItemResponse rawdataView;
     private CetusDatasetFileView rawdataFile;
 
-    public RawdataList(String metadataId, String rawdataId) {
+    public RawdataList(RawdataListItemResponse rawdataView, String metadataId, String rawdataId) {
         this.metadataId = metadataId;
         this.rawdataId = rawdataId;
+        this.rawdataView = rawdataView;
     }
 
 }

@@ -5,6 +5,7 @@ import kware.apps.mobigen.mobigen.dto.request.common.PaginationRequest;
 import kware.apps.mobigen.mobigen.dto.request.common.SortFieldRequest;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.util.List;
 
@@ -17,7 +18,7 @@ import java.util.List;
 * @summary      [RELATION_01] 연관 메타데이터 목록 조회 요청 DTO
 **/
 
-@Getter @Setter
+@Getter @Setter @ToString
 public class SearchRelationListRequest {
 
     private String action;                          // "search"
@@ -30,32 +31,8 @@ public class SearchRelationListRequest {
                                       int page, int limit,
                                       String sortOrder, String sortField ) {
         this.action = "search";
-        this.filters = new SearchRelationListFilters(publisher, theme, new SearchRelationListFilters.SimilarityScore(min, max));
-        this.pagination = new PaginationRequest(page, limit);
+        this.filters = new SearchRelationListFilters(publisher, theme, new SimilarityScore(min, max));
+        this.pagination = new PaginationRequest(page, limit, false);
         this.sort = new SortFieldRequest(sortOrder, sortField);
-    }
-
-    @Getter @Setter
-    public static class SearchRelationListFilters {
-        private String publisher;
-        private List<String> theme;
-        private SimilarityScore similarity_score;
-
-        public SearchRelationListFilters(String publisher, List<String> theme, SimilarityScore similarity_score) {
-            this.publisher = publisher;
-            this.theme = theme;
-            this.similarity_score = similarity_score;
-        }
-
-        @Getter @Setter
-        public static class SimilarityScore {
-            private float min;
-            private float max;
-
-            public SimilarityScore(float min, float max) {
-                this.min = min;
-                this.max = max;
-            }
-        }
     }
 }

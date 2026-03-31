@@ -1,10 +1,13 @@
 package kware.apps.mobigen.mobigen.dto.response.metadata;
 
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonValue;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -25,7 +28,8 @@ public class ViewMetadataResponse {
     private String publisher;
     private String keywords;
     private String landing_page;
-    private String theme;
+    @JsonFormat(with = JsonFormat.Feature.ACCEPT_SINGLE_VALUE_AS_ARRAY)
+    private List<String> theme;
     private String access_url;
     private String ingested_at;
     private String updated_at;

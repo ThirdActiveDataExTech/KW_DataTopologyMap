@@ -18,5 +18,5 @@ import java.util.List;
 
 @Getter @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class DeleteMetadatas {
-    private List<Long> uids;
+    private List<String> uids;
 }

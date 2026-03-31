@@ -3,15 +3,21 @@
 
     var template03FilterJS = {
 
-        type: null,
-
         initDom: function () {
             const $wrapper = $("#sidebar-wrapper-div")
             $wrapper.empty();
         },
 
         init(type, filter_param, values, title) {
-            this.type = type;
+            // 데이터가 아예 없거나 빈 객체/배열인 경우 처리
+            if (!values
+                    || (Array.isArray(values) && values.length === 0)
+                    || (typeof values === 'object' && Object.keys(values).length === 0)
+            ) {
+                this.initEmpty(title);
+                return;
+            }
+
             if(type === 'checkbox') {
                 template03FilterJS.checkbox.initCheckbox(filter_param, values, title);
             } else if(type === 'select2') {
@@ -19,101 +25,107 @@
             }
         },
 
+        // 데이터가 없을 때 공통 UI
+        initEmpty: function(title) {
+            const $wrapper = $("#sidebar-wrapper-div");
+            const emptyHtml = `
+            <div class="sidebar-widget sidebar-widget-border mb-40 pb-35">
+                <div class="sidebar-widget-title mb-25"><h3>${title}</h3></div>
+                <div class="sidebar-list-style">
+                    <p style="color: #999; font-size: 14px; padding-left: 5px;">항목이 없습니다.</p>
+                </div>
+            </div>`;
+            $wrapper.append(emptyHtml);
+        },
+
         checkbox: {
-
-            initCheckbox(filter_param, values, title = '카테고리') {
-
+            initCheckbox(filter_param, values, title) {
                 const $wrapper = $("#sidebar-wrapper-div");
-                const uniqueId = 'categories-' + Date.now(); // 고유 id 생성
-                const categoryContainer = $(`
-                <div id="sidebar-widgets-container1">
-                    <div class="sidebar-widget sidebar-widget-border mb-40 pb-35" data-aos="fade-up" data-aos-delay="400">
+                const uniqueId = 'cb-' + filter_param + '-' + Date.now();
+
+                // 다현님이 보내주신 구조 그대로 적용
+                const container = $(`
+                <div id="sidebar-widgets-container-${uniqueId}">
+                    <div class="sidebar-widget sidebar-widget-border mb-40 pb-35" data-aos="fade-up">
                         <div class="sidebar-widget-title mb-25"><h3>${title}</h3></div>
                         <div data-unique-id="${uniqueId}" class="sidebar-widget-color sidebar-list-style"></div>
                     </div>
                 </div>
             `);
-                $wrapper.append(categoryContainer);
+                $wrapper.append(container);
 
-                const $dom = categoryContainer.find(`div[data-unique-id="${uniqueId}"]`);
-                $dom.empty();
+                const $dom = container.find(`div[data-unique-id="${uniqueId}"]`);
                 let $ul = $("<ul></ul>");
 
-                // 전체 선택
-                const category_ALL = 'categories-all-' + uniqueId; // 고유 id 생성
+                // 1. 전체 선택 (디자인 포인트: font-weight: bold)
+                const allId = 'all-' + uniqueId;
                 $ul.append(`
                 <li>
                     <a href="javascript:void(0);">
-                        <input type="checkbox" class="category-all" value="ALL" id="${category_ALL}">
-                        <label for="${category_ALL}" style="font-weight:bold;">전체 선택</label>
+                        <input type="checkbox" class="category-all" value="ALL" id="${allId}">
+                        <label for="${allId}" style="font-weight:bold; cursor:pointer;">전체 선택</label>
                     </a>
                 </li>
             `);
 
-                // 개별 선택
-                for (const [key, name] of Object.entries(values)) {
-                    const _category = `categories-${key}-` + uniqueId; // 고유 id 생성
+                // 2. 개별 아이템 렌더링 (배열/객체 공통 처리)
+                const entries = Array.isArray(values) ? values.map(v => [v, v]) : Object.entries(values);
+                entries.forEach(([key, name]) => {
+                    const itemId = `item-${key}-${uniqueId}`;
                     $ul.append(`
                     <li>
                         <a href="javascript:void(0);">
-                            <input type="checkbox" class="category-item" value="${key}" id="${_category}">
-                            <label for="${_category}">${name}</label>
+                            <input type="checkbox" class="category-item" value="${key}" id="${itemId}">
+                            <label for="${itemId}" style="cursor:pointer;">${name}</label>
                         </a>
                     </li>
                 `);
-                }
+                });
                 $dom.append($ul);
 
-                // 이벤트 바인딩: container 기준으로 범위 한정
-                $(document)
-                    .off('change.checkbox.' + uniqueId)
-                    .on('change.checkbox.' + uniqueId, `div[data-unique-id="${uniqueId}"] input[type="checkbox"]`,
-                        async function() {
+                // 3. 이벤트 바인딩: 위젯 컨테이너 단위로 스코프 한정
+                $(document).off('change.' + uniqueId).on('change.' + uniqueId, `div[data-unique-id="${uniqueId}"] input`, async function() {
+                    const $parent = $(this).closest(`div[data-unique-id="${uniqueId}"]`);
+                    const $items = $parent.find('.category-item');
+                    const $all = $parent.find('.category-all');
 
-                            const $this = $(this);
-                            const $items = $dom.find('.category-item');
-                            const $all = $dom.find('.category-all');
+                    if ($(this).hasClass('category-all')) {
+                        $items.prop('checked', $(this).is(':checked'));
+                    } else {
+                        $all.prop('checked', $items.length === $items.filter(':checked').length);
+                    }
 
-                            if ($this.hasClass('category-all')) {
-                                $items.prop('checked', $this.is(':checked'));
-                            } else {
-                                $all.prop('checked', $items.length === $items.filter(':checked').length);
-                            }
-
-                            template03JS.param[filter_param] = $items.filter(':checked').map((i, el) => el.value).get();
-                            await template03JS.fnPage(1, false);
-                        });
-            },
+                    // 글로벌 param 업데이트 및 페이지 갱신
+                    template03JS.param[filter_param] = $items.filter(':checked').map((i, el) => el.value).get();
+                    await template03JS.fnPage(1, false);
+                });
+            }
         },
 
         select2: {
             initSelect2(filter_param, values, title) {
-
                 const $wrapper = $("#sidebar-wrapper-div");
-                const uniqueId = 'tags-' + Date.now();
-                const tagContainer = $(`
-                <div id="sidebar-widgets-container2">
-                    <div class="sidebar-widget sidebar-widget-border mb-40 pb-35" data-aos="fade-up" data-aos-delay="200">
-                        <div class="sidebar-widget-title mb-25"><h3>${title}</h3></div>
-                        <div id="tags" class="sidebar-widget-color sidebar-list-style">
-                            <select class="select2 round border_line" data-unique-id="${uniqueId}" multiple></select>
-                        </div>
+                const uniqueId = 'sel-' + filter_param + '-' + Date.now();
+                const container = $(`
+                <div class="sidebar-widget sidebar-widget-border mb-40 pb-35" data-aos="fade-up">
+                    <div class="sidebar-widget-title mb-25"><h3>${title}</h3></div>
+                    <div class="sidebar-list-style">
+                        <select class="select2 round border_line" data-unique-id="${uniqueId}" multiple style="width:100%"></select>
                     </div>
                 </div>
             `);
-                $wrapper.append(tagContainer);
+                $wrapper.append(container);
 
-                const $dom = tagContainer.find(`select[data-unique-id="${uniqueId}"]`);
-                for (const [key, name] of Object.entries(values)) {
-                    $dom.append(`<option value="${key}">${name}</option>`);
-                }
+                const $select = container.find('select');
+                const entries = Array.isArray(values) ? values.map(v => [v, v]) : Object.entries(values);
+                entries.forEach(([key, name]) => $select.append(new Option(name, key)));
 
-                $dom.select2({ placeholder: `${title} 검색` })
-                    .on('select2:select select2:unselect', async function() {
-                        template03JS.param[filter_param] = $dom.val() || [];
+                $select.select2({ placeholder: `${title} 검색` })
+                    .on('change', async function() {
+                        template03JS.param[filter_param] = $(this).val() || [];
                         await template03JS.fnPage(1, false);
                     });
-            },
+            }
         },
 
     }
@@ -122,8 +134,7 @@
     var template03JS = {
 
         page: 1,
-        keyword: '',
-        param : { }, // 검색 파라미터
+        param : {}, // 검색 파라미터
 
         dom: {
             showList: $("#showing-list"),
@@ -138,7 +149,7 @@
         // 페이지 그리기
         pageList: async function (clearSidebar = true) {
             template03JS.pageInit();
-            if (clearSidebar) template03JS.createSidebar();
+            if (clearSidebar) await template03JS.createSidebar();
 
             template03JS.getPageData(5).then((response) => {
                 template03JS.createList(response);
@@ -163,14 +174,14 @@
 
         createSidebar: async function () {
             template03FilterJS.initDom();
-            const response = await Http.get('/api/portal/integration-dataset/metakey-list')
-            const filters = response['filters']
+            const response = await Http.get('/api/portal/integration-dataset/metakey-list');
+            const filters = response['filters']; // ['publisher', 'theme', 'tags', 'created_at']
             for (const filter of filters) {
-                const values = await Http.get('/api/portal/integration-dataset/metakey-value-list', { key: filter })
-                if (values['filter'] === 'tag' && values['maps'] !== null) {
-                    template03JS.param['tag'] = []
-                    template03FilterJS.init("select2", values['filter'], values['maps'], values['filter']);
-                }
+                const res = await Http.get('/api/portal/integration-dataset/metakey-value-list', { key: filter });
+                template03JS.param[filter] = [];
+                const displayData = (res['maps'] && Object.keys(res['maps']).length > 0) ? res['maps'] : res['values'];
+                let uiType = (filter === 'tags') ? 'select2' : 'checkbox';
+                template03FilterJS.init(uiType, filter, displayData, filter);
             }
         },
 
@@ -178,9 +189,17 @@
             const obj = {
                 pageNumber: template03JS.page,
                 size: size,
-                publisher: template03JS.keyword,
-                theme: template03JS.param.tag
+                scoreMin: 0.8,
+                scoreMax: 1.0
             }
+            // 선택된 모든 필터 파라미터를 obj에 동적 할당
+            Object.keys(template03JS.param).forEach(key => {
+                const values = template03JS.param[key];
+                if (values && values.length > 0) {
+                    obj[key] = values; // 값이 있을 때만 담기
+                }
+            });
+
             return await Http.get('/api/portal/integration-dataset/relations-page', obj);
         },
 
@@ -357,7 +376,6 @@
         },
 
         fnPage: function(selectPage, clearSidebar) {
-            template03JS.getSearchData();
             template03JS.page = selectPage;
             template03JS.pageList(clearSidebar);
         },
@@ -368,9 +386,15 @@
             else if(selectTab === "list") { template03JS.dom.showList.show(); template03JS.dom.showCard.hide(); }
         },
 
-        getSearchData: function () {
-            // 검색어
-            template03JS.keyword = $('#keyword').val() || null;
+        // 필터 리셋 함수
+        fnReset: function() {
+            // 1. 파라미터 객체 초기화
+            this.param = {};
+
+            // 2. 사이드바 UI 재생성 (체크박스 해제 등을 위해 다시 그림)
+            // => {true}를 넘겨서 사이드바를 새로 고침
+            this.page = 1;
+            this.pageList(true);
         },
     }
 
@@ -379,15 +403,20 @@
         // 검색어 검색
         $('#searchForm').on('keypress', function(event) {
             if (event.key === 'Enter') {
-                event.preventDefault(); // 기본 동작(폼 제출) 막기
-                template03JS.keyword = $('#keyword').val();
+                event.preventDefault();
                 template03JS.fnPage(1, false);
             }
         });
+
         $("#search-button").on('click', function (event) {
            event.preventDefault();
-           template03JS.keyword = $('#keyword').val();
            template03JS.fnPage(1, false);
+        });
+
+        // 리셋 버튼 클릭 이벤트
+        $("#btn-filter-reset").on('click', function (event) {
+            event.preventDefault();
+            template03JS.fnReset();
         });
 
     });

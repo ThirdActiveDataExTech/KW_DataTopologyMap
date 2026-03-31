@@ -9,26 +9,35 @@ import io.netty.handler.timeout.ReadTimeoutHandler;
 import io.netty.handler.timeout.WriteTimeoutHandler;
 import kware.apps.mobigen.mobigen.ApiException;
 import kware.apps.mobigen.mobigen.dto.request.meta.SearchMetaValuesRequest;
-import kware.apps.mobigen.mobigen.dto.request.metadata.*;
+import kware.apps.mobigen.mobigen.dto.request.metadata.DeleteMetadatasRequest;
+import kware.apps.mobigen.mobigen.dto.request.metadata.DownloadMetadataFileRequest;
+import kware.apps.mobigen.mobigen.dto.request.metadata.SearchMetadataViewRequest;
+import kware.apps.mobigen.mobigen.dto.request.metadata.change.ChangeMetadataRequest;
+import kware.apps.mobigen.mobigen.dto.request.metadata.create.CreateMetadataRequest;
+import kware.apps.mobigen.mobigen.dto.request.metadata.search.SearchMetadataListRequest;
 import kware.apps.mobigen.mobigen.dto.request.pckge.PackageExportRequest;
 import kware.apps.mobigen.mobigen.dto.request.rawdata.*;
+import kware.apps.mobigen.mobigen.dto.request.rawdata.change.ChangeRawdataRequest;
 import kware.apps.mobigen.mobigen.dto.request.recommendation.SearchRecommendationListRequest;
 import kware.apps.mobigen.mobigen.dto.request.relation.SearchRelationListRequest;
 import kware.apps.mobigen.mobigen.dto.response.ApiResponse;
 import kware.apps.mobigen.mobigen.dto.response.meta.MetaKeysListResponse;
 import kware.apps.mobigen.mobigen.dto.response.meta.MetaValuesListResponse;
 import kware.apps.mobigen.mobigen.dto.response.metadata.*;
-import kware.apps.mobigen.mobigen.dto.response.pckge.PackageExportResponse;
 import kware.apps.mobigen.mobigen.dto.response.pckge.PackageImportResponse;
 import kware.apps.mobigen.mobigen.dto.response.rawdata.*;
 import kware.apps.mobigen.mobigen.dto.response.recommendation.RecommendationListResponse;
 import kware.apps.mobigen.mobigen.dto.response.relation.RelationListResponse;
 import kware.apps.mobigen.mobigen.dto.url.ExternalUrl;
+import kware.common.exception.SimpleException;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.MultipartBodyBuilder;
 import org.springframework.http.client.reactive.ReactorClientHttpConnector;
 import org.springframework.stereotype.Service;
@@ -48,37 +57,76 @@ import java.util.concurrent.TimeUnit;
 @Service
 public class MobigenExternalApiService {
 
-    private final String BASE_URL = "http://192.168.107.27:8000/v1";
+    private final WebClient WEB_CLIENT; // final 유지
 
     private static final int CONNECT_TIMEOUT_MILLIS = 5000;   // 서버와의 TCP 연결 시도 시간. 5초 안에 서버 연결 안 되면 실패 처리
     private static final int READ_WRITE_TIMEOUT_MILLIS = 10000; // 연결 후 읽기/쓰기가 이 시간 안에 안 되면 실패
     private static final Duration RESPONSE_TIMEOUT = Duration.ofSeconds(10); // 연결된 후 전체 응답 대기 시간. 10초 안에 응답 없으면 실패 처리
 
-    private final WebClient WEB_CLIENT = WebClient.builder()
+    private static final int ERROR_CODE = 9999;
+    public MobigenExternalApiService(@Value("${mobigen.url}") String BASE_URL) {
+        this.WEB_CLIENT = WebClient.builder()
             .baseUrl(BASE_URL)
             .clientConnector(new ReactorClientHttpConnector(    //  {WebClient}의 비동기 HTTP 클라이언트(Netty) 설정
-                    HttpClient.create()
-                            .followRedirect(true)
-                            .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, CONNECT_TIMEOUT_MILLIS)   // TCP 연결 자체가 몇 초 안에 안 되면 연결 실패 처리
-                            .responseTimeout(RESPONSE_TIMEOUT)                                      // 서버와 연결은 됐지만, 서버가 느려서 응답이 10초 안에 안넘어오면 실패
-                            .doOnConnected(conn ->
-                                conn                                                                                          // 연결 후 동작을 정의 -> Netty ChannelHandler 추가를 통해 I/O 읽기 및 쓰기 타임아웃 설정
-                                  .addHandlerLast(new ReadTimeoutHandler(READ_WRITE_TIMEOUT_MILLIS, TimeUnit.MILLISECONDS))   // (읽기) 너무 읽는 시간이 오래 걸리면 실패 처리
-                                  .addHandlerLast(new WriteTimeoutHandler(READ_WRITE_TIMEOUT_MILLIS, TimeUnit.MILLISECONDS))  // (쓰기) 너무 쓰는데 오래 걸리면 실패 처리
-                            )
-            ))
-            .build();
+                HttpClient.create()
+                    .followRedirect(true)
+                    .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, CONNECT_TIMEOUT_MILLIS)   // TCP 연결 자체가 몇 초 안에 안 되면 연결 실패 처리
+                    .responseTimeout(RESPONSE_TIMEOUT)                                      // 서버와 연결은 됐지만, 서버가 느려서 응답이 10초 안에 안넘어오면 실패
+                    .doOnConnected(conn ->
+                        conn                                                                                          // 연결 후 동작을 정의 -> Netty ChannelHandler 추가를 통해 I/O 읽기 및 쓰기 타임아웃 설정
+                            .addHandlerLast(new ReadTimeoutHandler(READ_WRITE_TIMEOUT_MILLIS, TimeUnit.MILLISECONDS))   // (읽기) 너무 읽는 시간이 오래 걸리면 실패 처리
+                            .addHandlerLast(new WriteTimeoutHandler(READ_WRITE_TIMEOUT_MILLIS, TimeUnit.MILLISECONDS))  // (쓰기) 너무 쓰는데 오래 걸리면 실패 처리
+                    )
+        ))
+        .build();
+    }
 
     private String extractDetail(String bodyStr) {
+        if (bodyStr == null || bodyStr.isBlank()) return "응답 데이터가 없습니다.";
+
         try {
             ObjectMapper mapper = new ObjectMapper();
             JsonNode root = mapper.readTree(bodyStr);
-            if (root.has("detail")) return root.get("detail").asText();
-            else if (root.has("message")) return root.get("message").asText();
-            else return bodyStr; // detail도 message도 없으면 그냥 전체 body 반환
+
+            // 1. 만약 전체가 문자열로 래핑되어 있다면 다시 파싱
+            if (root.isTextual()) {
+                root = mapper.readTree(root.asText());
+            }
+
+            // 2. detail 또는 message 필드 추출
+            if (root.has("detail")) {
+                return root.get("detail").asText();
+            } else if (root.has("message")) {
+                return root.get("message").asText();
+            }
+
+            return bodyStr;
         } catch (Exception e) {
-            return bodyStr; // JSON 파싱 실패 시 전체 body 반환
+            log.error("JSON 파싱 에러: {}", e.getMessage());
+            return bodyStr;
         }
+    }
+
+    /**
+     * [공통] 예외 객체를 분석하여 사용자 친화적인 메시지 반환
+     */
+    private String getErrorMessage(Exception e) {
+        Throwable cause = e.getCause();
+        if (cause instanceof io.netty.channel.ConnectTimeoutException) return "서버 연결(Connection Timeout) 실패";
+        if (cause instanceof java.util.concurrent.TimeoutException) return "응답(Response Timeout) 지연 발생";
+        if (e instanceof WebClientRequestException) return "요청(Request) 실패 - 서버 접근 불가";
+        return "알 수 없는 오류 발생 (API 서버 오류)";
+    }
+
+    /**
+     * [공통] 실패 응답 객체 생성
+     */
+    private <T> ApiResponse<T> createFailResponse(int code, String message) {
+        ApiResponse<T> fail = new ApiResponse<>();
+        fail.setCode(code);
+        fail.setMessage(message);
+        fail.setResult(null);
+        return fail;
     }
 
     private <T> ApiResponse<T> upload(String uri, MultipartBodyBuilder builder, ParameterizedTypeReference<ApiResponse<T>> typeRef) {
@@ -89,46 +137,20 @@ public class MobigenExternalApiService {
                     .contentType(MediaType.MULTIPART_FORM_DATA)
                     .body(BodyInserters.fromMultipartData(builder.build()))
                     .retrieve()
-                    .onStatus(HttpStatus::isError, res ->
-                            res.bodyToMono(String.class)
-                                    .flatMap(body -> {
-                                        log.error("[UPLOAD ERROR] status={} body={}", res.statusCode(), body);
-                                        ApiResponse<T> fail = new ApiResponse<>();
-                                        fail.setCode(String.valueOf(res.rawStatusCode()));
-                                        fail.setMessage(extractDetail(body));
-                                        fail.setResult(null);
-                                        return Mono.error(new ApiException(fail));
-                                    })
-                    )
+                    .onStatus(HttpStatus::isError, res -> res.bodyToMono(String.class).flatMap(body -> {
+                        log.error("[API ERROR] UPLOAD uri={} status={} body={}", uri, res.statusCode(), body);
+                        return Mono.error( new ApiException(createFailResponse(res.rawStatusCode(), extractDetail(body)), res.statusCode()) );
+                    }))
                     .bodyToMono(typeRef)
                     .block();
 
-            if (response == null) { // body가 null일 때 대비
-                ApiResponse<T> fail = new ApiResponse<>();
-                fail.setCode("9999");
-                fail.setMessage("서버 응답이 비어있습니다.");
-                fail.setResult(null);
-                return fail;
-            }
-
-            return response;
+            return (response != null) ? response : createFailResponse(ERROR_CODE, "서버 응답이 비어있습니다.");
 
         } catch (Exception e) {
-
-            String errorCode = "9999";
-            String errorMessage;
-            if (e.getCause() instanceof io.netty.channel.ConnectTimeoutException) errorMessage = "서버 연결(Connection Timeout) 실패";
-            else if (e.getCause() instanceof java.util.concurrent.TimeoutException) errorMessage = "응답(Response Timeout) 지연 발생";
-            else if (e instanceof WebClientRequestException) errorMessage = "요청(Request) 실패 - 서버 접근 불가";
-            else errorMessage = "알 수 없는 오류 발생 (API 서버 오류)";
-
-            log.error("[UPLOAD] API 통신 실패: uri={} / message={}", uri, errorMessage, e);
-
-            ApiResponse<T> fail = new ApiResponse<>();
-            fail.setCode(errorCode);
-            fail.setMessage(errorMessage);
-            fail.setResult(null);
-            return fail;
+            if (e instanceof ApiException) return (ApiResponse<T>) ((ApiException) e).getResponse(); // getResponse()로 변경
+            String msg = getErrorMessage(e);
+            log.error("[UPLOAD] API 통신 실패: uri={} / message={}", uri, msg, e);
+            return createFailResponse(ERROR_CODE, msg);
         }
     }
 
@@ -140,44 +162,44 @@ public class MobigenExternalApiService {
                     .contentType(MediaType.APPLICATION_JSON)
                     .body(BodyInserters.fromValue(bodyValue))
                     .retrieve()
-                    .onStatus(HttpStatus::isError, res ->
-                            res.bodyToMono(String.class).flatMap(body -> {
-                                log.error("[UPLOAD ERROR] status={} body={}", res.statusCode(), body);
-                                ApiResponse<T> fail = new ApiResponse<>();
-                                fail.setCode(String.valueOf(res.rawStatusCode()));
-                                fail.setMessage(extractDetail(body));
-                                fail.setResult(null);
-                                return Mono.error(new ApiException(fail));
-                            })
-                    )
+                    .onStatus(HttpStatus::isError, res -> res.bodyToMono(String.class).flatMap(body -> {
+                        log.error("[API ERROR] POST uri={} status={} body={}", uri, res.statusCode(), body);
+                        return Mono.error( new ApiException(createFailResponse(res.rawStatusCode(), extractDetail(body)), res.statusCode()) );
+                    }))
                     .bodyToMono(typeRef)
                     .block();
 
-            if (response == null) { // body가 null일 때 대비
-                ApiResponse<T> fail = new ApiResponse<>();
-                fail.setCode("9999");
-                fail.setMessage("서버 응답이 비어있습니다.");
-                fail.setResult(null);
-                return fail;
-            }
-
-            return response;
+            return (response != null) ? response : createFailResponse(ERROR_CODE, "서버 응답이 비어있습니다.");
 
         } catch (Exception e) {
+            if (e instanceof ApiException) return (ApiResponse<T>) ((ApiException) e).getResponse(); // getResponse()로 변경
+            String msg = getErrorMessage(e);
+            log.error("[POST] API 통신 실패: uri={} / message={}", uri, msg, e);
+            return createFailResponse(ERROR_CODE, msg);
+        }
+    }
 
-            String errorCode = "9999";
-            String errorMessage;
-            if (e.getCause() instanceof io.netty.channel.ConnectTimeoutException) errorMessage = "서버 연결(Connection Timeout) 실패";
-            else if (e.getCause() instanceof java.util.concurrent.TimeoutException) errorMessage = "응답(Response Timeout) 지연 발생";
-            else if (e instanceof WebClientRequestException) errorMessage = "요청(Request) 실패 - 서버 접근 불가";
-            else errorMessage = "알 수 없는 오류 발생 (API 서버 오류)";
-            log.error("[POST] API 통신 실패: uri={} / message={}", uri, errorMessage, e);
+    private ResponseEntity<Resource> download(String uri, Object bodyValue) {
+        try {
+            return WEB_CLIENT
+                    .post()
+                    .uri(uri)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .bodyValue(bodyValue)
+                    .accept(MediaType.APPLICATION_OCTET_STREAM)
+                    .retrieve()
+                    .onStatus(HttpStatus::isError, res -> res.bodyToMono(String.class).flatMap(body -> {
+                        log.error("[API ERROR] DOWNLOAD uri={} status={} body={}", uri, res.statusCode(), body);
+                        return Mono.error(new SimpleException(extractDetail(body), HttpStatus.BAD_REQUEST));
+                    }))
+                    .toEntity(Resource.class)
+                    .block();
 
-            ApiResponse<T> fail = new ApiResponse<>();
-            fail.setCode(errorCode);
-            fail.setMessage(errorMessage);
-            fail.setResult(null);
-            return fail;
+        } catch (Exception e) {
+            if (e instanceof SimpleException) throw (SimpleException) e;
+            String msg = getErrorMessage(e);
+            log.error("[DOWNLOAD] API 통신 실패: uri={} / message={}", uri, msg, e);
+            throw new SimpleException(msg, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -187,8 +209,8 @@ public class MobigenExternalApiService {
      * @date        2025-09-23
      * @deacription 패키지 파일 다운로드
     **/
-    public ApiResponse<PackageExportResponse> packageExport(PackageExportRequest request) {
-        return post(ExternalUrl.PACKAGE_01, request, new ParameterizedTypeReference<ApiResponse<PackageExportResponse>>() {});
+    public ResponseEntity<Resource> packageExport(PackageExportRequest request) {
+        return download(ExternalUrl.PACKAGE_01, request);
     }
 
     /**
@@ -299,8 +321,8 @@ public class MobigenExternalApiService {
      * @date        2025-10-15
      * @deacription 특정 메타데이터 파일 다운로드
     **/
-    public ApiResponse<DownloadMetadataResponse> downloadMetadataFile(DownloadMetadataFileRequest request) throws IOException {
-        return post(ExternalUrl.METADATA_08, request, new ParameterizedTypeReference<ApiResponse<DownloadMetadataResponse>>() {});
+    public ResponseEntity<Resource> downloadMetadataFile(DownloadMetadataFileRequest request) throws IOException {
+        return download(ExternalUrl.METADATA_08, request);
     }
 
 
@@ -324,7 +346,6 @@ public class MobigenExternalApiService {
         MultipartBodyBuilder builder = new MultipartBodyBuilder();
         builder.part("action", request.getAction());
         builder.part("metadata_id", request.getMetadata_id());
-        builder.part("rawdata_format", request.getRawdata_format());
         builder.part("file", new FileSystemResource(filePath))
                 .filename(filePath.getFileName().toString())
                 .contentType(MediaType.APPLICATION_OCTET_STREAM);
@@ -367,8 +388,8 @@ public class MobigenExternalApiService {
      * @date        2025-09-23
      * @deacription 메타데이터 하위 원본데이터 파일 다운로드
     **/
-    public ApiResponse<DownloadRawdataResponse> downloadRawdata(DownloadRawdataRequest request) throws IOException {
-        return post(ExternalUrl.RAWDATA_07, request, new ParameterizedTypeReference<ApiResponse<DownloadRawdataResponse>>() {});
+    public ResponseEntity<Resource> downloadRawdata(DownloadRawdataRequest request) throws IOException {
+        return download(ExternalUrl.RAWDATA_07, request);
     }
 
 

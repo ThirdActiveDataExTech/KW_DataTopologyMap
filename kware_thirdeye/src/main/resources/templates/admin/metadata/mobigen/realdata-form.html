@@ -92,13 +92,14 @@
                       <h5 class="card-title mb-0">원본데이터파일 정보</h5>
                       <div>
                         <button type="button" id="edit-realdata" class="custom-button" disabled>수정</button>
+                        <button type="button" id="download-realdata" class="custom-button" disabled>다운로드</button>
                       </div>
                     </div>
                     <div id="empty-div" style="margin-top: 30px;">
                       <span>좌측에서 원본데이터파일을 선택해주세요.</span>
                     </div>
                     <div id="realdata-div" style="margin-top: 30px; display: none">
-                      <span>realdata</span>
+                      <div id="jsoneditor"></div>
                     </div>
                   </div>
                 </div>
@@ -123,6 +124,7 @@
     $(function () {
 
       mobigenDatasetRealdataJS.initTable();
+      mobigenDatasetRealdataJS.initExtdataJson();
 
       // ===============================
       // 목록 버튼
@@ -132,6 +134,13 @@
         if (isOk) {
           window.location.href = '/admin/metadata/dataset'
         }
+      });
+
+      // ===============================
+      // 원본데이터 파일 목록 삭제 버튼
+      // ===============================
+      $("#download-realdata").on('click', function () {
+        mobigenDatasetRealdataJS.downloadRawData();
       });
 
       // ===============================

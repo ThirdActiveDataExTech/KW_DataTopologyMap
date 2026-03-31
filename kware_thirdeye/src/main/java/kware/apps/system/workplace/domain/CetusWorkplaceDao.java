@@ -16,4 +16,8 @@ public class CetusWorkplaceDao extends SuperDao<CetusWorkplace> {
     public List<WorkplaceList> getWorkplaceList() {
         return selectList("getWorkplaceList");
     }
+
+    public Long getRecentWorkplace() {
+        return selectOne("getRecentWorkplace");
+    }
 }

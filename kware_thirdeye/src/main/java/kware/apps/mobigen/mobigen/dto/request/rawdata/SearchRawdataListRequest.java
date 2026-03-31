@@ -20,9 +20,9 @@ public class SearchRawdataListRequest {
     private String metadata_id;
     private PaginationRequest pagination;
 
-    public SearchRawdataListRequest(String metadata_id, PaginationRequest pagination) {
+    public SearchRawdataListRequest(String metadata_id, int page, int limit) {
         this.action = "list";
         this.metadata_id = metadata_id;
-        this.pagination = pagination;
+        this.pagination = new PaginationRequest(page, limit, false);
     }
 }

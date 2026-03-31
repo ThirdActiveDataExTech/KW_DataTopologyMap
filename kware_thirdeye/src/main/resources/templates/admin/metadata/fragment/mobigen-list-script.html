@@ -1,7 +1,52 @@
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <script th:inline="javascript">
 
-    console.log("mobigen dataset manage tab")
+    // ===============================
+    // search form > init, refresh
+    // ===============================
+    $(document).ready(function() {
+
+        // 인덱스를 활용한 Select2 데이터 변환
+        const serverTheme = /*[[${mapKeyValues.theme}]]*/ [];
+        const select2Data = serverTheme.map((item, index) => {
+            const themeName = item;
+            return {
+                id: themeName,
+                text: themeName
+            };
+        });
+
+        // Select2 초기화
+        const $themeSelect = $("#new-theme").select2({
+            placeholder: "주제 선택",
+            width: '100%',
+            data: select2Data,
+            tags: true,
+            maximumInputLength: 30,
+            language: {
+                noResults: () => "결과가 없습니다",
+            }
+        });
+
+        // 자동 검색 이벤트 바인딩
+        $('.search-event-item').not('.select2').on('change', function() {
+            mobigenDatasetListJS.table.submit();
+        });
+
+        // Select2 전용 change 이벤트
+        $themeSelect.on('change.select2', function() {
+            mobigenDatasetListJS.table.submit();
+        });
+
+        // 폼 리셋
+        $('#filter-reset-btn').on('click', function() {
+            $('#search-form-id')[0].reset();
+            $themeSelect.val(null).trigger('change.select2');
+            $('#start-date, #end-date').val('');
+            mobigenDatasetListJS.table.submit();
+        });
+    });
+
 
     $(document).ready(function() {
         const string = window.localStorage.getItem('mobigen_obj')

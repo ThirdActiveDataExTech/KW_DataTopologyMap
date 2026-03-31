@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+	<div class="modal modal-primary fade text-start" id="selectRawdataModal" tabindex="-1"
+         aria-labelledby="menuProgramModalTitle" data-bs-keyboard="false"
+         aria-hidden="true" data-bs-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title" id="menuProgramModalTitle">원본데이터 팝업</h4>
+        </div>
+        <div class="modal-body">
+          <span>* 원본데이터 선택없이도 다운로드가 가능합니다.</span>
+          <!-- s:table -->
+          <div class="table-responsive text-nowrap row">
+            <table id="rawdata-select-datatable" class="table table-bordered text-center table-hover">
+              <thead>
+                <tr>
+                  <th></th>
+                  <th>번호</th>
+                  <th>파일명</th>
+                  <th>사이즈</th>
+                  <th>확장자</th>
+                  <th>업로드 일시</th>
+                </tr>
+              </thead>
+            </table>
+          </div>
+          <!-- e:table -->
+        </div>
+        <div class="modal-footer">
+          <div class="custom-btn-wrap" style="justify-content: right; margin-top: 0px;">
+            <button type="button" class="custom-button" id="selectRawdataModal-cancel-btn">취소</button>
+            <button type="button" class="custom-button" id="selectRawdataModal-select-btn">다운로드</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</html>

@@ -17,7 +17,6 @@ import lombok.ToString;
 public class UploadRawdataResponse {
     private String rawdata_id;
     private String filename;
-    private int file_size;
-    private String updated_at;
-    private String metadata_id;
+    private String file_size;
+    private String uploaded_at;
 }

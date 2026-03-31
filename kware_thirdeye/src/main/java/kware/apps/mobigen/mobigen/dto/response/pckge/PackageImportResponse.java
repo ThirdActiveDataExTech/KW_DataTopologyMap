@@ -19,5 +19,5 @@ import java.util.List;
 @Getter @Setter @ToString
 public class PackageImportResponse {
     private MetadataResultResponse metadata;
-    private List<RawdataResultResponse> rawdata;
+    private RawdataResultResponse rawdata;
 }

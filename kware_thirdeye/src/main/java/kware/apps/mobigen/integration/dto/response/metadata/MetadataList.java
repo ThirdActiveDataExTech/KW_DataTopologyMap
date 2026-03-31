@@ -18,7 +18,8 @@ public class MetadataList {
     private String registrantId;    // 등록자
     private boolean isApproved;     // 이미 승인된 데이터인지
 
-    public MetadataList(String metadataId) {
+    public MetadataList(MetadataResultResponse metadataView, String metadataId) {
+        this.metadataView = metadataView;
         this.metadataId = metadataId;
     }
 

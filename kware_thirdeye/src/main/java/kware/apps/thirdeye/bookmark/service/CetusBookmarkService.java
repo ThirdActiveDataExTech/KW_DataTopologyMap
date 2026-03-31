@@ -8,7 +8,7 @@ import kware.apps.thirdeye.bookmark.dto.request.SearchUserBookMark;
 import kware.apps.thirdeye.bookmark.dto.request.SearchUserBookMarkToggle;
 import kware.apps.thirdeye.bookmark.dto.request.UserBookMarkToggle;
 import kware.apps.thirdeye.bookmark.dto.response.UserBookMarkList;
-import kware.apps.thirdeye.mobigen.approveddataset.dto.response.ApprovedDatasetView;
+import kware.apps.thirdeye.mobigen.approveddataset.dto.response.ApprovedDatasetItem;
 import kware.apps.thirdeye.mobigen.approveddataset.service.CetusApprovedDatasetService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,7 +30,7 @@ public class CetusBookMarkService {
         List<UserBookMarkList> userBookMarkList = dao.getUserBookMarkList(search);
         for ( UserBookMarkList userBookMark : userBookMarkList ) {
             Long approvedUid = userBookMark.getApprovedUid();
-            ApprovedDatasetView datasetView = approvedDatasetService.findApprovedDatasetView(approvedUid, false, false, false);
+            ApprovedDatasetItem datasetView = approvedDatasetService.findApprovedDatasetView(approvedUid);
             userBookMark.setDatasetView(datasetView);
         }
         return userBookMarkList;

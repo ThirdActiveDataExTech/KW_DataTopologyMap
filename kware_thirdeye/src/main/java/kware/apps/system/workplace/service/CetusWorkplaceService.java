@@ -47,4 +47,9 @@ public class CetusWorkplaceService {
         dao.insert(bean);
         return bean.getUid();
     }
+
+    @Transactional(readOnly = true)
+    public Long findRecentWorkplace() {
+        return dao.getRecentWorkplace();
+    }
 }

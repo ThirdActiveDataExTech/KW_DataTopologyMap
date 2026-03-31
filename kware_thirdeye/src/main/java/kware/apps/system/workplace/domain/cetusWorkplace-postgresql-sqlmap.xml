@@ -96,4 +96,12 @@
          ORDER BY CW.REG_DT DESC
     </select>
 
+    <select id="getRecentWorkplace" resultType="Long">
+        /* cetusWorkplace.getRecentWorkplace */
+        SELECT CW.UID
+          FROM CETUS_WORKPLACE CW
+         ORDER BY CW.REG_DT DESC
+         LIMIT 1
+    </select>
+
 </mapper>

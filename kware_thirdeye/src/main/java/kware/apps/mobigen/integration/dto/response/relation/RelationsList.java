@@ -16,7 +16,9 @@ public class RelationsList {
     private RelatedMetadataResponse relationMetadata;
     private List<FieldRelationsResponse> fieldRelations;
 
-    public RelationsList(String metadataId) {
+    public RelationsList(String metadataId, RelatedMetadataResponse relationMetadata, List<FieldRelationsResponse> fieldRelations) {
         this.metadataId = metadataId;
+        this.relationMetadata = relationMetadata;
+        this.fieldRelations = fieldRelations;
     }
 }

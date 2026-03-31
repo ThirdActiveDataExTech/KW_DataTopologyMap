@@ -18,6 +18,5 @@ import java.util.List;
 public class ChangeRawdata {
     private String rawdataId;
     private String metadataId;
-    private String description;
-    private List<String> tags;
+    private String extdata;
 }

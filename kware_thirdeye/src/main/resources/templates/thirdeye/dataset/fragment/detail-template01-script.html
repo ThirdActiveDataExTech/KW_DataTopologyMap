@@ -10,62 +10,83 @@
 
     var template01JS = {
 
+        metadataId: null,
+        metadataFileId: null,
         chartDom: null,
         chart: null,
-        metDataFiles: [],
+
+        rawDataFileTable: null,
+        selectRawDataTable: null,
+        rawDataTableTotalElements: 0,
 
         drawTab01: function (dataset) {
-            const extraJson = JSON.parse(dataset['extraJson'])
-            template01JS.drawSummaryDescription(extraJson);   // 메인 상단 디테일 영역 구성 + 추가 정보
-            template01JS.drawMetadataTab(dataset);            // tab1 > 메타데이터 탭
-            template01JS.drawExtraMetadata(dataset);          // tab1 > 추가 메타데이터 탭
-            template01JS.setDataTable(extraJson);             // tab1 > json 테이블 영역
+            const extraJsonString = dataset?.['datasetUi']?.['extraJson'] ?? "{}"
+            const extraJson = JSON.parse(extraJsonString)
+
+            // 메인 상단 디테일 영역 구성 + 추가 정보
+            template01JS.drawSummaryDescription(extraJson);
+
+            // tab1 > 메타데이터 탭
+            template01JS.drawMetadataTab(dataset);
+
+            // tab1 > 추가 메타데이터 탭
+            template01JS.drawExtraMetadata(dataset);
+
+            // tab1 > json 테이블 영역
+            template01JS.setDataTable(extraJson);
         },
 
+        // 데이터 > 메타데이터
         drawMetadataTab: async function (dataset) {
-
-            if(!dataset['metadataView']?.['packagedataFile']) {
-                $("#downloadPackage").prop('disabled', true).prop('readonly', true)
-            }
+            template01JS.metadataId = dataset?.['metadataView']?.['metadataId']
 
             /* ========= 1. 메타데이터 정보 =========*/
-            const metadataFile = dataset['metadataView']?.['metadataFile'] || dataset['metadataView']?.['packagedataFile']
-            if(metadataFile){
-                $("#metadata-file-id").val(metadataFile['fileId']);
-                $("#metadata-id").val(metadataFile['metadataId']);
-                $("#metadata-badge").text(metadataFile['extension']);
-                $("#metadata-desc").text(metadataFile['orgFileNm']);
-            }
+            template01JS.metadataFileId = dataset?.['metadataView']?.['metadataFile']?.['fileId'] ?? null
+            const metadataResponse = dataset?.['metadataView']?.['metadataResponse']
+            $("#metadata-badge").text("json");
+            $("#metadata-desc").text(`${metadataResponse?.['title']}` ?? "조회 도중 오류가 발생했습니다.");
 
             /* ========= 2. 실(원본)데이터 정보 =========*/
-
-            const rawdataFiles = dataset['metadataView']?.['rawdataFiles'] || []
-            if (rawdataFiles.length !== 0) {
-                const filesLength = rawdataFiles.length;
-                const title = (filesLength === 1) ? "신규데이터 (1건)" : `주기성 과거 데이터 ( ${filesLength}건 )`;
-                $("#metadata-file-history-title").text(title);
-                const $tbody = $("#metadata-history-table-body");
-                $tbody.empty(); // 초기화
-
-                rawdataFiles.forEach((data) => {
-                    const $tr = $("<tr>")
-                        .attr("data-meta", data['metadataId'])
-                        .attr("data-raw", data['rawdataId'])
-                        .append($("<td>").text(data['orgFileNm']))
-                        .append($("<td>").text(data['regDt']));
-                    $tbody.append($tr);
-                });
-            } else {
-                const $historyBox = $("#history-box")
-                $historyBox.empty();
-                $historyBox.append(`<span>정보가 없습니다.</span>`)
-            }
+            template01JS.initRawDataTable();
         },
 
-        drawExtraMetadata: function (dataset) {
-            const metadataStr = dataset?.['metadataView']?.['extdata'] || "{}"
-            const metadataObj = JSON.parse(metadataStr)
+        // 데이터 > 메타데이터 > 신규/주기성 메타데이터 테이블
+        initRawDataTable: function () {
+            template01JS.rawDataFileTable = new Table("rawdata-files-table")
+                .delUnUseParams()
+                .get("/api/portal/integration-dataset/rawdata-page")
+                .param("metadataId", () => template01JS.metadataId)
+                .switchDiv()
+                .add(new Column("rawdataId").width('5%').center().render((data, full) => full.listIndex))
+                .add(new Column("orgFileNm").left().render((data, full) => {
+                    return full?.['rawdataView']?.['filename'] ?? full['rawdataFile']?.['orgFileNm']
+                }))
+                .add(new Column("orgFileNm").left().render((data, full) => {
+                    return full?.['rawdataView']?.['file_size'] ?? full['rawdataFile']?.['fileSize']
+                }))
+                .add(new Column("orgFileNm").left().render((data, full) => {
+                    return full?.['rawdataView']?.['format'] ?? full['rawdataFile']?.['extension']
+                }))
+                .add(new Column("orgFileNm").left().render((data, full) => {
+                    return full?.['rawdataView']?.['uploaded_at'] ?? full['rawdataFile']?.['regDt']
+                }))
+                .afterInit(() => {
+                    const total = template01JS.rawDataFileTable._data.list.length ?? 0;
+                    const title = (total === 1) ? "신규데이터 (1건)" : `주기성 과거 데이터 ( ${total}건 )`;
+                    $("#metadata-file-history-title").text(title)
+                })
+                .selectable()
+                .select(function (data) {
+                    const metaId = data['metadataId']
+                    const rawId = data['rawdataId']
+                    template01JS.showRawdataFileInfoModal(metaId, rawId);
+                })
+                .init();
+        },
 
+        // 데이터 > 추가 메타데이터
+        drawExtraMetadata: function (dataset) {
+            const metadataValue = dataset?.['metadataView']?.['metadataResponse']
             const container = document.getElementById("jsoneditor");
             const options = {
                 mode: "view",  // view 모드로 읽기 전용
@@ -75,21 +96,26 @@
                 onModeChange: function (newMode, oldMode) { }
             };
             const editor = new JSONEditor(container, options);
-            editor.set(metadataObj);
+            editor.set(metadataValue);
         },
 
+        // 요약 정보
+        // 데이터 > 추가 설명
         drawSummaryDescription: async function (extraJson) {
-            const newSummary = extraJson['summary'].replace(/\n/g, "<br>");
+            const summaryString = extraJson?.['summary'] ?? ""
+            const newSummary = summaryString.replace(/\n/g, "<br>");
             const summary = (newSummary.length !== 0) ? newSummary : '해당 데이터에 대해 요약 정보가 없습니다.'
             $("#summary").html(summary);
 
-            const description = (extraJson['description'].length !== 0) ? extraJson['description'] : `<p>해당 데이터에 대해 추가 정보가 없습니다.</p>`
+            const descriptionString = extraJson?.['description'] ?? ""
+            const description = (descriptionString.length !== 0) ? extraJson['description'] : `<p>해당 데이터에 대해 추가 정보가 없습니다.</p>`
             let editor = new Editor("description", description, false);
             editor = await editor.init(true);
         },
 
+        // 데이터 > 하단 테이블 영역 (패키지 다운로드 버튼 하단)
         setDataTable: function (extraJson) {
-            const addInfo = extraJson?.['addInfo'] || [];
+            const addInfo = extraJson?.['addInfo'] ?? [];
             const $tableBody = $('#tab1-table-tbody');
             $tableBody.empty(); // 기존 내용 제거
 
@@ -116,97 +142,269 @@
             }
         },
 
-        showMetDataFileInfoModal: async function (metaId, rawId) {
-
+        // 데이터 > 메타데이터 > 원본데이터 목록 row 클릭 > 모달 열기
+        showRawdataFileInfoModal: async function (metaId, rawId) {
             $("#metadata-file-info").empty();
-            const obj = { metadataId: metaId, rawdataId: rawId }
-            Http.post(`/api/portal/integration-dataset/view-rawdata`, obj, true).then((res) => {
+            const obj = {
+                metadataId: metaId,
+                rawdataId: rawId
+            }
+            Http.post('/api/portal/integration-dataset/view-rawdata', obj, true).then((res) => {
                 if (!res) {
                     Util.alert("데이터를 찾을 수 없습니다.");
                     return;
                 }
+                const rawdataId = res?.['rawdataId']
+                const metadataId = res?.['metadataId']
+                const rawdataFileId = res?.['rawdataFile']?.['fileId'] ?? null
                 const infoList = [
-                    { key: '원본데이터 파일Id', value: res['rawdataFile']['fileId'] },
-                    { key: '원본데이터 파일경로', value: res['rawdataFile']['filePath'] },
-                    { key: '원본데이터 파일크기', value: res['rawdataFile']['fileSize'] },
-                    { key: '원본데이터 파일유형', value: res['rawdataFile']['fileType'] },
-                    { key: '원본데이터 파일이름', value: res['rawdataFile']['orgFileNm'] },
-                    { key: '원본데이터 다운로드횟수', value: res['rawdataFile']['downCnt'] },
-                    { key: '원본데이터 파일 등록일', value: res['rawdataFile']['regDt'] },
-                    { key: '원본데이터 파일 수정일', value: res['rawdataFile']['regDt'] }
-                ]
+                    { key: '원본데이터 Id', value: rawdataId },
+                    { key: '메타데이터 Id', value: metadataId },
+                    { key: '원본데이터 파일이름', value: res?.['rawdataResponse']?.['filename'] },
+                    { key: '원본데이터 파일크기', value: res?.['rawdataResponse']?.['file_size'] },
+                    { key: '원본데이터 파일유형', value: res?.['rawdataResponse']?.['format'] },
+                    { key: '원본데이터 다운로드횟수', value: res?.['rawdataResponse']?.['download_count'] },
+                    { key: '원본데이터 파일 등록일', value: res?.['rawdataResponse']?.['uploaded_at'] }
+                ];
+
                 let tableHtml = `<table style="width:100%; border-collapse: collapse; border: 1px solid #ccc;">`;
-                for (let i = 0; i < infoList.length; i += 2) {
-                    const first = infoList[i];
-                    const second = infoList[i + 1];
+                infoList.forEach(item => {
                     tableHtml += `<tr>
-                                    <td style="background-color: #2b292a24;">${first.key}</td>
-                                    <td style="vertical-align: middle;">${first.value}</td>`;
-                    if (second) tableHtml += `<td style="background-color: #2b292a24;">${second.key}</td>
-                                              <td style="vertical-align: middle;">${second.value}</td>`;
-                    else tableHtml += `<td></td><td></td>`; // 홀수 개일 때 빈 칸
-                    tableHtml += `</tr>`;
-                }
+                    <td style="background-color: #2b292a24; width: 30%; border: 1px solid #ccc; padding: 8px;">${item.key}</td>
+                    <td style="vertical-align: middle; border: 1px solid #ccc; padding: 8px;">${item.value ?? '-'}</td>
+                  </tr>`;
+                });
+
+                // 마지막 다운로드 버튼 행
                 tableHtml += `<tr>
-                                  <td style="background-color: #2b292a24;">원본데이터 파일 다운로드</td>
-                                  <td style="vertical-align: middle;">
+                                <td style="background-color: #2b292a24; border: 1px solid #ccc; padding: 8px;">원본데이터 파일 다운로드</td>
+                                <td style="vertical-align: middle; border: 1px solid #ccc; padding: 8px;">
                                     <button class="custom-button realdata-file-download"
-                                    data-file="${res['rawdataFile']['fileId']}"
-                                    data-meta="${res['metadataId']}"
-                                    data-raw="${res['rawdataId']}">
-                                      <i class="ti-cloud-down"></i> 다운로드
+                                            data-file="${rawdataFileId}"
+                                            data-meta="${metadataId}"
+                                            data-raw="${rawdataId}">
+                                        <i class="ti-cloud-down"></i> 다운로드
                                     </button>
-                                  </td>
-                              </tr>
-`
+                                </td>
+                            </tr>`;
+
                 tableHtml += `</table>`;
+
                 $("#metadata-file-info").html(tableHtml);
                 $("#metaDataFileInfoModal").modal('show');
             });
         },
 
+        // 패키지 다운로드
         packageDownloadBtnClickEvent: async function (metadataId, rawdataIds = []) {
-            // todo[mobigen] download package
-            const obj = { metadataId: metadataId, rawdataIds: rawdataIds }
-            const res = await Http.post('/api/portal/integration-dataset/download-package', obj, true)
-            console.log(">> res : ", res);
+            try {
+                // 1. 파라미터 구성 (배열 처리를 위해 URLSearchParams 반복 사용)
+                const params = new URLSearchParams();
+                params.append("metadataId", metadataId);
+                rawdataIds.forEach(id => params.append("rawdataIds", id));
+
+                // 2. fetch를 이용한 서버 체크 (에러 확인용)
+                const response = await fetch(`/api/portal/integration-dataset/download-package?${params.toString()}`, {
+                    method: 'GET'
+                });
+
+                // 3. HTTP 상태 코드 확인 (Exception Catch)
+                if (!response.ok) {
+                    const errorData = await response.text();
+                    throw new Error(errorData ?? `서버 에러가 발생했습니다. (Status: ${response.status})`);
+                }
+
+                // 4. 응답이 정상일 때만 실제 다운로드 실행
+                const blob = await response.blob();
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `package_${metadataId}.zip`; // 파일명 설정
+                document.body.appendChild(a);
+                a.click();
+                window.URL.revokeObjectURL(url);
+
+            } catch (error) {
+                // 5. 예외 발생 시 사용자 알림
+                console.error("Download Error:", error);
+                Util.alert(`${error.message}`);
+                $("#selectRawdataModal").modal('hide');
+            }
+        },
+
+        // 패키지 다운로드 > 원본데이터 선택 모달 테이블 초기화
+        selectRawDataTableInit: function () {
+            template01JS.selectRawDataTable = new Table('rawdata-select-datatable')
+                .delUnUseParams()
+                .get("/api/portal/integration-dataset/rawdata-page")
+                .param("metadataId", () => dataset.metadataId)
+                .switchDiv()
+                .checkbox("rawdataId")
+                .add(new Column("rawdataId").width('5%').center().render((data, full) => full.listIndex))
+                .add(new Column("orgFileNm").left().render((data, full) => {
+                    return full?.['rawdataView']?.['filename'] ?? full['rawdataFile']?.['orgFileNm']
+                }))
+                .add(new Column("orgFileNm").left().render((data, full) => {
+                    return full?.['rawdataView']?.['file_size'] ?? full['rawdataFile']?.['fileSize']
+                }))
+                .add(new Column("orgFileNm").left().render((data, full) => {
+                    return full?.['rawdataView']?.['format'] ?? full['rawdataFile']?.['extension']
+                }))
+                .add(new Column("orgFileNm").left().render((data, full) => {
+                    return full?.['rawdataView']?.['uploaded_at'] ?? full['rawdataFile']?.['regDt']
+                }))
+                .init()
+                .afterInit((res) => {
+                    $("#rawdata-select-datatable tbody").on("click", ".lc-check", template01JS.checkEvent);
+                    $("#rawdata-select-datatable thead .lc-check-all").on("click", template01JS.checkAllEvent);
+                    template01JS.rawDataTableTotalElements = template01JS.selectRawDataTable._data.list.length
+                })
+                .afterSubmit(() => {
+                    template01JS.rawDataTableTotalElements = template01JS.selectRawDataTable._data.list.length
+                    if ($("#rawdata-select-datatable .lc-check-all").prop("checked")) $("#rawdata-select-datatable .lc-check-all").prop("checked", false);
+                });
+        },
+
+        // 패키지 다운로드 > 원본데이터 선택 모달 테이블 > row 선택
+         getCheckRowLst: function() {
+            let lst = []
+            const chk = $('#selectRawdataModal input[type="checkbox"].lc-check:checked')
+            chk.toArray().forEach(checkbox => lst.push($(checkbox).data("num")))
+            return lst
+        },
+
+        // 패키지 다운로드 > 원본데이터 선택 모달 테이블 > 전체 체크박스 클릭 이벤트
+        checkAllEvent: function (event) {
+            event.stopPropagation();
+            const isChecked = $(this).is(":checked");
+            $('#selectRawdataModal input[type="checkbox"].lc-check').prop('checked', isChecked);
+        },
+
+        // 패키지 다운로드 > 원본데이터 선택 모달 테이블 > 개별 체크박스 클릭 이벤트
+        checkEvent: function (event) {
+            event.stopPropagation()
+            const checkbox = $(this);
+            checkbox.attr("checkbox", !checkbox.is(":checked"))
+            if(template01JS.getCheckRowLst().length === template01JS.rawDataTableTotalElements) $("#rawdata-select-datatable .lc-check-all").prop("checked", true)
+            else $("#rawdata-select-datatable .lc-check-all").prop("checked", false);
         }
     }
 
     $(function () {
 
+        // 패키지 다운로드
+        $("#downloadPackage").on('click', async function () {
+            $("#selectRawdataModal").modal('show');
+        });
+
+        // 패키지 다운로드 > 원본데이터셋 선택 모달 > 선택 버튼
+        $("#selectRawdataModal-select-btn").off('click').on('click', async function () {
+            // 체크된 rawdataId 값들을 수집
+            const selectedIds =template01JS.getCheckRowLst();
+            // 다운로드 로직 수행
+            await template01JS.packageDownloadBtnClickEvent(dataset['metadataId'], selectedIds);
+            $("#selectRawdataModal").modal('hide');
+        });
+
+        // 패키지 다운로드 > 원본데이터셋 선택 모달 > 취소 버튼
+        $("#selectRawdataModal-cancel-btn").off('click').on('click', function () {
+            $("#selectRawdataModal").modal('hide');
+        });
+
+        // 패키지 다운로드 > 원본데이터셋 선택 모달 > 열기
+        $("#selectRawdataModal").on("show.bs.modal", function () {
+            template01JS.selectRawDataTableInit(); // 테이블 초기화
+        });
+
+        // 패키지 다운로드 > 원본데이터셋 선택 모달 > 닫기
+        $("#selectRawdataModal").on("hide.bs.modal", function () {
+            template01JS.selectRawDataTable.destroy(); // 테이블 destroy
+        });
+
+        // 메타데이터 다운로드 버튼
         $("#metadata-download-btn").on('click', async function (e) {
-            const metadataFileId = $("#metadata-file-id").val();
-            const metadataId = $("#metadata-id").val()
-            const response = await Http.get(`/api/portal/dataset-file/check-file`, {"fileId": metadataFileId})
-            if (!response) Util.alert("해당 경로에 파일이 없습니다.")
-            else {
-                const obj = {metadataId, metadataFileId}
-                const query = new URLSearchParams(obj).toString();
-                window.location.href = `/api/portal/integration-dataset/download-metadata?${query}`
+            const metadataFileId = template01JS.metadataFileId ?? null
+            const metadataId = template01JS.metadataId
+
+            try {
+
+                const params = new URLSearchParams({ metadataFileId, metadataId });
+                const response = await fetch(`/api/portal/integration-dataset/download-metadata?${params.toString()}`);
+
+                if (!response.ok) throw new Error(`다운로드 실패 (Status: ${response.status})`);
+
+                // [개선] 헤더에서 파일명 추출 로직
+                const contentDisposition = response.headers.get('Content-Disposition');
+                let fileName = `package_${metadataId}.json`; // 기본값
+
+                if (contentDisposition && contentDisposition.includes('filename=')) {
+                    // filename="test.zip" 또는 filename=test.zip 형태에서 파일명만 추출
+                    const fileNameMatch = contentDisposition.match(/filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/);
+                    if (fileNameMatch && fileNameMatch[1]) {
+                        fileName = fileNameMatch[1].replace(/['"]/g, '');
+                        fileName = decodeURIComponent(fileName); // 한글 파일명 대응
+                    }
+                }
+
+                const blob = await response.blob();
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = fileName; // [적용] 서버에서 받아온 파일명 사용
+                document.body.appendChild(a);
+                a.click();
+                window.URL.revokeObjectURL(url);
+
+            } catch (error) {
+                // 5. 예외 발생 시 사용자 알림
+                console.error("Download Error:", error);
+                Util.alert(`${error.message}`);
             }
         });
 
-        $(document).on('click', `.history-table tbody tr`, function () {
-            const metaId = $(this).data("meta");
-            const rawId = $(this).data("raw");
-            template01JS.showMetDataFileInfoModal(metaId, rawId);
-        });
-
+        // 원본데이터 다운로드 버튼
         $(document).on('click', '.realdata-file-download', async function () {
-            const rawdataFileId = $(this).data('file');
+            const rawdataFileId = $(this).data('file') ?? null
             const rawdataId = $(this).data('raw');
             const metadataId = $(this).data('meta');
 
-            const response = await Http.get(`/api/portal/dataset-file/check-file`, {"fileId": rawdataFileId})
-            if (!response) Util.alert("해당 경로에 파일이 없습니다.")
-            else {
-                const obj = { metadataId, rawdataId, rawdataFileId }
-                const query = new URLSearchParams(obj).toString();
-                window.location.href = `/api/portal/integration-dataset/download-rawdata?${query}`
+            try {
+
+                const params = new URLSearchParams({ rawdataFileId, rawdataId, metadataId });
+                const response = await fetch(`/api/portal/integration-dataset/download-rawdata?${params.toString()}`);
+
+                if (!response.ok) throw new Error(`다운로드 실패 (Status: ${response.status})`);
+
+                // [개선] 헤더에서 파일명 추출 로직
+                const contentDisposition = response.headers.get('Content-Disposition');
+                let fileName = `package_${metadataId}.json`; // 기본값
+
+                if (contentDisposition && contentDisposition.includes('filename=')) {
+                    // filename="test.zip" 또는 filename=test.zip 형태에서 파일명만 추출
+                    const fileNameMatch = contentDisposition.match(/filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/);
+                    if (fileNameMatch && fileNameMatch[1]) {
+                        fileName = fileNameMatch[1].replace(/['"]/g, '');
+                        fileName = decodeURIComponent(fileName); // 한글 파일명 대응
+                    }
+                }
+
+                const blob = await response.blob();
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = fileName; // [적용] 서버에서 받아온 파일명 사용
+                document.body.appendChild(a);
+                a.click();
+                window.URL.revokeObjectURL(url);
+
+            } catch (error) {
+                // 5. 예외 발생 시 사용자 알림
+                console.error("Download Error:", error);
+                Util.alert(`${error.message}`);
             }
         })
 
+        // 원본데이터 파일 > 모달 > 닫기
         $("#close-btn").on('click', function () {
            $("#metaDataFileInfoModal").modal('hide');
         });

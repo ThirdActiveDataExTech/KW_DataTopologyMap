@@ -48,7 +48,7 @@
                             <input type="text" id="new-meta-filename" class="file-text" placeholder="선택된 파일 없음" readonly>
                             <button type="button" id="new-meta-clear" class="clear-file">×</button>
                         </div>
-                        <span style="font-size: 11px;color: #393838;">* xml, csv, pdf 형태만 업로드 가능합니다.</span>
+                        <span style="font-size: 11px;color: #393838;">* xml 형태만 업로드 가능합니다.</span>
                     </div>
                     <button type="button" class="file-btn" id="new-meta-upload-btn">메타데이터 업로드</button>
                     <div id="new-meta-uploader" style="display: none;"></div>
@@ -68,23 +68,23 @@
                         </div>
 
                         <!-- 2행 -->
-                        <div class="row select2-row">
+                        <!--<div class="row select2-row">
                             <div class="col-lg-12">
                                 <label for="new-tags">태그</label>
                                 <div class="mt-2">
                                     <select class="select2 round border_line" id="new-tags" multiple></select>
                                 </div>
                             </div>
-                        </div>
+                        </div>-->
 
                         <!-- 3행 -->
-                        <div class="row">
-                            <div class="col-lg-6 items">
-                                <label for="jsoneditor">메타데이터(JSON)</label>
-                                <!--<textarea id="new-extdata" name="extdata" class="form-control" style="height:200px;" required></textarea>-->
-                                <div id="jsoneditor" style="width: inherit; height: 400px;"></div>
-                            </div>
+                    <div class="row">
+                        <div class="col-lg-6 items">
+                            <label for="jsoneditor">메타데이터(JSON)</label>
+                            <span style="color: firebrick; font-size: 0.85rem;">* json안의 key값은 수정하지 마세요.</span>
+                            <div id="jsoneditor" style="width: inherit; height: 400px;"></div>
                         </div>
+                    </div>
                 </div>
 
                 <!-- 원본데이터 업로드 -->
@@ -95,7 +95,7 @@
                             <input type="text" id="new-data-filename" class="file-text" placeholder="선택된 파일 없음" readonly>
                             <button type="button" id="new-data-clear" class="clear-file">×</button>
                         </div>
-                        <span style="font-size: 11px;color: #393838;">* xml, csv, pdf 형태만 업로드 가능합니다.</span>
+                        <span style="font-size: 11px;color: #393838;">* xml 형태만 업로드 가능합니다.</span>
                     </div>
                     <button type="button" class="file-btn" id="new-data-upload-btn">원본데이터 업로드</button>
                     <div id="new-data-uploader" style="display: none;"></div>
@@ -115,7 +115,7 @@
 
         $(document).ready(function() {
 
-            $("#new-tags").select2({
+            /*$("#new-tags").select2({
                 placeholder: "태그 선택",
                 language: {
                     searching: function() {
@@ -157,7 +157,7 @@
                         newTag: true
                     }
                 },
-            });
+            });*/
         });
 
         $(function () {

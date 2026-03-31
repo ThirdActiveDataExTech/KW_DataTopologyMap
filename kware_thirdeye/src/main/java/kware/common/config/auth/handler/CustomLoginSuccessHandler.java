@@ -59,12 +59,20 @@ public class CustomLoginSuccessHandler implements AuthenticationSuccessHandler {
 		if ("127.0.0.1".equals(ip) || "::1".equals(ip) || "0:0:0:0:0:0:0:1".equals(ip)) loginRegion = "[내부] 로컬 접속";
 		else {
 			Map<String, Object> geoInfo = ipWhoService.getGeoInfo(ip);
-			if((Boolean) geoInfo.get("success")) {
-				String country = (String) geoInfo.get("country");
-				String city = (String) geoInfo.get("city");
-				loginRegion = country + " " + city;
+			// 1. null 체크 및 안전한 Boolean 비교
+			boolean isSuccess = geoInfo != null && Boolean.TRUE.equals(geoInfo.get("success"));
+			if (isSuccess) {
+				// 2. 값이 없을 경우를 대비해 기본값 처리
+				String country = String.valueOf(geoInfo.getOrDefault("country", "Unknown"));
+				String city = String.valueOf(geoInfo.getOrDefault("city", ""));
+				loginRegion = (country + " " + city).trim();
 			} else {
-				loginRegion = (String) geoInfo.get("message");		// why success fail
+				// 3. 실패 시 메시지 추출, geoInfo 자체가 null이거나 message가 없을 경우 대비
+				if (geoInfo != null && geoInfo.containsKey("message")) {
+					loginRegion = "Fail: " + geoInfo.get("message");
+				} else {
+					loginRegion = "Unknown Location (API Error)";
+				}
 			}
 		}
 

@@ -6,4 +6,8 @@ import lombok.Setter;
 @Getter @Setter
 public class SearchMetaValues {
     private String key;
+
+    public SearchMetaValues(String key) {
+        this.key = key;
+    }
 }

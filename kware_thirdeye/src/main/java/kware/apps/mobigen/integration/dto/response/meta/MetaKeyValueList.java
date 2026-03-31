@@ -14,6 +14,11 @@ public class MetaKeyValueList {
     private List<String> values;
     private Map<Long, String> maps;
 
+    public MetaKeyValueList(String filter, List<String> values) {
+        this.filter = filter;
+        this.values = values;
+    }
+
     public MetaKeyValueList(String filter) {
         this.filter = filter;
     }

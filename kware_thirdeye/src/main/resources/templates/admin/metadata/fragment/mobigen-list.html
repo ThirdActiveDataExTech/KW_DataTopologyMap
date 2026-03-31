@@ -3,28 +3,64 @@
     <div>
         <!-- s:search -->
         <form id="search-form-id">
-            <div class="topbar-container">
-                <div class="topbar-left">
-                    <span id="total-num"></span>
-                    <div class="btn-wrapper">
-                        <!--<div class="col-12 col-xl-12 mb-1 mb-lg-0">
-                          <div class="search_wrap">
-                            <input
-                                type="text"
-                                id="search_txt1"
-                                class="form-control round border_line custom-input"
-                                name="registrantId"
-                                placeholder="등록자 아이디"
-                            />
-                          </div>
-                        </div>-->
+            <div class="custom-top-container">
+                <div class="search-filter-section">
+                    <div class="filter-group">
+                        <div class="filter-item">
+                            <label>발행처</label>
+                            <select id="filter-publisher" class="form-select search-event-item filter-wide">
+                                <option value="">전체 발행처</option>
+                                <th:block th:each="pub : ${mapKeyValues.publisher}">
+                                    <option th:value="${pub}" th:text="${pub}"></option>
+                                </th:block>
+                            </select>
+                        </div>
+
+                        <div class="filter-item">
+                            <label for="new-theme">주제 검색 (다중)</label>
+                            <div class="select2-wrapper">
+                                <select class="select2 search-event-item filter-extra-wide" id="new-theme" multiple></select>
+                            </div>
+                        </div>
+
+                        <div class="filter-item">
+                            <label>수집 기간</label>
+                            <div class="date-range-container d-flex align-items-center gap-2">
+                                <input type="date" id="start-date" class="form-control search-event-item">
+                                <span class="date-separator">~</span>
+                                <input type="date" id="end-date" class="form-control search-event-item">
+                            </div>
+                        </div>
+
+                        <div class="filter-item">
+                            <label>정렬 기준</label>
+                            <select id="sort-type" class="form-select search-event-item sort-select">
+                                <option value="id">ID 순</option>
+                                <option value="title">제목 순</option>
+                                <option value="issued">발행일 순</option>
+                                <option value="modified">수정일 순</option>
+                                <option value="ingested_at">수집일 순</option>
+                                <option value="updated_at">업데이트 순</option>
+                            </select>
+                        </div>
+
+                        <div class="filter-item d-flex align-items-end">
+                            <button type="button" class="btn-reset" id="filter-reset-btn">
+                                <i class="fa fa-refresh" aria-hidden="true"></i>
+                            </button>
+                        </div>
                     </div>
                 </div>
-                <div class="topbar-right">
-                    <div class="btn-wrapper">
-                        <button type="button" class="custom-button m-2" id="package-new-btn">패키지<br>데이터셋 등록</button>
-                        <button type="button" class="custom-button m-2" id="new-btn">데이터셋 등록</button>
-                        <button type="button" class="custom-button m-2" id="delete-btn">데이터셋 삭제</button>
+
+                <div class="action-status-section">
+                    <div class="selection-info">
+                        <span class="total-text">총 <b id="total-num">0</b>건 중</span>
+                        <span class="selected-text"><b id="selected-num">0</b>건 선택됨</span>
+                    </div>
+                    <div class="action-buttons">
+                        <button type="button" class="custom-button" id="package-new-btn">패키지 데이터셋 등록</button>
+                        <button type="button" class="custom-button" id="new-btn">데이터셋 등록</button>
+                        <button type="button" class="custom-button" id="delete-btn">데이터셋 삭제</button>
                     </div>
                 </div>
             </div>
@@ -43,7 +79,7 @@
                         <th>진열등록여부</th>
                         <th>등록자</th>
                         <th>등록일</th>
-                        <!--<th>원본데이터파일<br>관리</th>-->
+                        <th>원본데이터파일<br>관리</th>
                     </tr>
                     </thead>
                 </table>

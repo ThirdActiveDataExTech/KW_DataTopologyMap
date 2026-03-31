@@ -24,7 +24,7 @@ configurations {
     }
 }
 
-repositories {
+/*repositories {
     //maven { url 'https://repo.spring.io/release' }
     mavenCentral()
     maven { url = uri('https://www.egovframe.go.kr/maven/') }
@@ -32,6 +32,16 @@ repositories {
         //url "http://172.30.1.4:8088/repository/kware-repo-release/"
         url "http://172.30.1.4:8088/nexus/repository/kware-repo-snapshot/"
         allowInsecureProtocol=true
+    }
+}*/
+repositories {
+    //maven { url 'https://repo.spring.io/release' }
+    mavenCentral()
+    /*maven {
+        url = uri('https://www.egovframe.go.kr/maven/')
+    }*/
+    flatDir {
+        dirs 'libs'
     }
 }
 
@@ -60,20 +70,39 @@ dependencies {
     */
     //}redis 세션 콘트롤
 
+    //대용량 파일 upload tus protocol
+    //{{kware
+    implementation files("libs/bigfile-common-0.0.22-SNAPSHOT-plain.jar")
+    implementation files("libs/tus-java-server-1.0.0-2.0.jar")
+    implementation 'io.jsonwebtoken:jjwt:0.9.1'
+    //}}
+
     implementation 'org.springframework.boot:spring-boot-starter-mail' //이메일 발송
 
     annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
 
     runtimeOnly 'org.postgresql:postgresql'                       //POSTGRESQL
-//    implementation group: 'com.microsoft.sqlserver', name: 'mssql-jdbc', version: '6.1.0.jre7'  //MSSQL
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
     implementation 'org.jodd:jodd-core:5.3.0'
 
-    implementation('egovframework.rte:egovframework.rte.fdl.cmmn:3.8.0') {
+    /*implementation('egovframework.rte:egovframework.rte.fdl.cmmn:3.8.0') {
         exclude group: 'egovframework.rte', module: 'egovframework.rte.fdl.logging'
     }
     implementation('egovframework.rte:egovframework.rte.psl.dataaccess:3.8.0') {
+        exclude group: 'egovframework.rte', module: 'egovframework.rte.fdl.logging'
+        exclude group: 'org.mybatis', module: 'mybatis'
+        exclude group: 'org.mybatis', module: 'mybatis-spring'
+        exclude group: 'javax', module: 'javaee-api'
+    }*/
+
+    // aop
+    implementation 'org.springframework.boot:spring-boot-starter-aop'
+
+    implementation(name: 'egovframework.rte.fdl.cmmn-3.9.0', ext: 'jar') {
+        exclude group: 'egovframework.rte', module: 'egovframework.rte.fdl.logging'
+    }
+    implementation(name: 'egovframework.rte.psl.dataaccess-3.8.0', ext: 'jar') {
         exclude group: 'egovframework.rte', module: 'egovframework.rte.fdl.logging'
         exclude group: 'org.mybatis', module: 'mybatis'
         exclude group: 'org.mybatis', module: 'mybatis-spring'
@@ -97,15 +126,6 @@ dependencies {
     implementation 'nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect'
 
     implementation 'io.jsonwebtoken:jjwt:0.9.1'
-
-    //대용량 파일 upload tus protocol
-    //implementation 'me.desair.tus:tus-java-server:1.0.0-2.0'
-    //{{kware
-    //implementation 'kware.common:bigfile-common:0.0.2'
-    implementation 'kware.common:bigfile-common:0.0.24-SNAPSHOT'
-    //implementation files("libs/kware.common.bigfile-common-0.0.24-SNAPSHOT.jar")
-    implementation 'io.jsonwebtoken:jjwt:0.9.1'
-    //}}
 
     // https://mvnrepository.com/artifact/org.apache.commons/commons-csv
     implementation 'org.apache.commons:commons-csv:1.9.0'

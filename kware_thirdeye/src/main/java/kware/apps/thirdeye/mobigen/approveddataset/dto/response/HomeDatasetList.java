@@ -2,6 +2,7 @@ package kware.apps.thirdeye.mobigen.approveddataset.dto.response;
 
 import kware.apps.mobigen.integration.dto.response.metadata.MetadataView;
 import kware.apps.thirdeye.mobigen.datasetui.dto.response.DatasetUiView;
+import kware.apps.thirdeye.mobigen.mainui.dto.response.MainUiView;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -9,33 +10,28 @@ import lombok.NoArgsConstructor;
 @Getter @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class HomeDatasetList {
 
-    private Long approvedUid;
-    private Long metadataId;
-
-    private Long categoryUid;
-    private String categoryNm;
-
-    private Long thumbUid;
-    private String thumbId;
-
+    private Long approvedUid;       // cetus_approved_dataset.uid (pk)
+    private String metadataId;      // 데이터셋 ID
+    private String approvedDt;      // 승인 일시
+    private String approverNm;      // 데이터 승인자 이름
     private String targetTpCd;      // 원본 데이터셋 저장 위치
     private String targetTpCdNm;    // 원본 데이터셋 저장 위치 설명
+    private Integer ratings;        // 데이터셋 의견/평점
+    private String bookmarkYn;      // 북마크 여부
+    private String deleteAt;        // 진열 등록 삭제 여부
 
-    private DatasetUiView uiView;
-    private MetadataView metadataView;
-
-    private String bookmarkYn;
-
-    private String approvedDt;
-    private String approverNm;
-
-    public void setUiView(DatasetUiView uiView) {
-        this.uiView = uiView;
-    }
-    public void setMetadataView(MetadataView metadataView){
+    private MetadataView metadataView;  // 메타데이터 정보
+    public void setMetadataView(MetadataView metadataView) {
         this.metadataView = metadataView;
     }
-    public void setTargetTpCdNm(String targetTpCdNm) {
-        this.targetTpCdNm = targetTpCdNm;
+
+    private DatasetUiView datasetUi;
+    public void setDatasetUi(DatasetUiView datasetUi) {
+        this.datasetUi = datasetUi;
+    }
+
+    private MainUiView mainUi;
+    public void setMainUi(MainUiView mainUi) {
+        this.mainUi = mainUi;
     }
 }

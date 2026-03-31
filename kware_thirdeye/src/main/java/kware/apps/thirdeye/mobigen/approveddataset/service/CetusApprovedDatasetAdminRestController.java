@@ -3,10 +3,10 @@ package kware.apps.thirdeye.mobigen.approveddataset.service;
 
 import cetus.bean.Page;
 import cetus.bean.Pageable;
-import kware.apps.thirdeye.mobigen.approveddataset.dto.request.ApprovedDatasetSearch;
+import kware.apps.thirdeye.mobigen.approveddataset.dto.request.SearchApprovedDataset;
 import kware.apps.thirdeye.mobigen.approveddataset.dto.request.DeleteApprovedDatasets;
 import kware.apps.thirdeye.mobigen.approveddataset.dto.request.SaveApprovedDataset;
-import kware.apps.thirdeye.mobigen.approveddataset.dto.response.ApprovedDatasetList;
+import kware.apps.thirdeye.mobigen.approveddataset.dto.response.ApprovedDatasetItem;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -27,8 +27,8 @@ public class CetusApprovedDatasetAdminRestController {
      * @date        2025-10-15
     **/
     @GetMapping("/page")
-    public ResponseEntity findDatasetPage(ApprovedDatasetSearch search, Pageable pageable) {
-        Page<ApprovedDatasetList> datasetPage = service.findDatasetPage(search, pageable);
+    public ResponseEntity findDatasetPage(SearchApprovedDataset search, Pageable pageable) {
+        Page<ApprovedDatasetItem> datasetPage = service.findDatasetPage(search, pageable);
         return ResponseEntity.ok(datasetPage);
     }
 

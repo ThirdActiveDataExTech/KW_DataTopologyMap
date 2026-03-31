@@ -1,143 +1,429 @@
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <script th:inline="javascript">
 
-    var template02JS = {
+    var template02FilterJS = {
 
-        onloadIframe: function() {
+        initDom: function () {
+            const $wrapper = $("#recommend-sidebar-wrapper-div")
+            $wrapper.empty();
+        },
 
-            const iframe = document.getElementById('swagger-frame');
-            const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
-            // 상단 헤더 제거
-            const style = document.createElement('style');
-            style.innerHTML = `
-                  .topbar, .information-container, .swagger-ui .scheme-container {
-                    display: none !important;
-                  }
-                  .models {
-                    display: none !important;
-                  }
-                  .swagger-ui .opblock-tag:hover {
-                    background: transparent !important;
-                    cursor: default !important;
-                  }
-                  button.expand-operation {
-                    display: none !important;
-                  }
+        init(type, filter_param, values, title) {
+            // 데이터가 아예 없거나 빈 객체/배열인 경우 처리
+            if (!values
+                || (Array.isArray(values) && values.length === 0)
+                || (typeof values === 'object' && Object.keys(values).length === 0)
+            ) {
+                this.initEmpty(title);
+                return;
+            }
 
-                  body {
-                    background: transparent !important;
-                  }
+            if(type === 'checkbox') {
+                template02FilterJS.checkbox.initCheckbox(filter_param, values, title);
+            } else if(type === 'select2') {
+                template02FilterJS.select2.initSelect2(filter_param, values, title);
+            }
+        },
 
-                  .swagger-ui .opblock .opblock-summary-method,
-                  .opblock-summary-path,
-                  .nostyle,
-                  .opblock-summary-description {
-                    font-family: "Pretendard", "Noto Sans KR", sans-serif !important;
-                  }
+        // 데이터가 없을 때 공통 UI
+        initEmpty: function(title) {
+            const $wrapper = $("#recommend-sidebar-wrapper-div");
+            const emptyHtml = `
+            <div class="sidebar-widget sidebar-widget-border mb-40 pb-35">
+                <div class="sidebar-widget-title mb-25"><h3>${title}</h3></div>
+                <div class="sidebar-list-style">
+                    <p style="color: #999; font-size: 14px; padding-left: 5px;">항목이 없습니다.</p>
+                </div>
+            </div>`;
+            $wrapper.append(emptyHtml);
+        },
 
-                  .renderedMarkdown {
-                    font-size: 14px !important;
-                    font-family: "Pretendard", "Noto Sans KR", sans-serif !important;
-                  }
+        checkbox: {
+            initCheckbox(filter_param, values, title) {
+                const $wrapper = $("#recommend-sidebar-wrapper-div");
+                const uniqueId = 'cb-' + filter_param + '-' + Date.now();
 
-                  .swagger-ui .parameters-col_description input[type=text] {
-                    font-size: 14px !important;
-                    font-family: "Pretendard", "Noto Sans KR", sans-serif !important;
-                  }
+                // 다현님이 보내주신 구조 그대로 적용
+                const container = $(`
+                <div id="sidebar-widgets-container-${uniqueId}">
+                    <div class="sidebar-widget sidebar-widget-border mb-40 pb-35" data-aos="fade-up">
+                        <div class="sidebar-widget-title mb-25"><h3>${title}</h3></div>
+                        <div data-unique-id="${uniqueId}" class="sidebar-widget-color sidebar-list-style"></div>
+                    </div>
+                </div>
+            `);
+                $wrapper.append(container);
 
-                  button.arrow-btn {
-                      background-color: transparent;
-                      border: none;
-                  }
+                const $dom = container.find(`div[data-unique-id="${uniqueId}"]`);
+                let $ul = $("<ul></ul>");
 
-                  .opblock-summary-path {
-                    padding: 0 20px 0px 10px !important;
-                    color: black !important;
-                    font-weight: 500 !important;
-                  }
+                // 1. 전체 선택 (디자인 포인트: font-weight: bold)
+                const allId = 'all-' + uniqueId;
+                $ul.append(`
+                <li>
+                    <a href="javascript:void(0);">
+                        <input type="checkbox" class="category-all" value="ALL" id="${allId}">
+                        <label for="${allId}" style="font-weight:bold; cursor:pointer;">전체 선택</label>
+                    </a>
+                </li>
+            `);
 
-                  .opblock-post:hover .opblock-summary-method,
-                  .opblock-post:hover .opblock-summary-path,
-                  .opblock-post:hover .opblock-summary-description {
-                    font-weight: bold !important;
-                  }
+                // 2. 개별 아이템 렌더링 (배열/객체 공통 처리)
+                const entries = Array.isArray(values) ? values.map(v => [v, v]) : Object.entries(values);
+                entries.forEach(([key, name]) => {
+                    const itemId = `item-${key}-${uniqueId}`;
+                    $ul.append(`
+                    <li>
+                        <a href="javascript:void(0);">
+                            <input type="checkbox" class="category-item" value="${key}" id="${itemId}">
+                            <label for="${itemId}" style="cursor:pointer;">${name}</label>
+                        </a>
+                    </li>
+                `);
+                });
+                $dom.append($ul);
 
-                  .opblock-put:hover .opblock-summary-method,
-                  .opblock-put:hover .opblock-summary-path,
-                  .opblock-put:hover .opblock-summary-description {
-                    font-weight: bold !important;
-                  }
+                // 3. 이벤트 바인딩: 위젯 컨테이너 단위로 스코프 한정
+                $(document).off('change.' + uniqueId).on('change.' + uniqueId, `div[data-unique-id="${uniqueId}"] input`, async function() {
+                    const $parent = $(this).closest(`div[data-unique-id="${uniqueId}"]`);
+                    const $items = $parent.find('.category-item');
+                    const $all = $parent.find('.category-all');
 
-                  .opblock-get:hover .opblock-summary-method,
-                  .opblock-get:hover .opblock-summary-path,
-                  .opblock-get:hover .opblock-summary-description {
-                    font-weight: bold !important;
-                  }
-
-                  .opblock-delete:hover .opblock-summary-method,
-                  .opblock-delete:hover .opblock-summary-path,
-                  .opblock-delete:hover .opblock-summary-description {
-                    font-weight: bold !important;
-                  }
-
-                  .opblock-post,
-                  .opblock-put,
-                  .opblock-get,
-                  .opblock-delete {
-                    border-radius: 8px !important;
-                  }
-
-                  .opblock-summary-description {
-                    color: gray !important;
-                  }
-
-                  .swagger-ui .opblock-tag {
-                    margin: 0 0 15px !important;
-                  }
-                  .swagger-ui .opblock-tag {
-                    border-bottom: none !important;
-                  }
-                  .opblock-summary {
-                    padding: 10px 10px 10px !important;
-                  }
-                  .opblock-summary-method {
-                    border-radius: 20px !important;
-                  }
-
-                  .swagger-ui table tbody tr td:first-of-type {
-                    min-width: 10em !important;
-                  }
-
-                  .parameters-container .table-container {
-                    overflow-x: auto !important;
-                    max-width: 100% !important;
-                  }
-                  .parameters-container .table-container table {
-                    min-width: 600px !important;
-                  }
-                  @media (max-width: 768px) {
-                    .table-container {
-                      overflow-x: auto !important;
+                    if ($(this).hasClass('category-all')) {
+                        $items.prop('checked', $(this).is(':checked'));
+                    } else {
+                        $all.prop('checked', $items.length === $items.filter(':checked').length);
                     }
-                  }
 
-                  .responses-inner {
-                    overflow-x: auto !important;
-                    max-width: 100% !important;
-                  }
-                  .responses-inner table {
-                    min-width: 600px !important;
-                  }
-                  @media (max-width: 768px) {
-                    .responses-inner {
-                      overflow-x: auto !important;
-                    }
-                  }
-                `;
-            iframeDoc.head.appendChild(style);
-        }
+                    // 글로벌 param 업데이트 및 페이지 갱신
+                    template02JS.param[filter_param] = $items.filter(':checked').map((i, el) => el.value).get();
+                    await template02JS.fnPage(1, false);
+                });
+            }
+        },
+
+        select2: {
+            initSelect2(filter_param, values, title) {
+                const $wrapper = $("#recommend-sidebar-wrapper-div");
+                const uniqueId = 'sel-' + filter_param + '-' + Date.now();
+                const container = $(`
+                <div class="sidebar-widget sidebar-widget-border mb-40 pb-35" data-aos="fade-up">
+                    <div class="sidebar-widget-title mb-25"><h3>${title}</h3></div>
+                    <div class="sidebar-list-style">
+                        <select class="select2 round border_line" data-unique-id="${uniqueId}" multiple style="width:100%"></select>
+                    </div>
+                </div>
+            `);
+                $wrapper.append(container);
+
+                const $select = container.find('select');
+                const entries = Array.isArray(values) ? values.map(v => [v, v]) : Object.entries(values);
+                entries.forEach(([key, name]) => $select.append(new Option(name, key)));
+
+                $select.select2({ placeholder: `${title} 검색` })
+                    .on('change', async function() {
+                        template02JS.param[filter_param] = $(this).val() || [];
+                        await template02JS.fnPage(1, false);
+                    });
+            }
+        },
 
     }
+
+
+    var template02JS = {
+
+        page: 1,
+        param : {}, // 검색 파라미터
+
+        dom: {
+            showList: $("#showing-recommend-list"),
+            showCard: $("#showing-recommend-card")
+        },
+
+        drawTemplate02: function() {
+            template02JS.dom.showList.hide();
+            template02JS.pageList(true);
+        },
+
+        // 페이지 그리기
+        pageList: async function (clearSidebar = true) {
+            template02JS.pageInit();
+            if (clearSidebar) await template02JS.createSidebar();
+
+            template02JS.getPageData(5).then((response) => {
+                template02JS.createList(response);
+            });
+            template02JS.getPageData(9).then((response) => {
+                template02JS.createCard(response);
+            });
+        },
+
+        pageInit: function () {
+            // showing text 초기화
+            template02JS.dom.showCard.text("");
+            template02JS.dom.showList.text("");
+
+            // list/card 초기화
+            $('#shop-recommend-2').empty();
+            $('#shop-recommend-1 .row').empty();
+
+            // pagination 초기화
+            $(".card-recommend-pagination").empty();
+        },
+
+        createSidebar: async function () {
+            template02FilterJS.initDom();
+            const response = await Http.get('/api/portal/integration-dataset/metakey-list');
+            const filters = response['filters']; // ['publisher', 'theme', 'tags', 'created_at']
+            for (const filter of filters) {
+                const res = await Http.get('/api/portal/integration-dataset/metakey-value-list', { key: filter });
+                template02JS.param[filter] = [];
+                const displayData = (res['maps'] && Object.keys(res['maps']).length > 0) ? res['maps'] : res['values'];
+                let uiType = (filter === 'tags') ? 'select2' : 'checkbox';
+                template02FilterJS.init(uiType, filter, displayData, filter);
+            }
+        },
+
+        getPageData: async function (size) {
+            const obj = {
+                pageNumber: template02JS.page,
+                size: size,
+                scoreMin: 0.8,
+                scoreMax: 1.0
+            }
+            // 선택된 모든 필터 파라미터를 obj에 동적 할당
+            Object.keys(template02JS.param).forEach(key => {
+                const values = template02JS.param[key];
+                if (values && values.length > 0) {
+                    obj[key] = values; // 값이 있을 때만 담기
+                }
+            });
+
+            return await Http.get('/api/portal/integration-dataset/recommendation-page', obj);
+        },
+
+        createList: function (response) {
+
+            const data = response['list']
+
+            const $container = $("#shop-recommend-2")
+            if( data.length !== 0 ) {
+
+                const obj = template02JS.createPagination(response, true);
+
+                data.forEach( content => {
+
+                    // a. 리스트 전체 감싸는 wrap
+                    const $shopListWrap = $('<div>', {
+                        class: 'page-list-wrap mb-30 aos-init aos-animate',
+                        'data-aos': 'fade-up',
+                        'data-aos-delay': '200'
+                    });
+
+                    // b. 리스트를 묶는 row
+                    const $row = $('<div>', { class: 'row' });
+
+                    // c. 각 한개의 리스트 형태 col => 이미지 영역
+                    const $col1 = $('<div>', { class: 'col-lg-4 col-sm-5' });
+                    const $productListImg = $('<div>', { class: 'page-list-img' });
+                    const $productLink = $('<a>', { href: 'javascript:void(0);' });
+                    const randomNumber = Math.floor(Math.random() * 3) + 1;  // 1, 2, 3 중 랜덤 선택
+                    const $productImage = $('<img>', {
+                        src: `/assets/images/page/list/data_0${randomNumber}.jpg`,
+                        alt: 'Product Style',
+                        class: 'portal-img',
+                    });
+                    $productLink.append($productImage);
+                    $productListImg.append($productLink);
+                    $col1.append($productListImg);
+
+                    // d. 제목 영역
+                    const title = content?.['recommendationResponse']?.['title']
+                    const $col2 = $('<div>', { class: 'col-lg-8 col-sm-7' });
+                    const $shopListContent = $('<div>', { class: 'page-list-content' });
+                    $shopListContent.append(
+                        $('<h3>').append(
+                            $('<a>', { href: 'javascript:void(0);' }).text(title)
+                        )
+                    );
+
+                    const reason = content?.['recommendationResponse']?.['reason']
+                    $shopListContent.append(
+                        $('<div>', { class: 'page-price' }).append(
+                            $('<span>').text(reason)
+                        )
+                    );
+
+                    // e. extdata 영역
+                    /*const extdata = JSON.parse(content['relationMetadata']['extdata']); // JSON string → 객체
+                    Object.entries(extdata).forEach(([key, value]) => {
+                        $shopListContent.append(
+                            $('<p>').text(`${key} : ${typeof value === 'object' ? JSON.stringify(value) : value}`)
+                        );
+                    });*/
+
+                    $col2.append($shopListContent);
+                    $row.append($col1, $col2);
+                    $shopListWrap.append($row);
+                    $container.append($shopListWrap);
+                });
+                $container.append(obj.pageDom);
+
+            } else {
+                $container.append('<div><p class="text-center">검색 결과가 없습니다.</p></div>');
+            }
+        },
+
+        createCard: function (response) {
+
+            const data = response['list']
+
+            if( data.length !== 0 ) {
+
+                const dataLength = data.length;
+                const obj = template02JS.createPagination(response, false);
+
+                data.forEach( content => {
+
+                    // a. 카드를 감싸게 될 col
+                    const $colDiv = $('<div>', { class: 'col-lg-4 col-md-4 col-sm-6 col-12' });
+
+                    // b. 1개의 카드 요소
+                    const $productWrap = $('<div>', { class: 'page-wrap mb-35' });
+                    const $productImg = $('<div>', { class: 'page-img img-zoom mb-25' });
+                    const $productLink = $('<a>', { href: 'javascript:void(0);' });
+
+                    // c. 썸네일 이미지
+                    const randomNumber = Math.floor(Math.random() * 3) + 1;  // 1, 2, 3 중 랜덤 선택
+                    const $productImage = $('<img>', {
+                        class: 'portal-img', src: `/assets/images/page/list/data_0${randomNumber}.jpg`, alt: ''
+                    });
+                    $productLink.append($productImage);
+                    $productImg.append($productLink);
+
+                    // d. 제목
+                    const title = content?.['recommendationResponse']?.['title']
+                    const reason = content?.['recommendationResponse']?.['reason']
+                    const $productContent = $('<div>', { class: 'page-content' });
+                    const $productTitle = $('<h3>').append($('<a>', { href: 'javascript:void(0);' }).text(title));
+                    const $productPrice = $('<div>', { class: 'page-price' }).append($('<span>').text(reason));
+
+                    $productContent.append($productTitle, $productPrice);
+                    $productWrap.append($productImg, $productContent);
+                    $colDiv.append($productWrap);
+                    $('#shop-recommend-1 .row').append($colDiv);
+                });
+                $('#shop-recommend-1 #card-pagination').html(obj.pageDom);
+
+            } else {
+                $('#shop-recommend-1 .row').append('<div><p class="text-center">검색 결과가 없습니다.</p></div>');
+            }
+        },
+
+        createPagination: function (response, isList = true) {
+
+            const totalCount = response['totalElements']
+            const obj = {
+                pageDom: null,
+                number: response['number'],
+                pageCount: response['countPage'],
+                totalPages: response['totalPages'],
+                startIndex: 0, endIndex: 0,
+                startPage: response['startPage'],
+                endPage: response['endPage']
+            }
+            obj.startIndex = (response['number'] - 1) * response['size'] + 1;
+            obj.endIndex = obj.startIndex + response['size'] - 1;
+
+            // 페이징 컨테이너 그리기
+            const $pagination = $('<div>', {
+                class: 'pagination-style-1 aos-init',
+                'data-aos': 'fade-up',
+                'data-aos-delay': '200'
+            });
+
+            // Create the list element
+            const $ul = $('<ul>');
+            for( let j = obj.startPage; j <= obj.endPage; j++ ) {
+                const $li = $('<li>').append($('<a>', {
+                    class: j == template02JS.page ? 'active' : '',
+                    href: `javascript: template02JS.fnPage(${j});`,
+                    text: j
+                }));
+                $ul.append($li);
+            }
+
+            // 이전페이지
+            if ( obj.startPage > 1 ) {
+                $ul.prepend($('<li>').append($('<a>', {
+                    class: 'next',
+                    href: `javascript: template02JS.fnPage(${obj.startPage - 1});`,
+                }).html('<i class="ti-angle-double-left "></i>')));
+            }
+
+            // 다음페이지
+            if ( obj.endPage < obj.totalPages ) {
+                $ul.append($('<li>').append($('<a>', {
+                    href: `javascript: template02JS.fnPage(${obj.endPage + 1});`,
+                    text: '»'
+                }).html('<i class="ti-angle-double-right "></i>')));
+            }
+
+            $pagination.append($ul);
+            obj.pageDom = $pagination;
+
+            if(isList) template02JS.dom.showList.text(`전체 ${totalCount}건 중 ${obj.startIndex}-${obj.endIndex > totalCount ? totalCount : obj.endIndex}`);
+            else template02JS.dom.showCard.text(`전체 ${totalCount}건 중 ${obj.startIndex}-${obj.endIndex > totalCount ? totalCount : obj.endIndex}`);
+
+            return obj;
+        },
+
+        fnPage: function(selectPage, clearSidebar) {
+            template02JS.page = selectPage;
+            template02JS.pageList(clearSidebar);
+        },
+
+        fnTab: function (selectTab) {
+            template02JS.fnPage(1, false);
+            if(selectTab === "card") { template02JS.dom.showCard.show(); template02JS.dom.showList.hide(); }
+            else if(selectTab === "list") { template02JS.dom.showList.show(); template02JS.dom.showCard.hide(); }
+        },
+
+        // 필터 리셋 함수
+        fnReset: function() {
+            // 1. 파라미터 객체 초기화
+            this.param = {};
+
+            // 2. 사이드바 UI 재생성 (체크박스 해제 등을 위해 다시 그림)
+            // => {true}를 넘겨서 사이드바를 새로 고침
+            this.page = 1;
+            this.pageList(true);
+        },
+    }
+
+    $(function () {
+
+        // 검색어 검색
+        $('#searchForm').on('keypress', function(event) {
+            if (event.key === 'Enter') {
+                event.preventDefault();
+                template02JS.fnPage(1, false);
+            }
+        });
+
+        $("#search-button").on('click', function (event) {
+            event.preventDefault();
+            template02JS.fnPage(1, false);
+        });
+
+        // 리셋 버튼 클릭 이벤트
+        $("#recommend-btn-filter-reset").on('click', function (event) {
+            event.preventDefault();
+            template02JS.fnReset();
+        });
+
+    });
 
 </script>
 </html>

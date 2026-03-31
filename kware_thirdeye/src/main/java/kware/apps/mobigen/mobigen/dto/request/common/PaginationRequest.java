@@ -3,6 +3,7 @@ package kware.apps.mobigen.mobigen.dto.request.common;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 /**
 * @fileName     PaginationRequest
@@ -12,13 +13,14 @@ import lombok.Setter;
 * @summary      [COMMON] 조회를 위한 페이징 요청 DTO
 **/
 
-@Getter @Setter
+@Getter @Setter @ToString
 public class PaginationRequest {
+
     private int page;
     private int limit;
 
-    public PaginationRequest(int page, int limit) {
-        this.page = page;
+    public PaginationRequest(int page, int limit, boolean startZero) {
+        this.page = startZero ? Math.max(page - 1, 0) : page;
         this.limit = limit;
     }
 }

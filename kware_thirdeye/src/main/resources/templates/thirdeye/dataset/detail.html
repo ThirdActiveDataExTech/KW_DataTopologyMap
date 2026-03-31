@@ -16,6 +16,23 @@
         .description .ck-editor__top { display: none; }
     </style>
     <style>
+        .btn-reset-style {
+            width: 100%;
+            padding: 12px;
+            background-color: #f8f9fa;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-weight: bold;
+            color: #333;
+            transition: all 0.3s;
+        }
+        .btn-reset-style:hover {
+            background-color: #e2e6ea;
+            color: #ff5151; /* 리셋 느낌의 강조색 */
+        }
+        .btn-reset-style i { margin-right: 5px; }
+    </style>
+    <style>
         #sidebar-widgets-container2 .sidebar-widget .sidebar-list-style ul li:last-child {
             margin: 0 0 14px !important;
             margin-left: 5px !important;
@@ -45,9 +62,11 @@
           <div class="page-details-img-wrap" data-aos="fade-up" data-aos-delay="200">
               <div>
                   <img id="dataImgUrl" class="portal-img"
-                       th:src="|/api/portal/files/view?fileId=${dataset?.thumbId}|"
+                       th:src="${dataset?.datasetUi?.thumbId != null}
+                                 ? |/api/portal/files/view?fileId=${dataset.datasetUi.thumbId}|
+                                 : '/assets/images/page/thumbnail_default.png'"
                        onerror="this.src='/assets/images/page/thumbnail_default.png'"
-                       alt="" />
+                       alt="썸네일" />
               </div>
           </div>
         </div>
@@ -57,7 +76,7 @@
 
                 <div class="row">
                   <div class="col-lg-6">
-                    <h2 id="contentTitle" th:text="${dataset?.metadataView?.title}"></h2>
+                      <h2 id="contentTitle" th:text="${dataset?.metadataView?.metadataResponse?.title}"></h2>
                   </div>
                   <div class="col-lg-6 d-flex justify-content-end" style="flex-direction: row; align-items: flex-start;">
                     <div class="page-details-action-wrap" style="margin-right: 17px !important;">
@@ -94,7 +113,7 @@
                   <span id="summary"></span>
                 </div>
 
-                <div class="page-details-meta data-description-area list-tag-pnl">
+                <!--<div class="page-details-meta data-description-area list-tag-pnl">
                   <ul>
                       <li>
                           <ul class="tag">
@@ -104,7 +123,7 @@
                           </ul>
                       </li>
                   </ul>
-                </div>
+                </div>-->
 
                 <div class="page-details-review">
                     <div class="page-rating" id="page-content-avg-rating">
@@ -124,7 +143,7 @@
     <div class="container">
         <div class="description-review-topbar nav" data-aos="fade-up" data-aos-delay="200">
             <a class="active" data-bs-toggle="tab" href="#des-details1"> 데이터 </a>
-            <!--<a data-bs-toggle="tab" href="#des-details2" class=""> API </a>-->
+            <a data-bs-toggle="tab" href="#des-details2" class=""> 추천 데이터 </a>
             <a data-bs-toggle="tab" href="#des-details3" class=""> 관련 데이터 </a>
             <a data-bs-toggle="tab" href="#des-details4" class=""> 문의/오류신고 </a>
         </div>
@@ -132,9 +151,9 @@
             <div id="des-details1" class="tab-pane active">
               <div th:replace="thirdeye/dataset/fragment/detail-template01::template01"></div>
             </div>
-            <!--<div id="des-details2" class="tab-pane">
+            <div id="des-details2" class="tab-pane">
                 <div th:replace="thirdeye/dataset/fragment/detail-template02::template02"></div>
-            </div>-->
+            </div>
             <div id="des-details3" class="tab-pane">
                 <div th:replace="thirdeye/dataset/fragment/detail-template03::template03"></div>
             </div>
@@ -172,6 +191,7 @@
     <script th:src="@{'https://cdn.jsdelivr.net/npm/echarts@latest/dist/echarts.min.js'}"></script>
     <script th:src="@{'/assets/js/page/thirdeye/dataset/dataset-detail.js'}"></script>
     <th:block th:replace="thirdeye/dataset/fragment/detail-template01-script::script"></th:block>
+    <th:block th:replace="thirdeye/dataset/fragment/detail-template02-script::script"></th:block>
     <th:block th:replace="thirdeye/dataset/fragment/detail-template03-script::script"></th:block>
     <th:block th:replace="thirdeye/dataset/fragment/detail-template04-script::script"></th:block>
     <script th:inline="javascript">
@@ -187,6 +207,9 @@
 
         // tab01 > table 초기화
         template01JS.drawTab01(dataset);
+
+        // tab02 초기화
+        template02JS.drawTemplate02();
 
         // tab03 초기화
         template03JS.drawTemplate03();
@@ -214,16 +237,10 @@
             window.location.href = '/portal/list'
         });
 
-        // 패키디 다운로드
-        $("#downloadPackage").on('click', async function () {
-            await template01JS.packageDownloadBtnClickEvent(dataset['metadataId'], []);
-        });
-
         // 데이터 수정하기
         $("#editMetadataUI").on('click', function () {
             window.location.href = `/admin/approved/dataset/form/${approvedUid}`
         });
-
     });
 
   </script>

@@ -9,11 +9,12 @@ import lombok.Setter;
 @Getter @Setter @NoArgsConstructor
 public class RecommendationList {
 
-    private String metadataId;
+    private String recommendationMedataId;
 
     private RecommendationsResponse recommendationResponse;
 
-    public RecommendationList(String  metadataId) {
-        this.metadataId = metadataId;
+    public RecommendationList(String  recommendationMedataId, RecommendationsResponse recommendationResponse) {
+        this.recommendationMedataId = recommendationMedataId;
+        this.recommendationResponse = recommendationResponse;
     }
 }

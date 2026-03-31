@@ -19,13 +19,13 @@ public class CetusMobigenDataset {
     }
 
     public CetusMobigenDataset(SaveMetadata request) {
-        this.title = request.getTitle();
+        this.title = "request.getTitle()";
         this.extdata = request.getExtdata();
     }
 
     public CetusMobigenDataset(String metadataId, ChangeMetadata request) {
         this.uid = Long.parseLong(metadataId);
-        this.title = request.getTitle();
+        this.title = "";//request.getTitle();
         this.extdata = request.getExtdata();
     }
 

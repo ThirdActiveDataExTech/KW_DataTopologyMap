@@ -71,8 +71,6 @@
                             <div>
                                 <div class="metadata-download-box" id="metadata-download-box">
                                     <div class="metadata-info">
-                                        <input type="hidden" id="metadata-file-id">
-                                        <input type="hidden" id="metadata-id">
                                         <span class="metadata-badge" id="metadata-badge"></span>
                                         <span class="metadata-desc" id="metadata-desc"></span>
                                     </div>
@@ -87,21 +85,20 @@
                                 <div class="history-box" id="history-box">
                                     <h3 class="history-title" id="metadata-file-history-title">주기성 과거 데이터 (44건)</h3>
                                     <!-- 스크롤 래퍼 -->
-                                    <div class="history-table-wrapper">
-                                        <table class="history-table" id="metadata-history-table">
-                                            <thead>
+                                    <div class="history-table-wrapper" style="padding: 5px;">
+                                        <div class="table-responsive text-nowrap">
+                                            <table class="table table-bordered" id="rawdata-files-table">
+                                                <thead>
                                                 <tr>
+                                                    <th>번호</th>
                                                     <th>파일명</th>
-                                                    <th>등록일</th>
+                                                    <th>사이즈</th>
+                                                    <th>확장자</th>
+                                                    <th>업로드 일시</th>
                                                 </tr>
-                                            </thead>
-                                            <tbody id="metadata-history-table-body">
-                                                <tr data-id="1">
-                                                    <td>소설웹소설_데이터_20240923.csv</td>
-                                                    <td>2024-09-23</td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
+                                                </thead>
+                                            </table>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -121,6 +118,7 @@
         </div>
     </div>
 
+    <th:block th:replace="thirdeye/dataset/modal/rawdata-select-table"></th:block>
     <th:block th:replace="thirdeye/dataset/modal/metadata-file-info"></th:block>
 
     <style>

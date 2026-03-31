@@ -2,28 +2,23 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="cetusApprovedDataset">
 
-    <select id="getDatasetPage" parameterType="ApprovedDatasetSearch" resultType="ApprovedDatasetList">
+    <select id="getDatasetPage" parameterType="SearchApprovedDataset" resultType="ApprovedDatasetItem">
         /* cetusApprovedDataset.getDatasetPage */
         SELECT CAD.UID AS APPROVED_UID
               ,CAD.METADATA_ID
               ,TO_CHAR(CAD.APPROVED_DT, 'YYYY-MM-DD HH:MM') AS APPROVED_DT
               ,CU_APP.USER_NM AS APPROVER_NM
               ,CAD.TARGET_TP_CD
+              ,CASE WHEN CAD.TARGET_TP_CD = 'MOBIGEN' THEN '모비젠'
+                    WHEN CAD.TARGET_TP_CD = 'KWARE' THEN '케이웨어'
+                END AS TARGET_TP_CD_NM
               ,( SELECT COALESCE(ROUND(SUM(CDM.RATINGS) / COUNT(*)), 0)
                    FROM CETUS_DATASET_COMMENT CDM
                   WHERE CDM.APPROVED_DATASET_UID = CAD.UID ) AS RATINGS
               ,CASE WHEN CDB.APPROVED_DATASET_UID IS NOT NULL THEN 'Y' ELSE 'N' END AS BOOKMARK_YN
-              ,CDU.CATEGORY_UID AS CATEGORY_UID
-              ,CDC.CATEGORY_NM AS CATEGORY_NM
-              ,CDMU.UID AS MAIN_UI_UID
-              ,CDMU.CODE AS MAIN_UI_CODE
-              ,CDMU.TYPE_CD AS MAIN_UI_TYPE_CD
-              ,CDU.SHOW_AT AS SHOW_AT
-              ,CDU.EXTRA_JSON AS EXTRA_JSON
-              ,CF.FILE_ID AS THUMB_ID
+              ,CAD.DELETE_AT
           FROM CETUS_APPROVED_DATASET CAD -- 진열관리 중인 데이터셋
           LEFT JOIN CETUS_DATASET_UI CDU ON CDU.APPROVED_DATASET_UID = CAD.UID -- 진열관리 중인 데이터셋의 UI
-          LEFT JOIN CETUS_FILE CF ON CF.FILE_UID = CDU.THUMB_UID AND CF.USE_AT = 'Y' AND CF.SAVED = 'Y' -- 진열관리 중인 데이터셋의 썸네일 이미지
           LEFT JOIN CETUS_USER CU_APP ON CU_APP.UID = CAD.APPROVER_UID -- 모비젠의 데이터셋을 진열등록한 유저
           LEFT JOIN CETUS_DATASET_MAIN_UI CDMU ON CDMU.UID = CDU.MAIN_UI_UID -- KWARE 포탈 시스템의 메인 UI
           LEFT JOIN CETUS_DATASET_CATEGORY CDC ON CDC.UID = CDU.CATEGORY_UID -- 진열관리 중인 데이터셋의 카테고리
@@ -40,8 +35,9 @@
            AND CAD.TARGET_TP_CD = #{dataTarType}
         </if>
         <if test="@Ognl@isNotEmpty(startDate) and @Ognl@isNotEmpty(endDate)">
-           AND CAD.APPROVED_DT BETWEEN #{startDate}::TIMESTAMP
-           AND (#{endDate}::DATE + INTERVAL '1 day' - INTERVAL '1 second')
+            AND CAD.APPROVED_DT >= #{startDate}::TIMESTAMP
+            /* 종료일에 1일을 더한 날의 '00:00:00' 미만으로 설정하여 해당 날짜 전체 포함 */
+            AND CAD.APPROVED_DT <![CDATA[>]]> (#{endDate}::DATE + INTERVAL '1 day')
         </if>
         <if test="@Ognl@isNotEmpty(categories)">
            AND CDC.UID IN
@@ -49,28 +45,17 @@
                #{categoryUid}
             </foreach>
         </if>
-        <if test="@Ognl@isNotEmpty(keyword)">
-           AND CAD.SEARCH_DATA ->> 'title' LIKE '%' || #{keyword} || '%'
-        </if>
-        <if test="@Ognl@isNotEmpty(tags)">
-           AND EXISTS (
-               SELECT 1
-                 FROM JSONB_ARRAY_ELEMENTS_TEXT(CAD.SEARCH_DATA -> 'tags') AS T(tagUid)
-                WHERE T.tagUid::INT8 IN <foreach collection="tags" item="tag" open="(" separator="," close=")"> #{tag} </foreach>
-           )
-        </if>
          ORDER BY CAD.APPROVED_DT DESC
         <if test="@Ognl@isNotEmpty(startNumber) and  @Ognl@isNotEmpty(endNumber)">
         OFFSET ${startNumber} LIMIT ${endNumber}
         </if>
     </select>
 
-    <select id="getDatasetPageCount" parameterType="ApprovedDatasetSearch" resultType="int">
+    <select id="getDatasetPageCount" parameterType="SearchApprovedDataset" resultType="int">
         /* cetusApprovedDataset.getDatasetPageCount */
         SELECT COUNT(*)
           FROM CETUS_APPROVED_DATASET CAD -- 진열관리 중인 데이터셋
           LEFT JOIN CETUS_DATASET_UI CDU ON CDU.APPROVED_DATASET_UID = CAD.UID -- 진열관리 중인 데이터셋의 UI
-          LEFT JOIN CETUS_FILE CF ON CF.FILE_UID = CDU.THUMB_UID AND CF.USE_AT = 'Y' AND CF.SAVED = 'Y' -- 진열관리 중인 데이터셋의 썸네일 이미지
           LEFT JOIN CETUS_USER CU_APP ON CU_APP.UID = CAD.APPROVER_UID -- 모비젠의 데이터셋을 진열등록한 유저
           LEFT JOIN CETUS_DATASET_MAIN_UI CDMU ON CDMU.UID = CDU.MAIN_UI_UID -- KWARE 포탈 시스템의 메인 UI
           LEFT JOIN CETUS_DATASET_CATEGORY CDC ON CDC.UID = CDU.CATEGORY_UID -- 진열관리 중인 데이터셋의 카테고리
@@ -87,8 +72,9 @@
            AND CAD.TARGET_TP_CD = #{dataTarType}
         </if>
         <if test="@Ognl@isNotEmpty(startDate) and @Ognl@isNotEmpty(endDate)">
-           AND CAD.APPROVED_DT BETWEEN #{startDate}::TIMESTAMP
-           AND (#{endDate}::DATE + INTERVAL '1 day' - INTERVAL '1 second')
+            AND CAD.APPROVED_DT >= #{startDate}::TIMESTAMP
+            /* 종료일에 1일을 더한 날의 '00:00:00' 미만으로 설정하여 해당 날짜 전체 포함 */
+            AND CAD.APPROVED_DT <![CDATA[>]]> (#{endDate}::DATE + INTERVAL '1 day')
         </if>
         <if test="@Ognl@isNotEmpty(categories)">
            AND CDC.UID IN
@@ -96,19 +82,9 @@
                #{categoryUid}
            </foreach>
         </if>
-        <if test="@Ognl@isNotEmpty(keyword)">
-           AND CAD.SEARCH_DATA ->> 'title' LIKE '%' || #{keyword} || '%'
-        </if>
-        <if test="@Ognl@isNotEmpty(tags)">
-            AND EXISTS (
-                SELECT 1
-                  FROM JSONB_ARRAY_ELEMENTS_TEXT(CAD.SEARCH_DATA -> 'tags') AS T(tagUid)
-                 WHERE T.tagUid::INT8 IN <foreach collection="tags" item="tag" open="(" separator="," close=")"> #{tag} </foreach>
-            )
-        </if>
     </select>
 
-    <select id="getMetadataIsApproved" resultType="Boolean" parameterType="SearchMetadataApproved">
+    <select id="getMetadataIsApproved" resultType="Boolean" parameterType="map">
         /* cetusApprovedDataset.getApprovedMetadataIdList */
         SELECT EXISTS (
             SELECT 1
@@ -138,26 +114,24 @@
         )
     </insert>
 
-    <select id="getApprovedDatasetView" parameterType="SearchApprovedDatasetView" resultType="ApprovedDatasetView">
+    <select id="getApprovedDatasetView" parameterType="map" resultType="ApprovedDatasetItem">
         /* cetusApprovedDataset.getApprovedDatasetView */
         SELECT CAD.UID AS APPROVED_UID
               ,CAD.METADATA_ID
-              ,CAD.WORKPLACE_UID
-              ,CAD.APPROVED_DT
-              ,CAD.APPROVER_UID
+              ,TO_CHAR(CAD.APPROVED_DT, 'YYYY-MM-DD HH:MM') AS APPROVED_DT
+              ,CU_APP.USER_NM AS APPROVER_NM
               ,CAD.TARGET_TP_CD
-              ,CDU.CATEGORY_UID AS CATEGORY_UID
-              ,CDC.CATEGORY_NM AS CATEGORY_NM
-              ,CF.FILE_ID AS THUMB_ID
+              ,CASE WHEN CAD.TARGET_TP_CD = 'MOBIGEN' THEN '모비젠'
+                    WHEN CAD.TARGET_TP_CD = 'KWARE' THEN '케이웨어'
+            END AS TARGET_TP_CD_NM
               ,( SELECT COALESCE(ROUND(SUM(CDM.RATINGS) / COUNT(*)), 0)
-                   FROM CETUS_DATASET_COMMENT CDM
-                  WHERE CDM.APPROVED_DATASET_UID = CAD.UID
-              ) AS RATINGS
+                 FROM CETUS_DATASET_COMMENT CDM
+                 WHERE CDM.APPROVED_DATASET_UID = CAD.UID ) AS RATINGS
               ,CASE WHEN CDB.APPROVED_DATASET_UID IS NOT NULL THEN 'Y' ELSE 'N' END AS BOOKMARK_YN
-              ,CDU.EXTRA_JSON
               ,CAD.DELETE_AT
           FROM CETUS_APPROVED_DATASET CAD -- 진열관리 중인 데이터셋
           LEFT JOIN CETUS_DATASET_UI CDU ON CDU.APPROVED_DATASET_UID = CAD.UID -- 진열관리 중인 데이터셋의 UI
+          LEFT JOIN CETUS_USER CU_APP ON CU_APP.UID = CAD.APPROVER_UID -- 모비젠의 데이터셋을 진열등록한 유저
           LEFT JOIN CETUS_DATASET_CATEGORY CDC ON CDC.UID = CDU.CATEGORY_UID -- 진열관리 중인 데이터셋의 카테고리
           LEFT JOIN CETUS_FILE CF ON CF.FILE_UID = CDU.THUMB_UID AND CF.USE_AT = 'Y' AND CF.SAVED = 'Y' -- 진열관리 중인 데이터셋의 썸네일 이미지
           LEFT JOIN CETUS_DATASET_BOOKMARK CDB ON CDB.APPROVED_DATASET_UID = CAD.UID AND CDB.USER_UID = #{userUid} -- 진열관리 중인 데이터셋에 대해 로그인 사용자의 북마크 여부
@@ -171,21 +145,24 @@
          WHERE UID = #{uid}
     </update>
 
-    <select id="getHomeDatasetList" parameterType="HomeDatasetSearch" resultType="HomeDatasetList">
+    <select id="getHomeDatasetList" parameterType="HomeDatasetSearch" resultType="ApprovedDatasetItem">
         /* cetusApprovedDataset.getHomeDatasetList */
         SELECT CAD.UID AS APPROVED_UID
-              ,CAD.METADATA_ID AS METADATA_ID
-              ,CDU.CATEGORY_UID AS CATEGORY_UID
-              ,CDC.CATEGORY_NM AS CATEGORY_NM
-              ,CDU.THUMB_UID AS THUMB_UID
-              ,CF.FILE_ID AS THUMB_ID
+              ,CAD.METADATA_ID
+              ,TO_CHAR(CAD.APPROVED_DT, 'YYYY-MM-DD HH:MM') AS APPROVED_DT
+              ,CU_APP.USER_NM AS APPROVER_NM
               ,CAD.TARGET_TP_CD
+              ,CASE WHEN CAD.TARGET_TP_CD = 'MOBIGEN' THEN '모비젠'
+                    WHEN CAD.TARGET_TP_CD = 'KWARE' THEN '케이웨어'
+                END AS TARGET_TP_CD_NM
+              ,( SELECT COALESCE(ROUND(SUM(CDM.RATINGS) / COUNT(*)), 0)
+                   FROM CETUS_DATASET_COMMENT CDM
+                  WHERE CDM.APPROVED_DATASET_UID = CAD.UID ) AS RATINGS
               ,CASE WHEN CDB.APPROVED_DATASET_UID IS NOT NULL THEN 'Y' ELSE 'N' END AS BOOKMARK_YN
-             ,TO_CHAR(CAD.APPROVED_DT, 'YYYY-MM-DD HH:MM') AS APPROVED_DT
-             ,CU.USER_NM AS APPROVER_NM
+              ,CAD.DELETE_AT
           FROM CETUS_APPROVED_DATASET CAD -- 진열관리 중인 데이터셋
          INNER JOIN CETUS_DATASET_UI CDU ON CAD.UID = CDU.APPROVED_DATASET_UID -- 진열관리 중인 데이터셋의 UI
-          LEFT JOIN CETUS_USER CU ON CU.UID = CAD.APPROVER_UID -- 모비젠의 데이터셋을 진열등록한 유저
+          LEFT JOIN CETUS_USER CU_APP ON CU_APP.UID = CAD.APPROVER_UID -- 모비젠의 데이터셋을 진열등록한 유저
           LEFT JOIN CETUS_DATASET_CATEGORY CDC ON CDC.UID = CDU.CATEGORY_UID -- 진열관리 중인 데이터셋의 카테고리
           LEFT JOIN CETUS_FILE CF ON CF.FILE_UID = CDU.THUMB_UID AND CF.USE_AT = 'Y' -- 진열관리 중인 데이터셋의 썸네일 이미지
           LEFT JOIN CETUS_DATASET_BOOKMARK CDB ON CDB.APPROVED_DATASET_UID = CAD.UID AND CDB.USER_UID = #{userUid} -- 진열관리 중인 데이터셋에 대해 로그인 사용자의 북마크 여부

@@ -7,7 +7,12 @@ import lombok.Setter;
 @Getter @Setter
 public class ApiResponse<T> {
 
-    private String code;
+    private int code;
     private String message;
     private T result;
+    private boolean isSuccess;
+
+    public boolean isSuccess() {
+        return this.code == ApiStatus.SUCCESS.getCode();
+    }
 }

@@ -10,6 +10,7 @@ import java.util.List;
 public class SearchMetadataPage {
 
     private String publisher;
+    private List<String> keyword;
     private List<String> theme;
     private String dateRangeStart;
     private String dateRangeEnd;
@@ -18,6 +19,7 @@ public class SearchMetadataPage {
     private int pageNumber;
     private int size;
 
+    private String sortField;           // id, title, issued, modified, ingested_at, updated_at, publisher
     private String sortOrder = "desc";
 
 }

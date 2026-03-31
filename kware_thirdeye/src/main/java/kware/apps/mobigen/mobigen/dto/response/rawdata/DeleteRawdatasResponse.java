@@ -17,5 +17,5 @@ import java.util.List;
 
 @Getter @Setter @ToString
 public class DeleteRawdatasResponse {
-    private List<String> deleted_ids;
+    private int deleted_count;
 }

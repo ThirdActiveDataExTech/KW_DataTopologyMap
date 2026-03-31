@@ -3,13 +3,14 @@ package kware.apps.thirdeye.mobigen.approveddataset.service;
 
 import cetus.bean.Page;
 import cetus.bean.Pageable;
-import kware.apps.thirdeye.mobigen.approveddataset.dto.request.ApprovedDatasetSearch;
 import kware.apps.thirdeye.mobigen.approveddataset.dto.request.HomeDatasetSearch;
-import kware.apps.thirdeye.mobigen.approveddataset.dto.response.ApprovedDatasetList;
-import kware.apps.thirdeye.mobigen.approveddataset.dto.response.HomeDatasetList;
+import kware.apps.thirdeye.mobigen.approveddataset.dto.request.SearchApprovedDataset;
+import kware.apps.thirdeye.mobigen.approveddataset.dto.response.ApprovedDatasetItem;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
@@ -29,8 +30,8 @@ public class CetusApprovedDatasetRestController {
      * @date        2025-10-15
     **/
     @GetMapping("/page")
-    public ResponseEntity findDatasetList(ApprovedDatasetSearch search, Pageable pageable) {
-        Page<ApprovedDatasetList> datasetPage = service.findDatasetPage(search, pageable);
+    public ResponseEntity findDatasetList(SearchApprovedDataset search, Pageable pageable) {
+        Page<ApprovedDatasetItem> datasetPage = service.findDatasetPage(search, pageable);
         return ResponseEntity.ok(datasetPage);
     }
 
@@ -46,7 +47,7 @@ public class CetusApprovedDatasetRestController {
     **/
     @GetMapping("/home")
     public ResponseEntity findHomeDatasetList(HomeDatasetSearch search) {
-        List<HomeDatasetList> list = service.findHomeDatasetList(search);
+        List<ApprovedDatasetItem> list = service.findHomeDatasetList(search);
         return ResponseEntity.ok(list);
     }
 }

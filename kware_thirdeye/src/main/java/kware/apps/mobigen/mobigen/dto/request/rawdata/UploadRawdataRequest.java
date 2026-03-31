@@ -15,11 +15,9 @@ import lombok.Setter;
 public class UploadRawdataRequest {
     private String action;              // "create"
     private String metadata_id;
-    private String rawdata_format;
 
-    public UploadRawdataRequest(String metadata_id, String rawdata_format) {
+    public UploadRawdataRequest(String metadata_id) {
         this.action = "create";
         this.metadata_id = metadata_id;
-        this.rawdata_format = rawdata_format;
     }
 }

@@ -6,7 +6,7 @@ import kware.apps.superrole.code.service.CetusCodeService;
 import kware.apps.system.user.dto.response.UserFullInfo;
 import kware.apps.system.user.service.CetusUserService;
 import kware.apps.thirdeye.enumstatus.UserAuthorCd;
-import kware.apps.thirdeye.mobigen.approveddataset.dto.response.ApprovedDatasetView;
+import kware.apps.thirdeye.mobigen.approveddataset.dto.response.ApprovedDatasetItem;
 import kware.apps.thirdeye.mobigen.approveddataset.service.CetusApprovedDatasetService;
 import kware.common.config.auth.dto.SessionUserInfo;
 import kware.common.config.auth.menu.MenuNavigationManager;
@@ -45,7 +45,7 @@ public class PortalController {
     public String openDetail(@PathVariable("approvedUid") Long approvedUid, Model model) {
         menuNavigationManager.renderingPage("/portal/list", "데이터셋 상세", false, model);
 
-        ApprovedDatasetView dataset = datasetService.findApprovedDatasetView(approvedUid, false, true, true);
+        ApprovedDatasetItem dataset = datasetService.findApprovedDatasetView(approvedUid);
         model.addAttribute("dataset", dataset);
         model.addAttribute("commentCodes", codeService.getCodesByParentCode("DATASET_COMMENT"));
 

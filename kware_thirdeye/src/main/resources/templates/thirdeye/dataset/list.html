@@ -12,6 +12,22 @@
 <th:block layout:fragment="head">
     <link rel="stylesheet" th:href="@{'/assets/css/page/thirdeye/dataset-list.css'}"/>
     <style>
+        .button-reset-full {
+            width: 100%;
+            padding: 15px;
+            background-color: #f9f9f9;
+            border: 1px solid #ebebeb;
+            font-weight: 700;
+            color: #333;
+            transition: all 0.3s ease;
+        }
+        .button-reset-full:hover {
+            background-color: #333;
+            color: #fff;
+        }
+        .button-reset-full i { margin-right: 8px; }
+    </style>
+    <style>
         .page-list-content .tag-content {
             cursor: pointer;
         }
@@ -102,14 +118,10 @@
                 <div class="col-lg-3">
 
                     <div class="sidebar-widget mb-40 aos-init aos-animate" data-aos="fade-up" data-aos-delay="200">
-                        <div class="search-wrap-2" style="display: flex; align-items: center; gap: 8px;">
-                            <div style="position: relative; flex: 1;">
-                                <form class="search-2-form" id="searchForm" action="#">
-                                    <input id="keyword" placeholder="컨텐츠 제목을 입력하세요" type="text" style="width: 100%;">
-                                    <button type="button" id="search-button" class="button-search"><i class="ti-search"></i></button>
-                                </form>
-                            </div>
-                            <button type="button" id="resetBtn" class="button-reset">초기화</button>
+                        <div class="reset-wrap" style="display: flex; justify-content: center;">
+                            <button type="button" id="resetBtn" class="button-reset-full">
+                                <i class="ti-reload"></i> 필터 초기화
+                            </button>
                         </div>
                     </div>
 

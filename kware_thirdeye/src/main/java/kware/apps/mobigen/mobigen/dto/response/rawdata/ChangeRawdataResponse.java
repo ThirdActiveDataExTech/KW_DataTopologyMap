@@ -4,8 +4,6 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-import java.util.List;
-
 /**
 * @fileName     ChangeRawdataResponse
 * @author       dahyeon
@@ -16,6 +14,4 @@ import java.util.List;
 
 @Getter @Setter @ToString
 public class ChangeRawdataResponse {
-    private String description;
-    private List<String> tags;
 }

@@ -1,4 +1,4 @@
-package kware.apps.mobigen.mobigen.dto.request.metadata;
+package kware.apps.mobigen.mobigen.dto.request.metadata.change;
 
 
 import lombok.Getter;
@@ -23,22 +23,5 @@ public class ChangeMetadataRequest {
         this.action = "update";
         this.metadata_id = metadata_id;
         this.field = field;
-    }
-
-    @Getter @Setter
-    public static class ChangeMetadataFieldRequest {
-        private String title;
-        private String issued;
-        private String modified;
-        private String identifier;
-        private String publisher;
-        private String keywords;
-        private String landing_page;
-        private String theme;
-        private String access_url;
-
-        public ChangeMetadataFieldRequest(String title) {
-            this.title = title;
-        }
     }
 }

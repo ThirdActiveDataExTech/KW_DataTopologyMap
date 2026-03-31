@@ -2,7 +2,7 @@ package kware.apps.thirdeye.mobigen.approveddataset.web;
 
 
 import kware.apps.thirdeye.mobigen.approveddataset.domain.ApprovedDatasetTargetTpCd;
-import kware.apps.thirdeye.mobigen.approveddataset.dto.response.ApprovedDatasetView;
+import kware.apps.thirdeye.mobigen.approveddataset.dto.response.ApprovedDatasetItem;
 import kware.apps.thirdeye.mobigen.approveddataset.service.CetusApprovedDatasetService;
 import kware.apps.thirdeye.mobigen.mainui.domain.DatasetMainUiType;
 import kware.apps.thirdeye.mobigen.mainui.dto.response.MainUiList;
@@ -56,7 +56,7 @@ public class CetusApprovedDatasetController {
         // 2. 진열등록/관리 중인 데이터셋 정보
         // => 데이터셋의 상세 정보 (by. 모비젠)
         // => 데이터셋의 화면 UI 정보
-        ApprovedDatasetView approvedDatasetView = service.findApprovedDatasetView(approvedUid, false, false, true);
+        ApprovedDatasetItem approvedDatasetView = service.findApprovedDatasetView(approvedUid);
         model.addAttribute("view", approvedDatasetView);
 
         return "admin/approved/form";

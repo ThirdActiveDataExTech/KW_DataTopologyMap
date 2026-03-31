@@ -8,7 +8,7 @@ import lombok.Setter;
 import java.util.List;
 
 /**
-* @fileName     ApprovedDatasetSearch
+* @fileName     SearchApprovedDataset
 * @author       dahyeon
 * @version      1.0.0
 * @date         2025-10-14
@@ -16,7 +16,7 @@ import java.util.List;
 **/
 
 @Getter @NoArgsConstructor(access = AccessLevel.PROTECTED) @Setter
-public class ApprovedDatasetSearch {
+public class SearchApprovedDataset {
 
     private Long workplaceUid;
     private Long userUid;
@@ -27,12 +27,11 @@ public class ApprovedDatasetSearch {
     private String endDate;
     private String keyword;
     private List<Long> categories;  // 카테고리 검색
-    private List<Long> tags;        // tag 검색
 
-    public ApprovedDatasetSearch( Long workplaceUid, Long userUid,
-                                  String showAt, String uiTypeCd, String dataTarType,
-                                  String startDate, String endDate,
-                                  String keyword, List<Long> categories, List<Long> tags ) {
+    public SearchApprovedDataset(Long workplaceUid, Long userUid,
+                                 String showAt, String uiTypeCd, String dataTarType,
+                                 String startDate, String endDate,
+                                 String keyword, List<Long> categories ) {
         this.workplaceUid = workplaceUid;
         this.userUid = userUid;
         this.showAt = showAt;
@@ -42,7 +41,6 @@ public class ApprovedDatasetSearch {
         this.endDate = endDate;
         this.keyword = keyword;
         this.categories = categories;
-        this.tags = tags;
     }
 
     public void setWorkplaceUid(Long workplaceUid) {

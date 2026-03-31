@@ -60,6 +60,22 @@ public class CetusDatasetFileService {
     }
 
     @Transactional
+    public void updateDownCntAndLog(String fileId, HttpServletRequest req) {
+
+        CetusDatasetFile datasetFile = fileDao.getFileInfoByFileId(fileId);
+
+        // file log
+        SessionUserInfo user = UserUtil.getUser(req);
+        String workerUid = user != null ? user.getUid().toString() : WebUtil.getIpAddress(req);
+        String workerNm = user != null ? user.getUserNm() : WebUtil.getIpAddress(req);
+        CetusDatasetFileLog datasetFileLog = new CetusDatasetFileLog(datasetFile.getFileUid(), datasetFile.getFileId(), workerUid, workerNm);
+
+        // insert and update download count
+        fileDao.increaseDownCnt(datasetFile);
+        logDao.insertLog(datasetFileLog);
+    }
+
+    @Transactional
     public ResponseEntity downloadMetaFile(String fileId, final HttpServletRequest req) {
         // 1. {fileId} -> 파일 정보
         CetusDatasetFile datasetFile = fileDao.getFileInfoByFileId(fileId);
@@ -74,15 +90,7 @@ public class CetusDatasetFileService {
             contentType = "application/octet-stream";
         }
 
-        // 3. file log
-        SessionUserInfo user = UserUtil.getUser(req);
-        String workerUid = user != null ? user.getUid().toString() : WebUtil.getIpAddress(req);
-        String workerNm = user != null ? user.getUserNm() : WebUtil.getIpAddress(req);
-        CetusDatasetFileLog datasetFileLog = new CetusDatasetFileLog(datasetFile.getFileUid(), datasetFile.getFileId(), workerUid, workerNm);
-
-        // 4. insert and update download count
-        fileDao.increaseDownCnt(datasetFile);
-        logDao.insertLog(datasetFileLog);
+        this.updateDownCntAndLog(fileId, req);
 
         // 5. return
         String encodedFileName = URLEncoder.encode(datasetFile.getOrgFileNm(), StandardCharsets.UTF_8).replace("+", "%20");

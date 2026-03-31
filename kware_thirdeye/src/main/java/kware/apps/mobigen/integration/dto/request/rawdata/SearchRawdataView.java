@@ -7,4 +7,5 @@ import lombok.Setter;
 public class SearchRawdataView {
     private String metadataId;
     private String rawdataId;
+
 }

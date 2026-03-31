@@ -3,6 +3,7 @@ package kware.apps.mobigen.mobigen.dto.request.common;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 /**
 * @fileName     SortRequest
@@ -12,7 +13,8 @@ import lombok.Setter;
 * @summary      [COMMON] 조회를 위한 정렬 요청 DTO
 **/
 
-@Getter @Setter @NoArgsConstructor
+@Getter @Setter @ToString
+@NoArgsConstructor
 public class SortFieldRequest {
     private String order;
     private String field;

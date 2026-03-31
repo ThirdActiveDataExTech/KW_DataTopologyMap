@@ -3,9 +3,6 @@ package kware.apps.mobigen.mobigen.dto.response.metadata;
 
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
-
-import java.util.List;
 
 /**
 * @fileName     DeleteMetadataResponse
@@ -15,7 +12,6 @@ import java.util.List;
 * @summary      [METADATA_02] 한개 이상의 메타데이터 삭제 응답 DTO
 **/
 
-@Getter @Setter @ToString
+@Getter @Setter
 public class DeleteMetadataResponse {
-    private List<String> deleted_ids;
 }

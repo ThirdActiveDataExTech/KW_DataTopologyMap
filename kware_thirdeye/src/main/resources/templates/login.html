@@ -40,8 +40,8 @@
                                 <div class="login-form-container">
                                     <div class="login-register-form">
                                         <form id="post-form" method="post" action="/loginProc">
-                                            <input type="text" name="userId" id="userId" placeholder="userId">
-                                            <input type="password" name="password" id="password" placeholder="password" style="margin-bottom: 10px !important;">
+                                            <input type="text" name="userId" id="userId" placeholder="userId" value="system">
+                                            <input type="password" name="password" id="password" placeholder="password" style="margin-bottom: 10px !important;" value="1234">
                                             <div th:if="${param.error}">
                                                 <p style="margin-top: 5px; color: red;" class="error-message" id="errorMessage"></p>
                                             </div>

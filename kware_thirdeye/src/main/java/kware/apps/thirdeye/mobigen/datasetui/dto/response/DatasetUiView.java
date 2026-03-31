@@ -17,5 +17,6 @@ public class DatasetUiView {
     private String thumbId;
     private String extraJson;
     private Long categoryUid;
+    private String categoryNm;
 
 }
