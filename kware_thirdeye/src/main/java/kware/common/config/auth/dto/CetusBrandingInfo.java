@@ -1,9 +1,9 @@
 package kware.common.config.auth.dto;
 
+import java.io.Serializable;
+
 import kware.apps.system.menu.dto.response.SessionMenuList;
 import lombok.Getter;
-
-import java.io.Serializable;
 
 @Getter
 public class CetusBrandingInfo implements Serializable {

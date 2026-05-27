@@ -1,0 +1,17 @@
+.gradle
+build/
+!build/libs/*.war
+!build/libs/*.jar
+bin/
+.settings/
+.classpath
+.project
+.svn/
+.agents/
+.gemini/
+.graphifyignore
+GEMINI.md
+node_modules/
+frontend/node_modules/
+frontend/build/
+*.log

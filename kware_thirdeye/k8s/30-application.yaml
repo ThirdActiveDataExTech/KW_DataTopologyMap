@@ -1,0 +1,62 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: thirdeye-app-svc
+  labels:
+    app: thirdeye-app
+spec:
+  type: NodePort # 외부 브라우저 접속을 위해 NodePort로 변경
+  externalTrafficPolicy: Cluster
+  ports:
+    - port: 9094
+      targetPort: 9094
+      nodePort: 30094 # 웹 접속용 포트 지정 (VM-IP:30094)
+  selector:
+    app: thirdeye-app
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: thirdeye-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: thirdeye-app
+  template:
+    metadata:
+      labels:
+        app: thirdeye-app
+    spec:
+      containers:
+        - name: thirdeye-app
+          image: rnd.kware.co.kr/kware-thirdeye:0.2.0 
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 9094
+          env:
+            - name: SPRING_PROFILES_ACTIVE
+              value: "kube"
+            - name: DB_HOST
+              value: "thirdeye-db-svc" 
+            - name: DB_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: thirdeye-db-secret
+                  key: DB_USERNAME
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: thirdeye-db-secret
+                  key: DB_PASSWORD
+            - name: REDIS_NODES
+              value: "thirdeye-redis-svc:6379" 
+            - name: TZ
+              value: Asia/Seoul
+          volumeMounts:
+            - name: app-data
+              mountPath: /app/data
+      volumes:
+        - name: app-data
+          persistentVolumeClaim:
+            claimName: app-data-pvc

@@ -1,0 +1,72 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: thirdeye-db-svc
+  labels:
+    app: thirdeye-db
+spec:
+  type: NodePort # 외부 DB 툴(DBeaver 등) 접속 허용
+  externalTrafficPolicy: Cluster
+  ports:
+    - port: 5432
+      targetPort: 5432
+      nodePort: 30543 # 외부 접속 포트 지정
+  selector:
+    app: thirdeye-db
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: thirdeye-db
+spec:
+  serviceName: thirdeye-db-svc
+  replicas: 1
+  selector:
+    matchLabels:
+      app: thirdeye-db
+  template:
+    metadata:
+      labels:
+        app: thirdeye-db
+    spec:
+      containers:
+        - name: postgres
+          image: postgres:14.5-alpine
+          ports:
+            - containerPort: 5432
+          env:
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: thirdeye-db-secret
+                  key: POSTGRES_SUPER_PASSWORD
+            - name: DB_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: thirdeye-db-secret
+                  key: DB_USERNAME
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: thirdeye-db-secret
+                  key: DB_PASSWORD
+            - name: TZ
+              value: Asia/Seoul
+          volumeMounts:
+            - name: db-data-final
+              mountPath: /var/lib/postgresql/data
+            - name: db-init-script
+              mountPath: /docker-entrypoint-initdb.d
+      volumes:
+        - name: db-init-script
+          configMap:
+            name: thirdeye-db-init-script
+  volumeClaimTemplates:
+    - metadata:
+        name: db-data-final
+      spec:
+        accessModes: [ "ReadWriteOnce" ]
+        storageClassName: thirdeye-storage-class
+        resources:
+          requests:
+            storage: 2Gi # 테스트 환경을 위해 용량 대폭 축소

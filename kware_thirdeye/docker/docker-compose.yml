@@ -1,0 +1,22 @@
+version: '3.8'
+
+services:
+  kware-thirdeye:
+    build:
+      context: ../
+      dockerfile: docker/Dockerfile
+    image: kware-thirdeye:latest
+    container_name: kware-thirdeye-app
+    ports:
+      - "9094:9094"
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+      - TZ=Asia/Seoul
+    volumes:
+      - ./config:/app/config
+      - ./logs:/app/logs
+    restart: always
+
+networks:
+  default:
+    name: kware-network

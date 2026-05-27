@@ -1,0 +1,25 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: app-data-pvc
+  namespace: thirdeye
+spec:
+  accessModes:
+    - ReadWriteMany  # NFS의 장점인 다중 포드 공유 설정
+  storageClassName: thirdeye-storage-class
+  resources:
+    requests:
+      storage: 5Gi
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: db-data-final-thirdeye-db-0
+  namespace: thirdeye
+spec:
+  accessModes:
+    - ReadWriteOnce  # DB는 데이터 무결성을 위해 단일 쓰기 권장
+  storageClassName: thirdeye-storage-class
+  resources:
+    requests:
+      storage: 2Gi

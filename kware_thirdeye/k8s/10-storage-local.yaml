@@ -1,0 +1,53 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: local-app-data-pv
+spec:
+  capacity:
+    storage: 5Gi
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: thirdeye-storage-class
+  hostPath:
+    path: /mnt/data/thirdeye/app  # 노드의 실제 경로 (없으면 생성됨)
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: local-db-data-pv
+spec:
+  capacity:
+    storage: 2Gi
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: thirdeye-storage-class
+  hostPath:
+    path: /mnt/data/thirdeye/db   # 노드의 실제 경로
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: app-data-pvc
+  namespace: thirdeye
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: thirdeye-storage-class
+  resources:
+    requests:
+      storage: 5Gi
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: db-data-final-thirdeye-db-0
+  namespace: thirdeye
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: thirdeye-storage-class
+  resources:
+    requests:
+      storage: 2Gi
