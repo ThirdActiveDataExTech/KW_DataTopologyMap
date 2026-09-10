@@ -43,7 +43,7 @@ kubectl apply -k k8s/
 | 서비스 | 접속 주소 | 기본 계정 (Secret에서 변경 가능) |
 | :--- | :--- | :--- |
 | **Web App** | `http://<Node-IP>:30094` | admin / (초기화 데이터 참조) |
-| **PostgreSQL** | `<Node-IP>:30543` | `ketiagc` / `ketiagc123!` |
+| **PostgreSQL** | `<Node-IP>:30543` | `01-secret.yaml`의 `DB_USERNAME` / `DB_PASSWORD` (샘플값, 배포 전 변경) |
 
 - **Namespace**: `thirdeye`
 - **모든 계정 정보는 `01-secret.yaml`에서 통합 관리됩니다.**

@@ -303,8 +303,8 @@ DBeaver 등의 DB 클라이언트에서 접속합니다:
 | Host | `<Node-IP>` |
 | Port | `30543` |
 | Database | `postgres` |
-| Username | `01-secret.yaml`의 `DB_USERNAME` 값 (기본: `ketiagc`) |
-| Password | `01-secret.yaml`의 `DB_PASSWORD` 값 (기본: `ketiagc123!`) |
+| Username | `01-secret.yaml`의 `DB_USERNAME` 값 (샘플: `thirdeye_app`) |
+| Password | `01-secret.yaml`의 `DB_PASSWORD` 값 (샘플: `CHANGE_ME_BEFORE_APPLY`, 적용 전 변경) |
 
 ---
 
@@ -515,10 +515,10 @@ PostgreSQL 컨테이너가 최초 기동될 때, `/docker-entrypoint-initdb.d/` 
 
 | 순서 | 파일 | 역할 |
 | :--- | :--- | :--- |
-| 1 | `00_create_user.sh` | 환경변수를 읽어 `ketiagc` 사용자 생성 및 권한 부여 |
+| 1 | `00_create_user.sh` | 환경변수를 읽어 `DB_USERNAME` 사용자 생성 및 권한 부여 |
 | 2 | `01_schema.sql` | `k_thirdeye` 스키마 및 전체 테이블 구조 생성 |
 | 3 | `02_init_data.sql` | 초기 데이터 입력 (워크플레이스, 메뉴, 사용자 등) |
-| 4 | `99_reassign_owner.sql` | 모든 DB 객체의 소유권을 `ketiagc`에게 이전 |
+| 4 | `99_reassign_owner.sql` | 모든 DB 객체의 소유권을 `DB_USERNAME`에게 이전 |
 
 > 💡 `02_init_data.sql`에는 외래키 제약 조건을 일시 비활성화하는 설정이 포함되어 있습니다.
 > (`SET session_replication_role = 'replica'`)
@@ -537,8 +537,8 @@ PostgreSQL 컨테이너가 최초 기동될 때, `/docker-entrypoint-initdb.d/` 
 | 키 | 사용처 | 기본값 |
 | :--- | :--- | :--- |
 | `POSTGRES_SUPER_PASSWORD` | PostgreSQL `postgres` 슈퍼유저 비밀번호 | `superadmin_password_here` |
-| `DB_USERNAME` | 애플리케이션이 사용할 DB 사용자명 | `ketiagc` |
-| `DB_PASSWORD` | 애플리케이션이 사용할 DB 비밀번호 | `ketiagc123!` |
+| `DB_USERNAME` | 애플리케이션이 사용할 DB 사용자명 | `thirdeye_app` (샘플) |
+| `DB_PASSWORD` | 애플리케이션이 사용할 DB 비밀번호 | `CHANGE_ME_BEFORE_APPLY` (샘플, 적용 전 변경) |
 
 ---
 

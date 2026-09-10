@@ -1,8 +1,8 @@
 -- =============================================================================
 -- 1. 권한 및 제약 조건 설정 (강제 입력 모드)
 -- =============================================================================
-ALTER SCHEMA k_thirdeye OWNER TO ketiagc;
-GRANT ALL ON SCHEMA k_thirdeye TO ketiagc;
+-- 스키마 소유권·권한은 99_reassign_owner.sh가 $DB_USERNAME 기준으로 처리
+-- (초기 사용자 생성은 00_create_user.sh 참조)
 SET search_path TO k_thirdeye, public;
 
 -- [추가] bigint와 varchar 간의 비교 시 발생하는 타입 불일치 오류 해결을 위한 캐스트 설정

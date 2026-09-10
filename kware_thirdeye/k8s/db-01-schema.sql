@@ -1,6 +1,6 @@
 -- DROP SCHEMA k_thirdeye;
 
-CREATE SCHEMA k_thirdeye AUTHORIZATION ketiagc;
+CREATE SCHEMA k_thirdeye; -- 소유권은 99_reassign_owner.sh에서 $DB_USERNAME 으로 이전
 
 COMMENT ON SCHEMA k_thirdeye IS '써드파티 개발';
 
