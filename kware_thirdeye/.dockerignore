@@ -7,7 +7,7 @@ bin/
 .classpath
 .project
 .svn/
-.agents/
+.agent_workspace/
 .gemini/
 .graphifyignore
 GEMINI.md
