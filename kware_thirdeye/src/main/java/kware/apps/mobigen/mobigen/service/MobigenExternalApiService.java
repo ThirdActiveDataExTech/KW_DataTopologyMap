@@ -344,8 +344,8 @@ public class MobigenExternalApiService {
     **/
     public ApiResponse<UploadRawdataResponse> uploadRawdata(UploadRawdataRequest request, Path filePath) {
         MultipartBodyBuilder builder = new MultipartBodyBuilder();
-        builder.part("action", request.getAction());
-        builder.part("metadata_id", request.getMetadata_id());
+        builder.part("action", request.getAction()).contentType(MediaType.TEXT_PLAIN);
+        builder.part("metadata_id", request.getMetadata_id()).contentType(MediaType.TEXT_PLAIN);
         builder.part("file", new FileSystemResource(filePath))
                 .filename(filePath.getFileName().toString())
                 .contentType(MediaType.APPLICATION_OCTET_STREAM);
