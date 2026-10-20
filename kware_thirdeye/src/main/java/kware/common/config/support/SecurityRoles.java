@@ -2,7 +2,7 @@ package kware.common.config.support;
 
 public class SecurityRoles {
 
-    public static String[] PERMIT_ALL_URLS = {
+    public static final String[] PERMIT_ALL_URLS = {
             "/login",
 
             "/assets/**",
