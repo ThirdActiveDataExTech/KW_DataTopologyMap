@@ -116,7 +116,7 @@ kubectl apply -f k8s/01-secret.yaml
 ```bash
 kubectl get secret thirdeye-db-secret -n thirdeye
 # NAME                 TYPE     DATA   AGE
-# thirdeye-db-secret   Opaque   2      5s
+# thirdeye-db-secret   Opaque   3      5s
 ```
 
 > ⚠️ **주의**: 네임스페이스와 시크릿은 `kubectl delete -k k8s/` 명령으로 삭제되지 않습니다.
@@ -518,7 +518,7 @@ PostgreSQL 컨테이너가 최초 기동될 때, `/docker-entrypoint-initdb.d/` 
 | 1 | `00_create_user.sh` | 환경변수를 읽어 `DB_USERNAME` 사용자 생성 및 권한 부여 |
 | 2 | `01_schema.sql` | `k_thirdeye` 스키마 및 전체 테이블 구조 생성 |
 | 3 | `02_init_data.sql` | 초기 데이터 입력 (워크플레이스, 메뉴, 사용자 등) |
-| 4 | `99_reassign_owner.sql` | 모든 DB 객체의 소유권을 `DB_USERNAME`에게 이전 |
+| 4 | `99_reassign_owner.sh` | 모든 DB 객체의 소유권을 `DB_USERNAME`에게 이전 |
 
 > 💡 `02_init_data.sql`에는 외래키 제약 조건을 일시 비활성화하는 설정이 포함되어 있습니다.
 > (`SET session_replication_role = 'replica'`)
