@@ -51,6 +51,8 @@ spec:
                   key: DB_PASSWORD
             - name: REDIS_NODES
               value: "thirdeye-redis-svc:6379" 
+            - name: MOBIGEN_URL
+              value: "http://mobigen-api.example.internal:30080/v1"  # 실제 모비젠 API 주소로 교체
             - name: TZ
               value: Asia/Seoul
           volumeMounts:
