@@ -1,5 +1,6 @@
 # Stage 1: Build
 FROM eclipse-temurin:11-jdk-focal AS build
+ARG BUILD_PROFILE=kube
 WORKDIR /app
 
 # Copy gradle files for caching
@@ -15,8 +16,11 @@ RUN ./gradlew build -x test --no-daemon || return 0
 COPY src ./src
 
 # Build the final WAR file
-# 기본적으로 prod 프로파일로 빌드하거나, 필요에 따라 수정 가능합니다.
-RUN ./gradlew build -Pprofile=prod -x test --no-daemon
+# 실행 가능한 bootWar 하나만 남긴다. war 플러그인이 함께 만드는 *-plain.war 가 있으면
+# 아래 COPY 의 *.war 가 두 파일에 걸려 빌드가 실패한다.
+# 빌드 프로파일은 런타임 SPRING_PROFILES_ACTIVE 와 맞춘다(기본 kube, docker-compose 는 prod 로 전달).
+RUN ./gradlew bootWar -Pprofile=${BUILD_PROFILE} -x test --no-daemon \
+    && rm -f build/libs/*-plain.war
 
 # Stage 2: Runtime
 FROM eclipse-temurin:11-jre-focal
