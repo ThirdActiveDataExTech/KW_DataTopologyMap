@@ -56,6 +56,16 @@ spec:
                 secretKeyRef:
                   name: thirdeye-db-secret
                   key: DB_PASSWORD
+            - name: MAIL_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: thirdeye-db-secret
+                  key: MAIL_USERNAME
+            - name: MAIL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: thirdeye-db-secret
+                  key: MAIL_PASSWORD
             - name: REDIS_NODES
               value: "thirdeye-redis-svc:6379" 
             - name: MOBIGEN_URL
