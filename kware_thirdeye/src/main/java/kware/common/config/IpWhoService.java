@@ -10,13 +10,14 @@ import java.util.Map;
 
 @Slf4j
 @Service
+@lombok.RequiredArgsConstructor
 public class IpWhoService {
+
+    // 타임아웃이 설정된 공용 RestTemplate(RestTemplateConfig). 로그인 성공 처리 중 호출되므로 지연이 로그인 응답을 막지 않게 한다.
+    private final RestTemplate restTemplate;
 
     public Map<String, Object> getGeoInfo(String ip) {
         String url = "https://ipwho.is/" + ip;
-        // 매번 new RestTemplate()을 하는 것보다 Bean 주입을 권장하지만,
-        // 우선 예외 처리부터 적용합니다.
-        RestTemplate restTemplate = new RestTemplate();
         try {
             // API 호출 및 결과 반환
             return restTemplate.getForObject(url, Map.class);
