@@ -5,6 +5,7 @@ namespace: thirdeye
 
 resources:
   - 20-postgres.yaml
+  - 25-redis.yaml
   - 30-application.yaml
 
 configMapGenerator:
