@@ -130,7 +130,8 @@ public class WebSecurityConfig {
                             headersConfigurer
                                     .frameOptions(frameOptions -> frameOptions.sameOrigin())  // iframe 허용 (same origin만)
                                     .xssProtection(xss -> xss.xssProtectionEnabled(true))     // XSS 방어 활성화
-                    );
+                    )
+                    .authenticationProvider(myDaoAuthenticationProvider);
         }
     }
 
