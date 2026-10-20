@@ -414,7 +414,7 @@ public class DatasetService {
             log.error("=== [METADATA_05] Error - message: {} ===", message);
             throw new SimpleException("메타데이터 정보 수정 실패: " + message);
         }
-        log.info("=== [METADATA_04] Success - message: {} ===", apiResponse1.getMessage());
+        log.info("=== [METADATA_05] Success - message: {} ===", apiResponse1.getMessage());
 
         // 2. 원본데이터 파일 업로드
         if( realFileData != null && !realFileData.isEmpty() ) {
@@ -522,7 +522,7 @@ public class DatasetService {
         int page = search.getPageNumber();
         int limit = search.getSize();
         List<RawdataListItemResponse> items = apiResponse.getResult().getItems();
-        log.info("=== [METADATA_01] Success - totalCount: {}, pageNumber: {}, size(limit): {} ===", totalCount, page, limit);
+        log.info("=== [RAWDATA_01] Success - totalCount: {}, pageNumber: {}, size(limit): {} ===", totalCount, page, limit);
 
         List<RawdataList> rawdataList = new ArrayList<>();
         items.forEach(item -> {
