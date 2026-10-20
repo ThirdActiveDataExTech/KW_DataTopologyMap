@@ -183,15 +183,23 @@ public class CommonFileService {
         if(!this.ifFileIdExist(req)) return ResponseEntity.ok("fileId is not found");
         else {
 
-            File file2 = new File(tusTemp + File.separator + fileId);
+            // 요청 파라미터를 경로에 직접 결합하므로 정규화 후 임시 저장소 밖을 가리키면 거부한다.
+            java.nio.file.Path base = java.nio.file.Paths.get(tusTemp).toAbsolutePath().normalize();
+            java.nio.file.Path target = base.resolve(fileId).normalize();
+            if (!target.startsWith(base)) {
+                log.warn("임시 저장소 밖 경로 접근 거부. fileId:{}", fileId);
+                return ResponseEntity.badRequest().body("invalid fileId");
+            }
+            File file2 = target.toFile();
             String filePath = file2.getAbsolutePath();
             String fileName = file2.getName();
 
-            Resource resource = new FileSystemResource(filePath);
-
             if (!file2.exists() || !file2.isFile()) {
                 log.error("파일이 존재하지 않습니다. filepath:{}, orgFileNam:{}", filePath, fileName);
+                return ResponseEntity.notFound().build();
             }
+
+            Resource resource = new FileSystemResource(filePath);
 
             String disposition = "inline";
 
