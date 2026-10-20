@@ -55,6 +55,23 @@ spec:
               value: "http://mobigen-api.example.internal:30080/v1"  # 실제 모비젠 API 주소로 교체
             - name: TZ
               value: Asia/Seoul
+          # /actuator/health 는 인증 없이 응답하도록 보안 설정에서 허용한다.
+          startupProbe:
+            httpGet:
+              path: /actuator/health
+              port: 9094
+            periodSeconds: 10
+            failureThreshold: 30   # 최대 5분 기동 대기
+          readinessProbe:
+            httpGet:
+              path: /actuator/health/readiness
+              port: 9094
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /actuator/health/liveness
+              port: 9094
+            periodSeconds: 20
           volumeMounts:
             - name: app-data
               mountPath: /app/data
