@@ -61,3 +61,6 @@ GEMINI.md
 .gemini/
 .geminiignore
 !libs/*.jar
+
+# docker compose 로컬 환경변수
+docker/.env

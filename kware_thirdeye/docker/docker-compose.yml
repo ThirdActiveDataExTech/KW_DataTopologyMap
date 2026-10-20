@@ -5,13 +5,24 @@ services:
     build:
       context: ../
       dockerfile: docker/Dockerfile
+      args:
+        BUILD_PROFILE: ${SPRING_PROFILES_ACTIVE:-prod}
     image: kware-thirdeye:latest
     container_name: kware-thirdeye-app
     ports:
       - "9094:9094"
     environment:
-      - SPRING_PROFILES_ACTIVE=prod
+      # 값은 같은 폴더의 .env 에서 읽는다(.env.example 참고). 자격증명은 compose 파일에 적지 않는다.
+      - SPRING_PROFILES_ACTIVE=${SPRING_PROFILES_ACTIVE:-prod}
       - TZ=Asia/Seoul
+      - DB_USERNAME=${DB_USERNAME:?DB_USERNAME required}
+      - DB_PASSWORD=${DB_PASSWORD:?DB_PASSWORD required}
+      - MAIL_USERNAME=${MAIL_USERNAME:-}
+      - MAIL_PASSWORD=${MAIL_PASSWORD:-}
+      - MOBIGEN_URL=${MOBIGEN_URL:?MOBIGEN_URL required}
+      - SESSION_STORE_TYPE=${SESSION_STORE_TYPE:-none}
+      - COOKIE_SECURE=${COOKIE_SECURE:-false}
+      - ALLOWED_ORIGINS=${ALLOWED_ORIGINS:-}
     volumes:
       - ./config:/app/config
       - ./logs:/app/logs
