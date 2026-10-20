@@ -8,6 +8,7 @@
 | `DB_PASSWORD` | 애플리케이션 DB 비밀번호 | dev, local, prod, dev-mobigen, kube |
 | `MAIL_USERNAME` | 초대 메일 발송 SMTP 계정 | dev, local, dev-mobigen, kube |
 | `MAIL_PASSWORD` | SMTP 비밀번호(앱 비밀번호) | dev, local, dev-mobigen, kube |
+| `MOBIGEN_URL` | 모비젠 API base URL (예: `http://<host>:<port>/v1`) | prod(필수), kube |
 
 - kube 프로파일은 `k8s/01-secret.yaml`의 Secret에서 주입된다. 그 외 `DB_HOST`, `DB_PORT`, `DB_NAME`, `MAIL_HOST`, `MAIL_PORT`, `REDIS_NODES`, `MOBIGEN_URL`, `MAIL_SENDER`는 `application-kube.yml`의 기본값을 참조한다.
 - 로컬 실행 예 (Windows cmd):
