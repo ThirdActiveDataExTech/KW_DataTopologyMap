@@ -73,6 +73,7 @@ public class CustomLoginFailuerHandler implements AuthenticationFailureHandler {
 
     private int failCnt(String userId) {
         UserFullInfo user = cetusUserService.findUserByUserId(userId);
+        if (user == null) return 0;
         if (user.getFailCnt() < 4) cetusUserService.changeFailCnt(userId);
         else cetusUserService.changeUseAt(userId);
         return user.getFailCnt() + 1;

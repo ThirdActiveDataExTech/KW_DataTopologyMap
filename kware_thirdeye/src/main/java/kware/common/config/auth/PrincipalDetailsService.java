@@ -32,6 +32,7 @@ public class PrincipalDetailsService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String userId) throws UsernameNotFoundException {
         UserFullInfo user = cetusUserService.findUserByUserId(userId);
+        if (user == null) throw new UsernameNotFoundException("사용자를 찾을 수 없습니다: " + userId);
         SessionUserInfo sessionUserInfo = new SessionUserInfo(user);
         if(!sessionUserInfo.getIsSuper()) setUserPermissionsAndMenus(sessionUserInfo);
         return new PrincipalDetails(sessionUserInfo);

@@ -220,6 +220,7 @@ public class CetusUserService {
     @Transactional(readOnly = true)
     public UserFullInfo findUserByUserId(String userId) {
         UserFullInfo fullInfo = dao.getUserByUserId(userId);
+        if (fullInfo == null) return null;
         fullInfo.setRoleNm(UserAuthorCd.getDescriptionByCode(fullInfo.getRole()));
         fullInfo.setStatusNm(UserStatus.getDescriptionByCode(fullInfo.getStatus()));
         return fullInfo;
