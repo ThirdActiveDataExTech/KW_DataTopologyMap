@@ -13,7 +13,11 @@ public class SecurityRoles {
             "/thirdeye/**",
 
             "/api/tus/file/**",
-            "/api/portal/files/**"
+            "/api/portal/files/**",
+
+            // k8s 프로브·모니터링용. health 외 actuator 엔드포인트는 노출하지 않는다(application.yml).
+            "/actuator/health",
+            "/actuator/health/**"
     };
 
     public static final String[] USER_URLS = {
