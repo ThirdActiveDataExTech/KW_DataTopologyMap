@@ -59,12 +59,17 @@ public class MobigenExternalApiService {
 
     private final WebClient WEB_CLIENT; // final 유지
 
-    private static final int CONNECT_TIMEOUT_MILLIS = 5000;   // 서버와의 TCP 연결 시도 시간. 5초 안에 서버 연결 안 되면 실패 처리
-    private static final int READ_WRITE_TIMEOUT_MILLIS = 10000; // 연결 후 읽기/쓰기가 이 시간 안에 안 되면 실패
-    private static final Duration RESPONSE_TIMEOUT = Duration.ofSeconds(10); // 연결된 후 전체 응답 대기 시간. 10초 안에 응답 없으면 실패 처리
-
     private static final int ERROR_CODE = 9999;
-    public MobigenExternalApiService(@Value("${mobigen.url}") String BASE_URL) {
+
+    /**
+     * 타임아웃은 설정(mobigen.timeout.*)으로 조정한다. 기본값은 기존 상수와 같다.
+     * connect-ms: TCP 연결 대기, read-write-ms: 연결 후 읽기/쓰기 대기, response-sec: 전체 응답 대기
+     */
+    public MobigenExternalApiService(@Value("${mobigen.url}") String BASE_URL,
+                                     @Value("${mobigen.timeout.connect-ms:5000}") int CONNECT_TIMEOUT_MILLIS,
+                                     @Value("${mobigen.timeout.read-write-ms:10000}") int READ_WRITE_TIMEOUT_MILLIS,
+                                     @Value("${mobigen.timeout.response-sec:10}") long responseTimeoutSec) {
+        Duration RESPONSE_TIMEOUT = Duration.ofSeconds(responseTimeoutSec);
         this.WEB_CLIENT = WebClient.builder()
             .baseUrl(BASE_URL)
             .clientConnector(new ReactorClientHttpConnector(    //  {WebClient}의 비동기 HTTP 클라이언트(Netty) 설정
