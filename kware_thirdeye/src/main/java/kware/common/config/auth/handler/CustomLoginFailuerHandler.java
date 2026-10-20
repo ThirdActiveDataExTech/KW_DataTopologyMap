@@ -43,6 +43,7 @@ public class CustomLoginFailuerHandler implements AuthenticationFailureHandler {
             HttpSession session = req.getSession();
             session.setAttribute("userId", userId);
             res.sendRedirect("/login?session");
+            return;
        }
 
        if (exception instanceof DisabledException) {
@@ -50,6 +51,7 @@ public class CustomLoginFailuerHandler implements AuthenticationFailureHandler {
             String message = (UserStatus.STOP.toString().equals(userStatus))
                     ? LoginErrorMessage.DisabledException_STOP.getValue() : LoginErrorMessage.DisabledException_WAIT.getValue();
             messageView2(res, userId, message);
+            return;
        }
 
         messageView(res, exceptionMessage);
