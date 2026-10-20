@@ -17,11 +17,11 @@ fi
 
 # 2. 사용자 입력 (NFS 서버 IP 및 경로)
 # 환경에 맞게 기본값을 수정했습니다. (Enter를 치면 기본값이 사용됩니다.)
-read -p "Enter NFS Server IP (default: 172.30.1.1): " NFS_SERVER_IP
-NFS_SERVER_IP=${NFS_SERVER_IP:-172.30.1.1}
+read -p "Enter NFS Server IP: " NFS_SERVER_IP
+if [ -z "$NFS_SERVER_IP" ]; then echo "NFS Server IP is required"; exit 1; fi
 
-read -p "Enter NFS Export Path (default: /home/nfs_data/kube): " NFS_PATH
-NFS_PATH=${NFS_PATH:-/home/nfs_data/kube}
+read -p "Enter NFS Export Path (default: /srv/nfs/kubedata): " NFS_PATH
+NFS_PATH=${NFS_PATH:-/srv/nfs/kubedata}
 
 # 3. Helm 레포지토리 추가 및 업데이트
 echo "Adding Helm repository..."
@@ -40,5 +40,5 @@ helm upgrade --install nfs-client nfs-subdir-external-provisioner/nfs-subdir-ext
 
 echo ""
 echo "=== Installation Complete ==="
-echo "You can now use 'storageClassName: nfs-client' in your PVCs."
+echo "You can now use 'storageClassName: thirdeye-storage-class' in your PVCs."
 echo "Check status: kubectl get pods -l app=nfs-subdir-external-provisioner"
