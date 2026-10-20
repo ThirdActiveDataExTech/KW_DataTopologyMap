@@ -173,13 +173,27 @@ public class WebSecurityConfig {
     // cors 설정
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
-        config.addAllowedOriginPattern("*");
         config.addAllowedHeader("*");
         config.addAllowedMethod("*");
-        config.setAllowCredentials(true);
+        String allowedOrigin = allowedOrigins();
+        if (allowedOrigin.isBlank()) {
+            // 허용 목록이 없으면 자격증명(쿠키) 없는 교차 출처 요청만 허용한다.
+            // 와일드카드 출처 + allowCredentials(true) 조합은 어떤 사이트든 세션 쿠키를 싣고 호출할 수 있게 한다.
+            config.addAllowedOriginPattern("*");
+            config.setAllowCredentials(false);
+        } else {
+            for (String origin : allowedOrigin.split(",")) {
+                if (!origin.isBlank()) config.addAllowedOrigin(origin.trim());
+            }
+            config.setAllowCredentials(true);
+        }
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", config);
         return source;
+    }
+
+    private String allowedOrigins() {
+        return config.getAllowedOrigin() == null ? "" : config.getAllowedOrigin();
     }
 
     private boolean isLocalProfile() {

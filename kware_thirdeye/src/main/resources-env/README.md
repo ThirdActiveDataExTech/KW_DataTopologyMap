@@ -10,6 +10,7 @@
 | `MAIL_PASSWORD` | SMTP 비밀번호(앱 비밀번호) | dev, local, dev-mobigen, kube |
 | `SESSION_STORE_TYPE` | 세션 저장소: `redis`(Redis 클러스터, 다중 인스턴스) 또는 `none`(메모리, 단일 인스턴스). 기본 prod=redis, kube=none | prod, kube |
 | `COOKIE_SECURE` | 세션 쿠키 Secure 속성(HTTPS 종단이면 `true`). 기본 false | 전체 |
+| `ALLOWED_ORIGINS` | CORS 허용 출처 목록(쉼표 구분). 기본은 로컬 개발 주소 | 전체 |
 | `MOBIGEN_URL` | 모비젠 API base URL (예: `http://<host>:<port>/v1`) | prod(필수), kube |
 
 - kube 프로파일은 `k8s/01-secret.yaml`의 Secret에서 주입된다. 그 외 `DB_HOST`, `DB_PORT`, `DB_NAME`, `MAIL_HOST`, `MAIL_PORT`, `REDIS_NODES`, `MOBIGEN_URL`, `MAIL_SENDER`는 `application-kube.yml`의 기본값을 참조한다.
