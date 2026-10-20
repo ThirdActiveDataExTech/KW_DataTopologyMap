@@ -166,6 +166,7 @@ public class CommonFileService {
             CommonFile commonFile = new CommonFile();
             commonFile.setFileId(fileId);
             commonFile = dao.findFileInfo(commonFile);
+            if (commonFile == null || commonFile.getFilePath() == null) return Boolean.FALSE;
 
             String realPath = commonFile.getFilePath();
             File file2 = new File(realPath);
