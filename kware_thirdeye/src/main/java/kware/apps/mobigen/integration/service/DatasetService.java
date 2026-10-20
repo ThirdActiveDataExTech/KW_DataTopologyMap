@@ -454,8 +454,11 @@ public class DatasetService {
             // 4. 성공 시 ApiResponse 객체 그대로 반환
             return apiResponse;
 
+        } catch (SimpleException e) {
+            throw e;
         } catch (Exception e) {
-            return null;
+            log.error("=== [METADATA_07] Error - preview failed: {} ===", e.getMessage(), e);
+            throw new SimpleException("메타데이터 파일 미리보기 실패: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
