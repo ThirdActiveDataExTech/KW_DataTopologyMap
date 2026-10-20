@@ -4,8 +4,6 @@ import cetus.bean.Page;
 import cetus.bean.Pageable;
 import cetus.user.UserUtil;
 import kware.apps.mobigen.cetus.dataset.service.CetusMobigenDatasetService;
-import kware.apps.mobigen.cetus.tag.service.CetusMobigenDatasetTagService;
-import kware.apps.mobigen.cetus.tag.service.CetusMobigenTagService;
 import kware.apps.mobigen.integration.dto.request.meta.SearchMetaValues;
 import kware.apps.mobigen.integration.dto.request.metadata.*;
 import kware.apps.mobigen.integration.dto.request.pckg.DownloadPackageDataset;
@@ -51,7 +49,6 @@ import kware.apps.mobigen.mobigen.dto.response.relation.RelationListResponse;
 import kware.apps.mobigen.mobigen.service.MobigenExternalApiService;
 import kware.apps.thirdeye.bookmark.service.CetusBookMarkService2;
 import kware.apps.thirdeye.mobigen.approveddataset.service.CetusApprovedDatasetService2;
-import kware.apps.thirdeye.mobigen.category.service.CetusDatasetCategoryService;
 import kware.apps.thirdeye.mobigen.datasetfile.domain.file.CetusDatasetFile;
 import kware.apps.thirdeye.mobigen.datasetfile.dto.request.DeleteDatasetFile;
 import kware.apps.thirdeye.mobigen.datasetfile.dto.request.SearchDatasetFile;
@@ -99,11 +96,8 @@ public class DatasetService {
     private final CetusApprovedDatasetService2 approvedDatasetService2;
     private final CetusBookMarkService2 bookMarkService2;
 
-    // 추후 삭제
+    // 모비젠 API 전환 이전의 DB 폴백 잔재. 진열 데이터셋 논리삭제에만 사용한다.
     private final CetusMobigenDatasetService mobigenDatasetService;
-    private final CetusMobigenDatasetTagService datasetTagService;
-    private final CetusMobigenTagService tagService;
-    private final CetusDatasetCategoryService categoryService;
 
     private Path convertToPath(MultipartFile file) throws IOException {
         if (file == null || file.isEmpty()) {
