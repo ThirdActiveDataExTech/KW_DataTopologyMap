@@ -13,6 +13,9 @@
 - `logback-spring.xml` 추가: 콘솔 + 파일 일자 롤링(30일 보관, 100MB 분할, 3GB 상한, gz 압축)
 - multipart 업로드 한도를 `UPLOAD_MAX_FILE_SIZE`/`UPLOAD_MAX_REQUEST_SIZE`로 조정, 초과 시 413 응답
 
+### 배포
+- Dockerfile: `JAVA_OPTS` 환경변수(기본 MaxRAMPercentage=75), `/actuator/health` HEALTHCHECK, 런타임 이미지에 curl 설치
+
 ### 보안
 - 응답 헤더 Referrer-Policy(strict-origin-when-cross-origin), Content-Security-Policy-Report-Only 추가
 

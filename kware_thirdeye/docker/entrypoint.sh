@@ -37,7 +37,10 @@ fi
 mkdir -p /app/logs
 
 echo "Starting Application with profile: $SPRING_PROFILES_ACTIVE"
+echo "JAVA_OPTS: $JAVA_OPTS"
 
 # Spring Boot 실행
 # 외부 설정 위치를 지정하여 /app/config 내의 파일들이 내부 설정을 오버라이드하도록 함
-exec java -Dspring.config.location=file:/app/config/,classpath:/application.yml -jar app.war
+# JAVA_OPTS 는 Dockerfile 기본값 또는 실행 시 환경변수(단어 분리 의도)
+# shellcheck disable=SC2086
+exec java $JAVA_OPTS -Dspring.config.location=file:/app/config/,classpath:/application.yml -jar app.war
