@@ -9,6 +9,7 @@
 - 처리되지 않은 예외의 공통 처리(화면 500 페이지, API JSON 고정 문구+requestId). 예외 메시지·스택은 로그에만 기록
 
 ### 설정
+- `logback-spring.xml` 추가: 콘솔 + 파일 일자 롤링(30일 보관, 100MB 분할, 3GB 상한, gz 압축)
 - multipart 업로드 한도를 `UPLOAD_MAX_FILE_SIZE`/`UPLOAD_MAX_REQUEST_SIZE`로 조정, 초과 시 413 응답
 
 ### 보안
