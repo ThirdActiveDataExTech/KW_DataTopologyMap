@@ -21,6 +21,7 @@ import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
+import org.springframework.security.web.header.writers.ReferrerPolicyHeaderWriter;
 import org.springframework.security.web.session.HttpSessionEventPublisher;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
@@ -116,24 +117,35 @@ public class WebSecurityConfig {
             httpSecurity
                     .csrf(AbstractHttpConfigurer::disable)
                     .cors(AbstractHttpConfigurer::disable)
-                    .headers(headersConfigurer ->
-                            headersConfigurer
-                                    .frameOptions(frameOptions -> frameOptions.sameOrigin())
-                                    .xssProtection(xss -> xss.xssProtectionEnabled(true))
-                    )
+                    .headers(this::headers)
                     .authenticationProvider(myDaoAuthenticationProvider);
         } else {
             httpSecurity
                     .csrf(AbstractHttpConfigurer::disable)
                     .cors(corsConfigurer -> corsConfigurer.configurationSource(corsConfigurationSource()))
-                    .headers(headersConfigurer ->
-                            headersConfigurer
-                                    .frameOptions(frameOptions -> frameOptions.sameOrigin())  // iframe 허용 (same origin만)
-                                    .xssProtection(xss -> xss.xssProtectionEnabled(true))     // XSS 방어 활성화
-                    )
+                    .headers(this::headers)
                     .authenticationProvider(myDaoAuthenticationProvider);
         }
     }
+
+    // 응답 보안 헤더. X-Content-Type-Options: nosniff 와 Cache-Control 은 Spring Security 기본값으로 이미 붙는다.
+    // CSP 는 화면의 인라인 스크립트·외부 CDN 영향을 보기 위해 report-only 로 먼저 적용한다(차단하지 않고 브라우저 콘솔에만 위반 표시).
+    private void headers(HeadersConfigurer<HttpSecurity> headers) {
+        headers
+            .frameOptions(frameOptions -> frameOptions.sameOrigin())   // iframe 허용 (same origin만)
+            .xssProtection(xss -> xss.xssProtectionEnabled(true))
+            .referrerPolicy(referrer -> referrer.policy(ReferrerPolicyHeaderWriter.ReferrerPolicy.STRICT_ORIGIN_WHEN_CROSS_ORIGIN))
+            .contentSecurityPolicy(csp -> csp.policyDirectives(CSP_REPORT_ONLY).reportOnly());
+    }
+
+    private static final String CSP_REPORT_ONLY = String.join("; ",
+            "default-src 'self'",
+            "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net https://cdn.ckeditor.com",
+            "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.jsdelivr.net",
+            "font-src 'self' data: https://fonts.gstatic.com https://cdn.jsdelivr.net",
+            "img-src 'self' data: blob:",
+            "connect-src 'self'",
+            "frame-ancestors 'self'");
 
     // 권한 페이지 설정
     private void exception(ExceptionHandlingConfigurer<HttpSecurity> exceptionHandling) {
