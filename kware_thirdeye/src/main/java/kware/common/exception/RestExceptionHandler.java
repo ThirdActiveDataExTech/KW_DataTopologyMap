@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.support.MessageSourceAccessor;
+import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindException;
@@ -22,6 +23,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @RestControllerAdvice
+@Order(0)   // HttpExceptionHandler 의 Exception 포괄 처리보다 먼저 평가된다
 @Slf4j
 @RequiredArgsConstructor
 public class RestExceptionHandler {
