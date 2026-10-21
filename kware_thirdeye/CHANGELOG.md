@@ -7,6 +7,7 @@
 ### 추가
 - 요청 추적 ID(MDC requestId, 응답 헤더 `X-Request-Id`)를 모든 로그 줄에 표시
 - 처리되지 않은 예외의 공통 처리(화면 500 페이지, API JSON 고정 문구+requestId). 예외 메시지·스택은 로그에만 기록
+- 모비젠 API 연결 실패(연결 거부·연결 타임아웃·호스트 조회 실패) 시 재시도(기본 2회, `mobigen.retry.max-attempts`). 읽기 타임아웃·HTTP 오류는 재시도하지 않음
 
 ### 설정
 - `logback-spring.xml` 추가: 콘솔 + 파일 일자 롤링(30일 보관, 100MB 분할, 3GB 상한, gz 압축)

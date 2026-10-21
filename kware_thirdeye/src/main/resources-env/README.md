@@ -27,4 +27,4 @@ gradlew bootRun -Pprofile=local
 ```
 
 - IDE에서는 실행 구성의 환경변수 항목에 같은 값을 넣는다. 값을 저장소에 커밋하지 않는다.
-- 모비젠 API 타임아웃은 환경변수가 아니라 설정 키 `mobigen.timeout.connect-ms`(기본 5000), `mobigen.timeout.read-write-ms`(10000), `mobigen.timeout.response-sec`(10)로 조정한다.
+- 모비젠 API 타임아웃은 환경변수가 아니라 설정 키 `mobigen.timeout.connect-ms`(기본 5000), `mobigen.timeout.read-write-ms`(10000), `mobigen.timeout.response-sec`(10)로 조정한다. 연결 실패 재시도 횟수는 `mobigen.retry.max-attempts`(기본 2, 0이면 재시도 없음).
