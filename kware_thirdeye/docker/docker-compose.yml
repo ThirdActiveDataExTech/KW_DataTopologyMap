@@ -21,6 +21,9 @@ services:
       - MAIL_USERNAME=${MAIL_USERNAME:-}
       - MAIL_PASSWORD=${MAIL_PASSWORD:-}
       - MOBIGEN_URL=${MOBIGEN_URL:?MOBIGEN_URL required}
+      # 기본은 아래 thirdeye-db / thirdeye-redis 서비스. 외부 DB·Redis 를 쓰면 .env 에서 덮어쓴다
+      - DB_URL=${DB_URL:-jdbc:postgresql://thirdeye-db:5432/postgres?currentSchema=k_thirdeye}
+      - REDIS_NODES=${REDIS_NODES:-thirdeye-redis:6379}
       - SESSION_STORE_TYPE=${SESSION_STORE_TYPE:-none}
       - COOKIE_SECURE=${COOKIE_SECURE:-false}
       - ALLOWED_ORIGINS=${ALLOWED_ORIGINS:-}
@@ -29,7 +32,46 @@ services:
     volumes:
       - ./config:/app/config
       - ./logs:/app/logs
+    depends_on:
+      thirdeye-db:
+        condition: service_healthy
+      thirdeye-redis:
+        condition: service_started
     restart: always
+
+  # 로컬 실행용 PostgreSQL. 최초 기동 시 k8s/ 의 초기화 스크립트로 계정·스키마·기초 데이터를 만든다(이미지는 k8s 와 동일)
+  thirdeye-db:
+    image: postgres:14.5-alpine
+    container_name: kware-thirdeye-db
+    environment:
+      - POSTGRES_PASSWORD=${POSTGRES_SUPER_PASSWORD:?POSTGRES_SUPER_PASSWORD required}
+      - DB_USERNAME=${DB_USERNAME:?DB_USERNAME required}
+      - DB_PASSWORD=${DB_PASSWORD:?DB_PASSWORD required}
+      - TZ=Asia/Seoul
+    ports:
+      - "${DB_PORT_HOST:-5432}:5432"
+    volumes:
+      - thirdeye-pgdata:/var/lib/postgresql/data
+      - ../k8s/db-00-create-user.sh:/docker-entrypoint-initdb.d/00-create-user.sh:ro
+      - ../k8s/db-01-schema.sql:/docker-entrypoint-initdb.d/01-schema.sql:ro
+      - ../k8s/db-02-init-data.sql:/docker-entrypoint-initdb.d/02-init-data.sql:ro
+      - ../k8s/db-99-reassign-owner.sh:/docker-entrypoint-initdb.d/99-reassign-owner.sh:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    restart: unless-stopped
+
+  # 세션 저장소용 Redis (SESSION_STORE_TYPE=redis 일 때 사용). 캐시 용도라 디스크 영속화 없음
+  thirdeye-redis:
+    image: redis:7.2-alpine
+    container_name: kware-thirdeye-redis
+    command: ["redis-server", "--save", "", "--appendonly", "no"]
+    restart: unless-stopped
+
+volumes:
+  thirdeye-pgdata:
 
 networks:
   default:

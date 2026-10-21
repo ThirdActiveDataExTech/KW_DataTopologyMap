@@ -15,6 +15,7 @@
 
 ### 배포
 - Dockerfile: `JAVA_OPTS` 환경변수(기본 MaxRAMPercentage=75), `/actuator/health` HEALTHCHECK, 런타임 이미지에 curl 설치
+- docker-compose: 로컬용 PostgreSQL(`thirdeye-db`, k8s 초기화 스크립트 재사용)·Redis(`thirdeye-redis`) 서비스, prod 프로파일 `DB_URL`·`REDIS_NODES` 환경변수 덮어쓰기
 
 ### 보안
 - 응답 헤더 Referrer-Policy(strict-origin-when-cross-origin), Content-Security-Policy-Report-Only 추가

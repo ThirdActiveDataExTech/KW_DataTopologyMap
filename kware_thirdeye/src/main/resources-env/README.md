@@ -12,6 +12,8 @@
 | `COOKIE_SECURE` | 세션 쿠키 Secure 속성(HTTPS 종단이면 `true`). 기본 false | 전체 |
 | `ALLOWED_ORIGINS` | CORS 허용 출처 목록(쉼표 구분). 기본은 로컬 개발 주소 | 전체 |
 | `DB_POOL_SIZE` | HikariCP 최대 연결 수(기본 2) | 전체 |
+| `DB_URL` | JDBC URL 전체 덮어쓰기(docker-compose 의 로컬 DB 등). 기본은 프로파일 파일의 값 | prod |
+| `REDIS_NODES` | Redis 노드 목록(쉼표 구분). 1개면 단일 인스턴스, 2개 이상이면 클러스터 | prod, kube |
 | `UPLOAD_MAX_FILE_SIZE` / `UPLOAD_MAX_REQUEST_SIZE` | multipart 업로드 파일·요청 한도(기본 10MB, 예 `50MB`). TUS 대용량 업로드에는 적용되지 않음 | 전체 |
 | `MOBIGEN_URL` | 모비젠 API base URL (예: `http://<host>:<port>/v1`) | prod(필수), kube |
 

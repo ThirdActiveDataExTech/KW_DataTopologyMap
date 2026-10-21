@@ -33,7 +33,7 @@ gradlew bootWar -Pprofile=prod
 
 ## 컨테이너·Kubernetes
 
-- Docker: `docker/Dockerfile`(2단계 빌드, bootWar만 복사), `docker/docker-compose.yml`(환경변수는 `docker/.env`, 예시는 `docker/.env.example`)
+- Docker: `docker/Dockerfile`(2단계 빌드, bootWar만 복사), `docker/docker-compose.yml`(환경변수는 `docker/.env`, 예시는 `docker/.env.example`). compose 에는 로컬용 PostgreSQL(`thirdeye-db`, 최초 기동 시 `k8s/db-*` 스크립트로 초기화)과 Redis(`thirdeye-redis`)가 포함되며 외부 DB 를 쓰려면 `.env` 의 `DB_URL`·`REDIS_NODES` 를 지정한다.
 - Kubernetes: `k8s/README.md`와 `k8s/doc/INSTALL_MANUAL.md`를 따른다. 시크릿(`k8s/01-secret.yaml`)의 값은 샘플이므로 적용 전에 교체한다.
 - 상태 확인: `/actuator/health`(프로브용, 인증 불필요)
 
