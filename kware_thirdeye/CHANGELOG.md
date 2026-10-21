@@ -8,6 +8,9 @@
 - 요청 추적 ID(MDC requestId, 응답 헤더 `X-Request-Id`)를 모든 로그 줄에 표시
 - 처리되지 않은 예외의 공통 처리(화면 500 페이지, API JSON 고정 문구+requestId). 예외 메시지·스택은 로그에만 기록
 
+### 설정
+- multipart 업로드 한도를 `UPLOAD_MAX_FILE_SIZE`/`UPLOAD_MAX_REQUEST_SIZE`로 조정, 초과 시 413 응답
+
 ### 보안
 - 응답 헤더 Referrer-Policy(strict-origin-when-cross-origin), Content-Security-Policy-Report-Only 추가
 

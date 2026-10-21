@@ -7,6 +7,9 @@ import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.util.unit.DataSize;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -27,6 +30,9 @@ import java.util.Map;
 @Order(Ordered.LOWEST_PRECEDENCE)
 public class HttpExceptionHandler {
 
+    @Value("${spring.servlet.multipart.max-file-size}")
+    private DataSize maxFileSize;
+
     @ExceptionHandler(ResourceNotFoundException.class)
     public ModelAndView handleNotFoundException(ResourceNotFoundException ex) {
         ModelAndView modelAndView = new ModelAndView("error/404");
@@ -42,6 +48,17 @@ public class HttpExceptionHandler {
         }
         ModelAndView modelAndView = new ModelAndView("error/404");
         modelAndView.setStatus(HttpStatus.NOT_FOUND);
+        return modelAndView;
+    }
+
+    @ExceptionHandler(MaxUploadSizeExceededException.class)
+    public Object handleMaxUploadSize(MaxUploadSizeExceededException ex, HttpServletRequest request) {
+        String message = "업로드 가능한 최대 크기는 " + maxFileSize.toMegabytes() + "MB 입니다.";
+        if (wantsJson(request)) {
+            return ResponseEntity.status(HttpStatus.PAYLOAD_TOO_LARGE).body(body(message));
+        }
+        ModelAndView modelAndView = new ModelAndView("error/error");
+        modelAndView.setStatus(HttpStatus.PAYLOAD_TOO_LARGE);
         return modelAndView;
     }
 

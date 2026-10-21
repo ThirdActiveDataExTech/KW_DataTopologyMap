@@ -23,6 +23,8 @@ services:
       - SESSION_STORE_TYPE=${SESSION_STORE_TYPE:-none}
       - COOKIE_SECURE=${COOKIE_SECURE:-false}
       - ALLOWED_ORIGINS=${ALLOWED_ORIGINS:-}
+      - UPLOAD_MAX_FILE_SIZE=${UPLOAD_MAX_FILE_SIZE:-10MB}
+      - UPLOAD_MAX_REQUEST_SIZE=${UPLOAD_MAX_REQUEST_SIZE:-10MB}
     volumes:
       - ./config:/app/config
       - ./logs:/app/logs

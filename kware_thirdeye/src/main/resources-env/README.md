@@ -12,6 +12,7 @@
 | `COOKIE_SECURE` | 세션 쿠키 Secure 속성(HTTPS 종단이면 `true`). 기본 false | 전체 |
 | `ALLOWED_ORIGINS` | CORS 허용 출처 목록(쉼표 구분). 기본은 로컬 개발 주소 | 전체 |
 | `DB_POOL_SIZE` | HikariCP 최대 연결 수(기본 2) | 전체 |
+| `UPLOAD_MAX_FILE_SIZE` / `UPLOAD_MAX_REQUEST_SIZE` | multipart 업로드 파일·요청 한도(기본 10MB, 예 `50MB`). TUS 대용량 업로드에는 적용되지 않음 | 전체 |
 | `MOBIGEN_URL` | 모비젠 API base URL (예: `http://<host>:<port>/v1`) | prod(필수), kube |
 
 - kube 프로파일은 `k8s/01-secret.yaml`의 Secret에서 주입된다. 그 외 `DB_HOST`, `DB_PORT`, `DB_NAME`, `MAIL_HOST`, `MAIL_PORT`, `REDIS_NODES`, `MOBIGEN_URL`, `MAIL_SENDER`는 `application-kube.yml`의 기본값을 참조한다.
