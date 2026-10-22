@@ -9,6 +9,7 @@
 - 비밀번호 검증기 단위 테스트(영문·숫자·특수문자 조합, 길이, allowNull)
 - 메뉴 트리 구성(MenuManager) 단위 테스트(루트 판별, 정렬, 하위 연결, url 치환)
 - URL 권한 묶음(SecurityRoles) 단위 테스트(경로별 판정 순서, actuator 는 health 만 공개)
+- 공용 파일 서비스 단위 테스트(임시 저장소 경로 탐색 차단, 파일 보기 404·content type, fileId 판정)
 
 ### 변경
 - 사용처 없는 spring-batch 의존성 제거
