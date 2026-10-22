@@ -60,10 +60,11 @@ public class CommonFileService {
     }
 
     public boolean ifFileIdExist(HttpServletRequest req) {
-        return !req.getParameter("fileId").equals("null")
-                && !req.getParameter("fileId").equals("undefined")
-                && !req.getParameter("fileId").equals(null)
-                && req.getParameter("fileId").length() != 0;
+        String fileId = req.getParameter("fileId");
+        return fileId != null
+                && !fileId.isEmpty()
+                && !"null".equals(fileId)
+                && !"undefined".equals(fileId);
     }
 
     public ResponseEntity fileView(final HttpServletRequest req) {

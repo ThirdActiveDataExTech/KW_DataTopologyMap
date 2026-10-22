@@ -11,6 +11,9 @@
 - URL 권한 묶음(SecurityRoles) 단위 테스트(경로별 판정 순서, actuator 는 health 만 공개)
 - 공용 파일 서비스 단위 테스트(임시 저장소 경로 탐색 차단, 파일 보기 404·content type, fileId 판정)
 
+### 수정
+- 파일 조회·다운로드에서 `fileId` 파라미터가 없으면 NPE 로 500 이 나던 것을 '없음' 응답으로 처리
+
 ### 변경
 - 사용처 없는 spring-batch 의존성 제거
 - 사용처 없는 mysql-connector 의존성 제거(DB는 PostgreSQL만 사용)

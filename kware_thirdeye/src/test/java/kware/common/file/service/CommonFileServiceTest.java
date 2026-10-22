@@ -123,6 +123,15 @@ class CommonFileServiceTest {
         assertThat(service.ifFileIdExist(request("abc"))).isTrue();
     }
 
+    @Test
+    void fileId_파라미터가_아예_없으면_오류_없이_없는_것으로_본다() {
+        MockHttpServletRequest noParam = new MockHttpServletRequest();
+
+        assertThat(service.ifFileIdExist(noParam)).isFalse();
+        assertThat(service.downloadTemp(noParam).getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(service.downloadTemp(noParam).getBody()).isEqualTo("fileId is not found");
+    }
+
     private static MockHttpServletRequest request(String fileId) {
         MockHttpServletRequest request = new MockHttpServletRequest();
         request.setParameter("fileId", fileId);
