@@ -8,6 +8,7 @@
 - 단위 테스트 기반 설정(JUnit 5 공통 설정, 테스트용 로그 설정, `gradlew test` 실패 상세 출력)
 - 비밀번호 검증기 단위 테스트(영문·숫자·특수문자 조합, 길이, allowNull)
 - 메뉴 트리 구성(MenuManager) 단위 테스트(루트 판별, 정렬, 하위 연결, url 치환)
+- URL 권한 묶음(SecurityRoles) 단위 테스트(경로별 판정 순서, actuator 는 health 만 공개)
 
 ### 변경
 - 사용처 없는 spring-batch 의존성 제거
