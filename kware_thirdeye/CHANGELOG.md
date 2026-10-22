@@ -4,6 +4,9 @@
 
 ## 2026-10-22
 
+### 추가
+- 단위 테스트 기반 설정(JUnit 5 공통 설정, 테스트용 로그 설정, `gradlew test` 실패 상세 출력)
+
 ### 변경
 - 사용처 없는 spring-batch 의존성 제거
 - 사용처 없는 mysql-connector 의존성 제거(DB는 PostgreSQL만 사용)

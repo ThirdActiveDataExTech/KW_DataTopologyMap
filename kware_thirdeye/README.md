@@ -31,6 +31,14 @@ gradlew bootWar -Pprofile=prod
 
 계정·비밀번호·외부 주소는 설정 파일에 쓰지 않고 환경변수로 주입한다. 필요한 변수 목록과 기본값은 [`src/main/resources-env/README.md`](src/main/resources-env/README.md)에 있다. 변수를 주입하지 않으면 기동에 실패한다.
 
+### 테스트
+
+```cmd
+gradlew test
+```
+
+단위 테스트는 `src/test/java` 아래에 대상 클래스와 같은 패키지로 두며(`<클래스명>Test`), DB·외부 서비스 없이 실행된다. 보고서는 `build/reports/tests/test/index.html`.
+
 ## 컨테이너·Kubernetes
 
 - Docker: `docker/Dockerfile`(2단계 빌드, bootWar만 복사), `docker/docker-compose.yml`(환경변수는 `docker/.env`, 예시는 `docker/.env.example`). compose 에는 로컬용 PostgreSQL(`thirdeye-db`, 최초 기동 시 `k8s/db-*` 스크립트로 초기화)과 Redis(`thirdeye-redis`)가 포함되며 외부 DB 를 쓰려면 `.env` 의 `DB_URL`·`REDIS_NODES` 를 지정한다.

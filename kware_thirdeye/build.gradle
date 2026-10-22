@@ -150,6 +150,12 @@ dependencies {
 
 tasks.named('test') {
     useJUnitPlatform()
+    systemProperty 'file.encoding', 'UTF-8'
+    testLogging {
+        events 'failed', 'skipped'
+        exceptionFormat 'full'
+        showStandardStreams = false
+    }
 }
 
 tasks.named('bootBuildImage') {
