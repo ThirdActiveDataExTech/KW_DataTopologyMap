@@ -132,8 +132,6 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-cache'
     implementation 'org.json:json:20230227'
     implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity5'
-    // https://mvnrepository.com/artifact/mysql/mysql-connector-java
-    implementation 'mysql:mysql-connector-java:8.0.33'
     implementation 'org.springframework.boot:spring-boot-starter-data-redis'
     implementation 'org.springframework.session:spring-session-data-redis'
     // https://mvnrepository.com/artifact/org.jsoup/jsoup

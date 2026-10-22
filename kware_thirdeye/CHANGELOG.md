@@ -6,6 +6,7 @@
 
 ### 변경
 - 사용처 없는 spring-batch 의존성 제거
+- 사용처 없는 mysql-connector 의존성 제거(DB는 PostgreSQL만 사용)
 - springfox 제거, API 문서는 springdoc(swagger-ui) 하나로 통일. 노출 여부 키는 `springdoc.api-docs.enabled`
 
 ## 2026-10-21
