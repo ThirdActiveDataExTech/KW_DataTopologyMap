@@ -39,7 +39,7 @@ public class CetusMenu implements Serializable {
             this.url = "#";
         }
 
-        this.sortNo = menuInfo.getSortNo();
+        this.sortNo = menuInfo.getSortNoForTreeMenu();   // 정렬번호가 비어 있어도(-1) 트리 구성이 멈추지 않게
     }
 
     public boolean hasChild() {

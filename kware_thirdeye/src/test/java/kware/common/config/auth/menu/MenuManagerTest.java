@@ -65,6 +65,19 @@ class MenuManagerTest {
         assertThat(tree).extracting(CetusMenu::getUrl).containsExactly("#", "/list", "");
     }
 
+    @Test
+    void 정렬번호가_없는_메뉴는_맨_앞에_두고_트리_구성을_계속한다() {
+        List<SessionMenuList> rows = Arrays.asList(
+                menu(1L, null, "root", 0, null),
+                menu(10L, 1L, "번호있음", 1, "/a"),
+                menu(11L, 1L, "번호없음", null, "/b"));
+
+        List<CetusMenu> tree = menuManager.parseInfoListToTreeList(rows, 1L);
+
+        assertThat(tree).extracting(CetusMenu::getMenuNm).containsExactly("번호없음", "번호있음");
+        assertThat(tree.get(0).getSortNo()).isEqualTo(-1);
+    }
+
     private static SessionMenuList menu(Long menuNo, Long upperMenuNo, String menuNm, Integer sortNo, String url) {
         SessionMenuList row = BeanUtils.instantiateClass(SessionMenuList.class);
         ReflectionTestUtils.setField(row, "menuNo", menuNo);
