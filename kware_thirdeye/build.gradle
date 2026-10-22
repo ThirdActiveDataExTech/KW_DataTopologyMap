@@ -113,10 +113,8 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.security:spring-security-test' //spring-security
 
-    implementation("io.springfox:springfox-boot-starter:3.0.0")     //swagger
-    dependencies {
-        implementation 'org.springdoc:springdoc-openapi-ui:1.6.15'
-    }
+    // swagger-ui(/swagger-ui.html). 명세는 정적 파일 /openapi/spec 을 읽는다(application.yml springdoc.swagger-ui.url)
+    implementation 'org.springdoc:springdoc-openapi-ui:1.6.15'
 
     implementation 'org.apache.poi:poi:5.2.2'
     implementation 'org.apache.poi:poi-ooxml:5.2.2'
