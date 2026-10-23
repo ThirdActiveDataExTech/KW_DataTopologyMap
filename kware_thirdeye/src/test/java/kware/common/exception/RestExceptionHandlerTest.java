@@ -14,6 +14,7 @@ import org.springframework.core.MethodParameter;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BeanPropertyBindingResult;
+import org.springframework.validation.BindException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 
@@ -51,6 +52,17 @@ class RestExceptionHandlerTest {
                 new MethodArgumentNotValidException(sampleParameter(), binding));
 
         assertThat((Map<String, String>) entity.getBody()).containsEntry("title", "첫째<br>둘째");
+    }
+
+    @Test
+    void 폼_바인딩_오류_BindException도_같은_형식으로_돌려준다() {
+        BeanPropertyBindingResult binding = new BeanPropertyBindingResult(new SampleForm(), "sampleForm");
+        binding.addError(new FieldError("sampleForm", "size", "숫자만 입력하세요."));
+
+        ResponseEntity<?> entity = handler.requestBodyhandleValidException(new BindException(binding));
+
+        assertThat(entity.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+        assertThat((Map<String, String>) entity.getBody()).containsEntry("size", "숫자만 입력하세요.").hasSize(1);
     }
 
     @Test

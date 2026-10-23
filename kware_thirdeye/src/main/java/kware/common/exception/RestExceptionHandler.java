@@ -14,7 +14,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -31,8 +30,8 @@ public class RestExceptionHandler {
     private final MessageSourceAccessor messageSource;
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler({MethodArgumentNotValidException.class, BindException.class})
-    public ResponseEntity requestBodyhandleValidException(MethodArgumentNotValidException ex) {
+    @ExceptionHandler(BindException.class)   // MethodArgumentNotValidException 도 BindException 의 하위라 함께 받는다
+    public ResponseEntity requestBodyhandleValidException(BindException ex) {
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST.value())
                 .body(getValidErrors(ex.getBindingResult()));
