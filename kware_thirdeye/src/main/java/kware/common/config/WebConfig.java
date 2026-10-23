@@ -16,6 +16,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.i18n.LocaleChangeInterceptor;
 import org.springframework.web.servlet.resource.VersionResourceResolver;
 
+import java.nio.file.Paths;
 import java.util.concurrent.TimeUnit;
 
 @Configuration
@@ -38,13 +39,19 @@ public class WebConfig implements WebMvcConfigurer {
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
 
         registry.addResourceHandler("/ckImage/**")
-                .addResourceLocations("file:///" + configs.getCkeditorPath());
+                .addResourceLocations(directoryLocation(configs.getCkeditorPath()));
 
         registry.addResourceHandler("/assets/**")
                 .addResourceLocations("classpath:/static/assets/")
                 .setCacheControl(CacheControl.maxAge(365, TimeUnit.DAYS))
                 .resourceChain(true)
                 .addResolver(new VersionResourceResolver().addContentVersionStrategy("/**"));
+    }
+
+    /** 설정 경로(절대·상대 모두)를 디렉터리 file: URI 로 바꾼다. 끝에 / 가 없으면 상위 폴더 기준으로 해석되므로 붙인다. */
+    static String directoryLocation(String path) {
+        String uri = Paths.get(path).toAbsolutePath().normalize().toUri().toString();
+        return uri.endsWith("/") ? uri : uri + "/";
     }
 
     @Override
