@@ -16,6 +16,7 @@ import kware.apps.mobigen.integration.dto.response.rawdata.RawdataView;
 import kware.apps.mobigen.integration.dto.response.recommendation.RecommendationList;
 import kware.apps.mobigen.integration.dto.response.relation.RelationsList;
 import kware.apps.mobigen.mobigen.dto.response.ApiResponse;
+import kware.apps.mobigen.mobigen.service.MobigenAvailability;
 import kware.apps.mobigen.mobigen.dto.response.metadata.MetadataFilePreviewResponse;
 import kware.apps.mobigen.mobigen.dto.response.pckge.PackageImportResponse;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +28,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 @Slf4j
 @RestController
@@ -35,6 +38,23 @@ import java.io.IOException;
 public class DatasetRestController {
 
     private final DatasetService service;
+    private final MobigenAvailability availability;
+
+    /**
+     * 모비젠 연동 상태. 화면이 모비젠 호출 전에 확인해 미연결이면 호출을 건너뛸 수 있다.
+     *
+     * @api         [GET] /api/portal/integration-dataset/status
+     **/
+    @GetMapping("/status")
+    public ResponseEntity<Map<String, Object>> status() {
+        Map<String, Object> body = new LinkedHashMap<>();
+        body.put("enabled", availability.isEnabled());
+        body.put("available", availability.isAvailable());
+        body.put("state", availability.getState().name());
+        body.put("checkedAt", availability.getCheckedAt());
+        body.put("message", availability.isAvailable() ? null : availability.unavailableMessage());
+        return ResponseEntity.ok(body);
+    }
 
     /**
      *

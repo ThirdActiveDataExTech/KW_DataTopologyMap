@@ -1,6 +1,7 @@
 package kware.apps.thirdeye.controller;
 
 
+import kware.apps.mobigen.mobigen.service.MobigenAvailability;
 import cetus.user.UserUtil;
 import kware.apps.superrole.code.service.CetusCodeService;
 import kware.apps.system.user.dto.response.UserFullInfo;
@@ -27,6 +28,7 @@ public class PortalController {
     private final MenuNavigationManager menuNavigationManager;
     private final CetusApprovedDatasetService datasetService;
     private final CetusCodeService codeService;
+    private final MobigenAvailability mobigenAvailability;
 
     @GetMapping("/home")
     public String home(Model model) {
@@ -48,6 +50,7 @@ public class PortalController {
         ApprovedDatasetItem dataset = datasetService.findApprovedDatasetView(approvedUid);
         model.addAttribute("dataset", dataset);
         model.addAttribute("commentCodes", codeService.getCodesByParentCode("DATASET_COMMENT"));
+        model.addAttribute("mobigenAvailable", mobigenAvailability.isAvailable());   // 미연결이면 안내만 띄우고 모비젠 호출은 즉시 실패
 
         if(dataset == null) return "error/404";
         if("Y".equals(dataset.getDeleteAt())) return "error/error";
