@@ -59,6 +59,7 @@ public class MobigenExternalApiService {
 
     private final WebClient WEB_CLIENT; // final 유지
     private final int retryMaxAttempts;
+    private final MobigenAvailability availability;
 
     private static final int ERROR_CODE = 9999;
 
@@ -70,9 +71,11 @@ public class MobigenExternalApiService {
                                      @Value("${mobigen.timeout.connect-ms:5000}") int CONNECT_TIMEOUT_MILLIS,
                                      @Value("${mobigen.timeout.read-write-ms:10000}") int READ_WRITE_TIMEOUT_MILLIS,
                                      @Value("${mobigen.timeout.response-sec:10}") long responseTimeoutSec,
-                                     @Value("${mobigen.retry.max-attempts:2}") int retryMaxAttempts) {
+                                     @Value("${mobigen.retry.max-attempts:2}") int retryMaxAttempts,
+                                     MobigenAvailability availability) {
         Duration RESPONSE_TIMEOUT = Duration.ofSeconds(responseTimeoutSec);
         this.retryMaxAttempts = retryMaxAttempts;
+        this.availability = availability;
         this.WEB_CLIENT = WebClient.builder()
             .baseUrl(BASE_URL)
             .clientConnector(new ReactorClientHttpConnector(    //  {WebClient}의 비동기 HTTP 클라이언트(Netty) 설정
@@ -138,6 +141,7 @@ public class MobigenExternalApiService {
     }
 
     private <T> ApiResponse<T> upload(String uri, MultipartBodyBuilder builder, ParameterizedTypeReference<ApiResponse<T>> typeRef) {
+        if (!availability.isAvailable()) return unavailableResponse("UPLOAD", uri);
         try {
             ApiResponse<T> response = WEB_CLIENT
                     .post()
@@ -153,17 +157,20 @@ public class MobigenExternalApiService {
                     .retryWhen(MobigenRetryPolicy.connectRetry(retryMaxAttempts, Duration.ofMillis(500)))
                     .block();
 
+            availability.markUp();
             return (response != null) ? response : createFailResponse(ERROR_CODE, "서버 응답이 비어있습니다.");
 
         } catch (Exception e) {
             if (e instanceof ApiException) return (ApiResponse<T>) ((ApiException) e).getResponse(); // getResponse()로 변경
             String msg = getErrorMessage(e);
             log.error("[UPLOAD] API 통신 실패: uri={} / message={}", uri, msg, e);
+            markDownIfConnectFailure(e, msg);
             return createFailResponse(ERROR_CODE, msg);
         }
     }
 
     private <T> ApiResponse<T> post(String uri, Object bodyValue, ParameterizedTypeReference<ApiResponse<T>> typeRef) {
+        if (!availability.isAvailable()) return unavailableResponse("POST", uri);
         try {
             ApiResponse<T> response = WEB_CLIENT
                     .post()
@@ -179,19 +186,25 @@ public class MobigenExternalApiService {
                     .retryWhen(MobigenRetryPolicy.connectRetry(retryMaxAttempts, Duration.ofMillis(500)))
                     .block();
 
+            availability.markUp();
             return (response != null) ? response : createFailResponse(ERROR_CODE, "서버 응답이 비어있습니다.");
 
         } catch (Exception e) {
             if (e instanceof ApiException) return (ApiResponse<T>) ((ApiException) e).getResponse(); // getResponse()로 변경
             String msg = getErrorMessage(e);
             log.error("[POST] API 통신 실패: uri={} / message={}", uri, msg, e);
+            markDownIfConnectFailure(e, msg);
             return createFailResponse(ERROR_CODE, msg);
         }
     }
 
     private ResponseEntity<Resource> download(String uri, Object bodyValue) {
+        if (!availability.isAvailable()) {
+            log.warn("[DOWNLOAD] 모비젠 미연결 상태라 호출하지 않음: uri={} ({})", uri, availability.unavailableMessage());
+            throw new SimpleException(availability.unavailableMessage(), HttpStatus.SERVICE_UNAVAILABLE);
+        }
         try {
-            return WEB_CLIENT
+            ResponseEntity<Resource> entity = WEB_CLIENT
                     .post()
                     .uri(uri)
                     .contentType(MediaType.APPLICATION_JSON)
@@ -205,13 +218,27 @@ public class MobigenExternalApiService {
                     .toEntity(Resource.class)
                     .retryWhen(MobigenRetryPolicy.connectRetry(retryMaxAttempts, Duration.ofMillis(500)))
                     .block();
+            availability.markUp();
+            return entity;
 
         } catch (Exception e) {
             if (e instanceof SimpleException) throw (SimpleException) e;
             String msg = getErrorMessage(e);
             log.error("[DOWNLOAD] API 통신 실패: uri={} / message={}", uri, msg, e);
+            markDownIfConnectFailure(e, msg);
             throw new SimpleException(msg, HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
+
+    /** 미연결(또는 연동 꺼짐) 상태에서는 서버를 부르지 않고 바로 실패 응답을 돌려준다. 화면이 타임아웃·재시도를 기다리지 않게 한다 */
+    private <T> ApiResponse<T> unavailableResponse(String method, String uri) {
+        log.warn("[{}] 모비젠 미연결 상태라 호출하지 않음: uri={} ({})", method, uri, availability.unavailableMessage());
+        return createFailResponse(ERROR_CODE, availability.unavailableMessage());
+    }
+
+    /** 연결 자체가 안 된 실패면 다음 호출부터 즉시 실패 처리되도록 상태를 내린다. HTTP 오류·읽기 지연은 서버가 살아 있는 것이므로 유지 */
+    private void markDownIfConnectFailure(Exception e, String msg) {
+        if (MobigenRetryPolicy.isConnectFailure(e)) availability.markDown(msg);
     }
 
     /**
