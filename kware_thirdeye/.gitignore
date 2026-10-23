@@ -64,3 +64,6 @@ GEMINI.md
 
 # docker compose 로컬 환경변수
 docker/.env
+
+# 로컬 실행용 비밀값(application-local.yml 이 import)
+local-secret.properties
