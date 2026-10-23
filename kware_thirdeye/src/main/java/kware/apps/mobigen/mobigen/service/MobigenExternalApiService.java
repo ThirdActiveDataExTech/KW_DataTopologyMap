@@ -45,12 +45,9 @@ import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.WebClientRequestException;
 import reactor.core.publisher.Mono;
-import reactor.util.retry.Retry;
 import reactor.netty.http.client.HttpClient;
 
 import java.io.IOException;
-import java.net.ConnectException;
-import java.net.UnknownHostException;
 import java.nio.file.Path;
 import java.time.Duration;
 import java.util.HashMap;
@@ -90,25 +87,6 @@ public class MobigenExternalApiService {
                     )
         ))
         .build();
-    }
-
-    /**
-     * 서버에 요청이 닿기 전의 실패(연결 거부·연결 타임아웃·호스트 조회 실패)만 재시도한다.
-     * 읽기 타임아웃·HTTP 오류 응답은 서버가 이미 처리했을 수 있어 재시도하지 않는다(중복 생성 방지).
-     */
-    private Retry connectRetry() {
-        return Retry.backoff(retryMaxAttempts, Duration.ofMillis(500))
-                .filter(this::isConnectFailure)
-                .doBeforeRetry(signal -> log.warn("[RETRY] 모비젠 연결 실패, {}회째 재시도: {}", signal.totalRetries() + 1, signal.failure().getMessage()))
-                .onRetryExhaustedThrow((spec, signal) -> signal.failure());
-    }
-
-    private boolean isConnectFailure(Throwable t) {
-        if (!(t instanceof WebClientRequestException)) return false;
-        Throwable cause = t.getCause();
-        return cause instanceof ConnectException
-                || cause instanceof io.netty.channel.ConnectTimeoutException
-                || cause instanceof UnknownHostException;
     }
 
     private String extractDetail(String bodyStr) {
@@ -172,7 +150,7 @@ public class MobigenExternalApiService {
                         return Mono.error( new ApiException(createFailResponse(res.rawStatusCode(), extractDetail(body)), res.statusCode()) );
                     }))
                     .bodyToMono(typeRef)
-                    .retryWhen(connectRetry())
+                    .retryWhen(MobigenRetryPolicy.connectRetry(retryMaxAttempts, Duration.ofMillis(500)))
                     .block();
 
             return (response != null) ? response : createFailResponse(ERROR_CODE, "서버 응답이 비어있습니다.");
@@ -198,7 +176,7 @@ public class MobigenExternalApiService {
                         return Mono.error( new ApiException(createFailResponse(res.rawStatusCode(), extractDetail(body)), res.statusCode()) );
                     }))
                     .bodyToMono(typeRef)
-                    .retryWhen(connectRetry())
+                    .retryWhen(MobigenRetryPolicy.connectRetry(retryMaxAttempts, Duration.ofMillis(500)))
                     .block();
 
             return (response != null) ? response : createFailResponse(ERROR_CODE, "서버 응답이 비어있습니다.");
@@ -225,7 +203,7 @@ public class MobigenExternalApiService {
                         return Mono.error(new SimpleException(extractDetail(body), HttpStatus.BAD_REQUEST));
                     }))
                     .toEntity(Resource.class)
-                    .retryWhen(connectRetry())
+                    .retryWhen(MobigenRetryPolicy.connectRetry(retryMaxAttempts, Duration.ofMillis(500)))
                     .block();
 
         } catch (Exception e) {
