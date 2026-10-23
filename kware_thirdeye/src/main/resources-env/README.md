@@ -32,5 +32,6 @@ MAIL_PASSWORD=...
 gradlew bootRun -Pprofile=local
 ```
 
+- local 프로파일의 로그·업로드·에디터 이미지 경로는 프로젝트 루트의 `local-data/` 아래를 가리키며 이 폴더도 `.gitignore` 에 등록되어 있다.
 - IDE 실행도 작업 디렉터리가 프로젝트 루트이면 같은 파일을 읽는다. 다른 프로파일(dev 등)은 실행 환경의 환경변수로 주입한다. 값을 저장소에 커밋하지 않는다.
 - 모비젠 API 타임아웃은 환경변수가 아니라 설정 키 `mobigen.timeout.connect-ms`(기본 5000), `mobigen.timeout.read-write-ms`(10000), `mobigen.timeout.response-sec`(10)로 조정한다. 연결 실패 재시도 횟수는 `mobigen.retry.max-attempts`(기본 2, 0이면 재시도 없음).

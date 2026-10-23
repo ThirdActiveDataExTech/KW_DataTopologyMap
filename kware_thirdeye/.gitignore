@@ -67,3 +67,6 @@ docker/.env
 
 # 로컬 실행용 비밀값(application-local.yml 이 import)
 local-secret.properties
+
+# 로컬 실행 데이터(로그·업로드·에디터 이미지). application-local.yml 이 가리킴
+local-data/
