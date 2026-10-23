@@ -103,7 +103,7 @@ public class MobigenConnectivityChecker {
         try {
             Integer status = client.get().uri("")
                     .exchangeToMono(res -> res.releaseBody().thenReturn(res.rawStatusCode()))
-                    .timeout(timeout)
+                    .timeout(timeout.plusMillis(500))   // 연결 타임아웃이 먼저 걸리게 여유를 둬 사유(연결/응답)를 구분한다
                     .block();
             log.debug("모비젠 접속 확인 응답 HTTP {}", status);
             availability.markUp();
