@@ -64,7 +64,7 @@
               ,SHOW_AT = #{showAt}
               ,THUMB_UID = #{thumbUid}::int8
               ,CATEGORY_UID = #{categoryUid}::int8
-              ,EXTRA_JSON = #{extraJson}::jsonb
+              ,EXTRA_JSON = COALESCE(EXTRA_JSON, '{}'::jsonb) || #{extraJson}::jsonb   /* 화면이 보내지 않는 키(title 등)는 보존 */
               ,UPDT_UID = #{updtUid}
               ,UPDT_DT = NOW()
          WHERE UID = #{uid}
