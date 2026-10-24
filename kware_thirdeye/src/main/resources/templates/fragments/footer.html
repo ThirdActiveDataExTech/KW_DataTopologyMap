@@ -27,11 +27,11 @@
                                 <div class="footer-logo">
                                     <a href="/portal/home">
                                         <th:block th:if="${user == null}">
-                                            <img src="/assets/images/logo/logo.png" alt="logo">
+                                            <img src="/assets/images/logo/logo.png" alt="logo" width="238" height="82">
                                         </th:block>
                                         <th:block th:unless="${user == null}">
                                             <!--<img th:src="|/api/portal/files/view?fileId=${user?.brandingInfo?.footerLogo}|" onerror="this.src='/assets/images/logo/logo.png'" alt="logo">-->
-                                            <img src="/assets/images/logo/logo.png" alt="logo">
+                                            <img src="/assets/images/logo/logo.png" alt="logo" width="238" height="82">
                                         </th:block>
                                     </a>
                                 </div>
@@ -55,11 +55,11 @@
                                     <div class="payment-img">
                                         <a href="#">
                                             <th:block th:if="${user == null}">
-                                                <img src="/assets/images/icon-img/company.png" alt="logo">
+                                                <img src="/assets/images/icon-img/company.png" alt="logo" width="600" height="44">
                                             </th:block>
                                             <th:block th:unless="${user == null}">
                                                 <!--<img th:src="|/api/portal/files/view?fileId=${user?.brandingInfo?.companyLogo}|" onerror="this.src='/assets/images/icon-img/company.png'" alt="logo">-->
-                                                <img src="/assets/images/icon-img/company.png" alt="logo">
+                                                <img src="/assets/images/icon-img/company.png" alt="logo" width="600" height="44">
                                             </th:block>
                                         </a>
                                     </div>

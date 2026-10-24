@@ -16,12 +16,12 @@
                         <div class="logo">
                             <a href="/portal/home">
                                 <th:block th:if="${user == null}">
-                                    <img src="/assets/images/logo/logo.png" alt="logo">
+                                    <img src="/assets/images/logo/logo.png" alt="logo" width="238" height="82">
                                 </th:block>
                                 <th:block th:unless="${user == null}">
                                     <!--<img th:src="|/api/portal/files/view?fileId=${user?.brandingInfo?.rootLogo}|"
                                          onerror="this.src='/assets/images/logo/logo.png'" alt="logo">-->
-                                    <img src="/assets/images/logo/logo.png" alt="logo">
+                                    <img src="/assets/images/logo/logo.png" alt="logo" width="238" height="82">
                                 </th:block>
                             </a>
                         </div>
