@@ -39,6 +39,14 @@
             /* 종료일에 1일을 더한 날의 '00:00:00' 미만으로 설정하여 해당 날짜 전체 포함 */
             AND CAD.APPROVED_DT <![CDATA[>]]> (#{endDate}::DATE + INTERVAL '1 day')
         </if>
+        <if test="@Ognl@isNotEmpty(keyword)">
+           /* 검색어: 데이터셋 ID, 진열 등록 때 저장한 제목·요약·설명, 카테고리명 */
+           AND ( CAD.METADATA_ID ILIKE '%' || #{keyword} || '%'
+              OR CDU.EXTRA_JSON->>'title' ILIKE '%' || #{keyword} || '%'
+              OR CDU.EXTRA_JSON->>'summary' ILIKE '%' || #{keyword} || '%'
+              OR CDU.EXTRA_JSON->>'description' ILIKE '%' || #{keyword} || '%'
+              OR CDC.CATEGORY_NM ILIKE '%' || #{keyword} || '%' )
+        </if>
         <if test="@Ognl@isNotEmpty(categories)">
            AND CDC.UID IN
             <foreach collection="categories" item="categoryUid" open="(" separator="," close=")">
@@ -75,6 +83,14 @@
             AND CAD.APPROVED_DT >= #{startDate}::TIMESTAMP
             /* 종료일에 1일을 더한 날의 '00:00:00' 미만으로 설정하여 해당 날짜 전체 포함 */
             AND CAD.APPROVED_DT <![CDATA[>]]> (#{endDate}::DATE + INTERVAL '1 day')
+        </if>
+        <if test="@Ognl@isNotEmpty(keyword)">
+           /* 검색어: 데이터셋 ID, 진열 등록 때 저장한 제목·요약·설명, 카테고리명 */
+           AND ( CAD.METADATA_ID ILIKE '%' || #{keyword} || '%'
+              OR CDU.EXTRA_JSON->>'title' ILIKE '%' || #{keyword} || '%'
+              OR CDU.EXTRA_JSON->>'summary' ILIKE '%' || #{keyword} || '%'
+              OR CDU.EXTRA_JSON->>'description' ILIKE '%' || #{keyword} || '%'
+              OR CDC.CATEGORY_NM ILIKE '%' || #{keyword} || '%' )
         </if>
         <if test="@Ognl@isNotEmpty(categories)">
            AND CDC.UID IN
