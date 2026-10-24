@@ -36,7 +36,7 @@
     <script th:src="@{'/assets/js/plugins/jstree/jstree.min.js'}"></script>
 
     <!-- jsoneditor -->
-    <script th:src="@{'/assets/js/plugins/jsoneditor/jsoneditor.min.js'}"></script>
+    <script th:src="@{'/assets/js/plugins/jsoneditor/jsoneditor.min.js'}" defer></script>   <!-- 1MB, 상세·관리 화면 클릭 시 사용. 파싱을 막지 않게 defer -->
 
     <!-- Main JS -->
     <script th:src="@{'/assets/js/main.js'}"></script>
@@ -46,8 +46,8 @@
     <script th:src="@{'/assets/js/core/MyUploadAdapter.js'}"></script>
     <script th:src="@{'/assets/js/core/sweetalert2.all.min.js'}"></script>
     <script th:src="@{'/assets/js/core/perfect-scrollbar.min.js'}"></script>
-    <script th:src="@{'/assets/js/core/uppy.min.js'}"></script>
-    <script th:src="@{'/assets/js/core/uppy.locale.js'}"></script>
+    <script th:src="@{'/assets/js/core/uppy.min.js'}" defer></script>   <!-- 업로더. 호출 시점에만 참조하므로 defer -->
+    <script th:src="@{'/assets/js/core/uppy.locale.js'}" defer></script>
     <script th:src="@{'/assets/js/core/compressor.js'}"></script>
 
     <!-- Comm js -->
