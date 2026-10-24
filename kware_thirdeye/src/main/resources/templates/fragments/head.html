@@ -1,6 +1,7 @@
 <!-- css -->
 
 <!-- Add site Favicon -->
+<!-- 첫 화면에 필요 없는 플러그인 CSS(에디터·업로더·트리·표·선택상자·팝업)는 media=print 로 받아 두고 로드 뒤 적용해 렌더 차단을 피한다 -->
 <link rel="shortcut icon" type="image/x-icon" th:href="@{'/assets/images/favicon.ico'}" />
 
 <link rel="stylesheet" th:href="@{'/assets/css/header-download-wrap.css'}" />
@@ -11,35 +12,42 @@
 <link rel="stylesheet" th:href="@{'/assets/css/vendor/font-awesome.min.css'}" />
 <link rel="stylesheet" th:href="@{'/assets/css/plugins/animate.css'}" />
 <link rel="stylesheet" th:href="@{'/assets/css/plugins/aos.css'}" />
-<link rel="stylesheet" th:href="@{'/assets/css/plugins/magnific-popup.css'}" />
+<link rel="stylesheet" th:href="@{'/assets/css/plugins/magnific-popup.css'}" media="print" onload="this.media='all'">
+<noscript><link rel="stylesheet" th:href="@{'/assets/css/plugins/magnific-popup.css'}"></noscript>
 <link rel="stylesheet" th:href="@{'/assets/css/plugins/swiper.min.css'}" />
 <link rel="stylesheet" th:href="@{'/assets/css/plugins/jquery-ui.css'}" />
 <link rel="stylesheet" th:href="@{'/assets/css/plugins/nice-select.css'}" />
 <!--<link rel="stylesheet" th:href="@{'/assets/css/plugins/select2.min.css'}" />-->
-<link rel="stylesheet" th:href="@{'/assets/css/plugins/easyzoom.css'}" />
-<link rel="stylesheet" th:href="@{'/assets/css/plugins/slinky.css'}" />
-<link rel="stylesheet" th:href="@{'/assets/css/plugins/datatables/dataTables.bootstrap5.min.css'}">
-<link rel="stylesheet" th:href="@{'/assets/css/plugins/datatables/dataTables-custom.css'}">
-
+<link rel="stylesheet" th:href="@{'/assets/css/plugins/easyzoom.css'}" media="print" onload="this.media='all'">
+<noscript><link rel="stylesheet" th:href="@{'/assets/css/plugins/easyzoom.css'}"></noscript>
+<link rel="stylesheet" th:href="@{'/assets/css/plugins/slinky.css'}" media="print" onload="this.media='all'">
+<noscript><link rel="stylesheet" th:href="@{'/assets/css/plugins/slinky.css'}"></noscript>
+<link rel="stylesheet" th:href="@{'/assets/css/plugins/datatables/dataTables.bootstrap5.min.css'}" media="print" onload="this.media='all'">
+<noscript><link rel="stylesheet" th:href="@{'/assets/css/plugins/datatables/dataTables.bootstrap5.min.css'}"></noscript>
+<link rel="stylesheet" th:href="@{'/assets/css/plugins/datatables/dataTables-custom.css'}" media="print" onload="this.media='all'">
+<noscript><link rel="stylesheet" th:href="@{'/assets/css/plugins/datatables/dataTables-custom.css'}"></noscript>
 <!-- new select2 -->
-<link rel="stylesheet" th:href="@{'/assets/css/plugins/select2/select2.min.css'}" />
-<link rel="stylesheet" th:href="@{'/assets/css/plugins/select2/select2-custom.css'}" />
-
+<link rel="stylesheet" th:href="@{'/assets/css/plugins/select2/select2.min.css'}" media="print" onload="this.media='all'">
+<noscript><link rel="stylesheet" th:href="@{'/assets/css/plugins/select2/select2.min.css'}"></noscript>
+<link rel="stylesheet" th:href="@{'/assets/css/plugins/select2/select2-custom.css'}" media="print" onload="this.media='all'">
+<noscript><link rel="stylesheet" th:href="@{'/assets/css/plugins/select2/select2-custom.css'}"></noscript>
 <!-- jstree -->
-<link rel="stylesheet" th:href="@{'/assets/css/plugins/jstree/jstree.min.css'}" />
-<link rel="stylesheet" th:href="@{'/assets/css/plugins/jstree/ext-component-tree.css'}" />
-
+<link rel="stylesheet" th:href="@{'/assets/css/plugins/jstree/jstree.min.css'}" media="print" onload="this.media='all'">
+<noscript><link rel="stylesheet" th:href="@{'/assets/css/plugins/jstree/jstree.min.css'}"></noscript>
+<link rel="stylesheet" th:href="@{'/assets/css/plugins/jstree/ext-component-tree.css'}" media="print" onload="this.media='all'">
+<noscript><link rel="stylesheet" th:href="@{'/assets/css/plugins/jstree/ext-component-tree.css'}"></noscript>
 <!-- css -->
 <link rel="stylesheet" th:href="@{'/assets/css/custom.css'}" />
 
 <!-- ckeditor -->
-<link rel="stylesheet" type="text/css" th:href="@{'/assets/ckeditor/ckeditor5.css'}" />
-
+<link rel="stylesheet" th:href="@{'/assets/ckeditor/ckeditor5.css'}" media="print" onload="this.media='all'">
+<noscript><link rel="stylesheet" th:href="@{'/assets/ckeditor/ckeditor5.css'}"></noscript>
 <!-- core -->
-<link rel="stylesheet" type="text/css" th:href="@{'/assets/css/core/uppy.min.css'}">
-
+<link rel="stylesheet" th:href="@{'/assets/css/core/uppy.min.css'}" media="print" onload="this.media='all'">
+<noscript><link rel="stylesheet" th:href="@{'/assets/css/core/uppy.min.css'}"></noscript>
 <!-- popup -->
-<link rel="stylesheet" type="text/css" th:href="@{'/assets/css/page/popup/popup-custom.css'}">
-
+<link rel="stylesheet" th:href="@{'/assets/css/page/popup/popup-custom.css'}" media="print" onload="this.media='all'">
+<noscript><link rel="stylesheet" th:href="@{'/assets/css/page/popup/popup-custom.css'}"></noscript>
 <!-- jsoneditor -->
-<link rel="stylesheet" type="text/css" th:href="@{'/assets/css/plugins/jsoneditor/jsoneditor.min.css'}">
+<link rel="stylesheet" th:href="@{'/assets/css/plugins/jsoneditor/jsoneditor.min.css'}" media="print" onload="this.media='all'">
+<noscript><link rel="stylesheet" th:href="@{'/assets/css/plugins/jsoneditor/jsoneditor.min.css'}"></noscript>
