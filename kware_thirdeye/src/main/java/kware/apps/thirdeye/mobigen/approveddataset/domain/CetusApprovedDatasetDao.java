@@ -36,4 +36,9 @@ public class CetusApprovedDatasetDao extends SuperDao<CetusApprovedDataset> {
         update("updateApprovedDatasetSearchData", bean);
     }
 
+    /** 진열 중인데 extra_json 에 제목이 없는 데이터셋(제목 백필 대상) */
+    public List<ApprovedDatasetItem> getTitleMissingList() {
+        return selectList("getTitleMissingList");
+    }
+
 }

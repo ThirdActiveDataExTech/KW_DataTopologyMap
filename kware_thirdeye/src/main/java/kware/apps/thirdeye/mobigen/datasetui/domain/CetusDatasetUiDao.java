@@ -6,7 +6,9 @@ import kware.apps.thirdeye.mobigen.datasetui.dto.response.DatasetUiGroup;
 import kware.apps.thirdeye.mobigen.datasetui.dto.response.DatasetUiView;
 import org.springframework.stereotype.Component;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Component
 public class CetusDatasetUiDao extends SuperDao<CetusDatasetUi> {
@@ -33,5 +35,13 @@ public class CetusDatasetUiDao extends SuperDao<CetusDatasetUi> {
 
     public void updateDatasetCategory(CetusDatasetUi bean) {
         update("updateDatasetCategory", bean);
+    }
+
+    /** extra_json 의 title 만 채운다(다른 키는 보존). 제목 백필용 */
+    public int updateExtraJsonTitle(Long approvedDatasetUid, String title) {
+        Map<String, Object> param = new HashMap<>();
+        param.put("approvedDatasetUid", approvedDatasetUid);
+        param.put("title", title);
+        return update("updateExtraJsonTitle", param);
     }
 }

@@ -101,6 +101,18 @@
         </if>
     </select>
 
+    <select id="getTitleMissingList" resultType="ApprovedDatasetItem">
+        /* cetusApprovedDataset.getTitleMissingList */
+        /* 진열 중이지만 진열 정보(extra_json)에 제목이 없는 데이터셋. 모비젠에서 제목을 받아 채우는 백필 대상 */
+        SELECT CAD.UID AS APPROVED_UID
+              ,CAD.METADATA_ID
+          FROM CETUS_APPROVED_DATASET CAD
+         INNER JOIN CETUS_DATASET_UI CDU ON CDU.APPROVED_DATASET_UID = CAD.UID
+         WHERE CAD.DELETE_AT = 'N'
+           AND COALESCE(CDU.EXTRA_JSON->>'title', '') = ''
+         ORDER BY CAD.UID
+    </select>
+
     <select id="getMetadataIsApproved" resultType="Boolean" parameterType="map">
         /* cetusApprovedDataset.getApprovedMetadataIdList */
         SELECT EXISTS (

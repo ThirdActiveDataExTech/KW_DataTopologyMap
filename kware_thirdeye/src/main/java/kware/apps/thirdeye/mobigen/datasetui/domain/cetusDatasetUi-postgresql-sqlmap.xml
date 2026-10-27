@@ -56,6 +56,14 @@
          WHERE CDU.APPROVED_DATASET_UID = #{approvedDatasetUid}
     </select>
 
+    <update id="updateExtraJsonTitle" parameterType="map">
+        /* cetusDatasetUi.updateExtraJsonTitle */
+        /* 제목 백필: 기존 extra_json 키는 보존하고 title 만 넣는다 */
+        UPDATE CETUS_DATASET_UI
+           SET EXTRA_JSON = COALESCE(EXTRA_JSON, '{}'::jsonb) || jsonb_build_object('title', #{title}::text)
+         WHERE APPROVED_DATASET_UID = #{approvedDatasetUid}
+    </update>
+
     <update id="update" parameterType="CetusDatasetUi">
         /* cetusDatasetUi.update */
         UPDATE CETUS_DATASET_UI

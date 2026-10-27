@@ -35,4 +35,5 @@ gradlew bootRun -Pprofile=local
 - local 프로파일의 로그·업로드·에디터 이미지 경로는 프로젝트 루트의 `local-data/` 아래를 가리키며 이 폴더도 `.gitignore` 에 등록되어 있다.
 - IDE 실행도 작업 디렉터리가 프로젝트 루트이면 같은 파일을 읽는다. 다른 프로파일(dev 등)은 실행 환경의 환경변수로 주입한다. 값을 저장소에 커밋하지 않는다.
 - 모비젠 API 타임아웃은 환경변수가 아니라 설정 키 `mobigen.timeout.connect-ms`(기본 5000), `mobigen.timeout.read-write-ms`(10000), `mobigen.timeout.response-sec`(10)로 조정한다. 연결 실패 재시도 횟수는 `mobigen.retry.max-attempts`(기본 2, 0이면 재시도 없음).
+- 진열 데이터셋 제목은 진열 등록 때 `extra_json.title` 에 저장되어 목록·홈·검색은 모비젠을 부르지 않는다. 그 전에 등록된 행은 제목이 비어 있으므로 모비젠이 연결되면 기동 직후·복구 시 백그라운드로 채운다(백필). 수동 실행 `POST /api/admin/approved-dataset/backfill-title`, 마지막 결과 `GET` 같은 주소.
 - 모비젠 연동 자체는 `mobigen.enabled`(기본 true, 환경변수 `MOBIGEN_ENABLED`)로 끌 수 있다. 켜져 있으면 기동 직후 비동기로 접속을 확인하고 `mobigen.health-check.interval-ms`(기본 60000)마다 백그라운드 스레드가 다시 확인한다. 미연결 동안은 모비젠 API 호출을 기다리지 않고 바로 실패 응답을 돌려주며, `/api/portal/integration-dataset/status` 로 현재 상태를 볼 수 있다. 확인 기능은 `mobigen.health-check.enabled=false` 로 끌 수 있다(타임아웃 `timeout-ms`, 기본 2000).

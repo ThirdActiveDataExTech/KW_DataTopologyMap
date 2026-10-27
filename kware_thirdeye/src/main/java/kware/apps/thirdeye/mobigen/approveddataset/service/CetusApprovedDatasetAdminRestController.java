@@ -7,6 +7,7 @@ import kware.apps.thirdeye.mobigen.approveddataset.dto.request.SearchApprovedDat
 import kware.apps.thirdeye.mobigen.approveddataset.dto.request.DeleteApprovedDatasets;
 import kware.apps.thirdeye.mobigen.approveddataset.dto.request.SaveApprovedDataset;
 import kware.apps.thirdeye.mobigen.approveddataset.dto.response.ApprovedDatasetItem;
+import kware.apps.thirdeye.mobigen.approveddataset.dto.response.TitleBackfillResult;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 public class CetusApprovedDatasetAdminRestController {
 
     private final CetusApprovedDatasetService service;
+    private final ApprovedDatasetTitleBackfillService titleBackfillService;
 
     /**
      *
@@ -59,5 +61,24 @@ public class CetusApprovedDatasetAdminRestController {
     public ResponseEntity deleteSeveralApprovedDataset(@RequestBody DeleteApprovedDatasets request) {
         service.deleteSeveralApprovedDataset(request);
         return ResponseEntity.ok().build();
+    }
+
+    /**
+     *
+     * 진열 데이터셋 중 제목(extra_json.title)이 비어 있는 행에 모비젠 제목을 채운다(백필).
+     * 모비젠이 연결돼 있지 않으면 건너뛰고 상태만 돌려준다. 복구 시 자동으로도 실행된다.
+     *
+     * @api         [POST] /api/admin/approved-dataset/backfill-title
+    **/
+    @PostMapping("/backfill-title")
+    public ResponseEntity backfillTitle() {
+        return ResponseEntity.ok(titleBackfillService.backfill());
+    }
+
+    /** 마지막 백필 실행 결과 */
+    @GetMapping("/backfill-title")
+    public ResponseEntity lastBackfillResult() {
+        TitleBackfillResult result = titleBackfillService.getLastResult();
+        return ResponseEntity.ok(result != null ? result : java.util.Collections.singletonMap("status", "NEVER_RUN"));
     }
 }
