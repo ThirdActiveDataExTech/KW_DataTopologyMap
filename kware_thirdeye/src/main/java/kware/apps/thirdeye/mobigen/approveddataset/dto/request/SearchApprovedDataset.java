@@ -39,7 +39,7 @@ public class SearchApprovedDataset {
         this.dataTarType = dataTarType;
         this.startDate = startDate;
         this.endDate = endDate;
-        this.keyword = keyword;
+        this.keyword = normalizeKeyword(keyword);
         this.categories = categories;
     }
 
@@ -48,5 +48,18 @@ public class SearchApprovedDataset {
     }
     public void setUserUid(Long userUid) {
         this.userUid = userUid;
+    }
+
+    /** 검색어는 앞뒤 공백을 지우고, 비어 있으면 조건을 걸지 않도록 null 로 둔다 */
+    public void setKeyword(String keyword) {
+        this.keyword = normalizeKeyword(keyword);
+    }
+
+    static String normalizeKeyword(String keyword) {
+        if (keyword == null) {
+            return null;
+        }
+        String trimmed = keyword.trim();
+        return trimmed.isEmpty() ? null : trimmed;
     }
 }

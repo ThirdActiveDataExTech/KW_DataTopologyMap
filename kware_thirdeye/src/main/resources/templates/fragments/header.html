@@ -43,8 +43,8 @@
                                     <i class="pe-7s-close s-close"></i>
                                 </a>
                                 <div class="search-wrap-1">
-                                    <form action="/portal/list" method="get">
-                                        <input placeholder="컨텐츠 검색…" type="text" name="keyword">
+                                    <form id="headerSearchForm" action="/portal/list" method="get">
+                                        <input placeholder="컨텐츠 검색…" type="text" name="keyword" required maxlength="100" autocomplete="off">
                                         <button class="button-search"><i class="pe-7s-search"></i></button>
                                     </form>
                                 </div>
@@ -216,6 +216,22 @@
             location.href='/logout'
         }
 
+    </script>
+    <script>
+        // 상단 검색: 검색어가 없거나 공백만이면 서버로 보내지 않는다(빈 검색은 /portal/list 전체 목록이 되어 버림)
+        $(function () {
+            $('#headerSearchForm').on('submit', function (event) {
+                const input = this.elements['keyword'];
+                const keyword = (input.value || '').trim();
+                if (!keyword) {
+                    event.preventDefault();
+                    input.value = '';
+                    input.focus();
+                    return false;
+                }
+                input.value = keyword;   // 앞뒤 공백 제거한 값으로 제출
+            });
+        });
     </script>
 </th:block>
 <!-- E: 로그인 이후에 메인로고+메뉴 있는 헤더 -->
