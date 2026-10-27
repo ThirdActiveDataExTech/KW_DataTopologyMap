@@ -19,6 +19,7 @@ public class ApprovedDatasetItem {
     private Integer ratings;        // 데이터셋 의견/평점
     private String bookmarkYn;      // 북마크 여부
     private String deleteAt;        // 진열 등록 삭제 여부
+    private String title;           // 진열 등록 때 extra_json 에 저장한 제목. 목록·홈은 모비젠을 부르지 않고 이 값을 쓴다
 
     private MetadataView metadataView;  // 메타데이터 정보
     public void setMetadataView(MetadataView metadataView) {

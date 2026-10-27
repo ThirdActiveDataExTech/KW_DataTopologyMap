@@ -43,15 +43,25 @@ public class CetusApprovedDatasetService {
     private final DatasetService datasetService;
 
 
+    /** 상세 화면용: 모비젠 상세 + 진열 정보. 행마다 모비젠 API 1회가 나가므로 목록에는 쓰지 않는다 */
     private void settingApprovedDatasetInfo(ApprovedDatasetItem datasetItem) {
         String metadataId = datasetItem.getMetadataId();
-        Long approvedUid = datasetItem.getApprovedUid();
 
         // (1) 데이터셋 > 모비젠 측을 통한 상세 정보 조회
         MetadataView metadataView = datasetService.viewMetadata(new SearchMetadataView(metadataId));
         if (metadataView != null) {
             datasetItem.setMetadataView(metadataView);
         }
+
+        settingLocalDatasetInfo(datasetItem);
+    }
+
+    /**
+     * 목록·홈용: 로컬 DB 에 있는 진열 정보만 세팅한다.
+     * 제목은 조회 SQL 이 extra_json.title 로 함께 내려주므로 모비젠을 부르지 않는다(페이지당 N회 외부 호출 제거).
+     */
+    private void settingLocalDatasetInfo(ApprovedDatasetItem datasetItem) {
+        Long approvedUid = datasetItem.getApprovedUid();
 
         // (2) 데이터셋 진열 정보 세팅
         DatasetUiView datasetUiView = datasetUiService.findDatasetUiView(approvedUid);
@@ -69,7 +79,7 @@ public class CetusApprovedDatasetService {
      * @author      dahyeon
      * @date        2025-10-01
      * @deacription [KWARE] 승인된 데이터셋 목록 조회 + 페이징
-     *                  => 각 승인된 metadataId 값을 가지고 모비젠 측의 API를 통해 데이터셋 상세 정보 조회
+     *                  => 제목·요약 등은 진열 등록 때 extra_json 에 저장한 값을 쓴다. 모비젠 상세 조회는 상세 화면에서만 한다
     **/
     @Transactional(readOnly = true)
     public Page<ApprovedDatasetItem> findDatasetPage(SearchApprovedDataset search, Pageable pageable ) {
@@ -77,7 +87,7 @@ public class CetusApprovedDatasetService {
         search.setUserUid(UserUtil.getUser().getUid());
         Page<ApprovedDatasetItem> page = dao.page("getDatasetPage", "getDatasetPageCount", search, pageable);
         if(page.getList() != null && !page.getList().isEmpty()) {
-            page.getList().forEach(this::settingApprovedDatasetInfo);
+            page.getList().forEach(this::settingLocalDatasetInfo);
         }
         return page;
     }
@@ -159,7 +169,7 @@ public class CetusApprovedDatasetService {
         search.setWorkplaceUid(UserUtil.getUserWorkplaceUid());
         search.setUserUid(UserUtil.getUser().getUid());
         List<ApprovedDatasetItem> homeDatasetList = dao.getHomeDatasetList(search);
-        homeDatasetList.forEach(this::settingApprovedDatasetInfo);
+        homeDatasetList.forEach(this::settingLocalDatasetInfo);
         return homeDatasetList;
     }
 }
