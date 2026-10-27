@@ -51,7 +51,7 @@ public class DatasetRestController {
         body.put("enabled", availability.isEnabled());
         body.put("available", availability.isAvailable());
         body.put("state", availability.getState().name());
-        body.put("checkedAt", availability.getCheckedAt());
+        body.put("checkedAt", availability.getCheckedAt() != null ? availability.getCheckedAt().toString() : null);   // ISO-8601 문자열
         body.put("message", availability.isAvailable() ? null : availability.unavailableMessage());
         return ResponseEntity.ok(body);
     }

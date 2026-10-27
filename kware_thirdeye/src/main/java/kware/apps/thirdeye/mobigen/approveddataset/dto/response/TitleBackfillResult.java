@@ -1,5 +1,6 @@
 package kware.apps.thirdeye.mobigen.approveddataset.dto.response;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
 
 import java.time.Instant;
@@ -15,6 +16,7 @@ public class TitleBackfillResult {
     private final int updated;      // 제목을 채운 수
     private final int failed;       // 모비젠에서 제목을 받지 못한 수
     private final String message;
+    @JsonFormat(shape = JsonFormat.Shape.STRING)   // ISO-8601 문자열로 응답
     private final Instant finishedAt;
 
     public TitleBackfillResult(Status status, int targets, int updated, int failed, String message, Instant finishedAt) {
