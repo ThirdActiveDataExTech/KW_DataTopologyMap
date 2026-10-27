@@ -80,7 +80,7 @@
 
                 <div class="row">
                   <div class="col-lg-6">
-                      <h2 id="contentTitle" th:text="${dataset?.metadataView?.metadataResponse?.title}"></h2>
+                      <h2 id="contentTitle" th:text="${dataset?.metadataView?.metadataResponse?.title ?: dataset?.title}"></h2>
                   </div>
                   <div class="col-lg-6 d-flex justify-content-end" style="flex-direction: row; align-items: flex-start;">
                     <div class="page-details-action-wrap" style="margin-right: 17px !important;">

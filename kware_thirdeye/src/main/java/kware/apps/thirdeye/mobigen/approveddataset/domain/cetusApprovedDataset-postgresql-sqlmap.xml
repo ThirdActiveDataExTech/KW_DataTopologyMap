@@ -146,6 +146,7 @@
                  WHERE CDM.APPROVED_DATASET_UID = CAD.UID ) AS RATINGS
               ,CASE WHEN CDB.APPROVED_DATASET_UID IS NOT NULL THEN 'Y' ELSE 'N' END AS BOOKMARK_YN
               ,CAD.DELETE_AT
+              ,CDU.EXTRA_JSON->>'title' AS TITLE -- 진열 등록 때 저장한 제목(모비젠 응답이 없을 때 대체 표시)
           FROM CETUS_APPROVED_DATASET CAD -- 진열관리 중인 데이터셋
           LEFT JOIN CETUS_DATASET_UI CDU ON CDU.APPROVED_DATASET_UID = CAD.UID -- 진열관리 중인 데이터셋의 UI
           LEFT JOIN CETUS_USER CU_APP ON CU_APP.UID = CAD.APPROVER_UID -- 모비젠의 데이터셋을 진열등록한 유저
