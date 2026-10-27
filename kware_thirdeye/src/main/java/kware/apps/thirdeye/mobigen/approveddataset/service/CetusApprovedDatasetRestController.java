@@ -31,6 +31,7 @@ public class CetusApprovedDatasetRestController {
     **/
     @GetMapping("/page")
     public ResponseEntity findDatasetList(SearchApprovedDataset search, Pageable pageable) {
+        search.setShowAt("Y");   // 포털 목록·검색은 진열 관리에서 노출로 둔 데이터셋만(숨김은 관리자 목록에서만 보인다). 홈 조회와 같은 기준
         Page<ApprovedDatasetItem> datasetPage = service.findDatasetPage(search, pageable);
         return ResponseEntity.ok(datasetPage);
     }
