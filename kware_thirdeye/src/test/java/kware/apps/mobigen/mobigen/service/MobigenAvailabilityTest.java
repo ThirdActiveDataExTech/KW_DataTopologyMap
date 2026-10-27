@@ -59,4 +59,29 @@ class MobigenAvailabilityTest {
         assertThat(a.isAvailable()).isTrue();
         assertThat(a.getReason()).isNull();
     }
+
+    @Test
+    void 복구_리스너는_UP_으로_바뀔_때만_한_번_불린다() {
+        MobigenAvailability a = new MobigenAvailability(true, false, FIXED);
+        java.util.concurrent.atomic.AtomicInteger calls = new java.util.concurrent.atomic.AtomicInteger();
+        a.addUpListener(calls::incrementAndGet);
+
+        a.markUp();                 // UNKNOWN -> UP
+        a.markUp();                 // UP 유지: 호출 없음
+        a.markDown("연결 거부");
+        a.markUp();                 // DOWN -> UP
+
+        assertThat(calls.get()).isEqualTo(2);
+    }
+
+    @Test
+    void 리스너_예외는_상태_갱신을_막지_않는다() {
+        MobigenAvailability a = new MobigenAvailability(true, false, FIXED);
+        a.addUpListener(() -> { throw new IllegalStateException("boom"); });
+
+        a.markUp();
+
+        assertThat(a.getState()).isEqualTo(MobigenAvailability.State.UP);
+        assertThat(a.isAvailable()).isTrue();
+    }
 }

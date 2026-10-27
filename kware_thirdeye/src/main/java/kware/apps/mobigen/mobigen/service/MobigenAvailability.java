@@ -7,6 +7,8 @@ import org.springframework.stereotype.Component;
 
 import java.time.Clock;
 import java.time.Instant;
+import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * 모비젠 연동 가능 여부를 한 곳에서 기억한다.
@@ -27,6 +29,8 @@ public class MobigenAvailability {
     private final boolean enabled;
     private final boolean unknownMeansAvailable;
     private final Clock clock;
+
+    private final List<Runnable> upListeners = new CopyOnWriteArrayList<>();
 
     private volatile State state = State.UNKNOWN;
     private volatile Instant checkedAt;
@@ -60,7 +64,25 @@ public class MobigenAvailability {
         state = State.UP;
         checkedAt = clock.instant();
         reason = null;
-        if (before != State.UP) log.info("모비젠 연동 서버 연결 확인: 사용 가능 (이전 상태 {})", before);
+        if (before != State.UP) {
+            log.info("모비젠 연동 서버 연결 확인: 사용 가능 (이전 상태 {})", before);
+            notifyUp();
+        }
+    }
+
+    /** 연결이 (다시) 확인될 때 한 번 실행할 작업을 등록한다. 이미 UP 인 상태에서 반복 확인되는 동안은 부르지 않는다 */
+    public void addUpListener(Runnable listener) {
+        upListeners.add(listener);
+    }
+
+    private void notifyUp() {
+        for (Runnable listener : upListeners) {
+            try {
+                listener.run();
+            } catch (RuntimeException e) {
+                log.warn("모비젠 복구 후속 작업 실패: {}", e.toString());
+            }
+        }
     }
 
     public void markDown(String why) {
