@@ -1,6 +1,9 @@
 package kware.apps.thirdeye.mobigen.datasetui.service;
 
 
+import java.util.Map;
+import java.util.HashMap;
+import java.util.Collections;
 import cetus.user.UserUtil;
 import kware.apps.thirdeye.mobigen.approveddataset.dto.request.SaveApprovedDataset;
 import kware.apps.thirdeye.mobigen.category.service.CetusDatasetCategoryService;
@@ -70,6 +73,19 @@ public class CetusDatasetUiService {
     @Transactional(readOnly = true)
     public DatasetUiView findDatasetUiView(Long approvedDatasetUid) {
         return dao.getDatasetUiView(approvedDatasetUid);
+    }
+
+    /** 목록 한 페이지의 진열 정보를 한 번에 조회해 진열 데이터셋 UID 별로 돌려준다(행별 조회 대체) */
+    @Transactional(readOnly = true)
+    public Map<Long, DatasetUiView> findDatasetUiViewMap(List<Long> approvedDatasetUids) {
+        if (approvedDatasetUids == null || approvedDatasetUids.isEmpty()) {
+            return Collections.emptyMap();
+        }
+        Map<Long, DatasetUiView> result = new HashMap<>();
+        for (DatasetUiView view : dao.getDatasetUiViewList(approvedDatasetUids)) {
+            result.putIfAbsent(view.getApprovedDatasetUid(), view);
+        }
+        return result;
     }
 
     /**

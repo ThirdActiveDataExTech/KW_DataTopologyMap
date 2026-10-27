@@ -1,6 +1,7 @@
 package kware.apps.thirdeye.mobigen.mainui.domain;
 
 
+import java.util.Collections;
 import cetus.dao.SuperDao;
 import kware.apps.thirdeye.mobigen.mainui.dto.request.SearchDuplicateCode;
 import kware.apps.thirdeye.mobigen.mainui.dto.response.MainUiList;
@@ -22,6 +23,11 @@ public class CetusDatasetMainUiDao extends SuperDao<CetusDatasetMainUi> {
 
     public MainUiView getDatasetMainUiByUid(Long uid) {
         return selectOne("getDatasetMainUiByUid", uid);
+    }
+
+    /** 여러 메인 UI 를 한 번에 조회한다(목록 페이지용) */
+    public List<MainUiView> getDatasetMainUiListByUids(List<Long> uids) {
+        return selectList("getDatasetMainUiListByUids", Collections.singletonMap("uids", uids));
     }
 
     public void updateDatasetMainUidDeleteAt(CetusDatasetMainUi bean) {

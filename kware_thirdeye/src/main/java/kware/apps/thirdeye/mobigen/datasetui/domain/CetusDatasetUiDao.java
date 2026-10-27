@@ -1,6 +1,7 @@
 package kware.apps.thirdeye.mobigen.datasetui.domain;
 
 
+import java.util.Collections;
 import cetus.dao.SuperDao;
 import kware.apps.thirdeye.mobigen.datasetui.dto.response.DatasetUiGroup;
 import kware.apps.thirdeye.mobigen.datasetui.dto.response.DatasetUiView;
@@ -23,6 +24,11 @@ public class CetusDatasetUiDao extends SuperDao<CetusDatasetUi> {
 
     public DatasetUiView getDatasetUiView(Long approvedDatasetUid) {
         return selectOne("getDatasetUiView", approvedDatasetUid);
+    }
+
+    /** 여러 진열 데이터셋의 진열 정보를 한 번에 조회한다(목록 페이지용) */
+    public List<DatasetUiView> getDatasetUiViewList(List<Long> approvedDatasetUids) {
+        return selectList("getDatasetUiViewList", Collections.singletonMap("approvedDatasetUids", approvedDatasetUids));
     }
 
     public List<DatasetUiGroup> getDatasetUiByGroup(Long workplaceUid) {

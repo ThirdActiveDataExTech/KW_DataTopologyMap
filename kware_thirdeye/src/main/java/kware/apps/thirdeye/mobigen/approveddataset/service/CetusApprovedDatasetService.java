@@ -1,5 +1,7 @@
 package kware.apps.thirdeye.mobigen.approveddataset.service;
 
+import java.util.stream.Collectors;
+import java.util.Objects;
 import cetus.bean.Page;
 import cetus.bean.Pageable;
 import cetus.user.UserUtil;
@@ -73,6 +75,35 @@ public class CetusApprovedDatasetService {
         datasetItem.setMainUi(mainUiView);
     }
 
+    /**
+     * 목록·홈용(일괄): 한 페이지의 진열 정보와 메인 UI 를 각각 한 번씩 조회해 행에 채운다.
+     * 행마다 2회(진열 + 메인 UI) 조회하던 것을 페이지당 2회로 줄인다.
+     */
+    void settingLocalDatasetInfo(List<ApprovedDatasetItem> datasetItems) {
+        if (datasetItems == null || datasetItems.isEmpty()) {
+            return;
+        }
+        List<Long> approvedUids = datasetItems.stream()
+                .map(ApprovedDatasetItem::getApprovedUid)
+                .filter(Objects::nonNull)
+                .distinct()
+                .collect(Collectors.toList());
+        Map<Long, DatasetUiView> datasetUiByApprovedUid = datasetUiService.findDatasetUiViewMap(approvedUids);
+
+        List<Long> mainUiUids = datasetUiByApprovedUid.values().stream()
+                .map(DatasetUiView::getMainUiUid)
+                .filter(Objects::nonNull)
+                .distinct()
+                .collect(Collectors.toList());
+        Map<Long, MainUiView> mainUiByUid = mainUiService.findDatasetMainUiMap(mainUiUids);
+
+        for (ApprovedDatasetItem item : datasetItems) {
+            DatasetUiView datasetUiView = datasetUiByApprovedUid.get(item.getApprovedUid());
+            item.setDatasetUi(datasetUiView);
+            item.setMainUi(datasetUiView != null ? mainUiByUid.get(datasetUiView.getMainUiUid()) : null);
+        }
+    }
+
 
     /**
      * @method      findDatasetPage
@@ -86,9 +117,7 @@ public class CetusApprovedDatasetService {
         search.setWorkplaceUid(UserUtil.getUserWorkplaceUid());
         search.setUserUid(UserUtil.getUser().getUid());
         Page<ApprovedDatasetItem> page = dao.page("getDatasetPage", "getDatasetPageCount", search, pageable);
-        if(page.getList() != null && !page.getList().isEmpty()) {
-            page.getList().forEach(this::settingLocalDatasetInfo);
-        }
+        settingLocalDatasetInfo(page.getList());
         return page;
     }
 
@@ -169,7 +198,7 @@ public class CetusApprovedDatasetService {
         search.setWorkplaceUid(UserUtil.getUserWorkplaceUid());
         search.setUserUid(UserUtil.getUser().getUid());
         List<ApprovedDatasetItem> homeDatasetList = dao.getHomeDatasetList(search);
-        homeDatasetList.forEach(this::settingLocalDatasetInfo);
+        settingLocalDatasetInfo(homeDatasetList);
         return homeDatasetList;
     }
 }

@@ -120,6 +120,31 @@
          WHERE CDMU.UID = #{uid}
     </select>
 
+    <select id="getDatasetMainUiListByUids" resultType="MainUiView" parameterType="map">
+        /* cetusDatasetMainUi.getDatasetMainUiListByUids : 목록 한 페이지가 쓰는 메인 UI 를 한 번에 조회 */
+        SELECT CDMU.UID
+              ,CDMU.CODE
+              ,CDMU.NAME
+              ,CDMU.MAX_COUNT
+              ,CDMU.CATEGORY_CNT
+              ,CDMU.DESC_LINE_CLAMP
+              ,CDMU.TITLE_LINE_CLAMP
+              ,CDMU.THUMB_USE_AT
+              ,CDMU.WORKPLACE_UID
+              ,CDMU.USE_AT
+              ,CDMU.TYPE_CD
+              ,CDMU.SORT_NO
+              ,CDMU.REG_UID
+              ,CU.USER_NM AS REG_NM
+              ,TO_CHAR(CDMU.REG_DT, 'YYYY-MM-DD') AS REG_DT
+          FROM CETUS_DATASET_MAIN_UI CDMU
+          LEFT JOIN CETUS_USER CU ON CU.UID = CDMU.REG_UID
+         WHERE CDMU.UID IN
+            <foreach collection="uids" item="uid" open="(" separator="," close=")">
+               #{uid}
+            </foreach>
+    </select>
+
     <update id="updateDatasetMainUidDeleteAt" parameterType="CetusDatasetMainUi">
         /* cetusDatasetMainUi.updateDatasetMainUidDeleteAt */
         UPDATE CETUS_DATASET_MAIN_UI

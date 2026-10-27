@@ -1,6 +1,9 @@
 package kware.apps.thirdeye.mobigen.mainui.service;
 
 
+import java.util.Map;
+import java.util.HashMap;
+import java.util.Collections;
 import cetus.bean.Page;
 import cetus.bean.Pageable;
 import cetus.user.UserUtil;
@@ -77,6 +80,19 @@ public class CetusDatasetMainUiService {
     @Transactional(readOnly = true)
     public MainUiView findDatasetMainUiByUid(Long uid) {
         return dao.getDatasetMainUiByUid(uid);
+    }
+
+    /** 목록 한 페이지가 쓰는 메인 UI 들을 한 번에 조회해 UID 별로 돌려준다 */
+    @Transactional(readOnly = true)
+    public Map<Long, MainUiView> findDatasetMainUiMap(List<Long> uids) {
+        if (uids == null || uids.isEmpty()) {
+            return Collections.emptyMap();
+        }
+        Map<Long, MainUiView> result = new HashMap<>();
+        for (MainUiView view : dao.getDatasetMainUiListByUids(uids)) {
+            result.putIfAbsent(view.getUid(), view);
+        }
+        return result;
     }
 
     /**

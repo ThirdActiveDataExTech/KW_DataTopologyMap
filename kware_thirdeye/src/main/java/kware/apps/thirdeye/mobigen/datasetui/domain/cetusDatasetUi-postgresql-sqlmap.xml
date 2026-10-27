@@ -56,6 +56,27 @@
          WHERE CDU.APPROVED_DATASET_UID = #{approvedDatasetUid}
     </select>
 
+    <select id="getDatasetUiViewList" resultType="DatasetUiView" parameterType="map">
+        /* cetusDatasetUi.getDatasetUiViewList : 목록 한 페이지의 진열 정보를 한 번에 조회(행별 조회 대체) */
+        SELECT CDU.UID AS DATASET_UI_UID
+              ,CDU.APPROVED_DATASET_UID
+              ,CDU.SORT_NO
+              ,CDU.MAIN_UI_UID
+              ,CDU.SHOW_AT
+              ,CDU.THUMB_UID
+              ,CF.FILE_ID AS THUMB_ID
+              ,CDU.EXTRA_JSON
+              ,CDU.CATEGORY_UID
+              ,CDC.CATEGORY_NM AS CATEGORY_NM
+          FROM CETUS_DATASET_UI CDU
+          LEFT JOIN CETUS_FILE CF ON CF.FILE_UID = CDU.THUMB_UID AND CF.USE_AT = 'Y' AND CF.SAVED = 'Y'
+          LEFT JOIN CETUS_DATASET_CATEGORY CDC ON CDC.UID = CDU.CATEGORY_UID
+         WHERE CDU.APPROVED_DATASET_UID IN
+            <foreach collection="approvedDatasetUids" item="uid" open="(" separator="," close=")">
+               #{uid}
+            </foreach>
+    </select>
+
     <update id="updateExtraJsonTitle" parameterType="map">
         /* cetusDatasetUi.updateExtraJsonTitle */
         /* 제목 백필: 기존 extra_json 키는 보존하고 title 만 넣는다 */
