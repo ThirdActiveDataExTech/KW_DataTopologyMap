@@ -18,6 +18,9 @@ import java.util.List;
 @Getter @NoArgsConstructor(access = AccessLevel.PROTECTED) @Setter
 public class SearchApprovedDataset {
 
+    /** 검색어 최대 길이. 상단 검색 입력의 maxlength 와 같다. 넘는 부분은 잘라 ILIKE 패턴이 커지지 않게 한다 */
+    static final int MAX_KEYWORD_LENGTH = 100;
+
     private Long workplaceUid;
     private Long userUid;
     private String showAt;
@@ -50,7 +53,7 @@ public class SearchApprovedDataset {
         this.userUid = userUid;
     }
 
-    /** 검색어는 앞뒤 공백을 지우고, 비어 있으면 조건을 걸지 않도록 null 로 둔다 */
+    /** 검색어는 앞뒤 공백을 지우고, 비어 있으면 조건을 걸지 않도록 null 로 두며, 100자를 넘으면 자른다 */
     public void setKeyword(String keyword) {
         this.keyword = normalizeKeyword(keyword);
     }
@@ -60,6 +63,9 @@ public class SearchApprovedDataset {
             return null;
         }
         String trimmed = keyword.trim();
-        return trimmed.isEmpty() ? null : trimmed;
+        if (trimmed.isEmpty()) {
+            return null;
+        }
+        return trimmed.length() > MAX_KEYWORD_LENGTH ? trimmed.substring(0, MAX_KEYWORD_LENGTH) : trimmed;
     }
 }
