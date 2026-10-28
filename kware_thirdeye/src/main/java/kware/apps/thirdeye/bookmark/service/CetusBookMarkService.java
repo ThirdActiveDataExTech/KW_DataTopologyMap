@@ -16,6 +16,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -28,10 +31,18 @@ public class CetusBookMarkService {
     @Transactional(readOnly = true)
     public List<UserBookMarkList> findUserBookMarkList(SearchUserBookMark search ) {
         List<UserBookMarkList> userBookMarkList = dao.getUserBookMarkList(search);
+        if (userBookMarkList.isEmpty()) {
+            return userBookMarkList;
+        }
+        // 북마크 건수만큼 상세·모비젠을 부르지 않고 진열 정보를 한 번에 가져와 붙인다
+        List<Long> approvedUids = userBookMarkList.stream()
+                .map(UserBookMarkList::getApprovedUid)
+                .distinct()
+                .collect(Collectors.toList());
+        Map<Long, ApprovedDatasetItem> datasetViewByUid = approvedDatasetService.findApprovedDatasetViewList(approvedUids).stream()
+                .collect(Collectors.toMap(ApprovedDatasetItem::getApprovedUid, Function.identity(), (first, dup) -> first));
         for ( UserBookMarkList userBookMark : userBookMarkList ) {
-            Long approvedUid = userBookMark.getApprovedUid();
-            ApprovedDatasetItem datasetView = approvedDatasetService.findApprovedDatasetView(approvedUid);
-            userBookMark.setDatasetView(datasetView);
+            userBookMark.setDatasetView(datasetViewByUid.get(userBookMark.getApprovedUid()));
         }
         return userBookMarkList;
     }

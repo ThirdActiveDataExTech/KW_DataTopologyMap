@@ -26,6 +26,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -170,6 +171,24 @@ public class CetusApprovedDatasetService {
         ApprovedDatasetItem approvedDatasetView = dao.getApprovedDatasetView(map);
         this.settingApprovedDatasetInfo(approvedDatasetView);
         return approvedDatasetView;
+    }
+
+    /**
+     * 북마크 목록처럼 여러 건을 한 번에 볼 때 쓴다. 상세와 달리 모비젠은 부르지 않고
+     * 로컬 DB 의 진열 정보만 채운다(목록 1회 + 진열·메인 UI 일괄 2회, 건수와 무관).
+     */
+    @Transactional(readOnly = true)
+    public List<ApprovedDatasetItem> findApprovedDatasetViewList(List<Long> approvedUids) {
+        if (approvedUids == null || approvedUids.isEmpty()) {
+            return Collections.emptyList();
+        }
+        Map<String, Object> map = Map.of(
+          "approvedUids", approvedUids,
+          "userUid", UserUtil.getUser().getUid()
+        );
+        List<ApprovedDatasetItem> approvedDatasetViews = dao.getApprovedDatasetViewList(map);
+        settingLocalDatasetInfo(approvedDatasetViews);
+        return approvedDatasetViews;
     }
 
     /**

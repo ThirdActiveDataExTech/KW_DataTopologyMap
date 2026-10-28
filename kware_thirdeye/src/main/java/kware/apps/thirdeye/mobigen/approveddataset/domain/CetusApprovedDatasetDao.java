@@ -24,6 +24,11 @@ public class CetusApprovedDatasetDao extends SuperDao<CetusApprovedDataset> {
         return selectOne("getApprovedDatasetView", map);
     }
 
+    /** 여러 건 조회(approvedUids, userUid). 제목은 진열 저장값만 쓴다 */
+    public List<ApprovedDatasetItem> getApprovedDatasetViewList(Map<String, Object> map) {
+        return selectList("getApprovedDatasetViewList", map);
+    }
+
     public void deleteApprovedDataset(CetusApprovedDataset bean) {
         update("deleteApprovedDataset", bean);
     }

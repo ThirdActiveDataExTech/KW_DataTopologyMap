@@ -168,6 +168,33 @@
          WHERE CAD.UID = #{approvedUid}
     </select>
 
+    <select id="getApprovedDatasetViewList" parameterType="map" resultType="ApprovedDatasetItem">
+        /* cetusApprovedDataset.getApprovedDatasetViewList */
+        /* 북마크 등 여러 건을 한 번에 조회한다. 제목은 진열 저장값(extra_json.title)만 쓰고 모비젠은 부르지 않는다 */
+        SELECT CAD.UID AS APPROVED_UID
+              ,CAD.METADATA_ID
+              ,TO_CHAR(CAD.APPROVED_DT, 'YYYY-MM-DD HH:MM') AS APPROVED_DT
+              ,CU_APP.USER_NM AS APPROVER_NM
+              ,CAD.TARGET_TP_CD
+              ,CASE WHEN CAD.TARGET_TP_CD = 'MOBIGEN' THEN '모비젠'
+                    WHEN CAD.TARGET_TP_CD = 'KWARE' THEN '케이웨어'
+            END AS TARGET_TP_CD_NM
+              ,( SELECT COALESCE(ROUND(SUM(CDM.RATINGS) / COUNT(*)), 0)
+                 FROM CETUS_DATASET_COMMENT CDM
+                 WHERE CDM.APPROVED_DATASET_UID = CAD.UID ) AS RATINGS
+              ,CASE WHEN CDB.APPROVED_DATASET_UID IS NOT NULL THEN 'Y' ELSE 'N' END AS BOOKMARK_YN
+              ,CAD.DELETE_AT
+              ,CDU.EXTRA_JSON->>'title' AS TITLE
+          FROM CETUS_APPROVED_DATASET CAD
+          LEFT JOIN CETUS_DATASET_UI CDU ON CDU.APPROVED_DATASET_UID = CAD.UID
+          LEFT JOIN CETUS_USER CU_APP ON CU_APP.UID = CAD.APPROVER_UID
+          LEFT JOIN CETUS_DATASET_BOOKMARK CDB ON CDB.APPROVED_DATASET_UID = CAD.UID AND CDB.USER_UID = #{userUid}
+         WHERE CAD.UID IN
+            <foreach collection="approvedUids" item="approvedUid" open="(" separator="," close=")">
+               #{approvedUid}
+            </foreach>
+    </select>
+
     <update id="deleteApprovedDataset" parameterType="Long">
         /* cetusApprovedDataset.deleteApprovedDataset */
         UPDATE CETUS_APPROVED_DATASET
