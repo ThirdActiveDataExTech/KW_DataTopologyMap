@@ -14,6 +14,7 @@ configMapGenerator:
       - 00_create_user.sh=db-00-create-user.sh
       - 01_schema.sql=db-01-schema.sql
       - 02_init_data.sql=db-02-init-data.sql
+      - 03_indexes.sql=db-03-indexes.sql
       - 99_reassign_owner.sh=db-99-reassign-owner.sh
 
 generatorOptions:
