@@ -1,8 +1,13 @@
 package kware.apps.thirdeye.mobigen.category.dto.request;
 
 import lombok.AccessLevel;
+import cetus.annotation.DisplayName;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import javax.validation.Valid;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
 import java.util.List;
 
@@ -21,6 +26,8 @@ import java.util.List;
 
 @Getter @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class CloneCategory {
+    @NotEmpty @DisplayName("통합 대상 카테고리")
     private List<Long> uids;
+    @NotNull @Valid @DisplayName("카테고리")
     private SaveCategory category;
 }

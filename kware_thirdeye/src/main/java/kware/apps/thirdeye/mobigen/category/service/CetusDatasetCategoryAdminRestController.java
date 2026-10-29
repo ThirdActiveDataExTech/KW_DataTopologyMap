@@ -12,6 +12,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+
 import java.util.List;
 
 @RestController
@@ -61,7 +63,7 @@ public class CetusDatasetCategoryAdminRestController {
      * @date        2025-10-21
     **/
     @PutMapping("/delete-several")
-    public ResponseEntity deleteDatasetCategory(@RequestBody DeleteCategories request) {
+    public ResponseEntity deleteDatasetCategory(@RequestBody @Valid DeleteCategories request) {
         service.deleteDatasetCategory(request);
         return ResponseEntity.ok().build();
     }
@@ -80,7 +82,7 @@ public class CetusDatasetCategoryAdminRestController {
      * @date        2025-10-21
     **/
     @PutMapping("/clone")
-    public ResponseEntity cloneDatasetCategory(@RequestBody CloneCategory request) {
+    public ResponseEntity cloneDatasetCategory(@RequestBody @Valid CloneCategory request) {
         service.cloneDatasetCategory(request);
         return ResponseEntity.ok().build();
     }
@@ -108,7 +110,7 @@ public class CetusDatasetCategoryAdminRestController {
      * @date        2025-11-14
     **/
     @PutMapping("/change/main-ui")
-    public ResponseEntity changeCategorySortNo(@RequestBody ChangeCategorySortNoList request) {
+    public ResponseEntity changeCategorySortNo(@RequestBody @Valid ChangeCategorySortNoList request) {
         service.changeCategorySortNo(request);
         return ResponseEntity.ok().build();
     }
