@@ -185,7 +185,7 @@
 		    , PLACEHOLDER   = #{placeholder}
 		    , SORT_NUM = #{sortNum}
 			<if test="@Ognl@isNotEmpty(defaultValue)">
-		    , DEFAULT_VALUE = ${defaultValue}
+		    , DEFAULT_VALUE = #{defaultValue}
 		  	</if>
 		WHERE uid = #{uid}
 	</update>
