@@ -13,6 +13,8 @@ import org.springframework.context.support.StaticMessageSource;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.mock.http.MockHttpInputMessage;
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.BindException;
 import org.springframework.validation.FieldError;
@@ -96,9 +98,19 @@ class RestExceptionHandlerTest {
         assertThat(entity.getBody()).isEqualTo("데이터가 없습니다.");
     }
 
+    @Test
+    void 본문을_읽을_수_없으면_400과_안내_메시지이고_내부_오류_문구는_싣지_않는다() {
+        ResponseEntity<?> entity = handler.requestBodyNotReadable(
+                new HttpMessageNotReadableException("JSON parse error: Unexpected end-of-input", new MockHttpInputMessage(new byte[0])));
+
+        assertThat(entity.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+        assertThat(entity.getBody()).isEqualTo("요청 본문 형식이 올바르지 않습니다.");
+    }
+
     private static MessageSourceAccessor messages() {
         StaticMessageSource source = new StaticMessageSource();
         source.addMessage("http.error.empty", Locale.getDefault(), "데이터가 없습니다.");
+        source.addMessage("http.error.bad-request-body", Locale.getDefault(), "요청 본문 형식이 올바르지 않습니다.");
         return new MessageSourceAccessor(source, Locale.getDefault());
     }
 

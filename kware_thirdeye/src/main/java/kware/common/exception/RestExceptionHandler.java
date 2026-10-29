@@ -11,6 +11,7 @@ import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
@@ -35,6 +36,15 @@ public class RestExceptionHandler {
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST.value())
                 .body(getValidErrors(ex.getBindingResult()));
+    }
+
+    /** 본문 JSON 이 깨졌거나 타입이 맞지 않으면 400. 처리기가 없어 500 HTML 오류 페이지가 내려가던 것(내부 메시지는 응답에 싣지 않는다) */
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity requestBodyNotReadable(HttpMessageNotReadableException ex) {
+        log.debug("요청 본문을 읽을 수 없음: {}", ex.getMessage());
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(messageSource.getMessage("http.error.bad-request-body"));
     }
 
     @ExceptionHandler(SimpleException.class)
