@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.Map;
 
@@ -33,7 +34,7 @@ public class CetusDatasetCommentRestController {
     }
 
     @PostMapping
-    public ResponseEntity saveDatasetComment(@RequestBody DatasetCommentSave request) {
+    public ResponseEntity saveDatasetComment(@RequestBody @Valid DatasetCommentSave request) {
         service.saveDatasetComment(request);
         return ResponseEntity.ok().build();
     }

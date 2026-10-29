@@ -59,6 +59,15 @@
          ORDER BY CSC.SORT_NO
     </select>
 
+    <select id="countCommentType" parameterType="String" resultType="int">
+        /* cetusDatasetComment.countCommentType */
+        SELECT COUNT(*)
+          FROM CETUS_SYS_CODE
+         WHERE UPPER_CODE = 'DATASET_COMMENT'
+           AND CODE = #{typeCd}
+           AND USE_AT = 'Y'
+    </select>
+
     <insert id="insert" parameterType="CetusDatasetComment">
         /* cetusDatasetComment.insert */
         INSERT INTO CETUS_DATASET_COMMENT (
