@@ -12,6 +12,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/admin/approved-dataset")
@@ -44,7 +46,7 @@ public class CetusApprovedDatasetAdminRestController {
      * @date        2025-10-15
     **/
     @PostMapping("/approve")
-    public ResponseEntity approveDataset(@RequestBody SaveApprovedDataset request) {
+    public ResponseEntity approveDataset(@RequestBody @Valid SaveApprovedDataset request) {
         service.approveDataset(request);
         return ResponseEntity.ok().build();
     }
@@ -58,7 +60,7 @@ public class CetusApprovedDatasetAdminRestController {
      * @date        2025-10-15
     **/
     @PutMapping("/delete-several")
-    public ResponseEntity deleteSeveralApprovedDataset(@RequestBody DeleteApprovedDatasets request) {
+    public ResponseEntity deleteSeveralApprovedDataset(@RequestBody @Valid DeleteApprovedDatasets request) {
         service.deleteSeveralApprovedDataset(request);
         return ResponseEntity.ok().build();
     }
