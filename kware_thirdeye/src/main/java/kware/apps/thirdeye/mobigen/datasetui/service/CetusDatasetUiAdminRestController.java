@@ -7,6 +7,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/admin/dataset-ui")
@@ -23,7 +25,7 @@ public class CetusDatasetUiAdminRestController {
      * @date        2025-10-15
     **/
     @PutMapping("/{uid}")
-    public ResponseEntity changeApprovedDataset(@PathVariable("uid") Long uid, @RequestBody ChangeDatasetUi request) {
+    public ResponseEntity changeApprovedDataset(@PathVariable("uid") Long uid, @RequestBody @Valid ChangeDatasetUi request) {
         service.changeApprovedDatasetUi(uid, request);
         return ResponseEntity.ok().build();
     }
@@ -37,7 +39,7 @@ public class CetusDatasetUiAdminRestController {
      * @date        2025-10-17
     **/
     @PutMapping("/showY-several")
-    public ResponseEntity showYSeveralApprovedDataset(@RequestBody ChangeShowUiDatasets request) {
+    public ResponseEntity showYSeveralApprovedDataset(@RequestBody @Valid ChangeShowUiDatasets request) {
         service.changeShowApprovedDataset(request, "Y");
         return ResponseEntity.ok().build();
     }
@@ -51,7 +53,7 @@ public class CetusDatasetUiAdminRestController {
      * @date        2025-10-17
     **/
     @PutMapping("/showN-several")
-    public ResponseEntity showNSeveralApprovedDataset(@RequestBody ChangeShowUiDatasets request) {
+    public ResponseEntity showNSeveralApprovedDataset(@RequestBody @Valid ChangeShowUiDatasets request) {
         service.changeShowApprovedDataset(request, "N");
         return ResponseEntity.ok().build();
     }
