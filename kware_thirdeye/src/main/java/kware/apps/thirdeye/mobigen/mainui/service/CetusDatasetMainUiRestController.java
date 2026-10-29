@@ -11,6 +11,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -43,7 +45,7 @@ public class CetusDatasetMainUiRestController {
     }
 
     @PostMapping
-    public ResponseEntity saveDatasetMainUi(@RequestBody SaveMainUi request) {
+    public ResponseEntity saveDatasetMainUi(@RequestBody @Valid SaveMainUi request) {
         service.saveDatasetMainUi(request);
         return ResponseEntity.ok().build();
     }
@@ -55,7 +57,7 @@ public class CetusDatasetMainUiRestController {
     }
 
     @PutMapping("/{uid}")
-    public ResponseEntity changeDatasetMainUi(@PathVariable("uid") Long uid, @RequestBody ChangeMainUi request) {
+    public ResponseEntity changeDatasetMainUi(@PathVariable("uid") Long uid, @RequestBody @Valid ChangeMainUi request) {
         service.changeDatasetMainUi(uid, request);
         return ResponseEntity.ok().build();
     }
