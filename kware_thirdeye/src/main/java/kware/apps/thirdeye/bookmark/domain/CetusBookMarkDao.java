@@ -31,7 +31,7 @@ public class CetusBookMarkDao extends SuperDao<CetusBookMark> {
         delete("deleteBookMarkByApprovedUid", approvedUid);
     }
 
-    public void deleteBookMarkByMetadataId( String metadataId ) {
-        delete("deleteBookMarkByMetadataId", metadataId);
+    public void deleteBookMarkByMetadataIds(List<String> metadataIds) {
+        delete("deleteBookMarkByMetadataIds", metadataIds);
     }
 }

@@ -1,5 +1,7 @@
 package kware.apps.thirdeye.bookmark.service;
 
+import java.util.List;
+
 import kware.apps.mobigen.mobigen.dto.request.common.PaginationRequest;
 import kware.apps.thirdeye.bookmark.domain.CetusBookMarkDao;
 import lombok.RequiredArgsConstructor;
@@ -13,8 +15,8 @@ public class CetusBookMarkService2 {
     private final CetusBookMarkDao dao;
 
     @Transactional
-    public void deleteBookMarkByMetadataId(String metadataId) {
-        dao.deleteBookMarkByMetadataId(metadataId);
+    public void deleteBookMarkByMetadataIds(List<String> metadataIds) {
+        dao.deleteBookMarkByMetadataIds(metadataIds);
     }
 
     @Transactional

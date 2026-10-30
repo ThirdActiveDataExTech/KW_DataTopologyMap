@@ -33,8 +33,8 @@ public class CetusMobigenDatasetService {
     }
 
     @Transactional
-    public void ifExistDeleteApprovedDataset(String metadataId) {
-        dao.ifExistDeleteApprovedDataset(metadataId);
+    public void ifExistDeleteApprovedDatasets(List<String> metadataIds) {
+        dao.ifExistDeleteApprovedDatasets(metadataIds);
     }
 
     @Transactional

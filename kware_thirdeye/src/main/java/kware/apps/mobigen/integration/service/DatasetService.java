@@ -270,18 +270,10 @@ public class DatasetService {
         }
         log.info("=== [METADATA_02] Success - message: {} ===", apiResponse.getMessage());
 
-        // 3. 추가 정보 삭제
-        for (String metadataId: metadataIds) {
-
-            // 1.{metadataId} 데이터셋이 북마크 등록됐다면 삭제
-            bookMarkService2.deleteBookMarkByMetadataId(metadataId);
-
-            // 2. {metadataId} 데이터셋이 kware 포탈 시스템에서 관리중인 값이라면 포탈 시스템에서도 삭제 (논리삭제)
-            mobigenDatasetService.ifExistDeleteApprovedDataset(metadataId);
-
-            // 3. 해당 파일 정보도 삭제
-            datasetFileService.processDelFile(DeleteDatasetFile.deleteMetadata(metadataId));
-        }
+        // 3. 추가 정보 삭제 — 건별 반복(3N 질의) 대신 ID 목록으로 한 번씩: 북마크 삭제, 포탈 진열 논리삭제, 파일 정보 논리삭제
+        bookMarkService2.deleteBookMarkByMetadataIds(metadataIds);
+        mobigenDatasetService.ifExistDeleteApprovedDatasets(metadataIds);
+        datasetFileService.processDelMetadataFiles(metadataIds);
     }
 
     /**

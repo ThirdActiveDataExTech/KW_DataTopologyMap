@@ -100,11 +100,14 @@
          WHERE UID = #{uid}
     </update>
 
-    <update id="ifExistDeleteApprovedDataset" parameterType="String">
-        /* cetusApprovedDataset.ifExistDeleteApprovedDataset */
+    <update id="ifExistDeleteApprovedDatasets" parameterType="list">
+        /* cetusApprovedDataset.ifExistDeleteApprovedDatasets */
         UPDATE CETUS_APPROVED_DATASET
            SET DELETE_AT = 'Y'
-         WHERE METADATA_ID = #{metadataId}
+         WHERE METADATA_ID IN
+            <foreach collection="list" item="metadataId" open="(" separator="," close=")">
+               #{metadataId}
+            </foreach>
     </update>
 
 </mapper>

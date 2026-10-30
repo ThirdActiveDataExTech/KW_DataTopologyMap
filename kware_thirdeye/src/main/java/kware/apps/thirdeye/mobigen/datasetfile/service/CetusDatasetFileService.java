@@ -152,6 +152,12 @@ public class CetusDatasetFileService {
         fileDao.deleteDatasetFile(request);
     }
 
+    /** 메타데이터 여러 건의 파일 정보를 ID 목록으로 한 번에 논리삭제 */
+    @Transactional
+    public void processDelMetadataFiles(List<String> metadataIds) {
+        fileDao.deleteMetadataFiles(metadataIds);
+    }
+
     /* =================== */
 
     @Transactional(readOnly = true)
