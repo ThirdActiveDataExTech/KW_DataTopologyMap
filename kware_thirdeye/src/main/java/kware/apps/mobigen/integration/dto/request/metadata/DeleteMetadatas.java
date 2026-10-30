@@ -4,6 +4,10 @@ package kware.apps.mobigen.integration.dto.request.metadata;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import cetus.annotation.DisplayName;
+
+import javax.validation.constraints.NotEmpty;
 import java.util.List;
 
 /**
@@ -18,5 +22,6 @@ import java.util.List;
 
 @Getter @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class DeleteMetadatas {
+    @NotEmpty @DisplayName("삭제 대상")
     private List<String> uids;
 }

@@ -1,5 +1,7 @@
 package kware.apps.mobigen.integration.service;
 
+import javax.validation.Valid;
+
 import cetus.bean.Page;
 import kware.apps.mobigen.integration.dto.request.meta.SearchMetaValues;
 import kware.apps.mobigen.integration.dto.request.metadata.*;
@@ -113,7 +115,7 @@ public class DatasetRestController {
      * @date        2025-10-23
      **/
     @PostMapping("/delete-metadatas")
-    public ResponseEntity deleteMetadatas(@RequestBody DeleteMetadatas request) {
+    public ResponseEntity deleteMetadatas(@RequestBody @Valid DeleteMetadatas request) {
         service.deleteMetadatas(request);
         return ResponseEntity.ok().build();
     }
@@ -206,7 +208,7 @@ public class DatasetRestController {
      * @date        2025-10-23
      **/
     @PostMapping("/delete-rawdatas")
-    public ResponseEntity deleteRawdatas(@RequestBody DeleteRawdatas request) {
+    public ResponseEntity deleteRawdatas(@RequestBody @Valid DeleteRawdatas request) {
         service.deleteRawdatas(request);
         return ResponseEntity.ok().build();
     }
@@ -220,7 +222,7 @@ public class DatasetRestController {
      * @date        2025-10-24
      **/
     @PostMapping("/view-rawdata")
-    public ResponseEntity viewRawdata(@RequestBody SearchRawdataView search) {
+    public ResponseEntity viewRawdata(@RequestBody @Valid SearchRawdataView search) {
         RawdataView view = service.viewRawdata(search);
         return ResponseEntity.ok(view);
     }
@@ -234,7 +236,7 @@ public class DatasetRestController {
      * @date        2025-10-23
      **/
     @PostMapping("/update-rawdata")
-    public ResponseEntity updateRawdata(@RequestBody ChangeRawdata request) {
+    public ResponseEntity updateRawdata(@RequestBody @Valid ChangeRawdata request) {
         service.updateRawdata(request);
         return ResponseEntity.ok().build();
     }

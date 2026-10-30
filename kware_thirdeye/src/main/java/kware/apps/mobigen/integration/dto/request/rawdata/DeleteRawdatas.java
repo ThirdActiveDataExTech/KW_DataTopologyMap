@@ -3,6 +3,11 @@ package kware.apps.mobigen.integration.dto.request.rawdata;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import cetus.annotation.DisplayName;
+
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
 import java.util.List;
 
 /**
@@ -16,6 +21,8 @@ import java.util.List;
 
 @Getter @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class DeleteRawdatas {
+    @NotBlank @DisplayName("메타데이터 ID")
     private String metadataId;
+    @NotEmpty @DisplayName("삭제 대상")
     private List<String> rawdataIds;
 }
