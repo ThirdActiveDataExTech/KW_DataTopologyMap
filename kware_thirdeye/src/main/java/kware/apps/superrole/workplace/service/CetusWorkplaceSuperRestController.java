@@ -1,5 +1,7 @@
 package kware.apps.superrole.workplace.service;
 
+import javax.validation.Valid;
+
 import kware.apps.superrole.workplace.dto.request.SetWorkplace;
 import kware.apps.superrole.workplace.dto.request.createworkplace.CreateWorkplace;
 import lombok.RequiredArgsConstructor;
@@ -19,13 +21,13 @@ public class CetusWorkplaceSuperRestController {
     private final CetusWorkplaceSuperService service;
 
     @PostMapping("/choose")
-    public ResponseEntity chooseWorkplace(@RequestBody SetWorkplace request) {
+    public ResponseEntity chooseWorkplace(@RequestBody @Valid SetWorkplace request) {
         service.setSuperUserWorkplace(request);
         return ResponseEntity.ok().build();
     }
 
     @PostMapping("/create")
-    public ResponseEntity createWorkplace(@RequestBody CreateWorkplace request) {
+    public ResponseEntity createWorkplace(@RequestBody @Valid CreateWorkplace request) {
         service.createWorkplace(request);
         return ResponseEntity.ok().build();
     }
