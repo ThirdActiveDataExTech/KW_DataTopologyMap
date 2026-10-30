@@ -1,5 +1,7 @@
 package kware.apps.system.group.service;
 
+import javax.validation.Valid;
+
 
 import kware.apps.system.group.dto.request.GroupMergeList;
 import kware.apps.system.group.dto.response.GroupListWithUser;
@@ -23,7 +25,7 @@ public class CetusGroupRestController {
     }
 
     @PostMapping("/merge")
-    public ResponseEntity mergePosition(@RequestBody GroupMergeList request) {
+    public ResponseEntity mergePosition(@RequestBody @Valid GroupMergeList request) {
         service.mergeGroup(request);
         return ResponseEntity.ok().build();
     }

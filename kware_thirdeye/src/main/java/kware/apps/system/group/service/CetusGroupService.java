@@ -36,7 +36,7 @@ public class CetusGroupService {
             if(group.getUid() == null) dao.insert(bean);
             else dao.update(bean);
         }
-        if(request.getUids().length != 0) {
+        if(request.getUids() != null && request.getUids().length != 0) {   // 삭제 대상은 생략 가능
             for(Long uid : request.getUids()) {
                 CetusGroup bean = new CetusGroup(uid);
                 dao.updateUseAtToN(bean);

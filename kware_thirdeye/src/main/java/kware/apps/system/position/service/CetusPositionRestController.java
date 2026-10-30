@@ -1,5 +1,7 @@
 package kware.apps.system.position.service;
 
+import javax.validation.Valid;
+
 
 import kware.apps.system.position.dto.request.PositionMergeList;
 import kware.apps.system.position.dto.response.PositionList;
@@ -24,7 +26,7 @@ public class CetusPositionRestController {
     }
 
     @PostMapping("/merge")
-    public ResponseEntity mergePosition(@RequestBody PositionMergeList request) {
+    public ResponseEntity mergePosition(@RequestBody @Valid PositionMergeList request) {
         service.mergePosition(request);
         return ResponseEntity.ok().build();
     }
