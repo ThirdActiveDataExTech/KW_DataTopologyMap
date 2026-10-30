@@ -1,5 +1,7 @@
 package kware.apps.system.workplace.service;
 
+import javax.validation.Valid;
+
 
 import cetus.bean.Page;
 import cetus.bean.Pageable;
@@ -33,7 +35,7 @@ public class CetusWorkplaceRestController {
     }
 
     @PutMapping("/{uid}")
-    public ResponseEntity changeWorkplace(@PathVariable("uid") Long uid, @RequestBody WorkplaceSave request) {
+    public ResponseEntity changeWorkplace(@PathVariable("uid") Long uid, @RequestBody @Valid WorkplaceSave request) {
         service.changeWorkplace(uid, request);
         return ResponseEntity.ok().build();
     }

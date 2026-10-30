@@ -1,5 +1,7 @@
 package kware.apps.system.dept.service;
 
+import javax.validation.Valid;
+
 
 import kware.apps.system.dept.dto.request.DeptTreeChange;
 import kware.apps.system.dept.dto.request.DeptTreeSave;
@@ -30,13 +32,13 @@ public class CetusDeptRestController {
     }
 
     @PostMapping
-    public ResponseEntity saveDeptTree(@RequestBody DeptTreeSave request) {
+    public ResponseEntity saveDeptTree(@RequestBody @Valid DeptTreeSave request) {
         service.saveDeptTree(request);
         return ResponseEntity.ok().build();
     }
 
     @PutMapping("/{uid}")
-    public ResponseEntity changeDeptTree(@PathVariable("uid") Long uid, @RequestBody DeptTreeChange request) {
+    public ResponseEntity changeDeptTree(@PathVariable("uid") Long uid, @RequestBody @Valid DeptTreeChange request) {
         service.changeDeptTree(uid, request);
         return ResponseEntity.ok().build();
     }
