@@ -1,5 +1,7 @@
 package kware.apps.system.invite.service;
 
+import javax.validation.Valid;
+
 
 import kware.apps.system.invite.domain.CetusInvite;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +18,7 @@ public class CetusInviteRestController {
     private final CetusInviteService service;
 
     @PostMapping
-    public ResponseEntity sendInvite(@RequestBody CetusInvite request) throws MessagingException {
+    public ResponseEntity sendInvite(@RequestBody @Valid CetusInvite request) throws MessagingException {
         service.sendSignupInvite(request);
         return ResponseEntity.ok().build();
     }
