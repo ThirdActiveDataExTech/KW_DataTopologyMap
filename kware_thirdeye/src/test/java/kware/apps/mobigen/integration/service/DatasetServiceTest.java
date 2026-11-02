@@ -67,6 +67,19 @@ class DatasetServiceTest {
         verify(datasetFileService, never()).processDelMetadataFiles(anyList());
     }
 
+    @Test
+    void 외부_응답_본문이_없으면_예외를_내고_포탈_데이터는_건드리지_않는다() throws Exception {
+        when(apiService.deleteSeveralMetadata(any(DeleteMetadatasRequest.class))).thenReturn(null);
+
+        assertThatThrownBy(() -> service.deleteMetadatas(mapper.readValue("{\"uids\":[\"M-1\"]}", DeleteMetadatas.class)))
+                .isInstanceOf(SimpleException.class)
+                .hasMessageContaining("응답이 없습니다");
+
+        verify(bookMarkService2, never()).deleteBookMarkByMetadataIds(anyList());
+        verify(mobigenDatasetService, never()).ifExistDeleteApprovedDatasets(anyList());
+        verify(datasetFileService, never()).processDelMetadataFiles(anyList());
+    }
+
     private static ApiResponse<DeleteMetadataResponse> response(ApiStatus status) {
         ApiResponse<DeleteMetadataResponse> response = new ApiResponse<>();
         response.setCode(status.getCode());

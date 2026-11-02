@@ -160,9 +160,10 @@ public class DatasetService {
         ApiResponse<PackageImportResponse> apiResponse = apiService.packageImport(path);
 
         // 1. 응답 코드 체크
-        if (apiResponse != null && !apiResponse.isSuccess()) {
-            log.error("=== [PACKAGE_02] Error - message: {} ===", apiResponse.getMessage());
-            throw new SimpleException(apiResponse.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        if (apiResponse == null || !apiResponse.isSuccess()) {
+            String message = apiResponse == null ? "모비젠 응답이 없습니다." : apiResponse.getMessage();
+            log.error("=== [PACKAGE_02] Error - message: {} ===", message);
+            throw new SimpleException(message, HttpStatus.INTERNAL_SERVER_ERROR);
         }
         log.info("=== [PACKAGE_02] Success - message: {} ===", apiResponse.getMessage());
 
@@ -208,9 +209,10 @@ public class DatasetService {
         ApiResponse<MetadataListResponse> apiResponse = apiService.findMetadataList(pageSearchRequest);
 
         // 2. 응답 성공 여부 체크
-        if (apiResponse != null && !apiResponse.isSuccess()) {
-            log.error("=== [METADATA_01] Error - message: {} ===", apiResponse.getMessage());
-            throw new SimpleException(apiResponse.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        if (apiResponse == null || !apiResponse.isSuccess()) {
+            String message = apiResponse == null ? "모비젠 응답이 없습니다." : apiResponse.getMessage();
+            log.error("=== [METADATA_01] Error - message: {} ===", message);
+            throw new SimpleException(message, HttpStatus.INTERNAL_SERVER_ERROR);
         }
         log.info("=== [METADATA_01] Success - message: {} ===", apiResponse.getMessage());
 
@@ -264,9 +266,10 @@ public class DatasetService {
         ApiResponse<DeleteMetadataResponse> apiResponse = apiService.deleteSeveralMetadata(deleteRequest);
 
         // 2. 응답 성공 여부 체크
-        if (!apiResponse.isSuccess()) {
-            log.error("=== [METADATA_02] Error - message: {} ===", apiResponse.getMessage());
-            throw new SimpleException(apiResponse.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        if (apiResponse == null || !apiResponse.isSuccess()) {
+            String message = apiResponse == null ? "모비젠 응답이 없습니다." : apiResponse.getMessage();
+            log.error("=== [METADATA_02] Error - message: {} ===", message);
+            throw new SimpleException(message, HttpStatus.INTERNAL_SERVER_ERROR);
         }
         log.info("=== [METADATA_02] Success - message: {} ===", apiResponse.getMessage());
 
@@ -301,9 +304,10 @@ public class DatasetService {
         ApiResponse<CreateMetadataResponse> apiResponse = apiService.createMetadata(metadataRequest, path);
 
         // 성공 체크
-        if (!apiResponse.isSuccess()) {
-            log.error("=== [METADATA_03] Error - message: {} ===", apiResponse.getMessage());
-            throw new SimpleException("메타데이터 외부 등록 실패: " + apiResponse.getMessage(), HttpStatus.BAD_REQUEST);
+        if (apiResponse == null || !apiResponse.isSuccess()) {
+            String message = apiResponse == null ? "모비젠 응답이 없습니다." : apiResponse.getMessage();
+            log.error("=== [METADATA_03] Error - message: {} ===", message);
+            throw new SimpleException("메타데이터 외부 등록 실패: " + message, HttpStatus.BAD_REQUEST);
         }
         log.info("=== [METADATA_03] Success - message: {} ===", apiResponse.getMessage());
 
@@ -346,8 +350,8 @@ public class DatasetService {
         ApiResponse<ViewMetadataResponse> apiResponse = apiService.findMetadataById(searchRequest);
 
         // 2. 응답 성공 여부 체크 (실패 시 null 반환)
-        if (!apiResponse.isSuccess()) {
-            log.error("=== [METADATA_04] Error - message: {} ===", apiResponse.getMessage());
+        if (apiResponse == null || !apiResponse.isSuccess()) {
+            log.error("=== [METADATA_04] Error - message: {} ===", apiResponse == null ? "모비젠 응답이 없습니다." : apiResponse.getMessage());
             return null;
         }
         log.info("=== [METADATA_04] Success - message: {} ===", apiResponse.getMessage());
@@ -396,7 +400,7 @@ public class DatasetService {
 
         // [성공 체크] 실패 시 SimpleException 던지기
         if (apiResponse1 == null || !apiResponse1.isSuccess()) {
-            String message = (apiResponse1.getMessage() != null) ? apiResponse1.getMessage() : HttpStatus.BAD_REQUEST.getReasonPhrase();
+            String message = (apiResponse1 != null && apiResponse1.getMessage() != null) ? apiResponse1.getMessage() : HttpStatus.BAD_REQUEST.getReasonPhrase();
             log.error("=== [METADATA_05] Error - message: {} ===", message);
             throw new SimpleException("메타데이터 정보 수정 실패: " + message);
         }
@@ -431,9 +435,10 @@ public class DatasetService {
             ApiResponse<MetadataFilePreviewResponse> apiResponse = apiService.previewMetadataFile(path);
 
             // 3. 성공 여부 체크
-            if (apiResponse != null && !apiResponse.isSuccess()) {
-                log.error("=== [METADATA_07] Error - message: {} ===", apiResponse.getMessage());
-                throw new SimpleException(apiResponse.getMessage(), HttpStatus.BAD_REQUEST);
+            if (apiResponse == null || !apiResponse.isSuccess()) {
+                String message = apiResponse == null ? "모비젠 응답이 없습니다." : apiResponse.getMessage();
+                log.error("=== [METADATA_07] Error - message: {} ===", message);
+                throw new SimpleException(message, HttpStatus.BAD_REQUEST);
             }
             log.info("=== [METADATA_07] Success - message: {} ===", apiResponse.getMessage());
 
@@ -500,9 +505,10 @@ public class DatasetService {
         ApiResponse<RawdataListResponse> apiResponse = apiService.findRawdataList(searchRequest);
 
         // 2. 응답 성공 여부 체크
-        if (apiResponse != null && !apiResponse.isSuccess()) {
-            log.error("=== [RAWDATA_01] Error - message: {} ===", apiResponse.getMessage());
-            throw new SimpleException(apiResponse.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        if (apiResponse == null || !apiResponse.isSuccess()) {
+            String message = apiResponse == null ? "모비젠 응답이 없습니다." : apiResponse.getMessage();
+            log.error("=== [RAWDATA_01] Error - message: {} ===", message);
+            throw new SimpleException(message, HttpStatus.INTERNAL_SERVER_ERROR);
         }
         log.info("=== [RAWDATA_01] Success - message: {} ===", apiResponse.getMessage());
 
@@ -545,7 +551,7 @@ public class DatasetService {
 
         // [성공 체크] 파일 업로드 실패 시 SimpleException 던지기
         if (apiResponse2 == null || !apiResponse2.isSuccess()) {
-            String message = (apiResponse2.getMessage() != null) ? apiResponse2.getMessage() : HttpStatus.BAD_REQUEST.getReasonPhrase();
+            String message = (apiResponse2 != null && apiResponse2.getMessage() != null) ? apiResponse2.getMessage() : HttpStatus.BAD_REQUEST.getReasonPhrase();
             log.error("=== [RAWDATA_02] Error - message: {} ===", message);
             throw new SimpleException("원본 데이터 파일 업로드 실패: " + message);
         }
@@ -576,9 +582,10 @@ public class DatasetService {
 
         DeleteRawdatasRequest deleteRequest = new DeleteRawdatasRequest(request.getMetadataId(), request.getRawdataIds());
         ApiResponse<DeleteRawdatasResponse> apiResponse = apiService.deleteSeveralRawdata(deleteRequest);
-        if (apiResponse != null && !apiResponse.isSuccess()) {
-            log.error("=== [RAWDATA_03] Error - message: {} ===", apiResponse.getMessage());
-            throw new SimpleException(apiResponse.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        if (apiResponse == null || !apiResponse.isSuccess()) {
+            String message = apiResponse == null ? "모비젠 응답이 없습니다." : apiResponse.getMessage();
+            log.error("=== [RAWDATA_03] Error - message: {} ===", message);
+            throw new SimpleException(message, HttpStatus.INTERNAL_SERVER_ERROR);
         }
         log.info("=== [RAWDATA_03] Success - message: {} ===", apiResponse.getMessage());
 
@@ -605,9 +612,10 @@ public class DatasetService {
 
         SearchRawdataViewRequest searchRequest = new SearchRawdataViewRequest(metadataId, rawdataId);
         ApiResponse<ViewRawdataResponse> apiResponse = apiService.findRawdataById(searchRequest);
-        if (apiResponse != null && !apiResponse.isSuccess()) {
-            log.error("=== [RAWDATA_04] Error - message: {} ===", apiResponse.getMessage());
-            throw new SimpleException(apiResponse.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        if (apiResponse == null || !apiResponse.isSuccess()) {
+            String message = apiResponse == null ? "모비젠 응답이 없습니다." : apiResponse.getMessage();
+            log.error("=== [RAWDATA_04] Error - message: {} ===", message);
+            throw new SimpleException(message, HttpStatus.INTERNAL_SERVER_ERROR);
         }
         log.info("=== [RAWDATA_04] Success - message: {} ===", apiResponse.getMessage());
 
@@ -642,9 +650,10 @@ public class DatasetService {
                 new ChangeRawdataFieldRequest(request.getExtdata())
         );
         ApiResponse<ChangeRawdataResponse> apiResponse = apiService.changeRawdata(updateRequest);
-        if (apiResponse != null && !apiResponse.isSuccess()) {
-            log.error("=== [RAWDATA_05] Error - message: {} ===", apiResponse.getMessage());
-            throw new SimpleException(apiResponse.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        if (apiResponse == null || !apiResponse.isSuccess()) {
+            String message = apiResponse == null ? "모비젠 응답이 없습니다." : apiResponse.getMessage();
+            log.error("=== [RAWDATA_05] Error - message: {} ===", message);
+            throw new SimpleException(message, HttpStatus.INTERNAL_SERVER_ERROR);
         }
         log.info("=== [RAWDATA_05] Success - message: {} ===", apiResponse.getMessage());
     }
@@ -692,9 +701,10 @@ public class DatasetService {
         log.info("=== [META_01] Search Meta Key List ===");
 
         ApiResponse<MetaKeysListResponse> apiResponse = apiService.findMetaKeysList();
-        if (apiResponse != null && !apiResponse.isSuccess()) {
-            log.error("=== [META_01] Error - message: {} ===", apiResponse.getMessage());
-            throw new SimpleException(apiResponse.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        if (apiResponse == null || !apiResponse.isSuccess()) {
+            String message = apiResponse == null ? "모비젠 응답이 없습니다." : apiResponse.getMessage();
+            log.error("=== [META_01] Error - message: {} ===", message);
+            throw new SimpleException(message, HttpStatus.INTERNAL_SERVER_ERROR);
         }
         log.info("=== [META_01] Success - message: {} ===", apiResponse.getMessage());
 
@@ -719,9 +729,10 @@ public class DatasetService {
         SearchMetaValuesRequest searchKeyValueRequest = new SearchMetaValuesRequest(filterKey);
         ApiResponse<MetaValuesListResponse> apiResponse = apiService.findMetaValuesList(searchKeyValueRequest);
 
-        if (apiResponse != null && !apiResponse.isSuccess()) {
-            log.error("=== [META_02] Error - message: {} ===", apiResponse.getMessage());
-            throw new SimpleException(apiResponse.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        if (apiResponse == null || !apiResponse.isSuccess()) {
+            String message = apiResponse == null ? "모비젠 응답이 없습니다." : apiResponse.getMessage();
+            log.error("=== [META_02] Error - message: {} ===", message);
+            throw new SimpleException(message, HttpStatus.INTERNAL_SERVER_ERROR);
         }
         log.info("=== [META_02] Success - message: {} ===", apiResponse.getMessage());
 
@@ -748,9 +759,10 @@ public class DatasetService {
 
         ApiResponse<RelationListResponse> apiResponse = apiService.findRelationDataList(listRequest);
 
-        if (apiResponse != null && !apiResponse.isSuccess()) {
-            log.error("=== [RELATION_01] Error - message: {} ===", apiResponse.getMessage());
-            throw new SimpleException(apiResponse.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        if (apiResponse == null || !apiResponse.isSuccess()) {
+            String message = apiResponse == null ? "모비젠 응답이 없습니다." : apiResponse.getMessage();
+            log.error("=== [RELATION_01] Error - message: {} ===", message);
+            throw new SimpleException(message, HttpStatus.INTERNAL_SERVER_ERROR);
         }
         log.info("=== [RELATION_01] Success - message: {} ===", apiResponse.getMessage());
 
@@ -791,9 +803,10 @@ public class DatasetService {
 
         ApiResponse<RecommendationListResponse> apiResponse = apiService.findRecommendationDataList(pageRequest);
 
-        if (apiResponse != null && !apiResponse.isSuccess()) {
-            log.error("=== [RECOMMENDATION_01] Error - message: {} ===", apiResponse.getMessage());
-            throw new SimpleException(apiResponse.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        if (apiResponse == null || !apiResponse.isSuccess()) {
+            String message = apiResponse == null ? "모비젠 응답이 없습니다." : apiResponse.getMessage();
+            log.error("=== [RECOMMENDATION_01] Error - message: {} ===", message);
+            throw new SimpleException(message, HttpStatus.INTERNAL_SERVER_ERROR);
         }
         log.info("=== [RECOMMENDATION_01] Success - message: {} ===", apiResponse.getMessage());
 
