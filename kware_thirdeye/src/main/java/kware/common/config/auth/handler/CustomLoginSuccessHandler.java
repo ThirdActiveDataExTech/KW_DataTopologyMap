@@ -60,8 +60,7 @@ public class CustomLoginSuccessHandler implements AuthenticationSuccessHandler {
 		else {
 			Map<String, Object> geoInfo = ipWhoService.getGeoInfo(ip);
 			// 1. null 체크 및 안전한 Boolean 비교
-			boolean isSuccess = geoInfo != null && Boolean.TRUE.equals(geoInfo.get("success"));
-			if (isSuccess) {
+			if (geoInfo != null && Boolean.TRUE.equals(geoInfo.get("success"))) {
 				// 2. 값이 없을 경우를 대비해 기본값 처리
 				String country = String.valueOf(geoInfo.getOrDefault("country", "Unknown"));
 				String city = String.valueOf(geoInfo.getOrDefault("city", ""));
