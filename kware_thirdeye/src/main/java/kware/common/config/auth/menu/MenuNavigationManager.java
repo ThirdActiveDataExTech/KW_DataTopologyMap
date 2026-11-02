@@ -45,6 +45,9 @@ public class MenuNavigationManager {
                 rightSlideImgId = programBean.getRightSlideImgId();
             }
         } else {
+            if (parentMenu == null) {   // parentMenuUrl 이 없으면 기본 메뉴를 쓴다
+                parentMenu = getDefaultMenu(menusTop);
+            }
             leftSlideImgId = parentMenu.getLeftSlideImgId();
             rightSlideImgId = parentMenu.getRightSlideImgId();
         }

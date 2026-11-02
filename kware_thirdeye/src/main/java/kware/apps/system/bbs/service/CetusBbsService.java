@@ -77,9 +77,10 @@ public class CetusBbsService {
         CodeView codeView = codeService.findCodeByCodeAndUpperCode(view.getBbsTpCd(), "BBS_TP_CD");
         String url = "/portal/bbs/" + codeView.getItem1Val();
         CetusProgrmInfo programBean = progrmInfoService.findProgramByUrl(url);
-        if( programBean != null ) {
-            progrmInfoService.changeProgram(programBean.getUid(), new ProgramChange(progrmNm, request.getUseAt()));
+        if( programBean == null ) {   // 연결된 프로그램이 없으면 프로그램·메뉴 이름은 바꿀 것이 없다
+            return;
         }
+        progrmInfoService.changeProgram(programBean.getUid(), new ProgramChange(progrmNm, request.getUseAt()));
 
         List<CetusMenuInfo> menuBeans = menuInfoService.findMenuByProgramUid(programBean.getUid());
         for(CetusMenuInfo bean : menuBeans) {
