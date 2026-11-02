@@ -1,6 +1,5 @@
 package kware.common.config.auth.handler;
 
-import cetus.exception.AuthorizationException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;

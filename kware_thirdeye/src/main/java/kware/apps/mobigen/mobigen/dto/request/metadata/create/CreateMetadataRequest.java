@@ -1,12 +1,9 @@
 package kware.apps.mobigen.mobigen.dto.request.metadata.create;
 
 
-import cetus.user.UserUtil;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.List;
-import java.util.Map;
 
 /**
 * @fileName     CreateMetadata

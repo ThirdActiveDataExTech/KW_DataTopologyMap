@@ -1,6 +1,5 @@
 package kware.apps.mobigen.integration.dto.request.metadata;
 
-import kware.apps.mobigen.mobigen.dto.request.common.PaginationRequest;
 import lombok.Getter;
 import lombok.Setter;
 

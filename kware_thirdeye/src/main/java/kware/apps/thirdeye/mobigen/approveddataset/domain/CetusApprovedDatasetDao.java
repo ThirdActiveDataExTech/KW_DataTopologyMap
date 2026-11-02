@@ -3,7 +3,6 @@ package kware.apps.thirdeye.mobigen.approveddataset.domain;
 import cetus.dao.SuperDao;
 import kware.apps.thirdeye.mobigen.approveddataset.dto.request.HomeDatasetSearch;
 import kware.apps.thirdeye.mobigen.approveddataset.dto.response.ApprovedDatasetItem;
-import kware.apps.thirdeye.mobigen.approveddataset.dto.response.HomeDatasetList;
 import org.springframework.stereotype.Component;
 
 import java.util.List;

@@ -4,7 +4,6 @@ package kware.apps.mobigen.mobigen.dto.request.rawdata.change;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.List;
 
 /**
 * @fileName     ChangeRawdataRequest

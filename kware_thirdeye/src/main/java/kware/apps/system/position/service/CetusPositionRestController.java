@@ -4,7 +4,6 @@ import javax.validation.Valid;
 
 
 import kware.apps.system.position.dto.request.PositionMergeList;
-import kware.apps.system.position.dto.response.PositionList;
 import kware.apps.system.position.dto.response.PositionListWithUser;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

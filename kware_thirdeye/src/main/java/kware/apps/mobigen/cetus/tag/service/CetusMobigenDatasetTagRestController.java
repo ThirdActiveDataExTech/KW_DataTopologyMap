@@ -1,9 +1,7 @@
 package kware.apps.mobigen.cetus.tag.service;
 
-import cetus.annotation.Required;
 import kware.apps.mobigen.cetus.tag.dto.request.SearchTag;
 import kware.apps.mobigen.cetus.tag.dto.response.TagList;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;

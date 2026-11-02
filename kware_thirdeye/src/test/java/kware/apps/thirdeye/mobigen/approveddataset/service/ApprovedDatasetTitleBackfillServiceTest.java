@@ -14,7 +14,6 @@ import java.time.Instant;
 import java.time.ZoneOffset;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.List;
 
 import kware.apps.mobigen.integration.dto.request.metadata.SearchMetadataView;
 import kware.apps.mobigen.integration.dto.response.metadata.MetadataView;

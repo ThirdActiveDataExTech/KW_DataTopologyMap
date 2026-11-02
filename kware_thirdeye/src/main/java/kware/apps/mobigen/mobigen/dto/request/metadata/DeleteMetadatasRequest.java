@@ -2,7 +2,6 @@ package kware.apps.mobigen.mobigen.dto.request.metadata;
 
 
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 

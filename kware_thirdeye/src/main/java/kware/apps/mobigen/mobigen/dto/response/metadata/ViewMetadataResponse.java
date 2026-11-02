@@ -2,7 +2,6 @@ package kware.apps.mobigen.mobigen.dto.response.metadata;
 
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonValue;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;

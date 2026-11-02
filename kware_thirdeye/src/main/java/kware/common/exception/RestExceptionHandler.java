@@ -1,10 +1,6 @@
 package kware.common.exception;
 
-import cetus.Response;
-import cetus.exception.CetusValidException;
 import kware.apps.mobigen.mobigen.ApiException;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.support.MessageSourceAccessor;
