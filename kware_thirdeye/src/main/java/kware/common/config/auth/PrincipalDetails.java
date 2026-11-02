@@ -15,7 +15,6 @@ public class PrincipalDetails implements UserDetails {
     private static final long serialVersionUID = 1L;
 
     private SessionUserInfo user;
-    private boolean accountNotExpired;
 
     public PrincipalDetails(SessionUserInfo user) {
         this.user = user;

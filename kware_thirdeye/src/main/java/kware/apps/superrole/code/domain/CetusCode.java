@@ -50,7 +50,6 @@ public class CetusCode extends AuditBean {
 
 	public CetusCode updateChild(Long uid, CodeChildForm child) {
 		this.uid = uid;
-		this.upperCode = this.upperCode;
 		this.codeNm = child.getCodeNm() != null ? child.getCodeNm() : this.codeNm;
 		this.useAt = child.getUseAt() != null ? child.getUseAt() : this.useAt;
 

@@ -1,7 +1,6 @@
 package kware.apps.mobigen.cetus.dataset.web;
 
 
-import kware.apps.mobigen.cetus.dataset.service.CetusMobigenDatasetService;
 import kware.apps.mobigen.integration.dto.request.meta.SearchMetaValues;
 import kware.apps.mobigen.integration.dto.request.metadata.SearchMetadataView;
 import kware.apps.mobigen.integration.dto.response.meta.MetaKeyList;
@@ -25,7 +24,6 @@ import java.util.Map;
 @RequestMapping("/admin/metadata/dataset")
 public class CetusMobigenDatasetController {
 
-    private final CetusMobigenDatasetService service;
     private final MenuNavigationManager menuNavigationManager;
     private final DatasetService datasetService;
     

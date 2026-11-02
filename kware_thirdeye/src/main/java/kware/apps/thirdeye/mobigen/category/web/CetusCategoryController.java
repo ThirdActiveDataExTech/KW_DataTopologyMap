@@ -1,6 +1,5 @@
 package kware.apps.thirdeye.mobigen.category.web;
 
-import kware.apps.thirdeye.mobigen.category.service.CetusDatasetCategoryService;
 import kware.common.config.auth.menu.MenuNavigationManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -13,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/admin/dataset/category")
 public class CetusCategoryController {
 
-    private final CetusDatasetCategoryService service;
     private final MenuNavigationManager menuNavigationManager;
 
     @GetMapping

@@ -26,7 +26,6 @@ public class CSVRender {
     // private static final String PREFIX = "myData";
     private static final String SUFFIX = ".zip";
 
-    private Integer perSize;            // 1csv : data 개수
     private File tempFile;
     private Path tempDir;
     private Class<?> clazz;
@@ -41,7 +40,6 @@ public class CSVRender {
     */
     public CSVRender(Class<?> clazz , Integer perSize, String downloadPath) throws IOException {
         this.clazz = clazz;
-        this.perSize = perSize;
 
         this.makeDirFile(downloadPath);         // tempFile, tempDir create
         this.getHeader();           // clazz 통해 header -> CSVColumn column get
@@ -57,7 +55,6 @@ public class CSVRender {
         this.createMkdir(downloadPath +  File.separator + DateTimeUtil.getTodayShort());                 // 해당 경로 file mkdir
         Path dir = Paths.get(String.format("%s%s%s%s%s", downloadPath, File.separator, DateTimeUtil.getTodayShort(), File.separator, PREFIX));
         Path file = Paths.get(String.format("%s%s%s%s%s", downloadPath, File.separator, DateTimeUtil.getTodayShort(), File.separator, PREFIX + SUFFIX));
-        String separator = System.getProperty("file.separator");
         new File(String.format("%s%s%s%s%s", downloadPath, File.separator, DateTimeUtil.getTodayShort(), File.separator, PREFIX + SUFFIX));
         this.tempFile = Files.createFile(file).toFile();
         this.tempDir = Files.createDirectories(dir);

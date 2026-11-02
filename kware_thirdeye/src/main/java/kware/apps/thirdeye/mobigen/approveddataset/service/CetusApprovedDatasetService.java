@@ -36,7 +36,6 @@ import java.util.Map;
 public class CetusApprovedDatasetService {
 
     private final CetusApprovedDatasetDao dao;
-    private final CetusApprovedDatasetService2 approvedDatasetService2;
     private final CetusDatasetUiService datasetUiService;
     private final CetusDatasetMainUiService mainUiService;
 

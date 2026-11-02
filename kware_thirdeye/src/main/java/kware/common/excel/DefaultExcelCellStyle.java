@@ -14,7 +14,6 @@ import java.util.Map;
 @Component
 public class DefaultExcelCellStyle {
 
-	private SXSSFWorkbook wb;
 	private XSSFCellStyle header;
 	private XSSFCellStyle body;
 	private XSSFCellStyle amount;
@@ -23,7 +22,6 @@ public class DefaultExcelCellStyle {
 
 	// workbook을 받아와서 각각의 cellStyle 객체 생성 및 값 리턴
 	public Map<String, XSSFCellStyle> setWb(SXSSFWorkbook wb){
-		this.wb = wb;
 		font = wb.createFont();
 		this.header = (XSSFCellStyle)wb.createCellStyle();
 		this.body = (XSSFCellStyle)wb.createCellStyle();

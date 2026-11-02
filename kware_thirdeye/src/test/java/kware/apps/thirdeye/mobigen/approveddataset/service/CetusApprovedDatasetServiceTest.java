@@ -35,7 +35,7 @@ class CetusApprovedDatasetServiceTest {
     private final CetusDatasetUiService datasetUiService = mock(CetusDatasetUiService.class);
     private final CetusDatasetMainUiService mainUiService = mock(CetusDatasetMainUiService.class);
     private final CetusApprovedDatasetService service = new CetusApprovedDatasetService(
-            mock(CetusApprovedDatasetDao.class), mock(CetusApprovedDatasetService2.class),
+            mock(CetusApprovedDatasetDao.class),
             datasetUiService, mainUiService, mock(CetusDatasetCategoryService.class),
             mock(CetusBookMarkService2.class), mock(DatasetService.class));
 

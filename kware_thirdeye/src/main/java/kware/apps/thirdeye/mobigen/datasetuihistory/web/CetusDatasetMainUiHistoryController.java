@@ -1,9 +1,7 @@
 package kware.apps.thirdeye.mobigen.datasetuihistory.web;
 
-import kware.apps.thirdeye.mobigen.datasetuihistory.service.CetusDatasetHistoryService;
 import kware.common.config.auth.menu.MenuNavigationManager;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/admin/dataset/mainui-history")
 public class CetusDatasetMainUiHistoryController {
 
-    private final CetusDatasetHistoryService service;
     private final MenuNavigationManager menuNavigationManager;
 
     @GetMapping("/view/{approvedUid}")

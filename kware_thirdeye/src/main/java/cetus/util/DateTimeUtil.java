@@ -135,18 +135,6 @@ public class DateTimeUtil {
     }
     
     /**
-     * 지정한 시간이 얼마나 경과되었는지 반환.
-     */
-    public static String getDuration(long time) {
-
-        long duration = Calendar.getInstance().getTimeInMillis() - time;
-        
-        return "";
-        
-        //return DurationFormatUtils.formatDuration(duration, "dd'일' HH'시간' mm'분'", false);
-    }
-    
-    /**
      * 지정한 날짜에 대시('-')를 삽입
      */
     public static String appendDash(String src) {
