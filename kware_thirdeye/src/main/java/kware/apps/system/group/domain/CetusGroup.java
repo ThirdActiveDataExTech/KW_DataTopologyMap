@@ -3,7 +3,6 @@ package kware.apps.system.group.domain;
 
 import cetus.bean.AuditBean;
 import kware.apps.system.group.dto.request.GroupMerge;
-import kware.apps.system.position.dto.request.PositionMerge;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

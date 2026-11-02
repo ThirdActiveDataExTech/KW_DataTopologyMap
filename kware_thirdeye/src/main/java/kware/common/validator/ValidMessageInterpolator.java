@@ -4,7 +4,6 @@ import cetus.annotation.DisplayName;
 import org.hibernate.validator.internal.engine.MessageInterpolatorContext;
 import org.hibernate.validator.messageinterpolation.ParameterMessageInterpolator;
 
-import javax.validation.MessageInterpolator;
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
@@ -15,7 +14,7 @@ import java.util.Locale;
  * 경로가 목록 요소(categories[0].sortNo)나 중첩 객체(category.categoryNm)여도 필드를 찾고,
  * 찾지 못하거나 @DisplayName 이 없으면 예외 대신 필드명을 쓴다(검증 오류 응답이 예외로 바뀌지 않게).
  */
-public class ValidMessageInterpolator extends ParameterMessageInterpolator implements MessageInterpolator {
+public class ValidMessageInterpolator extends ParameterMessageInterpolator {
 
     @Override
     public String interpolate(String messageTemplate, Context context) {
