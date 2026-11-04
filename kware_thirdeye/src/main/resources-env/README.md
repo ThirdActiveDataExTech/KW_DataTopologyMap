@@ -6,13 +6,17 @@
 | :--- | :--- | :--- |
 | `DB_USERNAME` | 애플리케이션 DB 계정 | dev, local, prod, dev-mobigen, kube |
 | `DB_PASSWORD` | 애플리케이션 DB 비밀번호 | dev, local, prod, dev-mobigen, kube |
-| `MAIL_USERNAME` | 초대 메일 발송 SMTP 계정 | dev, local, dev-mobigen, kube |
-| `MAIL_PASSWORD` | SMTP 비밀번호(앱 비밀번호) | dev, local, dev-mobigen, kube |
+| `MAIL_USERNAME` | 초대 메일 발송 SMTP 계정 | dev, local, prod, dev-mobigen, kube |
+| `MAIL_PASSWORD` | SMTP 비밀번호(앱 비밀번호) | dev, local, prod, dev-mobigen, kube |
 | `SESSION_STORE_TYPE` | 세션 저장소: `redis`(Redis 클러스터, 다중 인스턴스) 또는 `none`(메모리, 단일 인스턴스). 기본 prod=redis, kube=none | prod, kube |
 | `COOKIE_SECURE` | 세션 쿠키 Secure 속성(HTTPS 종단이면 `true`). 기본 false | 전체 |
 | `ALLOWED_ORIGINS` | CORS 허용 출처 목록(쉼표 구분). 기본은 로컬 개발 주소 | 전체 |
 | `DB_POOL_SIZE` | HikariCP 최대 연결 수(기본 2) | 전체 |
-| `DB_URL` | JDBC URL 전체 덮어쓰기(docker-compose 의 로컬 DB 등). 기본은 프로파일 파일의 값 | prod |
+| `DB_URL` | JDBC URL 전체(예: `jdbc:postgresql://<host>:5432/<db>?currentSchema=k_thirdeye`) | prod(필수) |
+| `DATA_DIR` | 업로드·에디터·다운로드 루트. 기본 prod=`/app/data`, dev=`/home/kware/thirdeye/data` | prod, dev |
+| `LOG_FILE` | 애플리케이션 로그 파일. 기본 prod=`/app/logs/kware_thirdeye.log`, dev=`../logs/kware_thirdeye.log` | prod, dev |
+| `BASE_URL` | 메일 링크 등 외부 접근 주소. 기본 prod=빈 값(상대 경로), dev=개발서버 주소 | prod, dev |
+| `MAIL_HOST` / `MAIL_PORT` / `MAIL_SENDER` | SMTP 호스트·포트·발신자. 기본 smtp.gmail.com / 587 / KWARE | prod, dev, kube |
 | `REDIS_NODES` | Redis 노드 목록(쉼표 구분). 1개면 단일 인스턴스, 2개 이상이면 클러스터 | prod, kube |
 | `UPLOAD_MAX_FILE_SIZE` / `UPLOAD_MAX_REQUEST_SIZE` | multipart 업로드 파일·요청 한도(기본 10MB, 예 `50MB`). TUS 대용량 업로드에는 적용되지 않음 | 전체 |
 | `MOBIGEN_URL` | 모비젠 API base URL (예: `http://<host>:<port>/v1`) | prod(필수), kube |
