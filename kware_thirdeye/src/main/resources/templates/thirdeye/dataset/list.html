@@ -125,22 +125,6 @@
                         </div>
                     </div>
 
-                    <!-- 검색어: 상단 검색에서 넘어온 값을 보여 주고 여기서 바꾸거나 지운다. 필터 초기화는 검색어를 지우지 않는다 -->
-                    <div class="sidebar-widget sidebar-widget-border mb-40 pb-35" data-aos="fade-up" data-aos-delay="300">
-                        <div class="sidebar-widget-title mb-25">
-                            <h3>검색어</h3>
-                        </div>
-                        <form id="searchForm" class="page-filter" onsubmit="return false;">
-                            <div class="page-slider-amount">
-                                <div class="label-input" style="flex: 1;">
-                                    <input type="text" id="keyword" placeholder="검색어 없음(전체)" maxlength="100" autocomplete="off" style="width: 100%; text-align: center;"/>
-                                </div>
-                                <button type="button" id="keyword-clear" class="date-btn" title="검색어 지우기">×</button>
-                                <button type="button" id="search-button" class="date-btn">적용</button>
-                            </div>
-                        </form>
-                    </div>
-
                     <div class="sidebar-wrapper mb-40" id="sidebar-wrapper-div">
 
                         <div id="sidebar-widgets-container1">
@@ -204,33 +188,9 @@
             // 전체 검색을 통한 리스트 화면 접근시
             const searchParams = window.location.search.substring(1);
             const params = new URLSearchParams(searchParams);
-            const keyword = (params.get('keyword') || '').trim();
-            $('#keyword').val(keyword);
-            listJS.keyword = keyword;   // 주소의 ?keyword= 는 지우지 않는다(새로고침·공유 때 검색 상태 유지)
-
-            // 1. 검색어 검색: 사이드바 입력칸 값으로 조회하고 주소의 ?keyword= 를 같이 맞춘다
-            const searchByKeyword = () => {
-                const value = ($('#keyword').val() || '').trim();
-                $('#keyword').val(value);
-                listJS.keyword = value;
-                window.history.replaceState({}, document.title, value ? `/portal/list?keyword=${encodeURIComponent(value)}` : '/portal/list');
-                listJS.fnPage(1, false);
-            };
-            $('#searchForm').on('keypress', function (event) {
-                if (event.key === 'Enter') {
-                    event.preventDefault(); // 기본 동작(폼 제출) 막기
-                    searchByKeyword();
-                }
-            });
-            $("#search-button").on('click', function (event) {
-                event.preventDefault();
-                searchByKeyword();
-            });
-            $("#keyword-clear").on('click', function (event) {
-                event.preventDefault();
-                $('#keyword').val('');
-                searchByKeyword();
-            });
+            // 검색은 상단 검색창에서만 한다. 이 화면은 검색어를 건수 문구 옆에 보여 주기만 하고,
+            // 주소의 ?keyword= 는 지우지 않는다(새로고침·공유 때 검색 상태 유지)
+            listJS.keyword = (params.get('keyword') || '').trim();
 
             // 2. 뷰 버튼 클릭
             $(document).on('click', '.detail-btn', function () {
