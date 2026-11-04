@@ -22,7 +22,7 @@ services:
       - MAIL_PASSWORD=${MAIL_PASSWORD:-}
       - MOBIGEN_URL=${MOBIGEN_URL:?MOBIGEN_URL required}
       - BASE_URL=${BASE_URL:-}
-      # 기본은 아래 thirdeye-db / thirdeye-redis 서비스. 외부 DB·Redis 를 쓰면 .env 에서 덮어쓴다
+      # 기본은 아래 thirdeye-db 서비스(Redis 는 --profile redis 로 켤 때만). 외부 DB·Redis 를 쓰면 .env 에서 덮어쓴다
       - DB_URL=${DB_URL:-jdbc:postgresql://thirdeye-db:5432/postgres?currentSchema=k_thirdeye}
       - REDIS_NODES=${REDIS_NODES:-thirdeye-redis:6379}
       - SESSION_STORE_TYPE=${SESSION_STORE_TYPE:-none}
@@ -41,8 +41,6 @@ services:
     depends_on:
       thirdeye-db:
         condition: service_healthy
-      thirdeye-redis:
-        condition: service_started
     restart: always
 
   # 로컬 실행용 PostgreSQL. 최초 기동 시 k8s/ 의 초기화 스크립트로 계정·스키마·기초 데이터를 만든다(이미지는 k8s 와 동일)
@@ -69,10 +67,13 @@ services:
       retries: 10
     restart: unless-stopped
 
-  # 세션 저장소용 Redis (SESSION_STORE_TYPE=redis 일 때 사용). 캐시 용도라 디스크 영속화 없음
+  # 세션 저장소용 Redis. 기본(SESSION_STORE_TYPE=none)에서는 쓰지 않으므로 compose 프로파일로 두고,
+  # 세션을 Redis 에 둘 때만 .env 에 SESSION_STORE_TYPE=redis 와 함께 `docker compose --profile redis up -d` 로 켠다.
+  # 캐시 용도라 디스크 영속화 없음
   thirdeye-redis:
     image: redis:7.2-alpine
     container_name: kware-thirdeye-redis
+    profiles: ["redis"]
     command: ["redis-server", "--save", "", "--appendonly", "no"]
     restart: unless-stopped
 
