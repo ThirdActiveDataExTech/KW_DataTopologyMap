@@ -41,6 +41,7 @@ echo "JAVA_OPTS: $JAVA_OPTS"
 
 # Spring Boot 실행
 # 외부 설정 위치를 지정하여 /app/config 내의 파일들이 내부 설정을 오버라이드하도록 함
+# (spring.config.location 은 뒤에 적은 위치가 앞을 덮어쓴다. file 을 뒤에 둬야 /app/config/application.yml 이 이긴다)
 # JAVA_OPTS 는 Dockerfile 기본값 또는 실행 시 환경변수(단어 분리 의도)
 # shellcheck disable=SC2086
-exec java $JAVA_OPTS -Dspring.config.location=file:/app/config/,classpath:/application.yml -jar app.war
+exec java $JAVA_OPTS -Dspring.config.location=classpath:/application.yml,file:/app/config/ -jar app.war
