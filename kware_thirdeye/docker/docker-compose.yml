@@ -8,7 +8,7 @@ services:
     image: kware-thirdeye:latest
     container_name: kware-thirdeye-app
     ports:
-      - "9094:9094"
+      - "${APP_PORT_HOST:-9094}:9094"   # 왼쪽이 서버에서 여는 포트. .env 의 BASE_URL 을 "http://<서버 IP>:<이 포트>" 로 맞춘다
     environment:
       # 값은 같은 폴더의 .env 에서 읽는다(.env.example 참고). 자격증명은 compose 파일에 적지 않는다.
       - SPRING_PROFILES_ACTIVE=${SPRING_PROFILES_ACTIVE:-prod}
