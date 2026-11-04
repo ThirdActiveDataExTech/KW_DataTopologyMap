@@ -30,7 +30,7 @@ spec:
     spec:
       containers:
         - name: thirdeye-app
-          image: rnd.kware.co.kr/kware-thirdeye:0.2.0 
+          image: rnd.kware.co.kr/kware-thirdeye:0.3.0
           imagePullPolicy: Always
           ports:
             - containerPort: 9094
