@@ -18,4 +18,5 @@ frontend/build/
 local-secret.properties
 local-data/
 docker/.env
+docker/.env.dev
 docker/logs/
