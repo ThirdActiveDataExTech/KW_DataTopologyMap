@@ -15,6 +15,17 @@ KETI AGC 데이터셋 포털(ThirdEye). 모비젠(Mobigen) 외부 API와 연동�
 | 연동 | 모비젠 API(WebClient), TUS 대용량 업로드 |
 | 배포 | Docker(bootWar), Kubernetes(`k8s/`) |
 
+## 처음 받은 뒤 준비
+
+저장소에는 설정의 구조만 있고 계정·비밀번호는 없다. 받은 직후 아래 표의 양식을 복사해 값을 채운다. 만든 파일은 모두 `.gitignore` 에 있어 커밋되지 않는다. 값은 과제 담당자에게 받는다(사내 접근정보 보관함). 값이 없으면 compose 는 기동 전에 빠진 변수 이름을 출력하고, 앱은 DB 연결 단계에서 멈춘다.
+
+| 환경 | 복사할 양식 → 만들 파일 | 채울 값 | 비고 |
+| :--- | :--- | :--- | :--- |
+| 로컬(IDE·`bootRun`) | `local-secret.properties.example` → `local-secret.properties` | DB 계정·비밀번호, 메일 계정·앱 비밀번호 | 주소·경로는 `application-local.yml` 에 있음 |
+| 개발서버(compose) | `docker/.env.dev.example` → `docker/.env.dev` | 위와 같은 4개(나머지는 기본값 유지) | `docker/config.example/README.md` 에 변수 표 |
+| 운영(compose) | `docker/.env.example` → `docker/.env` | DB·메일 계정, `MOBIGEN_URL`, 외부 DB 면 `DB_URL` | 기동 `docker compose -f docker/docker-compose.yml up -d` |
+| Kubernetes | `k8s/01-secret.yaml` 의 샘플 값 교체 | DB·관리자 비밀번호, 메일 계정 | 교체한 파일은 커밋하지 않는다. 절차는 `k8s/README.md` |
+
 ## 빌드와 실행
 
 프로파일은 `local`, `dev`, `prod`, `dev-mobigen`, `kube` 다섯 가지이며 `src/main/resources-env/<profile>/application-<profile>.yml`에 있다. 빌드 시 `-Pprofile`로 리소스에 포함할 프로파일을 고른다.
