@@ -4,10 +4,10 @@
 
 | 환경변수 | 용도 | 사용 프로파일 |
 | :--- | :--- | :--- |
-| `DB_USERNAME` | 애플리케이션 DB 계정 | dev, local, prod, dev-mobigen, kube |
-| `DB_PASSWORD` | 애플리케이션 DB 비밀번호 | dev, local, prod, dev-mobigen, kube |
-| `MAIL_USERNAME` | 초대 메일 발송 SMTP 계정 | dev, local, prod, dev-mobigen, kube |
-| `MAIL_PASSWORD` | SMTP 비밀번호(앱 비밀번호) | dev, local, prod, dev-mobigen, kube |
+| `DB_USERNAME` | 애플리케이션 DB 계정 | dev, local, prod, kube |
+| `DB_PASSWORD` | 애플리케이션 DB 비밀번호 | dev, local, prod, kube |
+| `MAIL_USERNAME` | 초대 메일 발송 SMTP 계정 | dev, local, prod, kube |
+| `MAIL_PASSWORD` | SMTP 비밀번호(앱 비밀번호) | dev, local, prod, kube |
 | `SESSION_STORE_TYPE` | 세션 저장소: `redis`(Redis 클러스터, 다중 인스턴스) 또는 `none`(메모리, 단일 인스턴스). 기본 prod=redis, kube=none | prod, kube |
 | `COOKIE_SECURE` | 세션 쿠키 Secure 속성(HTTPS 종단이면 `true`). 기본 false | 전체 |
 | `ALLOWED_ORIGINS` | CORS 허용 출처 목록(쉼표 구분). 기본은 로컬 개발 주소 | 전체 |

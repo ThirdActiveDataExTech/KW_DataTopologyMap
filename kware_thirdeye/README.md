@@ -22,13 +22,13 @@ KETI AGC 데이터셋 포털(ThirdEye). 모비젠(Mobigen) 외부 API와 연동�
 | 환경 | 복사할 양식 → 만들 파일 | 채울 값 | 비고 |
 | :--- | :--- | :--- | :--- |
 | 로컬(IDE·`bootRun`) | `local-secret.properties.example` → `local-secret.properties` | DB 계정·비밀번호, 메일 계정·앱 비밀번호 | 주소·경로는 `application-local.yml` 에 있음 |
-| 개발서버(compose) | `docker/.env.dev.example` → `docker/.env.dev` | 위와 같은 4개(나머지는 기본값 유지) | `docker/config.example/README.md` 에 변수 표 |
+| 개발서버(compose) | `docker/.env.dev.example` → `docker/.env.dev` | 위와 같은 4개(나머지는 기본값 유지) | 모비젠 쪽 개발 환경은 같은 dev 프로파일에 `.env.dev` 의 DB·주소만 모비젠 값으로. 변수 표는 `docker/config.example/README.md` |
 | 운영(compose) | `docker/.env.example` → `docker/.env` | DB·메일 계정, `MOBIGEN_URL`, 외부 DB 면 `DB_URL` | 기동 `docker compose -f docker/docker-compose.yml up -d` |
 | Kubernetes | `k8s/01-secret.yaml` 의 샘플 값 교체 | DB·관리자 비밀번호, 메일 계정 | 교체한 파일은 커밋하지 않는다. 절차는 `k8s/README.md` |
 
 ## 빌드와 실행
 
-프로파일은 `local`, `dev`, `prod`, `dev-mobigen`, `kube` 다섯 가지이며 `src/main/resources-env/<profile>/application-<profile>.yml`에 있다. 빌드 시 `-Pprofile`로 리소스에 포함할 프로파일을 고른다.
+프로파일은 `local`, `dev`, `prod`, `kube` 네 가지이며 `src/main/resources-env/<profile>/application-<profile>.yml`에 있다. 빌드 시 `-Pprofile`로 리소스에 포함할 프로파일을 고른다.
 
 ```cmd
 set DB_USERNAME=...
