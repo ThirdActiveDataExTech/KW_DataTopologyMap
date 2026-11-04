@@ -16,9 +16,12 @@ services:
       - JAVA_OPTS=${JAVA_OPTS:--XX:MaxRAMPercentage=75.0 -Djava.security.egd=file:/dev/./urandom}
       - DB_USERNAME=${DB_USERNAME:?DB_USERNAME required}
       - DB_PASSWORD=${DB_PASSWORD:?DB_PASSWORD required}
+      - MAIL_HOST=${MAIL_HOST:-smtp.gmail.com}
+      - MAIL_PORT=${MAIL_PORT:-587}
       - MAIL_USERNAME=${MAIL_USERNAME:-}
       - MAIL_PASSWORD=${MAIL_PASSWORD:-}
       - MOBIGEN_URL=${MOBIGEN_URL:?MOBIGEN_URL required}
+      - BASE_URL=${BASE_URL:-}
       # 기본은 아래 thirdeye-db / thirdeye-redis 서비스. 외부 DB·Redis 를 쓰면 .env 에서 덮어쓴다
       - DB_URL=${DB_URL:-jdbc:postgresql://thirdeye-db:5432/postgres?currentSchema=k_thirdeye}
       - REDIS_NODES=${REDIS_NODES:-thirdeye-redis:6379}
@@ -27,9 +30,14 @@ services:
       - ALLOWED_ORIGINS=${ALLOWED_ORIGINS:-}
       - UPLOAD_MAX_FILE_SIZE=${UPLOAD_MAX_FILE_SIZE:-10MB}
       - UPLOAD_MAX_REQUEST_SIZE=${UPLOAD_MAX_REQUEST_SIZE:-10MB}
+      # 컨테이너 안 경로(application-prod.yml 기본값과 같음). 호스트 폴더는 아래 volumes 에서 붙인다
+      - DATA_DIR=/app/data
+      - LOG_FILE=/app/logs/kware_thirdeye.log
+      - dir=/app/logs   # undertow 접근 로그 폴더(application.yml 의 ${dir})
     volumes:
       - ./config:/app/config
       - ./logs:/app/logs
+      - ${HOST_DATA_DIR:-./data}:/app/data   # 업로드 원본·에디터 이미지·다운로드 파일. 컨테이너를 지워도 남게 호스트에 둔다
     depends_on:
       thirdeye-db:
         condition: service_healthy
