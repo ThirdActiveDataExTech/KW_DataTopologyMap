@@ -68,7 +68,7 @@ services:
     restart: unless-stopped
 
   # 세션 저장소용 Redis. 기본(SESSION_STORE_TYPE=none)에서는 쓰지 않으므로 compose 프로파일로 두고,
-  # 세션을 Redis 에 둘 때만 .env 에 SESSION_STORE_TYPE=redis 와 함께 `docker compose --profile redis up -d` 로 켠다.
+  # 세션을 Redis 에 둘 때만 .env 에 SESSION_STORE_TYPE=redis 와 COMPOSE_PROFILES=redis 를 넣어 켠다(명령은 그대로 up -d).
   # 캐시 용도라 디스크 영속화 없음
   thirdeye-redis:
     image: redis:7.2-alpine
