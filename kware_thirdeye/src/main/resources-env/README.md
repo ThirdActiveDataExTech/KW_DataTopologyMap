@@ -13,7 +13,7 @@
 | `ALLOWED_ORIGINS` | CORS 허용 출처 목록(쉼표 구분). 기본은 로컬 개발 주소 | 전체 |
 | `DB_POOL_SIZE` | HikariCP 최대 연결 수(기본 2) | 전체 |
 | `DB_URL` | JDBC URL 전체(예: `jdbc:postgresql://<host>:5432/<db>?currentSchema=k_thirdeye`) | prod(필수) |
-| `DATA_DIR` | 업로드·에디터·다운로드 루트. 기본 prod=`/app/data`, dev=`/home/kware/thirdeye/data` | prod, dev |
+| `DATA_DIR` | 업로드·에디터·다운로드 루트(컨테이너 기준). 기본 `/app/data`, 서버에 직접 띄우면 쓰기 가능한 경로로 지정 | prod, dev |
 | `LOG_FILE` | 애플리케이션 로그 파일. 기본 prod=`/app/logs/kware_thirdeye.log`, dev=`../logs/kware_thirdeye.log` | prod, dev |
 | `BASE_URL` | 메일 링크 등 외부 접근 주소. 기본 prod=빈 값(상대 경로), dev=개발서버 주소 | prod, dev |
 | `MAIL_HOST` / `MAIL_PORT` / `MAIL_SENDER` | SMTP 호스트·포트·발신자. 기본 smtp.gmail.com / 587 / KWARE | prod, dev, kube |
