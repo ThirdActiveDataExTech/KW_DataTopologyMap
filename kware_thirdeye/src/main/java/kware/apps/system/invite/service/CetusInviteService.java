@@ -4,7 +4,9 @@ import cetus.util.StringUtil;
 import kware.apps.system.invite.domain.CetusInvite;
 import kware.apps.system.invite.domain.CetusInviteDao;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.mail.MailException;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
@@ -16,6 +18,7 @@ import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class CetusInviteService {
@@ -68,6 +71,26 @@ public class CetusInviteService {
         helper.setTo(request.getEmail());
         helper.setSubject(subject);
         helper.setText(messageCn.toString(), true);
-        mailSender.send(message);
+
+        // 발송 기록은 SMTP 디버그(mail.debug)와 무관하게 남긴다. 수신자는 일부 가린다.
+        String to = maskEmail(request.getEmail());
+        long started = System.currentTimeMillis();
+        try {
+            mailSender.send(message);
+            log.info("초대 메일 발송 완료: to={}, {}ms", to, System.currentTimeMillis() - started);
+        } catch (MailException e) {
+            log.warn("초대 메일 발송 실패: to={}, {}ms, 원인={}", to, System.currentTimeMillis() - started, e.getMessage());
+            throw e;
+        }
+    }
+
+    /** 로그용 수신자 표기. 아이디 앞 두 글자만 남기고 가린다(예: ab***@example.com). */
+    static String maskEmail(String email) {
+        if (email == null) return "";
+        int at = email.indexOf('@');
+        if (at <= 0) return "***";
+        String local = email.substring(0, at);
+        String kept = local.substring(0, Math.min(2, local.length()));
+        return kept + "***" + email.substring(at);
     }
 }
