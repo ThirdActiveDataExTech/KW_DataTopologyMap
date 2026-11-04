@@ -15,3 +15,7 @@ node_modules/
 frontend/node_modules/
 frontend/build/
 *.log
+local-secret.properties
+local-data/
+docker/.env
+docker/logs/
