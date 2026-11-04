@@ -27,7 +27,9 @@ FROM eclipse-temurin:11-jre-focal
 WORKDIR /app
 
 # HEALTHCHECK 용 curl (베이스 이미지에 없음)
-RUN apt-get update \n    && apt-get install -y --no-install-recommends curl \n    && rm -rf /var/lib/apt/lists/*
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends curl \
+    && rm -rf /var/lib/apt/lists/*
 
 # JVM 옵션. 컨테이너 메모리 제한을 따르도록 비율 지정, 실행 시 -e JAVA_OPTS=... 로 덮어쓴다
 ENV JAVA_OPTS="-XX:MaxRAMPercentage=75.0 -Djava.security.egd=file:/dev/./urandom"
@@ -51,6 +53,7 @@ RUN chmod +x entrypoint.sh
 EXPOSE 9094
 
 # 기동 후 60초 유예, 30초마다 health 확인. 3회 연속 실패면 unhealthy (compose restart·오케스트레이터가 참고)
-HEALTHCHECK --interval=30s --timeout=5s --start-period=60s --retries=3 \n    CMD curl -fsS http://localhost:9094/actuator/health || exit 1
+HEALTHCHECK --interval=30s --timeout=5s --start-period=60s --retries=3 \
+    CMD curl -fsS http://localhost:9094/actuator/health || exit 1
 
 ENTRYPOINT ["./entrypoint.sh"]
