@@ -24,16 +24,6 @@ configurations {
     }
 }
 
-/*repositories {
-    //maven { url 'https://repo.spring.io/release' }
-    mavenCentral()
-    maven { url = uri('https://www.egovframe.go.kr/maven/') }
-    maven {
-        //url "http://172.30.1.4:8088/repository/kware-repo-release/"
-        url "http://172.30.1.4:8088/nexus/repository/kware-repo-snapshot/"
-        allowInsecureProtocol=true
-    }
-}*/
 repositories {
     //maven { url 'https://repo.spring.io/release' }
     mavenCentral()
