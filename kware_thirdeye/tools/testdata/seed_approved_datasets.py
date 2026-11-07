@@ -144,7 +144,7 @@ def main():
     ap.add_argument("--count", type=int, default=100, help="목표 건수(기존 TEST-HOSP- 건수를 빼고 보충)")
     ap.add_argument("--workplace", type=int, default=22)
     ap.add_argument("--approver", type=int, default=214, help="승인자 cetus_user.uid (기본 214 데이터 제공자)")
-    ap.add_argument("--host", default="172.30.1.12")
+    ap.add_argument("--host", default=os.environ.get("DB_HOST"), help="DB 호스트(없으면 환경변수 DB_HOST)")
     ap.add_argument("--port", type=int, default=5434)
     ap.add_argument("--db", default="ketiagc_db")
     ap.add_argument("--schema", default="k_thirdeye")
@@ -153,6 +153,8 @@ def main():
     ap.add_argument("--dry-run", action="store_true")
     ap.add_argument("--purge", action="store_true", help="TEST-HOSP- 데이터와 빈 시험 카테고리를 삭제")
     a = ap.parse_args()
+    if not a.host:
+        ap.error("--host 또는 환경변수 DB_HOST 가 필요합니다")
     sys.stdout.reconfigure(encoding="utf-8")
 
     user, pw = load_credentials(a.secret)
