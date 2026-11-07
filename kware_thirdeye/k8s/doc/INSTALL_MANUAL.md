@@ -45,7 +45,7 @@
 │         ▼ Storage: thirdeye-storage-class ▼          │
 │   ┌──────────────────────────────────────────────┐  │
 │   │  [옵션 A] hostPath (로컬)                     │  │
-│   │  [옵션 B] NFS (172.30.1.1:/home/nfs_data)    │  │
+│   │  [옵션 B] NFS (NFS-SERVER:/home/nfs_data)    │  │
 │   └──────────────────────────────────────────────┘  │
 └─────────────────────────────────────────────────────┘
 ```
@@ -79,7 +79,7 @@
 
 ### NFS 옵션 추가 요구사항
 
-- NFS 서버 (예: `172.30.1.1`)
+- NFS 서버 (예: `<NFS 서버 IP>`)
 - `helm` CLI 도구
 - 마스터/워커 노드에 `nfs-common` 패키지 설치
 
@@ -169,7 +169,7 @@ kubectl apply -k k8s/
 NFS로 사용할 서버에서 다음 스크립트를 실행합니다.
 
 ```bash
-# NFS 서버(예: 172.30.1.1)에서 실행
+# NFS 서버(예: <NFS 서버 IP>)에서 실행
 ./k8s/script-nfs-server.sh
 ```
 
@@ -179,7 +179,7 @@ NFS로 사용할 서버에서 다음 스크립트를 실행합니다.
 - `/etc/exports` 등록 및 서비스 시작
 
 > 💡 실제 환경에서는 NFS 경로가 다를 수 있습니다.
-> 기본 프로비저너 스크립트는 `172.30.1.1:/home/nfs_data/kube`를 사용합니다.
+> 기본 프로비저너 스크립트는 `<NFS 서버 IP>:/home/nfs_data/kube`를 사용합니다.
 > 환경에 맞게 스크립트 내 경로를 수정하십시오.
 
 ### 5-2. NFS 클라이언트 설치
@@ -193,8 +193,8 @@ NFS로 사용할 서버에서 다음 스크립트를 실행합니다.
 
 **설치 확인** (각 노드에서):
 ```bash
-showmount -e 172.30.1.1
-# Export list for 172.30.1.1:
+showmount -e <NFS 서버 IP>
+# Export list for <NFS 서버 IP>:
 # /home/nfs_data/kube *
 ```
 
@@ -208,7 +208,7 @@ Helm을 사용하여 쿠버네티스 클러스터에 NFS 프로비저너를 설�
 
 실행 중 NFS 서버 IP와 경로를 입력하라는 프롬프트가 나타납니다:
 ```
-Enter NFS Server IP (default: 172.30.1.1): [Enter]
+Enter NFS Server IP (default: <NFS 서버 IP>): [Enter]
 Enter NFS Export Path (default: /home/nfs_data/kube): [Enter]
 ```
 
@@ -407,7 +407,7 @@ kubectl get pv
 kubectl delete pv <PV-NAME>    # Released 상태인 PV가 있으면 삭제
 
 # 5단계: NFS 서버의 물리 데이터 삭제 (최종)
-# NFS 서버(172.30.1.1)에서 실행:
+# NFS 서버(<NFS 서버 IP>)에서 실행:
 sudo rm -rf /home/nfs_data/kube/*
 ```
 
